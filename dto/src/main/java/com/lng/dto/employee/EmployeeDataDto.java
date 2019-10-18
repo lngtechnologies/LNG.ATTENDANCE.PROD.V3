@@ -4,20 +4,26 @@ public class EmployeeDataDto {
 	
 	private Integer custId;
 
+	private String custName;
+	
+	private String brCode;
+
 	private Integer empId;
 	
 	private String employeeName;
 	
-	private String faceListId;
+	private String custLogo;
 	
-	private String empAppSetupStatus;
+	//private Boolean empAppSetupStatus;
 	
-	public EmployeeDataDto(Integer id, Integer empid, String empName, String faceListId, String empAppSetupStatus) {
-		this.custId = id;
+	public EmployeeDataDto(Integer custId, String custName, String brCode, Integer empid, String empName, String custLogo) {
+		this.custId = custId;
+		this.custName = custName;
+		this.brCode = brCode;		
 		this.empId = empid;
 		this.employeeName = empName;
-		this.faceListId = faceListId;
-		this.empAppSetupStatus = empAppSetupStatus;
+		this.custLogo = custLogo;
+		//this.empAppSetupStatus = empAppSetupStatus;
 	}
 
 	public Integer getCustId() {
@@ -26,6 +32,22 @@ public class EmployeeDataDto {
 
 	public void setCustId(Integer custId) {
 		this.custId = custId;
+	}
+
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+	public String getBrCode() {
+		return brCode;
+	}
+
+	public void setBrCode(String brCode) {
+		this.brCode = brCode;
 	}
 
 	public Integer getEmpId() {
@@ -44,21 +66,12 @@ public class EmployeeDataDto {
 		this.employeeName = employeeName;
 	}
 
-	public String getFaceListId() {
-		return faceListId;
+	public String getCustLogo() {
+		return custLogo;
 	}
 
-	public void setFaceListId(String faceListId) {
-		this.faceListId = faceListId;
+	public void setCustLogo(String custLogo) {
+		this.custLogo = custLogo;
 	}
-
-	public String getEmpAppSetupStatus() {
-		return empAppSetupStatus;
-	}
-
-	public void setEmpAppSetupStatus(String empAppSetupStatus) {
-		this.empAppSetupStatus = empAppSetupStatus;
-	}
-	
 
 }

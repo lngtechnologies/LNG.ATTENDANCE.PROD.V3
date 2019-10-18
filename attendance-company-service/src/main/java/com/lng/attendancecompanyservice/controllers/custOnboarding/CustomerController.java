@@ -26,7 +26,7 @@ import com.lng.dto.customer.StatusDto;
  */
 @CrossOrigin(origins="*", maxAge=3600)
 @RestController
-@RequestMapping(value="/cust/onboarding")
+@RequestMapping(value="/customer/onboarding")
 public class CustomerController {
 	
 	@Autowired

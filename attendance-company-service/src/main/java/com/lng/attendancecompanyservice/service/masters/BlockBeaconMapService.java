@@ -1,7 +1,7 @@
 package com.lng.attendancecompanyservice.service.masters;
 
-import com.lng.dto.blockBeaconMap.BlockBeaconMapDto;
-import com.lng.dto.blockBeaconMap.BlockBeaconMapListResponse;
+import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
+import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
 
 import status.StatusDto;
 

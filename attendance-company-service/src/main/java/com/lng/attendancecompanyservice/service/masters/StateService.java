@@ -1,7 +1,7 @@
 package com.lng.attendancecompanyservice.service.masters;
 
-import com.lng.dto.state.StateDto;
-import com.lng.dto.state.StateResponse;
+import com.lng.dto.masters.state.StateDto;
+import com.lng.dto.masters.state.StateResponse;
 
 import status.Status;
 

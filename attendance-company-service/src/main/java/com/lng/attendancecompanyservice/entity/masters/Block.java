@@ -22,7 +22,7 @@ public class Block {
 	private Integer blkId;
 	
 	@ManyToOne
-	@JoinColumn(name = "branch")
+	@JoinColumn(name = "refBranchId")
 	private Branch branch;
 	
 	@Column(name = "blkLogicalName")

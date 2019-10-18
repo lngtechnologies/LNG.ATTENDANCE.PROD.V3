@@ -12,9 +12,9 @@ import com.lng.attendancecompanyservice.entity.masters.IndustryType;
 import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.IndustryTypeRepository;
 import com.lng.attendancecompanyservice.service.masters.IndustryTypeService;
-import com.lng.dto.IndustryType.IndustryTypeDto;
-import com.lng.dto.IndustryType.IndustryTypeListResponse;
-import com.lng.dto.IndustryType.IndustryTypeResponse;
+import com.lng.dto.masters.industryType.IndustryTypeDto;
+import com.lng.dto.masters.industryType.IndustryTypeListResponse;
+import com.lng.dto.masters.industryType.IndustryTypeResponse;
 
 import status.Status;
 import status.StatusDto;

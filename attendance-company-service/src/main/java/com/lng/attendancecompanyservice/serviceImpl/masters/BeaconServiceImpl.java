@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import com.lng.attendancecompanyservice.entity.masters.Beacon;
 import com.lng.attendancecompanyservice.repositories.masters.BeaconRepository;
 import com.lng.attendancecompanyservice.service.masters.BeaconService;
-import com.lng.dto.beacon.BeaconDto;
-import com.lng.dto.beacon.BeaconListResponseDto;
+import com.lng.dto.masters.beacon.BeaconDto;
+import com.lng.dto.masters.beacon.BeaconListResponseDto;
 
 import status.Status;
 import status.StatusDto;

@@ -11,10 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.BeaconService;
-import com.lng.dto.IndustryType.IndustryTypeDto;
-import com.lng.dto.IndustryType.IndustryTypeListResponse;
-import com.lng.dto.beacon.BeaconDto;
-import com.lng.dto.beacon.BeaconListResponseDto;
+import com.lng.dto.masters.beacon.BeaconDto;
+import com.lng.dto.masters.beacon.BeaconListResponseDto;
 
 import status.StatusDto;
 

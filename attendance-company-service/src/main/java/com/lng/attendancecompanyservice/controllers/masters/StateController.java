@@ -11,12 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.StateService;
-import com.lng.dto.state.StateDto;
-import com.lng.dto.state.StateResponse;
+import com.lng.dto.masters.state.StateDto;
+import com.lng.dto.masters.state.StateResponse;
 
-@RestController
+
 @CrossOrigin(origins = "*", maxAge=3600)
-@RequestMapping(value="/master")
+@RestController
+@RequestMapping(value="/master/state")
 public class StateController {
 	@Autowired
 	StateService stateService;

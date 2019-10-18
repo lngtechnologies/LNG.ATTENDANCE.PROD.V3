@@ -1,7 +1,7 @@
 package com.lng.attendancecompanyservice.service.masters;
 
-import com.lng.dto.beacon.BeaconDto;
-import com.lng.dto.beacon.BeaconListResponseDto;
+import com.lng.dto.masters.beacon.BeaconDto;
+import com.lng.dto.masters.beacon.BeaconListResponseDto;
 
 import status.StatusDto;
 

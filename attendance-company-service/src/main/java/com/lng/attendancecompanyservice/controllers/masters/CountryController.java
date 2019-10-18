@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.CountryService;
-import com.lng.dto.country.CountryDto;
-import com.lng.dto.country.CountryResponse;
+import com.lng.dto.masters.country.CountryDto;
+import com.lng.dto.masters.country.CountryResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
-@RequestMapping(value="/master")
+@RequestMapping(value="/master/country")
 public class CountryController {
 	@Autowired
 	CountryService countryService;

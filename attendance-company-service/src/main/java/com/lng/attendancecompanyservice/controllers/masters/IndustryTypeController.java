@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.IndustryTypeService;
-import com.lng.dto.IndustryType.IndustryTypeDto;
-import com.lng.dto.IndustryType.IndustryTypeListResponse;
-import com.lng.dto.IndustryType.IndustryTypeResponse;
+import com.lng.dto.masters.industryType.IndustryTypeDto;
+import com.lng.dto.masters.industryType.IndustryTypeListResponse;
+import com.lng.dto.masters.industryType.IndustryTypeResponse;
 
 import status.StatusDto;
 
