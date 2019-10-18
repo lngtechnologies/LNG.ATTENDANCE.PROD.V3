@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import com.lng.attendancecustomerservice.entity.empAppSetup.Employee;
+import com.lng.attendancecustomerservice.entity.masters.Employee;
 
 @Repository
 public interface EmployeeRepository extends PagingAndSortingRepository<Employee, Integer> {
@@ -17,6 +17,8 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	
 	@Query(value = "select * from tmemployee where refCustId = ?1 and empId = ?2", nativeQuery = true)
 	Employee getByEmpIdAndRefCustId(Integer custId, Integer empId);
+	
+	Employee getByEmpId(Integer empId);
 	
 	Employee getEmployeeByEmpId(Integer empId);
 	

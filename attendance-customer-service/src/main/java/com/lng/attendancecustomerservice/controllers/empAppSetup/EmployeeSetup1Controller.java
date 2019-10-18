@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
-import com.lng.dto.employee.EmpAppStatusResponseDto;
 import com.lng.dto.employee.EmployeeDto;
 import com.lng.dto.employee.OtpResponseDto;
 import com.lng.dto.employee.ResponseDto;
 
+import status.StatusDto;
+
 @CrossOrigin(origins="*", maxAge=3600)
 @RestController
-@RequestMapping(value="/employee/setupone")
+@RequestMapping(value="/employee/setup")
 public class EmployeeSetup1Controller {
 
 	@Autowired
@@ -43,10 +44,10 @@ public class EmployeeSetup1Controller {
     }
 	
 	@PostMapping(value = "/updateEmpAppStatus")
-    public ResponseEntity<EmpAppStatusResponseDto> updateEmpAppStatus(@RequestBody EmployeeDto employeeDto) {
-		EmpAppStatusResponseDto empAppStatusResponseDto = employeeService.updateEmpAppStatus(employeeDto.getRefCustId(), employeeDto.getEmpId());
-        if (empAppStatusResponseDto !=null){
-            return new ResponseEntity<EmpAppStatusResponseDto>(empAppStatusResponseDto, HttpStatus.OK);
+    public ResponseEntity<StatusDto> updateEmpAppStatus(@RequestBody EmployeeDto employeeDto) {
+		StatusDto statusDto = employeeService.updateEmpAppStatus(employeeDto);
+        if (statusDto !=null){
+            return new ResponseEntity<StatusDto>(statusDto, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }

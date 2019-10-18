@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.controllers.empAppSetup;
+/*package com.lng.attendancecustomerservice.controllers.empAppSetup;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,4 +30,4 @@ public class EmployeeSetup2Controller {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
-}
+}*/

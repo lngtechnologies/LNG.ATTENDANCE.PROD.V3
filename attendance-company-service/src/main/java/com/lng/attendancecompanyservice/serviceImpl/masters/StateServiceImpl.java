@@ -12,8 +12,8 @@ import com.lng.attendancecompanyservice.entity.masters.State;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.service.masters.StateService;
-import com.lng.dto.state.StateDto;
-import com.lng.dto.state.StateResponse;
+import com.lng.dto.masters.state.StateDto;
+import com.lng.dto.masters.state.StateResponse;
 
 import status.Status;
 @Service

@@ -1,10 +1,10 @@
 package com.lng.attendancecustomerservice.service.empAppSetup;
 
-import com.lng.dto.employee.EmpAppStatusResponseDto;
 import com.lng.dto.employee.EmployeeDto;
-import com.lng.dto.employee.EmployeeSetup2Dto;
 import com.lng.dto.employee.OtpResponseDto;
 import com.lng.dto.employee.ResponseDto;
+
+import status.StatusDto;
 
 public interface EmployeeService {
 
@@ -14,9 +14,11 @@ public interface EmployeeService {
 	
 	OtpResponseDto generateOtp(Integer custId, Integer empId);
 	
-	EmpAppStatusResponseDto updateEmpAppStatus(Integer custId, Integer empId);
+	StatusDto updateEmpAppStatus(EmployeeDto employeeDto);
+	
+	//EmpAppStatusResponseDto updateEmpAppStatus(Integer custId, Integer empId);
 	
 	//Employee Application Setup Stage 2
-	EmpAppStatusResponseDto updateEmpAppStatusStageTwo(EmployeeSetup2Dto employeeSetup2Dto);
+   // EmpAppStatusResponseDto updateEmpAppStatusStageTwo(EmployeeSetup2Dto employeeSetup2Dto);
 	
 }

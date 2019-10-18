@@ -9,4 +9,6 @@ import com.lng.attendancecustomerservice.entity.masters.Customer;
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer> {
 
 	Customer getByCustCode(String custCode);
+	
+	Customer findCustomerByCustId(Integer custId);
 }

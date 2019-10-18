@@ -94,6 +94,13 @@ public class Customer {
 
 	@Column(name = "custCreatedDate")
 	private Date custCreatedDate;
+		
+	@Column(name = "custLogoFile")
+	private byte[] custLogoFile;
+	
+	@Column(name = "custGSTIN")
+	@Size(max = 50)
+	private String custGSTIN;
 
 	public Integer getCustId() {
 		return custId;
@@ -230,5 +237,23 @@ public class Customer {
 	public void setCustCreatedDate(Date custCreatedDate) {
 		this.custCreatedDate = custCreatedDate;
 	}
+
+	public byte[] getCustLogoFile() {
+		return custLogoFile;
+	}
+
+	public void setCustLogoFile(byte[] custLogoFile) {
+		this.custLogoFile = custLogoFile;
+	}
+
+	public String getCustGSTIN() {
+		return custGSTIN;
+	}
+
+	public void setCustGSTIN(String custGSTIN) {
+		this.custGSTIN = custGSTIN;
+	}
+	
+	
 
 }

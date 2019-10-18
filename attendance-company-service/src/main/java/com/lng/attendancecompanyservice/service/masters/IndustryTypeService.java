@@ -1,8 +1,8 @@
 package com.lng.attendancecompanyservice.service.masters;
 
-import com.lng.dto.IndustryType.IndustryTypeDto;
-import com.lng.dto.IndustryType.IndustryTypeListResponse;
-import com.lng.dto.IndustryType.IndustryTypeResponse;
+import com.lng.dto.masters.industryType.IndustryTypeDto;
+import com.lng.dto.masters.industryType.IndustryTypeListResponse;
+import com.lng.dto.masters.industryType.IndustryTypeResponse;
 
 import status.StatusDto;
 
