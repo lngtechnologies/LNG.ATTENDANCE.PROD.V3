@@ -16,7 +16,7 @@ import com.lng.dto.country.CountryResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
-@RequestMapping(value="/master")
+@RequestMapping(value="/master/country")
 public class CountryController {
 	@Autowired
 	CountryService countryService;

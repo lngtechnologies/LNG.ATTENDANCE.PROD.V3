@@ -16,7 +16,7 @@ import com.lng.dto.state.StateResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
-@RequestMapping(value="/master")
+@RequestMapping(value="/master/state")
 public class StateController {
 	@Autowired
 	StateService stateService;

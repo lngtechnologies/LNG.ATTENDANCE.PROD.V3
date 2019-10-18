@@ -74,11 +74,18 @@ public class CountryServiceImpl implements CountryService {
 		} else  {
 			return false;
 		}
+	}
+	
+	private Boolean CheckCoutryTelExistsForUpdate(String CountryTelCode, Integer cId) {
+		Country countryTel =  countryRepositary.findByCountryTelCode(CountryTelCode);
+
+		if(countryTel != null && cId != countryTel.getCountryId()) {
+			return true;
+		} else  {
+			return false;
+		}
 
 	}
-
-
-
 
 	@Override
 	public CountryResponse getAll() {
@@ -106,29 +113,24 @@ public class CountryServiceImpl implements CountryService {
 			Country country = countryRepositary.findCountryByCountryId(countryDto.getCountryId());			
 			if(CheckCountryExists(countryDto.getCountryName())) throw new Exception("Country already exists");
 
-			if(CheckCoutryTelExists(countryDto.getCountryTelCode())) throw new Exception("Country Tel code already exists");
-
+			if(CheckCoutryTelExistsForUpdate(countryDto.getCountryTelCode(), countryDto.getCountryId())) throw new Exception("Country Tel code already exists");
 
 			country = modelMapper.map(countryDto,Country.class);
 			countryRepositary.save(country);
 			status = new Status(false, 200, "Updated successfully");
-
-
 		}
-		
+
 		catch(Exception e) {
 			status = new Status(true, 4000, e.getMessage());
 		}
 		return status;
 	}
 
-
 	@Override 
 	public CountryResponse deleteByCountryId(Integer countryId) {
 		CountryResponse countryResponse=new CountryResponse(); 
 		//CountryDto  countryDto = new CountryDto();
 		try { 
-
 			//if(countryDto.getCountryId() == null || countryDto.getCountryId() == 0) throw new Exception("Country id is not found");
 			// Get state by countryId
 			List<State> state = stateRepository.findStateByCountryCountryId(countryId);
@@ -142,7 +144,7 @@ public class CountryServiceImpl implements CountryService {
 				else {
 					throw new Exception("CountryId Not Found");
 				}
-				
+
 			} else  {
 				countryResponse.status = new Status(true,400, "Cannot Delete");
 			}
@@ -154,15 +156,10 @@ public class CountryServiceImpl implements CountryService {
 		return countryResponse;
 	}
 
-
-
 	public CountryDto convertToCountryDto(Country country) {
 		CountryDto countryDto = modelMapper.map(country,CountryDto.class); 
 		countryDto.setCountryId(country.getCountryId());
 		return countryDto;
 	}
-
-
-
 
 }
