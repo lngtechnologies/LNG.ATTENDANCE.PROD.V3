@@ -1,11 +1,9 @@
 package com.lng.attendancecompanyservice.serviceImpl.authentication;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.lng.attendancecompanyservice.entity.authentication.Login;
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
+import com.lng.attendancecompanyservice.entity.masters.Login;
 import com.lng.attendancecompanyservice.repositories.authentication.ICustomerRepository;
 import com.lng.attendancecompanyservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecompanyservice.security.JwtTokenService;
@@ -90,11 +88,11 @@ public class LoginServiceImpl implements ILogin {
 			}
 
 			// Check user is active
-			if(user.getIsActive() != 1) throw new Exception("Please contact admin "+loginDto.getLoginName() + "is not active");
+			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+loginDto.getLoginName() + "is not active");
 
 			// Validate password else throw invalid details
 			//if(matches(loginDto.getLoginPassword(), user.loginPassword)) {
-			if(encoder.getEncoder().matches(loginDto.getLoginPassword(), user.loginPassword)) {
+			if(encoder.getEncoder().matches(loginDto.getLoginPassword(), user.getLoginPassword())) {
 
 				// Generate token and send user details to client 
 				response.data = new LoginDto(user.getLoginId(), user.getLoginName(), jwtTokenService.generateToken(user.getLoginName()).toString());
@@ -132,7 +130,7 @@ public class LoginServiceImpl implements ILogin {
 			if(user == null) throw new Exception(loginDto.getUserName() + " not found");
 			
 			// Check user is active
-			if(user.getIsActive() != 1) throw new Exception("Please contact admin "+loginDto.getUserName() + "is not active");
+			if(user.getLoginIsActive()== false) throw new Exception("Please contact admin "+loginDto.getUserName() + "is not active");
 			
 			// Check mobile exist
 			if(user.getLoginMobile() == null) throw new Exception("Mobile no doesn't exists. Unable to reset password.");
@@ -191,7 +189,7 @@ public class LoginServiceImpl implements ILogin {
 			if(user == null) throw new Exception(changePasswordDto.getUserName() + " not found");
 			
 			// Check user is active
-			if(user.getIsActive() != 1) throw new Exception("Please contact admin "+changePasswordDto.getUserName() + "is not active");
+			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+changePasswordDto.getUserName() + "is not active");
 
 			// Check customer validity
 			if(user != null && user.getRefCustId() != 0) {
@@ -208,7 +206,7 @@ public class LoginServiceImpl implements ILogin {
 
 			// Validate password else throw invalid details
 			//if(matches(changePasswordDto.getOldPassword(), user.loginPassword)) {
-			if(encoder.getEncoder().matches(changePasswordDto.getOldPassword(), user.loginPassword)) {
+			if(encoder.getEncoder().matches(changePasswordDto.getOldPassword(), user.getLoginPassword())) {
 
 				// set new password
 				String hashedPassword = encoder.getEncoder().encode(changePasswordDto.getNewPassword());

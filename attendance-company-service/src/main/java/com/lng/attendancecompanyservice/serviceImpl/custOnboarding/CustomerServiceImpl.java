@@ -52,12 +52,12 @@ public class CustomerServiceImpl implements CustomerService {
 	MessageUtil messageUtil = new MessageUtil();
 
 	Encoder Encoder = new Encoder();
-	
+
 	//Sms sms = new Sms();
 
 	//Email email = new Email();
-	
-	
+
+
 	/*
 	 * @Bean public BCryptPasswordEncoder getEncoder() { return new
 	 * BCryptPasswordEncoder(); }
@@ -67,37 +67,51 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	@Transactional(rollbackOn={Exception.class})
 	public StatusDto saveCustomer(CustomerDto customerDto) {
-		//CustomerDto customerDto1 = new CustomerDto();
+
 		StatusDto statusDto = new StatusDto();
 		try {
-			Customer customer = saveCustomerData(customerDto);
 
-			if(customer != null) {
-				Branch branch = setCustomerDetailsToBranch(customer);
+			Customer customer1 = customerRepository.findCustomerByCustEmail(customerDto.getCustEmail());
+			Customer customer2 = customerRepository.findCustomerByCustMobile(customerDto.getCustMobile());
+			Customer customer3 = new Customer();
 
-				if(branch != null) {
-					int custId = saveBranch(branch);
-					Login login = setCustomerToLogin(customer);
+			if(customer1 == null && customer2 == null) {
 
-					if(login != null) {
-						int loginId = saveLogin(login);
-					}
+				if(customer3.getCustCode() != customerDto.getCustCode()) {
+
+					Customer customer = saveCustomerData(customerDto);
+
+					Branch branch = setCustomerDetailsToBranch(customer);
+
+					if(branch != null) {
+						int custId = saveBranch(branch);
+
+						Login login = setCustomerToLogin(customer);
+
+						if(login != null) {
+							int loginId = saveLogin(login);
+						}
+					}			
+				} else {
+					statusDto.setCode(400);
+					statusDto.setError(true);
+					statusDto.setMessage("Customer Code Already Exist");
 				}
+				//send mail
+				customerDto.setCustCode(customerDto.getCustCode());
+				sendMailWithoutAttachments(customerDto);
+				statusDto.setCode(200);
+				statusDto.setError(false);
+				statusDto.setMessage("Successfully Saved");
+
+			}else {
+				statusDto.setCode(400);
+				statusDto.setError(true);
+				statusDto.setMessage("Customer Mobile Number or Email Already Exist");
 			}
 
-			//send mail
-			customerDto.setCustCode(customer.getCustCode());
-			sendMailWithoutAttachments(customerDto);
-
-			statusDto.setError(false);
-			statusDto.setCode(200);
-			statusDto.setMessage("Successfully saved");
 		} catch (Exception e) {
 
-			e.printStackTrace();
-			statusDto.setError(true);
-			statusDto.setCode(5000);
-			statusDto.setMessage("Something went wrong");
 		}
 		return statusDto;
 	}
@@ -326,7 +340,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	// Save to customer table
 	private Customer saveCustomerData(CustomerDto customerDto) {
-		StatusDto statusDto = new StatusDto();
+		CustomerResponse customerResponse = new CustomerResponse();
 		Customer customer = modelMapper.map(customerDto, Customer.class);
 
 
@@ -336,17 +350,14 @@ public class CustomerServiceImpl implements CustomerService {
 		customer.setCustCreatedDate(new Date());
 		customer.setCustCode(customerDto.getCustCode() + custCode);
 		customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));			
-
 		try {
-			if(customer.getCustCode() != customerDto.getCustCode()) {
-				customerRepository.save(customer);				
-			} 
+			
+				customer = customerRepository.save(customer);
+				customerResponse.data = customerDto;
+				
 		}catch (Exception e) {
-			statusDto.setError(true);
-			statusDto.setCode(4000);
-			statusDto.setMessage("Customer code exists");
+			e.printStackTrace();
 		}
-
 		return customer;
 	}
 
@@ -355,7 +366,7 @@ public class CustomerServiceImpl implements CustomerService {
 		byte[] decodedByte = Base64.getDecoder().decode(base64);
 		return decodedByte;
 	}
-	
+
 	// convert byte to base64
 	public  String byteTobase64(byte[] custLogoFile) {
 		String base64 = Base64.getEncoder().encodeToString(custLogoFile);
@@ -397,7 +408,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	// Call to Azure to create faceListId
 	/*public void callAzure() { 
-		
+
 		HttpClient httpclient = HttpClients.createDefault();
 
 		try { 
@@ -436,7 +447,7 @@ public class CustomerServiceImpl implements CustomerService {
 	//Set Customer to Login 
 	private Login setCustomerToLogin(Customer customer){
 		Login login = new Login();
-		login.setRefCustId(customer.getCustId());;
+		login.setRefCustId(customer.getCustId());
 		login.setLoginName(customer.getCustName());
 		login.setLoginMobile(customer.getCustMobile());
 		login.setLoginIsActive(true);
@@ -448,7 +459,7 @@ public class CustomerServiceImpl implements CustomerService {
 	private int saveLogin(Login login){
 		//CustomerDto customerDto = new CustomerDto();
 		String randomPassword = loginRepository.generatePassword();
-		login.setLoginPssword(Encoder.getEncoder().encode(randomPassword));
+		login.setLoginPassword(Encoder.getEncoder().encode(randomPassword));
 		loginRepository.save(login);
 		String mobileNo = login.getLoginMobile();
 		String mobileSmS = "Welcome to Attendance System, Your Login Password is : "+ randomPassword;	
@@ -559,6 +570,34 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerResponse;
 	}
 
+	// Search customer by name or code 
+	@Override
+	public CustomerListResponse searchCustByNameOrCode(String cust) {
+		CustomerListResponse customerListResponse = new CustomerListResponse();
+		try {
+			if(cust.length() >= 3 && cust.length() <= 10) {
+
+				List<Customer> customerDtoList = customerRepository.searchAllCustomerByNameOrCode(cust);
+
+				customerListResponse.setDataList(customerDtoList.stream().map(customer -> convertToCustomerDtoTwo(customer)).collect(Collectors.toList()));
+
+				if(customerListResponse != null && customerListResponse.getDataList() != null) {
+					customerListResponse.status = new Status(false, 2000, "Success");
+				}else {
+					customerListResponse.status = new Status(true, 4000, "Not Found");
+				}
+			}else {
+				customerListResponse.status = new Status(true, 4000, "Data too long or too less");
+			}
+		}
+		catch (Exception e) {
+
+			customerListResponse.status = new Status(true, 5000, "Something went wrong");
+		}
+		return customerListResponse;
+	}
+
+
 	public CustomerDto convertToCustomerDto(Customer customer) {
 		CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class);
 
@@ -578,4 +617,6 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDtoTwo.setIndustryName(customer.getIndustryType().getIndustryName());
 		return customerDtoTwo;
 	}
+
+
 }

@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.lng.attendancecompanyservice.entity.authentication.Login;
+import com.lng.attendancecompanyservice.entity.masters.Login;
+
+
 
 @Repository
 public interface ILoginRepository extends JpaRepository<Login, Integer> {

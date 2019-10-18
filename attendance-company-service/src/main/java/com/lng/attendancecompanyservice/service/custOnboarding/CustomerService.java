@@ -18,5 +18,7 @@ public interface CustomerService {
 	CustomerResponse updateCustomerByCustomerId(CustomerDto customerDto);
 	
 	CustomerResponse deleteCustomerByCustomerId(int custId);
+	
+	CustomerListResponse searchCustByNameOrCode(String cust);
 
 }

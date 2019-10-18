@@ -7,6 +7,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
+import com.lng.dto.customer.CustomerDto;
+import com.lng.dto.customer.CustomerDtoTwo;
 
 @Repository
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer> {
@@ -17,5 +19,14 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	
 	@Query(value = "CALL generateCustCode()", nativeQuery = true)
 	String generateCustCode();
+	
+	@Query(value = "CALL searchCustomerByNameAndCode(?1)", nativeQuery = true)
+	List<Customer> searchAllCustomerByNameOrCode(String cust);
+	
+	Customer findCustomerByCustEmail(String custEmail);
+	
+	Customer findCustomerByCustMobile(String custMobile);
+	
+	List<Customer> findCustomerByIndustryType_IndustryId(Integer industryId);
 	
 }

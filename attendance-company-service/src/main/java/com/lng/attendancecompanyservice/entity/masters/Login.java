@@ -13,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
 
 @Entity
@@ -40,7 +41,8 @@ public class Login {
 	@Size(max = 100)
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginPassword")
-	private String loginPssword;
+	@JsonIgnore
+	private String loginPassword;
 
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginIsActive")
@@ -57,8 +59,6 @@ public class Login {
 	public void setLoginId(Integer loginId) {
 		this.loginId = loginId;
 	}
-
-	
 
 	public Integer getRefCustId() {
 		return refCustId;
@@ -84,12 +84,12 @@ public class Login {
 		this.loginMobile = loginMobile;
 	}
 
-	public String getLoginPssword() {
-		return loginPssword;
+	public String getLoginPassword() {
+		return loginPassword;
 	}
 
-	public void setLoginPssword(String loginPssword) {
-		this.loginPssword = loginPssword;
+	public void setLoginPassword(String loginPassword) {
+		this.loginPassword = loginPassword;
 	}
 
 	public Boolean getLoginIsActive() {

@@ -17,9 +17,6 @@ import com.lng.dto.customer.CustomerResponse;
 import com.lng.dto.customer.StatusDto;
 
 
-
-
-
 /**
  * @author : Rahul.
  * @Created Date : 25-09-2019.
@@ -79,6 +76,15 @@ public class CustomerController {
 	    }
 	    return new ResponseEntity(HttpStatus.NO_CONTENT);
 	  }
+	
+	@PostMapping(value = "/searchCustByNameOrCode")
+	public ResponseEntity<CustomerListResponse> searchByCustNameOrCode(@RequestBody String cust) {
+		CustomerListResponse customerListResponse = customerService.searchCustByNameOrCode(cust); 
+       if(customerListResponse.getDataList().isEmpty()) {
+           return new ResponseEntity(HttpStatus.NO_CONTENT);
+       }
+       return new ResponseEntity<CustomerListResponse>(customerListResponse, HttpStatus.OK);
+   }
 	
 	@GetMapping(value="/test")
 	public String get() {
