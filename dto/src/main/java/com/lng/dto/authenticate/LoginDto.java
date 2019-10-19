@@ -8,15 +8,27 @@ package com.lng.dto.authenticate;
  */
 public class LoginDto {
 
-	private Integer loginId;	
+	private Integer loginId;
+	private Integer refCustId;
 	private String loginName;
 	private String token;
 	
-	public LoginDto(Integer id, String name, String token) {
+	public LoginDto(Integer id, Integer custId, String name, String token) {
 		this.loginId = id;
+		this.refCustId = custId;
 		this.loginName = name;
 		this.token = token;
 	}
+	
+	public Integer getRefCustId() {
+		return refCustId;
+	}
+
+	public void setRefCustId(Integer refCustId) {
+		this.refCustId = refCustId;
+	}
+
+
 
 	public String getLoginName() {
 		return loginName;

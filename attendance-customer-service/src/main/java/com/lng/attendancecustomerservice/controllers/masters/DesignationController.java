@@ -16,7 +16,7 @@ import com.lng.dto.masters.designation.DesignationResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
-@RequestMapping(value="/master")
+@RequestMapping(value="/master/designation")
 public class DesignationController {
 	@Autowired
 	DesignationService designationService;
