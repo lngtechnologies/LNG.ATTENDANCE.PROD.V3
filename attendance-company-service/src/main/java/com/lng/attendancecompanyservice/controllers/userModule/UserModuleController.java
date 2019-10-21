@@ -20,7 +20,7 @@ import com.lng.dto.userModule.Param;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping(value="/user")
+@RequestMapping(value="/module/user")
 public class UserModuleController {
 	
 	@Autowired

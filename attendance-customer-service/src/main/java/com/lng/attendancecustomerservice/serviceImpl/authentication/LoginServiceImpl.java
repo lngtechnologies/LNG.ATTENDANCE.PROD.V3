@@ -93,7 +93,7 @@ public class LoginServiceImpl implements ILogin {
 			if(getEncoder().matches(loginDto.getLoginPassword(), user.loginPassword)) {
 
 				// Generate token and send user details to client 
-				response.data = new LoginDto(user.getLoginId(), user.getLoginName(), jwtTokenService.generateToken(user.getLoginName()).toString());
+				response.data = new LoginDto(user.getLoginId(),user.getRefCustId(), user.getLoginName(), jwtTokenService.generateToken(user.getLoginName()).toString());
 				response.status = new Status(false,200,"success");
 
 			} else {

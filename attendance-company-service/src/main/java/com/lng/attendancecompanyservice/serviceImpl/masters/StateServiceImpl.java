@@ -40,7 +40,6 @@ public class StateServiceImpl implements StateService {
 				response.status = new Status(false,200, "successfully created");
 			}
 
-
 		}catch(Exception ex){
 			response.status = new Status(true,3000, ex.getMessage()); 
 		}
