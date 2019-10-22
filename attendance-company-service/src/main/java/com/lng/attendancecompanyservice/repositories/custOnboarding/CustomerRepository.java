@@ -23,10 +23,12 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	@Query(value = "CALL searchCustomerByNameAndCode(?1)", nativeQuery = true)
 	List<Customer> searchAllCustomerByNameOrCode(String cust);
 	
-	Customer findCustomerByCustEmail(String custEmail);
+	List<Customer> findCustomerByCustEmail(String custEmail);
 	
-	Customer findCustomerByCustMobile(String custMobile);
+	List<Customer> findCustomerByCustMobile(String custMobile);
 	
 	List<Customer> findCustomerByIndustryType_IndustryId(Integer industryId);
+	
+	Customer findCustomerByCustCode(String custCode);
 	
 }

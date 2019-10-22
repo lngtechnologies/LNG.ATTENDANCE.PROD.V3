@@ -12,7 +12,9 @@
 	<groupId>com.lng</groupId>
 	<artifactId>attendance-customer-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	
 	<packaging>war</packaging>
+	
 	<name>attendance-customer-service</name>
 	<description>Demo project for Spring Boot</description>
 

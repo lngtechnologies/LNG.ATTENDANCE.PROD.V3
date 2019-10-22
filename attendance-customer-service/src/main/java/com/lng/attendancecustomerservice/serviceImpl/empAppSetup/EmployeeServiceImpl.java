@@ -55,7 +55,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					byte[] custLogo = employee.getCustomer().getCustLogoFile();
 					String base64CustLogo = byteTobase64(custLogo);
 					response.status = new Status(false,200,"success");
-					response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrCode(), employee.getEmpId(), employee.getEmpName(), base64CustLogo);					
+					response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrCode(), employee.getEmpId(), employee.getEmpName(), employee.getEmpPresistedFaceId(), employee.getEmpAppSetupStatus(), base64CustLogo);					
 				}
 			} else {
 				throw new Exception("Invalid Data");

@@ -9,4 +9,6 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch, Int
 
 	@Query(value = "CALL generateBranchCodeForCustomer(?1)", nativeQuery = true)
 	String generateBranchForCustomer(Integer custId);
+	
+	Branch findBranchByBrId(Integer brId);
 }

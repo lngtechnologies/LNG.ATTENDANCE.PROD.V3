@@ -18,7 +18,7 @@ import status.StatusDto;
 
 @CrossOrigin(origins="*", maxAge=3600)
 @RestController
-@RequestMapping(value="/beacon")
+@RequestMapping(value="/master/beacon")
 public class BeaconController {
 
 	@Autowired
