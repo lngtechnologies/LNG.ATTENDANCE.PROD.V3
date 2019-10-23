@@ -26,6 +26,7 @@ import com.lng.attendancecustomerservice.repositories.masters.EmployeeDesignatio
 import com.lng.attendancecustomerservice.repositories.masters.EmployeeShiftRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.masters.CustEmployeeService;
+import com.lng.attendancecustomerservice.utils.Encoder;
 import com.lng.dto.employee.EmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 
@@ -35,6 +36,8 @@ import status.StatusDto;
 public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 	ModelMapper modelMapper = new ModelMapper();
+	
+	Encoder encoder = new Encoder();
 
 	@Autowired
 	CustEmployeeRepository custEmployeeRepository;
@@ -154,6 +157,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 		Employee employee = modelMapper.map(custEmployeeDto, Employee.class);
 		try {
+			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
+			employee.setEmpInService(true);
+			employee.setEmpPassword(encoder.getEncoder().encode(branch.getBrCode()));
 			employee = custEmployeeRepository.save(employee);
 		}catch (Exception e) {
 			e.printStackTrace();

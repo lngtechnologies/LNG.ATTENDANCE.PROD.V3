@@ -1,24 +1,36 @@
 package com.lng.dto.masters.custEmployee;
 
+import java.util.Date;
+
 public class CustEmployeeDto {
-	
+
 	private Integer custId;
-	
+
 	private String empName;
-	
+
+	private String empMobile;
+
+	private String empPassword;
+
+	private String empGender;
+
+	private Boolean empInService;
+
 	private Integer brId;
-	
+
 	private Integer shiftId;
-	
+
 	private Integer deptartmentId;
-	
+
 	private Integer designationId;
-	
+
 	private Integer empTypeId;
-	
+
 	private Integer contractorId;
-	
+
 	private Integer reportingToId;
+
+	private Date empJoiningDate;
 
 	public Integer getCustId() {
 		return custId;
@@ -34,6 +46,38 @@ public class CustEmployeeDto {
 
 	public void setEmpName(String empName) {
 		this.empName = empName;
+	}
+
+	public String getEmpMobile() {
+		return empMobile;
+	}
+
+	public void setEmpMobile(String empMobile) {
+		this.empMobile = empMobile;
+	}
+
+	public String getEmpPassword() {
+		return empPassword;
+	}
+
+	public void setEmpPassword(String empPassword) {
+		this.empPassword = empPassword;
+	}
+
+	public String getEmpGender() {
+		return empGender;
+	}
+
+	public void setEmpGender(String empGender) {
+		this.empGender = empGender;
+	}
+
+	public Boolean getEmpInService() {
+		return empInService;
+	}
+
+	public void setEmpInService(Boolean empInService) {
+		this.empInService = empInService;
 	}
 
 	public Integer getBrId() {
@@ -92,5 +136,12 @@ public class CustEmployeeDto {
 		this.reportingToId = reportingToId;
 	}
 
+	public Date getEmpJoiningDate() {
+		return empJoiningDate;
+	}
+
+	public void setEmpJoiningDate(Date empJoiningDate) {
+		this.empJoiningDate = empJoiningDate;
+	}
 
 }

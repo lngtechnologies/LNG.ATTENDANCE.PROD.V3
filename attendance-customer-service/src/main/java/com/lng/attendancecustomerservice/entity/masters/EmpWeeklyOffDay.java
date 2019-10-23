@@ -12,13 +12,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ttempmonthlynoofday")
-public class MonthlyNoOfDays {
+@Table(name = "ttempweeklyoffday")
+public class EmpWeeklyOffDay {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "empMonthlyNoOfDayId")
-	private Integer empMonthlyNoOfDayId;
+	@Column(name = "empWeeklyOffDayId")
+	private Integer empWeeklyOffDayId;
 	
 	@ManyToOne
 	@JoinColumn(name = "refEmpId")
@@ -27,15 +27,21 @@ public class MonthlyNoOfDays {
 	@Column(name = "yearMonth")
 	private Date yearMonth;
 	
-	@Column(name = "noOfDays")
-	private Integer noOfDays;
+	@Column(name = "dayOfWeek")
+	private String dayOfWeek;
+	
+	@Column(name = "fromDate")
+	private Date fromDate;
+	
+	@Column(name = "toDate")
+	private Date toDate;
 
-	public Integer getEmpMonthlyNoOfDayId() {
-		return empMonthlyNoOfDayId;
+	public Integer getEmpWeeklyOffDayId() {
+		return empWeeklyOffDayId;
 	}
 
-	public void setEmpMonthlyNoOfDayId(Integer empMonthlyNoOfDayId) {
-		this.empMonthlyNoOfDayId = empMonthlyNoOfDayId;
+	public void setEmpWeeklyOffDayId(Integer empWeeklyOffDayId) {
+		this.empWeeklyOffDayId = empWeeklyOffDayId;
 	}
 
 	public Employee getEmployee() {
@@ -54,12 +60,28 @@ public class MonthlyNoOfDays {
 		this.yearMonth = yearMonth;
 	}
 
-	public Integer getNoOfDays() {
-		return noOfDays;
+	public String getDayOfWeek() {
+		return dayOfWeek;
 	}
 
-	public void setNoOfDays(Integer noOfDays) {
-		this.noOfDays = noOfDays;
+	public void setDayOfWeek(String dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
 	}
 
 }
