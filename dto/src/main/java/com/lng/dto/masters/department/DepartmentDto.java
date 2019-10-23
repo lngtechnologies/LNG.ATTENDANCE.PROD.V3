@@ -1,5 +1,7 @@
 package com.lng.dto.masters.department;
 
+import java.util.List;
+
 public class DepartmentDto {
 	private Integer deptId;
 	private Integer refCustId;

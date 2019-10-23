@@ -10,14 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.lng.attendancecustomerservice.entity.masters.Branch;
-import com.lng.attendancecustomerservice.entity.masters.Contractor;
-import com.lng.attendancecustomerservice.entity.masters.Customer;
-import com.lng.attendancecustomerservice.entity.masters.EmployeeType;
-import com.lng.attendancecustomerservice.entity.masters.Shift;
 
 @Entity
 @Table(name = "tmemployee")
@@ -50,29 +43,29 @@ public class Employee {
 
 	@Column(name = "empName")
 	@Size(max = 50)
-	@NotNull(message = "This field should not be an empty")
+	// @NotNull(message = "This field should not be an empty")
 	private String empName;
 
 	@Column(name = "empMobile")
 	@Size(max = 10)
-	@NotNull(message = "This field should not be an empty")
+	// @NotNull(message = "This field should not be an empty")
 	private String empMobile;
 
 	@Column(name = "empPassword")
 	@Size(max = 50)
-	@NotNull(message = "This field should not be an empty")
+	// @NotNull(message = "This field should not be an empty")
 	private String empPassword;
 
 	@Column(name = "empGender")
 	@Size(max = 1)
-	@NotNull(message = "This field should not be an empty")
+	// @NotNull(message = "This field should not be an empty")
 	private String empGender;
 
 	@Column(name = "empInService")
 	private Boolean empInService;
 
 	@Column(name = "empReportingTo")
-	@NotNull(message = "This field should not be an empty")
+	// @NotNull(message = "This field should not be an empty")
 	private Integer empReportingTo;
 
 	@Column(name = "empJoiningDate")

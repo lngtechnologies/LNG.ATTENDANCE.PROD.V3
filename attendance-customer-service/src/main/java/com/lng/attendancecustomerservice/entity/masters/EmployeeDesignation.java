@@ -10,35 +10,36 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 @Entity
-@Table(name="ttempdept")
-public class EmployeeDepartment {
-	
+@Table(name = "ttempdesignation")
+public class EmployeeDesignation {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "empDeptId")
-	private Integer empDeptId;
+	@Column(name = "empDesgnId")
+	private Integer empDesgnId;
 	
 	@ManyToOne
 	@JoinColumn(name = "refEmpId")
 	private Employee employee;
 	
 	@ManyToOne
-	@JoinColumn(name = "refDeptId")
-	private Department department;
+	@JoinColumn(name = "refDesignationId")
+	private Designation designation;
 	
 	@Column(name = "empFromDate")
 	private Date empFromDate;
 	
 	@Column(name = "empToDate")
-	private Date  empToDate;
+	private Date empToDate;
 
-	public Integer getEmpDeptId() {
-		return empDeptId;
+	public Integer getEmpDesgnId() {
+		return empDesgnId;
 	}
 
-	public void setEmpDeptId(Integer empDeptId) {
-		this.empDeptId = empDeptId;
+	public void setEmpDesgnId(Integer empDesgnId) {
+		this.empDesgnId = empDesgnId;
 	}
 
 	public Employee getEmployee() {
@@ -49,12 +50,12 @@ public class EmployeeDepartment {
 		this.employee = employee;
 	}
 
-	public Department getDepartment() {
-		return department;
+	public Designation getDesignation() {
+		return designation;
 	}
 
-	public void setDepartment(Department department) {
-		this.department = department;
+	public void setDesignation(Designation designation) {
+		this.designation = designation;
 	}
 
 	public Date getEmpFromDate() {
@@ -72,5 +73,5 @@ public class EmployeeDepartment {
 	public void setEmpToDate(Date empToDate) {
 		this.empToDate = empToDate;
 	}
-	
+
 }

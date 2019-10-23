@@ -3,6 +3,9 @@ package com.lng.dto.masters.contractor;
 public class ContractorDto {
 	private Integer contractorId;
 	private String contractorName;
+	private Integer  refCustId;
+	private String  custName;
+
 	public Integer getContractorId() {
 		return contractorId;
 	}
@@ -14,6 +17,18 @@ public class ContractorDto {
 	}
 	public void setContractorName(String contractorName) {
 		this.contractorName = contractorName;
+	}
+	public Integer getRefCustId() {
+		return refCustId;
+	}
+	public void setRefCustId(Integer refCustId) {
+		this.refCustId = refCustId;
+	}
+	public String getCustName() {
+		return custName;
+	}
+	public void setCustName(String custName) {
+		this.custName = custName;
 	}
 
 

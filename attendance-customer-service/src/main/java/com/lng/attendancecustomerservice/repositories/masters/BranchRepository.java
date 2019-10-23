@@ -8,4 +8,6 @@ import com.lng.attendancecustomerservice.entity.masters.Branch;
 public interface BranchRepository extends PagingAndSortingRepository<Branch,Integer> {
 	
 	Branch findBranchByBrId(Integer brId);
+	
+	Branch findBranchByCustomer_custId(Integer custId);
 }

@@ -39,7 +39,7 @@ public class ShiftDto {
 	public void setShiftEnd(String shiftEnd) {
 		this.shiftEnd = shiftEnd;
 	}
-	
+
 	public String getBrName() {
 		return brName;
 	}
@@ -47,6 +47,6 @@ public class ShiftDto {
 		this.brName = brName;
 	}
 
-    
+
 
 }

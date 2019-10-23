@@ -17,4 +17,10 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 
 	@Query(value = "CALL DepartmentIdIsExistOrNot(?1)",nativeQuery = true)
 	int  findEmployeeDepartmentByDepartmentDeptId(int deptId);
+	
+	@Query(value = "CALL CheckCustomerExistForDepartment(?1, ?2)",nativeQuery = true)
+	int  findByRefCustIdAndDeptName(Integer refCustId,String deptName);
+	
+	
+	Department findDepartmentBydeptNameAndCustomer_custId(String deptName, int custId);
 }

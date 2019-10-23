@@ -97,26 +97,31 @@ public class ShiftServiceImpl implements ShiftService {
 			if(shiftDto.getShiftId() == null || shiftDto.getShiftId() == 0) throw new Exception("Shift id is null or zero");
 			if(shiftDto.getRefBrId() == null || shiftDto.getRefBrId() == 0) throw new Exception("RefBranchId id is null or zero");
 			Shift 	shift = shiftRepository.findShiftByShiftId(shiftDto.getShiftId());
+
 			Branch branch = branchRepository.findBranchByBrId(shiftDto.getRefBrId());
 			if(branch != null) {
-			int b = shiftRepository.findByRefBrIdAndShiftName(shiftDto.getRefBrId(), shiftDto.getShiftName());
-			   if(b == 0) {
-			//if(CheckShiftExists(shiftDto.getShiftName())) throw new Exception("Shift already exists");
+				Shift sh = shiftRepository.findShiftByshiftNameAndBranch_brId(shiftDto.getShiftName(), shiftDto.getRefBrId());
+				if(sh == null) {	
 
+					shift = modelMapper.map(shiftDto,Shift.class);
+					shift.setBranch(branch);
+					shiftRepository.save(shift);
+					status = new Status(false, 200, "Updated successfully");
+				} else if (sh.getShiftId() == shiftDto.getShiftId()) { 
 
-			shift = modelMapper.map(shiftDto,Shift.class);
-			shift.setBranch(branch);
-			shiftRepository.save(shift);
-			status = new Status(false, 200, "Updated successfully");
-			   }
-		         else{ 
-		 		status = new Status(true,400,"ShiftName already exist for Customer :" + shiftDto.getRefBrId());
-		 		}
+					shift = modelMapper.map(shiftDto,Shift.class);
+					shift.setBranch(branch);
+					shiftRepository.save(shift);
+					status = new Status(false, 200, "Updated successfully");
+				}
+				else{ 
+					status = new Status(true,400,"ShiftName already exist for Customer :" + shiftDto.getRefBrId());
+				}
 			}
-		
+
 			else {
 				status = new Status(false, 200, "BranchId Not Found");
-				
+
 			}
 		}
 		catch(Exception e) {
@@ -185,7 +190,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 		}
 		response.setData(shiftDtoList);
-		response.status = new Status(false,4000, "BranchId not Found");
+		//response.status = new Status(false,4000, "BranchId not Found");
 		return response;
 	}
 

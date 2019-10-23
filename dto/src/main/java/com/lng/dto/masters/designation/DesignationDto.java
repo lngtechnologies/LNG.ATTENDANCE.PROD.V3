@@ -33,4 +33,5 @@ public class DesignationDto {
 	public void setCustName(String custName) {
 		this.custName = custName;
 	}
+	
 }

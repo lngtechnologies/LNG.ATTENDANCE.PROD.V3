@@ -92,6 +92,7 @@ public class BlockServiceImpl implements BlockService {
 	}
 
 
+
 	@Override
 	public Status updateBlockByBlkId(BlockDto blockDto) {
 		Status status = null;
@@ -99,11 +100,17 @@ public class BlockServiceImpl implements BlockService {
 			if(blockDto.getBlkName() == null || blockDto.getBlkName().isEmpty()) throw new Exception("Please enter Block name");
 			if(blockDto.getBlkId() == null || blockDto.getBlkId() == 0) throw new Exception("Block id is null or zero");
 			if(blockDto.getRefBranchId() == null || blockDto.getRefBranchId() == 0) throw new Exception("RefCoustomerId id is null or zero");
-			Block 	block = blockRepository.findBlockByblkId(blockDto.getBlkId())	;		
+			Block block = blockRepository.findBlockByblkId(blockDto.getBlkId())	;	
 			Branch branch = branchRepository.findBranchByBrId(blockDto.getRefBranchId());
 			if(branch != null) {
-				int b = blockRepository.findByRefBranchIdAndBlkName(blockDto.getRefBranchId(), blockDto.getBlkName());
-				if(b == 0) {
+				Block bl = blockRepository.findBlockhByblkLogicalNameAndBranch_brId(blockDto.getBlkLogicalName(), blockDto.getRefBranchId());
+				if(bl == null) {
+					block = modelMapper.map(blockDto,Block.class);
+					block.setBranch(branch);
+					block.setBlkCreatedDate(new Date());
+					blockRepository.save(block);
+					status = new Status(false, 200, "Updated successfully");
+				} else if (bl.getBlkId() == blockDto.getBlkId()) { 
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
 					block.setBlkCreatedDate(new Date());
@@ -135,7 +142,7 @@ public class BlockServiceImpl implements BlockService {
 
 			int b = blockRepository.findEmployeeBlockByBlockBlkId(blkId);
 			if(b == 0) {
-				 block = blockRepository.findBlockByblkId(blkId);
+				block = blockRepository.findBlockByblkId(blkId);
 				if(block != null) {
 					blockRepository.delete(block);					
 					response.status = new Status(false,200, "successfully deleted");

@@ -32,21 +32,24 @@ public class DepartmentServiceImpl  implements DepartmentService {
 		try{
 			if(departmentDto.getDeptName() == null || departmentDto.getDeptName().isEmpty()) throw new Exception("Please enter Department name");
 
-			if(CheckDepartmentExists(departmentDto.getDeptName())) throw new Exception("Department already exists");
-
-			Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
-			if(customer != null) {
-				if(departmentDto.getDeptName() != null) {
+			int a = departmentRepository.findByRefCustIdAndDeptName(departmentDto.getRefCustId(), departmentDto.getDeptName());
+			if(a == 0) {
+				Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
+				if(customer != null) {
 
 					Department department = new Department();
 					department.setCustomer(customer);
 					department.setDeptName(departmentDto.getDeptName());
 					departmentRepository.save(department);
 					response.status = new Status(false,200, "successfully created");
-				}	
+
+				}
+				else{ 
+					response.status = new Status(true,400, "CustomerId Not Found");
+				}
 			}
-			else {
-				response.status = new Status(false,200, "Customer Not Exist");
+			else{ 
+				response.status = new Status(true,400,"DepartmentName already exist for branch :" + departmentDto.getRefCustId());
 			}
 
 		}catch(Exception ex){
@@ -56,14 +59,11 @@ public class DepartmentServiceImpl  implements DepartmentService {
 		return response;
 	}
 
-	private Boolean CheckDepartmentExists(String departmentName) {
-		Department department =  departmentRepository.findByDepartmentName(departmentName);
-		if(department != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	/*
+	 * private Boolean CheckDepartmentExists(String departmentName) { Department
+	 * department = departmentRepository.findByDepartmentName(departmentName);
+	 * if(department != null) { return true; } else { return false; } }
+	 */
 	@Override
 	public DepartmentResponse getAll() {
 		DepartmentResponse response = new DepartmentResponse();
@@ -82,19 +82,38 @@ public class DepartmentServiceImpl  implements DepartmentService {
 	@Override
 	public Status updateDepartmentByDepartmentId(DepartmentDto departmentDto) {
 		Status status = null;
+		//DepartmentResponse response = new DepartmentResponse();
 		try {
 			if(departmentDto.getDeptName() == null || departmentDto.getDeptName().isEmpty()) throw new Exception("Please enter Department name");
 			if(departmentDto.getDeptId() == null || departmentDto.getDeptId() == 0) throw new Exception("Department id is null or zero");
 			if(departmentDto.getRefCustId() == null || departmentDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
-			Department department = departmentRepository.findDepartmentByDeptId(departmentDto.getDeptId());		
-			if(CheckDepartmentExists(departmentDto.getDeptName())) throw new Exception("Department already exists");
 
+			Department department = departmentRepository.findDepartmentByDeptId(departmentDto.getDeptId());	
+			Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
+			if(customer != null) {
+				Department de = departmentRepository.findDepartmentBydeptNameAndCustomer_custId(departmentDto.getDeptName(), departmentDto.getRefCustId());
+				if(de == null) {
 
-			department = modelMapper.map(departmentDto,Department.class);
-			departmentRepository.save(department);
-			status = new Status(false, 200, "Updated successfully");
+					department = modelMapper.map(departmentDto,Department.class);
+					department.setCustomer(customer);
+					departmentRepository.save(department);
+					status = new Status(false, 200, "Updated successfully");
+				} else if (de.getDeptId() == departmentDto.getDeptId()) { 
 
+					department = modelMapper.map(departmentDto,Department.class);
+					department.setCustomer(customer);
+					departmentRepository.save(department);
+					status = new Status(false, 200, "Updated successfully");
+				}
+				else{ 
+					status = new Status(true,400,"DepartmentName already exist for Customer :" + departmentDto.getRefCustId());
+				}
+			}
 
+			else {
+				status = new Status(false, 200, "CustomerId Not Found");
+
+			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 4000, e.getMessage());

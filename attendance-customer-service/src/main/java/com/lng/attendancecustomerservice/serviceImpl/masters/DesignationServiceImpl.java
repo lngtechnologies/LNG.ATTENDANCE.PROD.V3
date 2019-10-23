@@ -30,11 +30,11 @@ public class DesignationServiceImpl implements DesignationService{
 		try{
 			if(designationDto.getDesignationName() == null || designationDto.getDesignationName().isEmpty()) throw new Exception("Please enter Designation name");
 
-			if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation Name already exists");
-
-			Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
-			if(customer != null) {
-				if(designationDto.getDesignationName() != null) {
+			//if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation Name already exists");
+			int a  = designationRepository.findByRefCustIdAndDesignationName(designationDto.getRefCustId(), designationDto.getDesignationName());
+			if(a == 0) {
+				Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
+				if(customer != null) {
 
 					Designation designation = new Designation();
 					designation.setCustomer(customer);
@@ -42,11 +42,12 @@ public class DesignationServiceImpl implements DesignationService{
 					designationRepository.save(designation);
 					response.status = new Status(false,200, "successfully created");
 				}
-
+				else{ 
+					response.status = new Status(true,400, "CustomerId Not Found");
+				}
 			}
-
-			else {
-				response.status = new Status(false,200, "Customer Not Exist");
+			else{ 
+				response.status = new Status(true,400,"DesignationName already exist for Customer :" + designationDto.getRefCustId());
 			}
 		}catch(Exception e){
 			response.status = new Status(true, 4000, e.getMessage());
@@ -55,14 +56,11 @@ public class DesignationServiceImpl implements DesignationService{
 		return response;
 	}
 
-	private Boolean CheckDesignationExists(String designationName) {
-		Designation designation =  designationRepository.findByDesignationName(designationName);
-		if(designation != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+	/*
+	 * private Boolean CheckDesignationExists(String designationName) { Designation
+	 * designation = designationRepository.findByDesignationName(designationName);
+	 * if(designation != null) { return true; } else { return false; } }
+	 */
 	@Override
 	public DesignationResponse getAll() {
 		DesignationResponse response = new DesignationResponse();
@@ -85,14 +83,32 @@ public class DesignationServiceImpl implements DesignationService{
 			if(designationDto.getDesignationId() == null || designationDto.getDesignationId() == 0) throw new Exception("Designation id is null or zero");
 			if(designationDto.getRefCustId() == null || designationDto.getRefCustId() == 0) throw new Exception("RefCustomerId id is null or zero");
 			Designation 	designation = designationRepository.findDesignationByDesignationId(designationDto.getDesignationId())	;		
-			if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation already exists");
+			//if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation already exists");
+			Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
+			if(customer != null) {
+				Designation de = designationRepository.findDesignationBydesignationNameAndCustomer_custId(designationDto.getDesignationName(), designationDto.getRefCustId());
+				if(de == null) {
+					designation.setCustomer(customer);
+					designation.setDesignationName(designationDto.getDesignationName());
+					designationRepository.save(designation);
+					status = new Status(false,200, "Updated successfully");
+				} else if (de.getDesignationId() == designationDto.getDesignationId()) { 
 
+					designation.setCustomer(customer);
+					designation.setDesignationName(designationDto.getDesignationName());
+					designationRepository.save(designation);
+					status = new Status(false,200, "Updated successfully");
 
-			designation = modelMapper.map(designationDto,Designation.class);
-			designationRepository.save(designation);
-			status = new Status(false, 200, "Updated successfully");
+				}
+				else{ 
+					status = new Status(true,400,"DesignationName already exist for Customer :" + designationDto.getRefCustId());
+				}
+			}
 
+			else {
+				status = new Status(false, 200, "CustomerId Not Found");
 
+			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 4000, e.getMessage());
@@ -120,7 +136,7 @@ public class DesignationServiceImpl implements DesignationService{
 					designationRepository.delete(designation);					
 					designationResponse.status = new Status(false,200, "successfully deleted");
 				}
-				
+
 			} else  {
 				designationResponse.status = new Status(true,400, "Cannot Delete");
 			}

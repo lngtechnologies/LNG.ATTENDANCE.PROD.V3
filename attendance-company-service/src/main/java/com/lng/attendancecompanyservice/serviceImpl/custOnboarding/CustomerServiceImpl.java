@@ -70,7 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 		StatusDto statusDto = new StatusDto();
 		Login login = new Login();
-		
+
 		try {
 
 			List<Customer> customerList1 = customerRepository.findCustomerByCustEmail(customerDto.getCustEmail());
@@ -538,7 +538,7 @@ public class CustomerServiceImpl implements CustomerService {
 				customer.setCustPincode(customerDto.getCustPincode());
 				customer.setCustValidityEnd(customerDto.getCustValidityEnd());
 				customer.setCustValidityStart(customerDto.getCustValidityStart());
-				//customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));
+				customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));
 				customer.setCustGSTIN(customerDto.getCustGSTIN());
 				customerRepository.save(customer);
 				customerResponse.status = new Status(false, 2000, "Successfully Updated");

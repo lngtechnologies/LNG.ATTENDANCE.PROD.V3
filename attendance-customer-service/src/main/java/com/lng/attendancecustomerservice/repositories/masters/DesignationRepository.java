@@ -17,6 +17,12 @@ public interface DesignationRepository extends CrudRepository<Designation,Intege
 	Designation   getDesignationBydesignationId(Integer designationId);
 	
 	 @Query(value = "CALL DesignationIdIsExistOrNot(?1)",nativeQuery = true)
+	 
 	 int  findEmployeeDesignationByDesignationDesignationId(int designationId);
+	 
+		@Query(value = "CALL  CheckCustomerExistForDesignation(?1, ?2);",nativeQuery = true)
+		int  findByRefCustIdAndDesignationName(Integer refCustId,String designationName);
+		
+		Designation findDesignationBydesignationNameAndCustomer_custId(String designationName, int custId);
 
 }
