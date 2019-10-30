@@ -32,8 +32,8 @@ public class ContractorController {
 
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<ContractorResponse> getAll() {
-		ContractorResponse contractorDto =  contractorService.getAll();
-		if(contractorDto.getData().isEmpty()) {
+		ContractorResponse contractorDto = contractorService.getAll();
+		if(contractorDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<ContractorResponse>(contractorDto, HttpStatus.OK);
@@ -43,7 +43,7 @@ public class ContractorController {
 	public ResponseEntity<status.Status> update(@RequestBody ContractorDto contractorDto){
 		status.Status status = contractorService.updateContractorByContractorId(contractorDto);
 		if(contractorDto != null){
-			return  new ResponseEntity<status.Status>(status, HttpStatus.OK);
+			return new ResponseEntity<status.Status>(status, HttpStatus.OK);
 		}
 		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
@@ -53,6 +53,16 @@ public class ContractorController {
 		if(contractorDto!=null){
 			return new ResponseEntity<ContractorResponse>(contractorResponse,HttpStatus.OK);
 		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
+	}
+
+
+	@PostMapping(value = "/getContractorDetailsByContractorId")
+	public ResponseEntity<ContractorResponse> findByContractorId(@RequestBody ContractorDto contractorDto) {
+		ContractorResponse contractorResponse = contractorService.getContractorByContractorId(contractorDto.getContractorId());
+		if (contractorResponse !=null){
+			return new ResponseEntity<ContractorResponse>(contractorResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 
 }

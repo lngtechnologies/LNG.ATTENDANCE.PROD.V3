@@ -10,6 +10,8 @@ public class BlockBeaconMapDto {
 	
 	private String beaconCode;
 	
+	private Integer beaconType;
+	
 	private Boolean blkBeaconMapIsActive;
 	
 	private Date blkBeaconMapCreatedDate;
@@ -62,6 +64,14 @@ public class BlockBeaconMapDto {
 
 	public void setBlkLogicalName(String blkLogicalName) {
 		this.blkLogicalName = blkLogicalName;
+	}
+
+	public Integer getBeaconType() {
+		return beaconType;
+	}
+
+	public void setBeaconType(Integer beaconType) {
+		this.beaconType = beaconType;
 	}
 
 	

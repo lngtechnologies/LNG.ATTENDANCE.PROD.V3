@@ -10,7 +10,7 @@ import com.lng.attendancecustomerservice.entity.masters.Contractor;
 @Repository
 public interface ContractorRepository extends CrudRepository<Contractor,Integer> {
 
-	List<Contractor> findAll();
+	List<Contractor> findAllByContractorIsActive(Boolean contractorIsActive);
 	@Query(value = "select * from tmcontractor where contractorName = ?1", nativeQuery = true)
 	Contractor findByContractorName(String contractorName);
 	Contractor findContractorByContractorId(Integer contractorId);
@@ -25,5 +25,6 @@ public interface ContractorRepository extends CrudRepository<Contractor,Integer>
 
 
 	Contractor findContractorBycontractorNameAndCustomer_custId(String contractorName, int custId);
+
 
 }

@@ -9,12 +9,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
+import com.lng.attendancecompanyservice.entity.masters.Block;
 import com.lng.attendancecompanyservice.entity.masters.Branch;
 import com.lng.attendancecompanyservice.entity.masters.Country;
+import com.lng.attendancecompanyservice.entity.masters.Employee;
+import com.lng.attendancecompanyservice.entity.masters.EmployeeBranch;
+import com.lng.attendancecompanyservice.entity.masters.Login;
+import com.lng.attendancecompanyservice.entity.masters.LoginDataRight;
+import com.lng.attendancecompanyservice.entity.masters.Shift;
 import com.lng.attendancecompanyservice.entity.masters.State;
 import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
+import com.lng.attendancecompanyservice.repositories.masters.BlockRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
+import com.lng.attendancecompanyservice.repositories.masters.CustEmployeeRepository;
+import com.lng.attendancecompanyservice.repositories.masters.EmployeeBranchRepositories;
+import com.lng.attendancecompanyservice.repositories.masters.LoginDataRightRepository;
+import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
+import com.lng.attendancecompanyservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.service.masters.BranchService;
 import com.lng.dto.customer.CustomerDto;
@@ -37,11 +49,25 @@ public class BranchServiceImpl implements BranchService {
 	StateRepository stateRepository;
 	@Autowired
 	CountryRepository countryRepository;
+	@Autowired
+	LoginRepository loginRepository;
+	@Autowired
+	LoginDataRightRepository loginDataRightRepository;
+	@Autowired
+	BlockRepository blockRepository;
+	@Autowired
+	CustEmployeeRepository custEmployeeRepository;
+	@Autowired
+	ShiftRepository shiftRepository;
+	@Autowired
+	EmployeeBranchRepositories employeeBranchRepositories;
 
 	@Override
 	public BranchResponse saveBranch(BranchDto branchDto) {
 		BranchResponse response = new BranchResponse();
-		BranchDto branchDto2 = new BranchDto();
+
+		// BranchDto branchDto2 = new BranchDto();
+
 		try{
 			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
 			int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
@@ -53,14 +79,14 @@ public class BranchServiceImpl implements BranchService {
 
 						State state = stateRepository.findStateByStateId(branchDto.getRefStateId());
 						if(state != null) {
-
-							Branch  branch = new Branch();
+							String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
+							Branch branch = new Branch();
 							branch.setState(state);
 							branch.setCustomer(customer);
 							branch.setCountry(country);
 							branch.setBrAddress(branchDto.getBrAddress());
 							branch.setBrCity(branchDto.getBrCity());
-							branch.setBrCode(branchDto.getBrCode());
+							branch.setBrCode(customer.getCustCode() + brnchCode);
 							branch.setBrCreatedDate(new Date());
 							branch.setBrEmail(branchDto.getBrEmail());
 							branch.setBrLatLong(branchDto.getBrLatLong());
@@ -73,7 +99,18 @@ public class BranchServiceImpl implements BranchService {
 							branch.setBrValidityEnd(branchDto.getBrValidityEnd());
 							branch.setBrValidityStart(branchDto.getBrValidityStart());
 							branchRepository.save(branch);
-							response.status = new Status(false,200, "successfully created");
+							// Save to login data right table
+							try {
+								Login login = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
+								LoginDataRight loginDataRight = new LoginDataRight();
+								loginDataRight.setBranch(branch);
+								loginDataRight.setLogin(login);
+								loginDataRightRepository.save(loginDataRight);
+							}catch (Exception e) {
+								e.printStackTrace();
+							}
+
+							response.status = new Status(false,200, "Successfully Branch created with code: "+ branch.getBrCode());
 						}
 						else{ 
 							response.status = new Status(true,400, "StateId Not Found");
@@ -88,7 +125,7 @@ public class BranchServiceImpl implements BranchService {
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"BranchName already exist for branch :" + branchDto.getRefCustomerId());
+				response.status = new Status(true,400,"BranchName already exist");
 			}
 		}catch(Exception ex){
 			response.status = new Status(true,3000, ex.getMessage()); 
@@ -97,13 +134,14 @@ public class BranchServiceImpl implements BranchService {
 		return response;
 	}
 
+
 	@Override
 	public BranchResponse getAll() {
 		BranchResponse response = new BranchResponse();
 		try {
 			List<Branch> branchList=branchRepository.findAllBranchByBrIsActive(true);
-			response.setData(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully  GetAll");
+			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+			response.status = new Status(false,200, "successfully GetAll");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -121,7 +159,7 @@ public class BranchServiceImpl implements BranchService {
 			if(branchDto.getRefCountryId() == null || branchDto.getRefCountryId() == 0) throw new Exception("RefCountryId id is null or zero");
 			if(branchDto.getRefStateId() == null || branchDto.getRefStateId() == 0) throw new Exception("RefStateId id is null or zero");
 
-			Branch  branch = branchRepository.findBranchByBrId(branchDto.getBrId())	;	
+			Branch branch = branchRepository.findBranchByBrId(branchDto.getBrId())	;	
 
 			Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
 			if(customer != null) {
@@ -154,7 +192,7 @@ public class BranchServiceImpl implements BranchService {
 							branchRepository.save(branch);
 							status = new Status(false, 200, "Updated successfully");
 						} else {
-							status = new Status(true,400,"BranchName already exist for branch :" + branchDto.getRefCustomerId()); 
+							status = new Status(true,400,"BranchName already exist for branch"); 
 						}
 					}
 
@@ -176,6 +214,27 @@ public class BranchServiceImpl implements BranchService {
 		return status;
 	}
 
+	@Override
+	public BranchResponse getBranchByBrId(int brId) {
+		BranchResponse response = new BranchResponse();
+		try {
+			Branch branch=branchRepository.findBranchByBrId(brId);
+			if(branch != null) {
+				BranchDto branchDto = convertToBranchDto(branch);
+				response.data = branchDto;
+				response.status = new Status(false,200, "successfully GetBranchDetails");
+			}
+			else {
+				response.status = new Status(true, 4000, "Not found");
+			}
+		}catch(Exception e) {
+			response.status = new Status(true,3000, e.getMessage()); 
+
+		}
+		return response;
+	}
+
+
 
 	@Override
 	public BranchResponse deleteByBrId(Integer brId) {
@@ -183,15 +242,32 @@ public class BranchServiceImpl implements BranchService {
 		Branch branch = new Branch();
 		try {
 			branch = branchRepository.findBranchByBrId(brId);
-			branch.setBrIsActive(false);
-			branchRepository.save(branch);
-			response.status = new Status(false, 200, "Deleted successfully");
+			if(branch != null) {
+				
+				// Check weather the branch is used in any transaction or no
+				List<LoginDataRight> loginDataRight = loginDataRightRepository.findByBranch_BrId(brId);
+				List<Block> block = blockRepository.findByBranch_BrId(brId);
+				List<Employee> employee = custEmployeeRepository.findByBranch_BrId(brId);
+				List<Shift> shift = shiftRepository.findByBranch_BrId(brId);
+				List<EmployeeBranch> employeeBranch = employeeBranchRepositories.findByBranch_BrId(brId);
+				
+				if(loginDataRight.isEmpty() && block.isEmpty() && employee.isEmpty() && shift.isEmpty() && employeeBranch.isEmpty()) {
+					branchRepository.delete(branch);
+					response.status = new Status(false, 200, "Deleted successfully");
+				}else {
+					branch.setBrIsActive(false);
+					branchRepository.save(branch);
+					response.status = new Status(false, 200, "Branch is used in some other transaction, so it is set to IsActivive 0");
+				}
+			}else {
+				response.status = new Status(true, 400, "Branch branch not found");
+			}
+		
 		}catch(Exception e) {
-			response.status = new Status(true,400, "BranchId Not Found");
+			response.status = new Status(true,400, e.getMessage());
 		}
 		return response;
 	}
-
 
 	public BranchDto convertToBranchDto(Branch branch) {
 		BranchDto branchDto = modelMapper.map(branch,BranchDto.class);
@@ -207,5 +283,4 @@ public class BranchServiceImpl implements BranchService {
 		CountryDto countryDto = modelMapper.map(branch.getCountry(),CountryDto.class);
 		return branchDto;
 	}
-
 }

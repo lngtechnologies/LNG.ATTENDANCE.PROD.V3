@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.lng.attendancecustomerservice.entity.masters.Shift;
 @Repository
 public interface ShiftRepository extends CrudRepository<Shift,Integer> {
-	List<Shift> findAll();
+	
+	List<Shift> findAllByShiftIsActive(Boolean shiftIsActive);
 
 	@Query(value = "select * from tmshift where shiftName = ?1", nativeQuery = true)
 	Shift findByShiftName(String shiftName);
@@ -26,13 +27,4 @@ public interface ShiftRepository extends CrudRepository<Shift,Integer> {
 	
 	
 	Shift findShiftByshiftNameAndBranch_brId(String shiftName, int brId);
-
-	//List<Shift> findByBranch_BrIdAndShiftName(Integer refBrId,String shiftName);
-	/*
-	 * @Modifying
-	 * 
-	 * @Query(value = "INSERT INTO tmshift VALUES(NULL,?1,?2,?3,?4)", nativeQuery =
-	 * true) Shift insertNewShift(int refBrId,String shiftName,String
-	 * shifrtStart,String shifrtEnd);
-	 */
 }

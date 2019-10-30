@@ -5,8 +5,9 @@ public class DesignationDto {
 	private Integer refCustId;
 	private String designationName;
 	private String custName;
-	
-	
+	private Boolean desigIsActive;
+
+
 	public Integer getDesignationId() {
 		return designationId;
 	}
@@ -25,7 +26,12 @@ public class DesignationDto {
 	public void setDesignationName(String designationName) {
 		this.designationName = designationName;
 
-
+	}
+	public Boolean getDesigIsActive() {
+		return desigIsActive;
+	}
+	public void setDesigIsActive(Boolean desigIsActive) {
+		this.desigIsActive = desigIsActive;
 	}
 	public String getCustName() {
 		return custName;
@@ -33,5 +39,5 @@ public class DesignationDto {
 	public void setCustName(String custName) {
 		this.custName = custName;
 	}
-	
+
 }

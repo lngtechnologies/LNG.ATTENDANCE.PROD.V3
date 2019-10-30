@@ -7,6 +7,8 @@ public class ShiftDto {
 	private String  shiftStart;
 	private String    shiftEnd;
 	private String brName;
+	private Boolean shiftIsActive;
+	
 	public Integer getShiftId() {
 		return shiftId;
 	}
@@ -46,7 +48,11 @@ public class ShiftDto {
 	public void setBrName(String brName) {
 		this.brName = brName;
 	}
-
-
-
+	public Boolean getShiftIsActive() {
+		return shiftIsActive;
+	}
+	public void setShiftIsActive(Boolean shiftIsActive) {
+		this.shiftIsActive = shiftIsActive;
+	}
+	
 }

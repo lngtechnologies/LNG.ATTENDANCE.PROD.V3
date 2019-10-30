@@ -6,6 +6,7 @@ public class DepartmentDto {
 	private Integer deptId;
 	private Integer refCustId;
 	private String deptName;
+	private Boolean deptIsActive;
 	
 	private String  custName;
 	public Integer getDeptId() {
@@ -32,7 +33,12 @@ public class DepartmentDto {
 	public void setCustName(String custName) {
 		this.custName = custName;
 	}
- 
-	
+	public Boolean getDeptIsActive() {
+		return deptIsActive;
+	}
+	public void setDeptIsActive(Boolean deptIsActive) {
+		this.deptIsActive = deptIsActive;
+	}
+
 
 }

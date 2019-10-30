@@ -18,24 +18,42 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 
 public class MessageUtil {
+	
+	@Value("#('${sms.url}')")
+	private String smsurl;
 	
 	//Send SMS
 	public String sms(String to, String message)
 	{
 		RestTemplate restTemplate = new RestTemplate();
-		//String messageBody="Your OTP for this registration is "+message;
+
+		//  String messageBody="Your OTP for this registration is "+message;
 		//message=messageBody;
+		
+		// SMSVendor smsVendor = smsVendorRepository.getAllBySmsVndrIsActive();
+		
 
-		final  String uri = "http://sms1.mbsms.in/api/v4/?api_key=Ab0c65c21302aa8b2d09ba6bf592fb650&method=sms&message="+message+"&to="+to+"&sender=SRENTY&unicode=1";
+		String mobileNumbers = to;
 
-		//final  String uri = "https://api.mgage.solutions/SendSMS/sendmsg.php?uname=SPARAPI&pass=max@123456&send=SPARON&dest="+ to +"&msg="+ message;
+		String textMessage = message;
 
-		String result = restTemplate.getForObject(uri,String.class);
+		// final  String uri = smsurl;
+		
+		final  String uri = "http://promotional.mysmsbasket.com/V2/http-api.php?apikey=YE5ssFpB9306XlDP&senderid=LNGATS&number=mobileNumbers&message=textMessage&format=json";
+
+		StringBuilder sb = new StringBuilder(uri);
+		sb.replace(sb.indexOf("mobileNumbers"), sb.indexOf("mobileNumbers") + "mobileNumbers".length(), mobileNumbers);
+		sb.replace(sb.indexOf("textMessage"), sb.indexOf("textMessage") + "textMessage".length(), textMessage);
+		
+		String result = restTemplate.getForObject(sb.toString(),String.class);
+
 		return result;
 	}
+
 
 	//Send Only Email Without Attchments
 	public  void sendOnlyEmail(String host, String port,
@@ -67,7 +85,7 @@ public class MessageUtil {
 		msg.setRecipients(Message.RecipientType.TO, toAddresses);
 		msg.setSubject(subject);
 		msg.setSentDate(new Date());
-		
+
 		// creates message part
 		MimeBodyPart messageBodyPart = new MimeBodyPart();
 		messageBodyPart.setContent(message, "text/html");

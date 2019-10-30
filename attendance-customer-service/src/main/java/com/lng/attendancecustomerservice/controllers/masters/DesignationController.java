@@ -32,8 +32,8 @@ public class DesignationController {
 
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<DesignationResponse> getAll() {
-		DesignationResponse designationDto =  designationService.getAll();
-		if(designationDto.getData().isEmpty()) {
+		DesignationResponse designationDto = designationService.getAll();
+		if(designationDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<DesignationResponse>(designationDto, HttpStatus.OK);
@@ -43,7 +43,7 @@ public class DesignationController {
 	public ResponseEntity<status.Status> update(@RequestBody DesignationDto designationDto){
 		status.Status status = designationService.updateDesignationBydesignationId(designationDto);
 		if(designationDto != null){
-			return  new ResponseEntity<status.Status>(status, HttpStatus.OK);
+			return new ResponseEntity<status.Status>(status, HttpStatus.OK);
 		}
 		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
@@ -54,6 +54,14 @@ public class DesignationController {
 			return new ResponseEntity<DesignationResponse>(designationResponse,HttpStatus.OK);
 		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
-}
 
+	@PostMapping(value = "/getDesignationDetailsByDesignationId")
+	public ResponseEntity<DesignationResponse> findByDesignationId(@RequestBody DesignationDto designationDto) {
+		DesignationResponse designationResponse = designationService.getDesignationByDesignationId(designationDto.getDesignationId());
+		if (designationResponse !=null){
+			return new ResponseEntity<DesignationResponse>(designationResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+}
 

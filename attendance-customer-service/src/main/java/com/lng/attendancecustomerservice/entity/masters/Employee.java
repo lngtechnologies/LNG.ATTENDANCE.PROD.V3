@@ -52,7 +52,7 @@ public class Employee {
 	private String empMobile;
 
 	@Column(name = "empPassword")
-	@Size(max = 50)
+	//@Size(max = 100)
 	// @NotNull(message = "This field should not be an empty")
 	private String empPassword;
 

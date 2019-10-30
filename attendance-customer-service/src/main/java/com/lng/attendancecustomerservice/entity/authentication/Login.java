@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,75 +25,84 @@ public class Login {
 	@Column(name = "refCustId")
 	private Integer refCustId;
 
+	@Size(max = 50)
+	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginName")
 	private String loginName;
 
+	@Size(max = 10)
+	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginMobile")
 	private String loginMobile;
 
+	@Size(max = 100)
+	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginPassword")
 	@JsonIgnore
-	public String loginPassword;
+	private String loginPassword;
 
+	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginIsActive")
-	private Integer  isActive;
+	private Boolean loginIsActive;
 
+	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginCreatedDate")
-	private Date  createdDate;
-	
+	private Date loginCreatedDate;
+
 	public Integer getLoginId() {
 		return loginId;
 	}
-	
+
 	public void setLoginId(Integer loginId) {
 		this.loginId = loginId;
 	}
-	
+
 	public Integer getRefCustId() {
 		return refCustId;
 	}
-	
+
 	public void setRefCustId(Integer refCustId) {
 		this.refCustId = refCustId;
+	}
+
+	public String getLoginName() {
+		return loginName;
+	}
+
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
 	}
 
 	public String getLoginMobile() {
 		return loginMobile;
 	}
-	
+
 	public void setLoginMobile(String loginMobile) {
 		this.loginMobile = loginMobile;
 	}
 
-	public Integer getIsActive() {
-		return isActive;
-	}
-	
-	public void setIsActive(Integer isActive) {
-		this.isActive = isActive;
-	}
-	
-	public Date getCreatedDate() {
-		return createdDate;
-	}
-	
-	public void setCreatedDate(Date createdDate) {
-		this.createdDate = createdDate;
-	}
-	
-	public String getLoginName() {
-		return loginName;
-	}
-	
-	public void setLoginName(String username) {
-		this.loginName = username;
-	}
-	
 	public String getLoginPassword() {
 		return loginPassword;
 	}
-	
-	public void setLoginPassword(String password) {
-		this.loginPassword = password;
+
+	public void setLoginPassword(String loginPassword) {
+		this.loginPassword = loginPassword;
 	}
+
+	public Boolean getLoginIsActive() {
+		return loginIsActive;
+	}
+
+	public void setLoginIsActive(Boolean loginIsActive) {
+		this.loginIsActive = loginIsActive;
+	}
+
+	public Date getLoginCreatedDate() {
+		return loginCreatedDate;
+	}
+
+	public void setLoginCreatedDate(Date loginCreatedDate) {
+		this.loginCreatedDate = loginCreatedDate;
+	}
+	
 }

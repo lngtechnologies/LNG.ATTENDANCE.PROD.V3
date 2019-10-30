@@ -31,4 +31,6 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	
 	Customer findCustomerByCustCode(String custCode);
 	
+	List<Customer> findByState_StateId(Integer stateId);
+	
 }

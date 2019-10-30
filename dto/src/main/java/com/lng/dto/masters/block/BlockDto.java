@@ -5,7 +5,6 @@ import java.util.Date;
 public class BlockDto {
 	private Integer blkId;
 	private Integer refBranchId;
-	private String blkName;
 	private String blkLogicalName;
 	private Integer blkGPSRadius;
 	private String blkLatLong;
@@ -15,6 +14,7 @@ public class BlockDto {
 	private Integer brId;
 	private String brCode;
 	private String brName;
+	
 	public Integer getBlkId() {
 		return blkId;
 	}
@@ -28,13 +28,6 @@ public class BlockDto {
 		this.refBranchId = refBranchId;
 	}
    
-    
-	public String getBlkName() {
-		return blkName;
-	}
-	public void setBlkName(String blkName) {
-		this.blkName = blkName;
-	}
 	public String getBlkLogicalName() {
 		return blkLogicalName;
 	}

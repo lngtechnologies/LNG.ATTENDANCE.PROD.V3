@@ -17,7 +17,7 @@ public class BlockBeaconMap {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "")
+	@Column(name = "blkBeaconMapId")
 	private Integer blkBeaconMapId;
 
 	@ManyToOne
@@ -26,6 +26,9 @@ public class BlockBeaconMap {
 
 	@Column(name = "beaconCode")
 	private String beaconCode;
+	
+	@Column(name = "beaconType")
+	private Integer beaconType;
 
 	@Column(name = "blkBeaconMapIsActive")
 	private Boolean blkBeaconMapIsActive;
@@ -72,5 +75,14 @@ public class BlockBeaconMap {
 	public void setBlkBeaconMapCreatedDate(Date blkBeaconMapCreatedDate) {
 		this.blkBeaconMapCreatedDate = blkBeaconMapCreatedDate;
 	}
+
+	public Integer getBeaconType() {
+		return beaconType;
+	}
+
+	public void setBeaconType(Integer beaconType) {
+		this.beaconType = beaconType;
+	}
+	
 
 }

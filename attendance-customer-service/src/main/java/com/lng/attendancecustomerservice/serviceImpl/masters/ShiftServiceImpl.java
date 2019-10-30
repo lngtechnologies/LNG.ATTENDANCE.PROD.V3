@@ -7,10 +7,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.Shift;
-import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.masters.ShiftService;
@@ -26,8 +24,9 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Autowired
 	ShiftRepository shiftRepository;
-	@Autowired
-	EmployeeRepository employeeRepository;
+	/*
+	 * @Autowired EmployeeRepository employeeRepository;
+	 */
 
 	@Autowired
 	BranchRepository branchRepository;
@@ -41,7 +40,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 		Shift shift = new Shift();
 		try {
-			if(shiftDto.getShiftName() == null || shiftDto.getShiftName().isEmpty())  throw new Exception("Plz Enter Shift Name");
+			if(shiftDto.getShiftName() == null || shiftDto.getShiftName().isEmpty()) throw new Exception("Plz Enter Shift Name");
 
 			int a = shiftRepository.findByRefBrIdAndShiftName(shiftDto.getRefBrId(), shiftDto.getShiftName());
 			if(a == 0) {
@@ -51,6 +50,7 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftName(shiftDto.getShiftName());
 					shift.setShiftStart(shiftDto.getShiftStart());
 					shift.setShiftEnd(shiftDto.getShiftEnd());
+					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					shiftResponse.status = new Status(false,200, "successfully created");
 
@@ -80,9 +80,9 @@ public class ShiftServiceImpl implements ShiftService {
 	public ShiftResponse getAll() {
 		ShiftResponse response = new ShiftResponse();
 		try {
-			List<Shift> shiftList=shiftRepository.findAll();
-			response.setData(shiftList.stream().map(shift -> convertToShiftDto(shift)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully  GetAll");
+			List<Shift> shiftList=shiftRepository.findAllByShiftIsActive(true);
+			response.setData1(shiftList.stream().map(shift -> convertToShiftDto(shift)).collect(Collectors.toList()));
+			response.status = new Status(false,200, "successfully GetAll");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -96,7 +96,7 @@ public class ShiftServiceImpl implements ShiftService {
 			if(shiftDto.getShiftName() == null || shiftDto.getShiftName().isEmpty()) throw new Exception("Please enter Shift name");
 			if(shiftDto.getShiftId() == null || shiftDto.getShiftId() == 0) throw new Exception("Shift id is null or zero");
 			if(shiftDto.getRefBrId() == null || shiftDto.getRefBrId() == 0) throw new Exception("RefBranchId id is null or zero");
-			Shift 	shift = shiftRepository.findShiftByShiftId(shiftDto.getShiftId());
+			Shift shift = shiftRepository.findShiftByShiftId(shiftDto.getShiftId());
 
 			Branch branch = branchRepository.findBranchByBrId(shiftDto.getRefBrId());
 			if(branch != null) {
@@ -105,6 +105,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 					shift = modelMapper.map(shiftDto,Shift.class);
 					shift.setBranch(branch);
+					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					status = new Status(false, 200, "Updated successfully");
 				} else if (sh.getShiftId() == shiftDto.getShiftId()) { 
@@ -134,21 +135,25 @@ public class ShiftServiceImpl implements ShiftService {
 	public ShiftResponse deleteByShiftId(Integer shiftId) {
 		ShiftResponse shiftResponse=new ShiftResponse(); 
 		try {
-
+			Shift shift = shiftRepository.findShiftByShiftId(shiftId);
 			int b = shiftRepository.findEmployeeByShiftShiftId(shiftId);
+			if(shift!= null) {
 			if(b == 0) {
-				Shift shift = shiftRepository.findShiftByShiftId(shiftId);
-				if(shift!= null) {
-					shiftRepository.delete(shift);					
+			
+					shiftRepository.delete(shift);	
 					shiftResponse.status = new Status(false,200, "successfully deleted");
+				} else {
+					shift.setShiftIsActive(false);
+					shiftRepository.save(shift);
+					shiftResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
 				}
 
-			} else  {
-				shiftResponse.status = new Status(true,400, "Cannot Delete");
+			} else {
+				shiftResponse.status = new Status(true,400, "Shift Not Found");
 			}
 
 		}catch(Exception e) { 
-			shiftResponse.status = new Status(true,400, "ShiftId Not Found");
+			shiftResponse.status = new Status(true,500, e.getMessage());
 		}
 
 		return shiftResponse;
@@ -189,8 +194,29 @@ public class ShiftServiceImpl implements ShiftService {
 
 
 		}
-		response.setData(shiftDtoList);
+		response.setData1(shiftDtoList);
 		//response.status = new Status(false,4000, "BranchId not Found");
+		return response;
+	}
+
+
+	@Override
+	public ShiftResponse getShiftDetailsByShiftId(Integer shiftId) {
+		ShiftResponse response = new ShiftResponse();
+		try {
+			Shift shift=shiftRepository.findShiftByShiftId(shiftId);
+			if(shift != null) {
+				ShiftDto shiftDto = convertToShiftDto(shift);
+				response.data = shiftDto;
+				response.status = new Status(false,200, "successfully GetShiftDetails");
+			}
+			else {
+				response.status = new Status(true, 4000, "Not found");
+			}
+		}catch(Exception e) {
+			response.status = new Status(true,3000, e.getMessage()); 
+
+		}
 		return response;
 	}
 

@@ -15,10 +15,16 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
 import com.lng.attendancecompanyservice.entity.masters.Branch;
+import com.lng.attendancecompanyservice.entity.masters.Country;
+import com.lng.attendancecompanyservice.entity.masters.IndustryType;
 import com.lng.attendancecompanyservice.entity.masters.Login;
+import com.lng.attendancecompanyservice.entity.masters.State;
 import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
+import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
+import com.lng.attendancecompanyservice.repositories.masters.IndustryTypeRepository;
 import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
+import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.service.custOnboarding.CustomerService;
 import com.lng.attendancecompanyservice.utils.Encoder;
 import com.lng.attendancecompanyservice.utils.MessageUtil;
@@ -42,6 +48,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	LoginRepository loginRepository;
+
+	@Autowired
+	CountryRepository countryRepository;
+
+	@Autowired
+	StateRepository stateRepository;
+
+	@Autowired
+	IndustryTypeRepository industryTypeRepository;
 
 	@Autowired
 	MailProperties mailProperties;
@@ -105,7 +120,9 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 
 		} catch (Exception e) {
-
+			statusDto.setCode(400);
+			statusDto.setError(true);
+			statusDto.setMessage(e.getMessage());		
 		}
 		return statusDto;
 	}
@@ -465,7 +482,8 @@ public class CustomerServiceImpl implements CustomerService {
 		login.setLoginPassword(Encoder.getEncoder().encode(randomPassword));
 		loginRepository.save(login);
 		String mobileNo = login.getLoginMobile();
-		String mobileSmS = "Welcome to Attendance System, Your Login Password is : "+ randomPassword;	
+		String mobileSmS = "Greetings from LNG! Your account has been created successfully. "
+				          + "The login details has been sent to your E-Mail and password is : "+ randomPassword;	
 		String s = messageUtil.sms(mobileNo, mobileSmS);
 		return login.getLoginId();
 	}
@@ -495,12 +513,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 	//Finds the Customer by custId
 	@Override
-	public CustomerResponse getCustomerByCustomerId(int custId) {
-		CustomerResponse customerResponse = new CustomerResponse();
+	public CustomerListResponse getCustomerByCustomerId(int custId) {
+		CustomerListResponse customerResponse = new CustomerListResponse();
 		try {
 			Customer cust = customerRepository.findCustomerByCustId(custId);
 			if(cust != null) {
-				CustomerDto custDto = convertToCustomerDto(cust);
+				CustomerDtoTwo custDto = convertToCustomerDtoTwo(cust);
 				custDto.setCustLogoFile(byteTobase64(cust.getCustLogoFile()));
 				customerResponse.data = custDto;
 				customerResponse.status = new Status(false, 200, "Success");
@@ -521,10 +539,13 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerResponse customerResponse = new CustomerResponse();
 		try {
 			Customer customer = customerRepository.findCustomerByCustId(customerDto.getCustId());
+			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
+			State state = stateRepository.findByStateId(customerDto.getRefStateId());
+			IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(customerDto.getRefIndustryTypeId());
 			if(customer != null) {
-				customer.setCountry(customer.getCountry());
-				customer.setState(customer.getState());
-				customer.setIndustryType(customer.getIndustryType());
+				customer.setCountry(country);
+				customer.setState(state);
+				customer.setIndustryType(industryType);
 				customer.setCustAddress(customerDto.getCustAddress());
 				customer.setCustCity(customerDto.getCustCity());
 				customer.setCustCode(customerDto.getCustCode());
@@ -538,12 +559,17 @@ public class CustomerServiceImpl implements CustomerService {
 				customer.setCustPincode(customerDto.getCustPincode());
 				customer.setCustValidityEnd(customerDto.getCustValidityEnd());
 				customer.setCustValidityStart(customerDto.getCustValidityStart());
-				customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));
+				if(customerDto.getCustLogoFile() == null) {
+					customer.setCustLogoFile(customer.getCustLogoFile());
+				} else {
+					customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));
+				}
+
 				customer.setCustGSTIN(customerDto.getCustGSTIN());
 				customerRepository.save(customer);
 				customerResponse.status = new Status(false, 2000, "Successfully Updated");
 			}	else {
-				customerResponse.status = new Status(false, 4000, "Cannot Update");
+				customerResponse.status = new Status(false, 4000, "Customer Not Found");
 			}
 
 		} catch (Exception e) {
@@ -556,20 +582,20 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public CustomerResponse deleteCustomerByCustomerId(int custId) {
 		CustomerResponse customerResponse = new CustomerResponse();
-		try {
+
 			Customer customer = customerRepository.findCustomerByCustId(custId);
-			customer.setCustIsActive(false);
 			try {
-				customerRepository.save(customer);
-				customerResponse.status = new Status(false, 200, "Successfully Deleted");
+				if(customer != null) {
+					customer.setCustIsActive(false);
+					customerRepository.save(customer);
+					customerResponse.status = new Status(false, 200, "Successfully Deleted");
+				} else {
+					customerResponse.status = new Status(true, 400, "Customer Not Found");
+				}
 			} catch (Exception e) {
 				e.printStackTrace(); 
 				customerResponse.status = new Status(true, 5000, "Something went wrong");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			customerResponse.status = new Status(true, 4000, "Customer Not Found");
-		}
 		return customerResponse;
 	}
 
@@ -603,7 +629,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	public CustomerDto convertToCustomerDto(Customer customer) {
 		CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class);
-
 		customerDto.setRefCountryId(customer.getCountry().getCountryId());
 		customerDto.setRefStateId(customer.getState().getStateId());
 		customerDto.setRefIndustryTypeId(customer.getIndustryType().getIndustryId());

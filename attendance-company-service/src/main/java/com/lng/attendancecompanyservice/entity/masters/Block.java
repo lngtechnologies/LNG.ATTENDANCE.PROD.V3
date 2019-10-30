@@ -32,10 +32,13 @@ public class Block {
 	private Integer blkGPSRadius;
 	
 	@Column(name = "blkLatLong")
-	private Point blkLatLong;
+	private String blkLatLong;
 	
 	@Column(name = "blkCreatedDate")
 	private Date blkCreatedDate;
+	
+	@Column(name = "blkIsActive")
+	private Boolean blkIsActive;
 
 	public Integer getBlkId() {
 		return blkId;
@@ -69,11 +72,12 @@ public class Block {
 		this.blkGPSRadius = blkGPSRadius;
 	}
 
-	public Point getBlkLatLong() {
+	
+	public String getBlkLatLong() {
 		return blkLatLong;
 	}
 
-	public void setBlkLatLong(Point blkLatLong) {
+	public void setBlkLatLong(String blkLatLong) {
 		this.blkLatLong = blkLatLong;
 	}
 
@@ -83,6 +87,14 @@ public class Block {
 
 	public void setBlkCreatedDate(Date blkCreatedDate) {
 		this.blkCreatedDate = blkCreatedDate;
+	}
+
+	public Boolean getBlkIsActive() {
+		return blkIsActive;
+	}
+
+	public void setBlkIsActive(Boolean blkIsActive) {
+		this.blkIsActive = blkIsActive;
 	}
 
 }

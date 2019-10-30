@@ -10,7 +10,7 @@ import com.lng.attendancecustomerservice.entity.masters.Department;
 @Repository
 public interface DepartmentRepository extends CrudRepository<Department,Integer> {	
 
-	List<Department> findAll();
+	List<Department> findAllByDeptIsActive(Boolean deptIsActive);
 	@Query(value = "select * from tmdepartment where deptName = ?1", nativeQuery = true)
 	Department findByDepartmentName(String stateName);
 	Department findDepartmentByDeptId(Integer deptId);
@@ -23,4 +23,7 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 	
 	
 	Department findDepartmentBydeptNameAndCustomer_custId(String deptName, int custId);
+	
+	@Query(value = "SELECT a.* FROM tmdepartment a LEFT JOIN ttempdept b ON a.deptId = b.refDeptId WHERE b.refEmpId = ?1",nativeQuery = true)
+	Department findDepartmentByEmployee_EmpId(Integer empId);
 }

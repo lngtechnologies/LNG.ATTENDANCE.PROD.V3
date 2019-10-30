@@ -81,7 +81,6 @@ public class Customer {
 	private String custEmail;
 
 	@Column(name = "custNoOfBranch")
-	@Range(max = 4)
 	@NotNull(message = "This field should not be an empty")
 	private Integer custNoOfBranch;
 

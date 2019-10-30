@@ -7,20 +7,25 @@ import status.Status;
 public class BranchResponse {
 	
 	  public Status status; 
-	  public List<BranchDto> data;
+	  public BranchDto data;
+	  public List<BranchDto> data1;
 	public Status getStatus() {
 		return status;
 	}
 	public void setStatus(Status status) {
 		this.status = status;
 	}
-	public List<BranchDto> getData() {
+	public BranchDto getData() {
 		return data;
 	}
-	public void setData(List<BranchDto> data) {
+	public void setData(BranchDto data) {
 		this.data = data;
 	}
-	  
-	  
+	public List<BranchDto> getData1() {
+		return data1;
+	}
+	public void setData1(List<BranchDto> data1) {
+		this.data1 = data1;
+	}
 
 }

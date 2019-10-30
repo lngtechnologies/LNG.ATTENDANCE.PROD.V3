@@ -3,6 +3,8 @@ package com.lng.dto.masters.custEmployee;
 import java.util.Date;
 
 public class CustEmployeeDto {
+	
+	private Integer empId;
 
 	private Integer custId;
 
@@ -28,9 +30,17 @@ public class CustEmployeeDto {
 
 	private Integer contractorId;
 
-	private Integer reportingToId;
+	private Integer empReportingToId;
 
 	private Date empJoiningDate;
+	
+	public Integer getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(Integer empId) {
+		this.empId = empId;
+	}
 
 	public Integer getCustId() {
 		return custId;
@@ -128,12 +138,12 @@ public class CustEmployeeDto {
 		this.contractorId = contractorId;
 	}
 
-	public Integer getReportingToId() {
-		return reportingToId;
+	public Integer getEmpReportingToId() {
+		return empReportingToId;
 	}
 
-	public void setReportingToId(Integer reportingToId) {
-		this.reportingToId = reportingToId;
+	public void setEmpReportingToId(Integer empReportingToId) {
+		this.empReportingToId = empReportingToId;
 	}
 
 	public Date getEmpJoiningDate() {

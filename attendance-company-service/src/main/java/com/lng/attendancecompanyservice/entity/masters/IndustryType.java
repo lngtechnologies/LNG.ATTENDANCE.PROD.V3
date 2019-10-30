@@ -19,6 +19,9 @@ public class IndustryType {
 	@Column(name = "industryName")
 	private String industryName;
 
+	@Column(name = "industryIsActive")
+	private Boolean industryIsActive;
+	
 	public Integer getIndustryId() {
 		return industryId;
 	}
@@ -33,6 +36,14 @@ public class IndustryType {
 
 	public void setIndustryName(String industryName) {
 		this.industryName = industryName;
+	}
+
+	public Boolean getIndustryIsActive() {
+		return industryIsActive;
+	}
+
+	public void setIndustryIsActive(Boolean industryIsActive) {
+		this.industryIsActive = industryIsActive;
 	}
 
 }

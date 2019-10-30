@@ -5,6 +5,8 @@ public class IndustryTypeDto {
 	private Integer industryId;
 	
 	private String industryName;
+	
+	private Boolean industryIsActive;
 
 	public Integer getIndustryId() {
 		return industryId;
@@ -21,6 +23,13 @@ public class IndustryTypeDto {
 	public void setIndustryName(String industryName) {
 		this.industryName = industryName;
 	}
-	
-	
+
+	public Boolean getIndustryIsActive() {
+		return industryIsActive;
+	}
+
+	public void setIndustryIsActive(Boolean industryIsActive) {
+		this.industryIsActive = industryIsActive;
+	}
+
 }

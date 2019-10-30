@@ -51,10 +51,10 @@ public class CustomerController {
    }
 	
 	@PostMapping(value = "/findByCustomerId")
-    public ResponseEntity<CustomerResponse> findByCustomerId(@RequestBody CustomerDto customerDto) {
-		CustomerResponse customerResponse = customerService.getCustomerByCustomerId(customerDto.getCustId());
+    public ResponseEntity<CustomerListResponse> findByCustomerId(@RequestBody CustomerDto customerDto) {
+		CustomerListResponse customerResponse = customerService.getCustomerByCustomerId(customerDto.getCustId());
         if (customerResponse !=null){
-            return new ResponseEntity<CustomerResponse>(customerResponse, HttpStatus.OK);
+            return new ResponseEntity<CustomerListResponse>(customerResponse, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }

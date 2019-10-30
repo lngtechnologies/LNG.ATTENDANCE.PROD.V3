@@ -14,7 +14,7 @@ import javax.persistence.Table;
 public class State {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "stateId")
 	private Integer stateId;
 	
@@ -24,6 +24,9 @@ public class State {
 	
 	@Column(name = "stateName")
 	private String stateName;
+	
+	@Column(name = "stateIsActive")
+	private Boolean stateIsActive;
 
 	public Integer getStateId() {
 		return stateId;

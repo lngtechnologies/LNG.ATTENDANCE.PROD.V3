@@ -21,7 +21,7 @@ public class ShiftController {
 
 	@Autowired
 	ShiftService shiftService;
-	
+
 	@PostMapping(value = "/create")
 	public ResponseEntity<ShiftResponse> save(@RequestBody ShiftDto shiftDto) {
 		ShiftResponse shiftDto1 = shiftService.saveShift(shiftDto);
@@ -33,8 +33,8 @@ public class ShiftController {
 
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<ShiftResponse> getAll() {
-		ShiftResponse shiftDto =  shiftService.getAll();
-		if(shiftDto.getData().isEmpty()) {
+		ShiftResponse shiftDto = shiftService.getAll();
+		if(shiftDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<ShiftResponse>(shiftDto, HttpStatus.OK);
@@ -44,7 +44,7 @@ public class ShiftController {
 	public ResponseEntity<status.Status> update(@RequestBody ShiftDto shiftDto){
 		status.Status status = shiftService.updateShiftByShiftId(shiftDto);
 		if(shiftDto != null){
-			return  new ResponseEntity<status.Status>(status, HttpStatus.OK);
+			return new ResponseEntity<status.Status>(status, HttpStatus.OK);
 		}
 		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
@@ -55,7 +55,7 @@ public class ShiftController {
 			return new ResponseEntity<ShiftResponse>(shiftResponse,HttpStatus.OK);
 		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
-	
+
 	@PostMapping(value = "/getShiftDetailsByBranchId")
 	public ResponseEntity<ShiftResponse> edit(@RequestBody ShiftDto shiftDto) {
 		ShiftResponse shiftDto1 = shiftService.getBlockDetailsByRefBrId(shiftDto.getRefBrId());
@@ -63,5 +63,14 @@ public class ShiftController {
 			return new ResponseEntity<ShiftResponse>(shiftDto1, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping(value = "/getStateDetailsByStateId")
+	public ResponseEntity<ShiftResponse> findByShiftId(@RequestBody ShiftDto shiftDto) {
+		ShiftResponse shiftResponse = shiftService.getShiftDetailsByShiftId(shiftDto.getShiftId());
+		if (shiftResponse !=null){
+			return new ResponseEntity<ShiftResponse>(shiftResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 }

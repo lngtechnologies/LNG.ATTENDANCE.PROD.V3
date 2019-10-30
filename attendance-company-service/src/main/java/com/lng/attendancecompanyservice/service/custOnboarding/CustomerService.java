@@ -13,7 +13,7 @@ public interface CustomerService {
 	
 	CustomerListResponse findAll();
 	
-	CustomerResponse getCustomerByCustomerId(int custId);
+	CustomerListResponse getCustomerByCustomerId(int custId);
 	
 	CustomerResponse updateCustomerByCustomerId(CustomerDto customerDto);
 	

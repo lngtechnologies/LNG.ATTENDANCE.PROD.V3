@@ -7,7 +7,6 @@ import status.Status;
 
 public interface CountryService {
 	
-//CountryResponse saveCountry(CountryParamDto countryParamDto);
 	CountryResponse saveCountry(CountryDto countryDto);
 	CountryResponse getAll();
 	Status updateCountryByCountryId(CountryDto countryDto);

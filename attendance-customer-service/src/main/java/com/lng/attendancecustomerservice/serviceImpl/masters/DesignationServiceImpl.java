@@ -14,7 +14,6 @@ import com.lng.attendancecustomerservice.repositories.masters.DesignationReposit
 import com.lng.attendancecustomerservice.service.masters.DesignationService;
 import com.lng.dto.masters.designation.DesignationDto;
 import com.lng.dto.masters.designation.DesignationResponse;
-
 import status.Status;
 @Service
 public class DesignationServiceImpl implements DesignationService{
@@ -31,7 +30,7 @@ public class DesignationServiceImpl implements DesignationService{
 			if(designationDto.getDesignationName() == null || designationDto.getDesignationName().isEmpty()) throw new Exception("Please enter Designation name");
 
 			//if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation Name already exists");
-			int a  = designationRepository.findByRefCustIdAndDesignationName(designationDto.getRefCustId(), designationDto.getDesignationName());
+			int a = designationRepository.findByRefCustIdAndDesignationName(designationDto.getRefCustId(), designationDto.getDesignationName());
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
 				if(customer != null) {
@@ -39,6 +38,7 @@ public class DesignationServiceImpl implements DesignationService{
 					Designation designation = new Designation();
 					designation.setCustomer(customer);
 					designation.setDesignationName(designationDto.getDesignationName());
+					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					response.status = new Status(false,200, "successfully created");
 				}
@@ -65,9 +65,9 @@ public class DesignationServiceImpl implements DesignationService{
 	public DesignationResponse getAll() {
 		DesignationResponse response = new DesignationResponse();
 		try {
-			List<Designation> designationList=designationRepository.findAll();
-			response.setData(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully  GetAll");
+			List<Designation> designationList=designationRepository.findAllByDesigIsActive(true);
+			response.setData1(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
+			response.status = new Status(false,200, "successfully GetAll");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -82,7 +82,7 @@ public class DesignationServiceImpl implements DesignationService{
 			if(designationDto.getDesignationName() == null || designationDto.getDesignationName().isEmpty()) throw new Exception("Please enter Designation name");
 			if(designationDto.getDesignationId() == null || designationDto.getDesignationId() == 0) throw new Exception("Designation id is null or zero");
 			if(designationDto.getRefCustId() == null || designationDto.getRefCustId() == 0) throw new Exception("RefCustomerId id is null or zero");
-			Designation 	designation = designationRepository.findDesignationByDesignationId(designationDto.getDesignationId())	;		
+			Designation designation = designationRepository.findDesignationByDesignationId(designationDto.getDesignationId())	;	
 			//if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation already exists");
 			Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
 			if(customer != null) {
@@ -90,6 +90,7 @@ public class DesignationServiceImpl implements DesignationService{
 				if(de == null) {
 					designation.setCustomer(customer);
 					designation.setDesignationName(designationDto.getDesignationName());
+					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					status = new Status(false,200, "Updated successfully");
 				} else if (de.getDesignationId() == designationDto.getDesignationId()) { 
@@ -116,7 +117,7 @@ public class DesignationServiceImpl implements DesignationService{
 		return status;
 	}
 	public DesignationDto convertToDesignationDto(Designation designation) {
-		DesignationDto  designationDto = modelMapper.map(designation,DesignationDto.class);
+		DesignationDto designationDto = modelMapper.map(designation,DesignationDto.class);
 		designationDto.setRefCustId(designation.getCustomer().getCustId());
 		designationDto.setCustName(designation.getCustomer().getCustName());
 
@@ -128,24 +129,48 @@ public class DesignationServiceImpl implements DesignationService{
 	public DesignationResponse deleteByDesignationId(Integer designationId) {
 		DesignationResponse designationResponse=new DesignationResponse(); 
 		try {
-
+			Designation designation = designationRepository.findDesignationByDesignationId(designationId);
 			int a = designationRepository.findEmployeeDesignationByDesignationDesignationId(designationId);
+			if(designation!= null) {
 			if(a == 0) {
-				Designation designation = designationRepository.findDesignationByDesignationId(designationId);
-				if(designation!= null) {
-					designationRepository.delete(designation);					
+			
+					designationRepository.delete(designation);	
 					designationResponse.status = new Status(false,200, "successfully deleted");
+				}else {
+					designation.setDesigIsActive(false);
+					designationRepository.save(designation);
+					designationResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
 				}
 
-			} else  {
-				designationResponse.status = new Status(true,400, "Cannot Delete");
+			} else {
+				designationResponse.status = new Status(true,400, "Designation Not Found");
 			}
 
 		}catch(Exception e) { 
-			designationResponse.status = new Status(true,400, "DesignationId Not Found");
+			designationResponse.status = new Status(true,500, e.getMessage());
 		}
 
 		return designationResponse;
+	}
+
+	@Override
+	public DesignationResponse getDesignationByDesignationId(Integer designationId) {
+		DesignationResponse response=new DesignationResponse();
+		try {
+			Designation designation = designationRepository.findDesignationByDesignationId(designationId);
+			if(designation != null) {
+				DesignationDto designationDto = convertToDesignationDto(designation);
+				response.data = designationDto;
+				response.status = new Status(false,200, "successfully GetDesignationDetails");
+			}
+			else {
+				response.status = new Status(true, 4000, "Not found");
+			}
+		}catch(Exception e) {
+			response.status = new Status(true,3000, e.getMessage()); 
+
+		}
+		return response;
 	}
 
 }

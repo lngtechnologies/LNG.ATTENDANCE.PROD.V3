@@ -8,17 +8,21 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
 import com.lng.attendancecompanyservice.entity.masters.Country;
+import com.lng.attendancecompanyservice.entity.masters.Employee;
 import com.lng.attendancecompanyservice.entity.masters.State;
+import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
+import com.lng.attendancecompanyservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.service.masters.StateService;
-import com.lng.dto.masters.country.CountryDto;
 import com.lng.dto.masters.state.StateDto;
 import com.lng.dto.masters.state.StateResponse;
 
 import status.Status;
+
 @Service
 public class StateServiceImpl implements StateService {
 	ModelMapper modelMapper=new ModelMapper();
@@ -29,7 +33,10 @@ public class StateServiceImpl implements StateService {
 	BranchRepository branchRepository;
 	@Autowired
 	CountryRepository  countryRepository;
-
+	@Autowired
+	CustomerRepository customerRepository;
+	
+	
 	@Override
 	public StateResponse saveState(StateDto stateDto) {
 		StateResponse response = new StateResponse();
@@ -41,10 +48,11 @@ public class StateServiceImpl implements StateService {
 			if(a == 0) {
 				Country country = countryRepository.findCountryByCountryId(stateDto.getRefCountryId());
 				if(country != null) {
-				state.setCountry(country);
-				state.setStateName(stateDto.getStateName());
-				stateRepository.save(state);
-              response.status = new Status(false,200, "successfully created");
+					state.setCountry(country);
+					state.setStateName(stateDto.getStateName());
+					state.setStateIsActive(true);
+					stateRepository.save(state);
+					response.status = new Status(false,200, "successfully created");
 
 				}
 				else{ 
@@ -74,8 +82,8 @@ public class StateServiceImpl implements StateService {
 	public StateResponse getAll() {
 		StateResponse response = new StateResponse();
 		try {
-			List<State> stateList=stateRepository.findAll();
-			response.setData(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
+			List<State> stateList=stateRepository.findAllByStateIsActive(true);
+			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
 			response.status = new Status(false,200, "successfully  GetAll");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
@@ -128,36 +136,29 @@ public class StateServiceImpl implements StateService {
 	public StateResponse deleteByStateId(Integer stateId) {
 		StateResponse stateResponse=new StateResponse();
 		try {
-
+			State state = stateRepository.findStateByStateId(stateId);
 			int a = stateRepository.findBranchByStateStateId(stateId);
-			if(a == 0) {
-				State state = stateRepository.findStateByStateId(stateId);
-				if(state!= null) {
+			List<Customer> customers = customerRepository.findByState_StateId(stateId);
+			if(state!= null) {
+				if(a == 0 && customers.isEmpty()) {
 					stateRepository.delete(state);					
 					stateResponse.status = new Status(false,200, "successfully deleted");
+				}else {
+					state.setStateIsActive(false);
+					stateRepository.save(state);
+					stateResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
 				}
 
 			} else  {
-				stateResponse.status = new Status(true,400, "Cannot Delete");
+				stateResponse.status = new Status(true,400, "State Not Found");
 			}
 
 		}catch(Exception e) { 
-			stateResponse.status = new Status(true,400, "StateId Not Found");
+			stateResponse.status = new Status(true,500, e.getMessage());
 		}
 
 		return stateResponse;
 	}
-
-
-	public StateDto convertToStateDto(State state) {
-		StateDto stateDto = modelMapper.map(state,StateDto.class);
-		stateDto.setStateId(state.getStateId());
-		stateDto.setRefCountryId(state.getCountry().getCountryId());
-		stateDto.setCountryName(state.getCountry().getCountryName());
-		CountryDto countryDto = modelMapper.map(state.getCountry(),CountryDto.class);
-		return stateDto;
-	}
-
 
 	@Override
 	public StateResponse getStateDetailsByRefCountryId(Integer refCountryId) {
@@ -179,9 +180,38 @@ public class StateServiceImpl implements StateService {
 		}catch (Exception e){
 			stateResponse.status = new Status(true,3000, e.getMessage());
 		}
-		stateResponse.setData(stateDtoList);
+		stateResponse.setData1(stateDtoList);
 		return stateResponse;
 	}
+
+	@Override
+	public StateResponse getStateDetailsByStateId(Integer stateId) {
+		StateResponse response=new StateResponse();
+		try {
+			State state=stateRepository.findByStateId(stateId);
+			if(state != null) {
+				StateDto stateDto = convertToStateDto(state);
+				response.data = stateDto;
+				response.status = new Status(false,200, "successfully  GetStateDetails");
+			}
+			else {
+				response.status = new Status(true, 4000, "Not found");
+			}
+		}catch(Exception e) {
+			response.status = new Status(true,3000, e.getMessage()); 
+
+		}
+		return response;
+	}
+
+	public StateDto convertToStateDto(State state) {
+		StateDto stateDto = modelMapper.map(state,StateDto.class);
+		stateDto.setStateId(state.getStateId());
+		stateDto.setRefCountryId(state.getCountry().getCountryId());
+		stateDto.setCountryName(state.getCountry().getCountryName());
+		return stateDto;
+	}
+
 
 }
 

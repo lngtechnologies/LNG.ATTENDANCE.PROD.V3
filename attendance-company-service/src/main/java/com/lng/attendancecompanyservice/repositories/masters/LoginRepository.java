@@ -9,4 +9,6 @@ public interface LoginRepository extends PagingAndSortingRepository<Login, Integ
 
 	 @Query(value = "call generatePassword", nativeQuery = true)
 	 String generatePassword();
+	 
+	 Login findByRefCustId(Integer custId);
 }

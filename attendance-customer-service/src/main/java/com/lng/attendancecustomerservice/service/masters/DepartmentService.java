@@ -10,6 +10,7 @@ public interface DepartmentService {
 	DepartmentResponse getAll();
 	Status updateDepartmentByDepartmentId(DepartmentDto departmentDto);
 	DepartmentResponse deleteByDeptId(Integer deptId);
-	
+	DepartmentResponse getDepartmentByDeptId(Integer deptId);
+
 
 }

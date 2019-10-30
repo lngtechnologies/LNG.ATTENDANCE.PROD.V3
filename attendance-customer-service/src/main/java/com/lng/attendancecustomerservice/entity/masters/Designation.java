@@ -21,6 +21,10 @@ public class Designation {
 	private Customer customer;
 	@Column(name="designationName")
 	private String designationName;
+	
+	@Column(name="desigIsActive")
+	private Boolean desigIsActive;
+	
 	public Integer getDesignationId() {
 		return designationId;
 	}
@@ -38,6 +42,12 @@ public class Designation {
 	}
 	public void setDesignationName(String designationName) {
 		this.designationName = designationName;
+	}
+	public Boolean getDesigIsActive() {
+		return desigIsActive;
+	}
+	public void setDesigIsActive(Boolean desigIsActive) {
+		this.desigIsActive = desigIsActive;
 	}
 	
 

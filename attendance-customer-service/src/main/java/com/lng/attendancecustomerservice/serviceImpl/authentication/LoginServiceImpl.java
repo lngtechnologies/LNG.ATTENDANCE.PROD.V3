@@ -1,7 +1,7 @@
 package com.lng.attendancecustomerservice.serviceImpl.authentication;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import java.util.Base64;
+
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.authentication.Login;
@@ -10,6 +10,7 @@ import com.lng.attendancecustomerservice.repositories.authentication.ICustomerRe
 import com.lng.attendancecustomerservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecustomerservice.security.JwtTokenService;
 import com.lng.attendancecustomerservice.service.authentication.ILogin;
+import com.lng.attendancecustomerservice.utils.Encoder;
 import com.lng.attendancecustomerservice.utils.MessageUtil;
 import com.lng.dto.authenticate.ChangePasswordDto;
 import com.lng.dto.authenticate.ForgotPasswordParamDto;
@@ -39,10 +40,13 @@ public class LoginServiceImpl implements ILogin {
 	
 	MessageUtil messageUtil = new MessageUtil();
 	
-	@Bean
-	public BCryptPasswordEncoder getEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	Encoder encoder = new Encoder();
+	
+	/*
+	 * @Bean public BCryptPasswordEncoder getEncoder() { return new
+	 * BCryptPasswordEncoder(); }
+	 */
+	
 
 	public LoginServiceImpl(ILoginRepository accountRepository, JwtTokenService jwtTokenService, ICustomerRepository custRepository) {
 		this.accountRepository = accountRepository;
@@ -56,6 +60,8 @@ public class LoginServiceImpl implements ILogin {
 	public LoginResponse AuthenticateUser(LoginParamDto loginDto) {
 		// Object to hold response
 		LoginResponse response = new LoginResponse();
+		
+		String logo = null;
 
 		try {
 			//String hashedPassword = BCrypt.hashpw(loginDto.getLoginPassword(), BCrypt.gensalt(4));
@@ -83,17 +89,22 @@ public class LoginServiceImpl implements ILogin {
 
 				//
 				if(!cust.getCustIsActive()) throw new Exception("Subscription expired, please contact admin");
+				
+				// convert byte to base64
+				if(cust != null)
+				logo = Base64.getEncoder().encodeToString(cust.getCustLogoFile());
+
 			}
 
 			// Check user is active
-			if(user.getIsActive() != 1) throw new Exception("Please contact admin "+loginDto.getLoginName() + "is not active");
+			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+loginDto.getLoginName() + "is not active");
 
 			// Validate password else throw invalid details
 			//if(matches(loginDto.getLoginPassword(), user.loginPassword)) {
-			if(getEncoder().matches(loginDto.getLoginPassword(), user.loginPassword)) {
+			if(encoder.getEncoder().matches(loginDto.getLoginPassword(), user.getLoginPassword())) {
 
 				// Generate token and send user details to client 
-				response.data = new LoginDto(user.getLoginId(),user.getRefCustId(), user.getLoginName(), jwtTokenService.generateToken(user.getLoginName()).toString());
+				response.data = new LoginDto(user.getLoginId(), user.getRefCustId(), user.getLoginName(), jwtTokenService.generateToken(user.getLoginName()).toString(), logo);
 				response.status = new Status(false,200,"success");
 
 			} else {
@@ -128,7 +139,7 @@ public class LoginServiceImpl implements ILogin {
 			if(user == null) throw new Exception(loginDto.getUserName() + " not found");
 			
 			// Check user is active
-			if(user.getIsActive() != 1) throw new Exception("Please contact admin "+loginDto.getUserName() + "is not active");
+			if(user.getLoginIsActive()== false) throw new Exception("Please contact admin "+loginDto.getUserName() + "is not active");
 			
 			// Check mobile exist
 			if(user.getLoginMobile() == null) throw new Exception("Mobile no doesn't exists. Unable to reset password.");
@@ -150,7 +161,7 @@ public class LoginServiceImpl implements ILogin {
 			String nPassword = accountRepository.generatePassword();
 			
 			// set new password
-			String hashedPassword = getEncoder().encode(nPassword);
+			String hashedPassword = encoder.getEncoder().encode(nPassword);
 			user.setLoginPassword(hashedPassword);
 			accountRepository.save(user);
 			
@@ -187,7 +198,7 @@ public class LoginServiceImpl implements ILogin {
 			if(user == null) throw new Exception(changePasswordDto.getUserName() + " not found");
 			
 			// Check user is active
-			if(user.getIsActive() != 1) throw new Exception("Please contact admin "+changePasswordDto.getUserName() + "is not active");
+			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+changePasswordDto.getUserName() + "is not active");
 
 			// Check customer validity
 			if(user != null && user.getRefCustId() != 0) {
@@ -204,10 +215,10 @@ public class LoginServiceImpl implements ILogin {
 
 			// Validate password else throw invalid details
 			//if(matches(changePasswordDto.getOldPassword(), user.loginPassword)) {
-			if(getEncoder().matches(changePasswordDto.getOldPassword(), user.loginPassword)) {
+			if(encoder.getEncoder().matches(changePasswordDto.getOldPassword(), user.getLoginPassword())) {
 
 				// set new password
-				String hashedPassword = getEncoder().encode(changePasswordDto.getNewPassword());
+				String hashedPassword = encoder.getEncoder().encode(changePasswordDto.getNewPassword());
 				//String hashedPassword = BCrypt.hashpw(changePasswordDto.getNewPassword(), BCrypt.gensalt(4));
 				user.setLoginPassword(hashedPassword);
 				accountRepository.save(user);

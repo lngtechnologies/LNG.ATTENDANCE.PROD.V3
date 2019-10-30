@@ -10,6 +10,5 @@ public interface ShiftService {
 	Status updateShiftByShiftId(ShiftDto shiftDto);
 	ShiftResponse deleteByShiftId(Integer shiftId);
 	ShiftResponse getBlockDetailsByRefBrId(Integer refBrId);
-	//ShiftResponse saveShift(ShiftDto shiftDto);
-
+	ShiftResponse getShiftDetailsByShiftId(Integer shiftId);
 }

@@ -139,27 +139,30 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 	public StatusDto deleteIndustryByIndustryId(Integer industryId) {
 		StatusDto statusDto = new StatusDto();
 
+		IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(industryId);
 		List<Customer> customer = customerRepository.findCustomerByIndustryType_IndustryId(industryId);
 		try {
+			if(industryType != null) {
 			if(customer.isEmpty()) {
-				IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(industryId);
-				
-				if(industryType != null) {
+			
 					industryTypeRepository.delete(industryType);
 					statusDto.setCode(200);
 					statusDto.setError(false);
 					statusDto.setMessage("Successfully Deleted");
 				
 				}else {
-					statusDto.setCode(400);
-					statusDto.setError(true);
-					statusDto.setMessage("Industry Not Found");
+					industryType.setIndustryIsActive(false);
+					industryTypeRepository.save(industryType);
+					statusDto.setCode(200);
+					statusDto.setError(false);
+					statusDto.setMessage("The record has been just disabled as it is already used");
 				}
 				
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("The record cannot be deleted as it is already used");
+				statusDto.setMessage("Industry Not Found");
+				
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);

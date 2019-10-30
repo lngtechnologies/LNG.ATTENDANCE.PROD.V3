@@ -34,24 +34,23 @@ public class BlockServiceImpl implements BlockService {
 	@Override
 	public BlockResponse saveBlock(BlockDto blockDto) {
 		BlockResponse response = new BlockResponse();
-		BlockDto blockDto2 = new BlockDto();
+		// BlockDto blockDto2 = new BlockDto();
+		Block  block = new Block();
 		try{
-			if(blockDto.getBlkName() == null || blockDto.getBlkName().isEmpty()) throw new Exception("Please enter Block name");
-			int b = blockRepository.findByRefBranchIdAndBlkName(blockDto.getRefBranchId(), blockDto.getBlkName());
+			if(blockDto.getBlkLogicalName() == null || blockDto.getBlkLogicalName().isEmpty()) throw new Exception("Please enter Block name");
+			int b = blockRepository.findByRefBranchIdAndBlkLogicalName(blockDto.getRefBranchId(), blockDto.getBlkLogicalName());
 			//blockDto.setBlkCreatedDate(new Date());
 			if(b == 0) {
-				Branch branch1 = branchRepository.findBranchByBrId(blockDto.getRefBranchId());
-				if(branch1 != null) {
+				Branch branch = branchRepository.findBranchByBrId(blockDto.getRefBranchId());
+				if(branch != null) {
 
-					Block  block = new Block();
-
-					block = modelMapper.map(blockDto, Block.class);
-					block.setBranch(branch1);
+					block.setBranch(branch);
+					block.setBlkGPSRadius(blockDto.getBlkGPSRadius());
+					block.setBlkLogicalName(blockDto.getBlkLogicalName());
+					block.setBlkLatLong(blockDto.getBlkLatLong());
 					block.setBlkCreatedDate(new Date());
-					blockDto2 = modelMapper.map(blockRepository.save(block), BlockDto.class);
-
-					//block = modelMapper.map(blockDto, Block.class);
-					//response = modelMapper.map(blockRepository.save(block),BlockResponse.class);
+					block.setBlkIsActive(true);
+					blockRepository.save(block);
 					response.status = new Status(false,200, "successfully created");
 				}
 				else{ 
@@ -59,7 +58,7 @@ public class BlockServiceImpl implements BlockService {
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"BlockName already exist for branch :" + blockDto.getRefBranchId());
+				response.status = new Status(true,400,"BlockName already exist");
 			}
 
 
@@ -70,19 +69,13 @@ public class BlockServiceImpl implements BlockService {
 		return response;
 	}
 
-	/*
-	 * private Boolean CheckBlockExists(String blkName) { Block block =
-	 * blockRepository.findByBlockName(blkName); if(block != null) { return true; }
-	 * else { return false; } }
-	 */
-
 	@Override
 	public BlockResponse getAll() {
 		//BlockDto blockDto1=new BlockDto();
 		BlockResponse response = new BlockResponse();
 		try {
 			List<Block> blockList=blockRepository.findAll();
-			response.setData(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
+			response.setData1(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
 			response.status = new Status(false,200, "successfully  GetAll");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
@@ -97,7 +90,7 @@ public class BlockServiceImpl implements BlockService {
 	public Status updateBlockByBlkId(BlockDto blockDto) {
 		Status status = null;
 		try {
-			if(blockDto.getBlkName() == null || blockDto.getBlkName().isEmpty()) throw new Exception("Please enter Block name");
+			if(blockDto.getBlkLogicalName() == null || blockDto.getBlkLogicalName().isEmpty()) throw new Exception("Please enter Block name");
 			if(blockDto.getBlkId() == null || blockDto.getBlkId() == 0) throw new Exception("Block id is null or zero");
 			if(blockDto.getRefBranchId() == null || blockDto.getRefBranchId() == 0) throw new Exception("RefCoustomerId id is null or zero");
 			Block block = blockRepository.findBlockByblkId(blockDto.getBlkId())	;	
@@ -140,22 +133,25 @@ public class BlockServiceImpl implements BlockService {
 		Block block = new Block();
 		try {
 
+			block = blockRepository.findBlockByblkId(blkId);
+			int a =blockRepository.findBlockBeaconMapByBlockBlkId(blkId);
 			int b = blockRepository.findEmployeeBlockByBlockBlkId(blkId);
-			if(b == 0) {
-				block = blockRepository.findBlockByblkId(blkId);
-				if(block != null) {
+			if(block != null) {
+				if(a == 0 && b == 0) {
 					blockRepository.delete(block);					
 					response.status = new Status(false,200, "successfully deleted");
+					
+				}else  {
+					block.setBlkIsActive(false);
+					blockRepository.save(block);
+					response.status = new Status(false,200, "Block is used in other transaction, so it is set to isActive 0");
 				}
-
-			} else  {
-				response.status = new Status(true,400, "Cannot Delete");
+			}else {
+				response.status = new Status(true,400, "BlockId Not Found");
 			}
-
 		}catch(Exception e) { 
-			response.status = new Status(true,400, "BlockId Not Found");
+			response.status = new Status(true,500, e.getMessage());
 		}
-
 		return response;
 	}
 
@@ -164,7 +160,7 @@ public class BlockServiceImpl implements BlockService {
 		BlockDto blockDto = modelMapper.map(block,BlockDto.class);
 		blockDto.setBlkId(block.getBlkId());
 		blockDto.setCustId(blockDto.getCustId());
-		blockDto.setRefBranchId(blockDto.getRefBranchId());
+		blockDto.setRefBranchId(block.getBranch().getBrId());
 		blockDto.setBrName(block.getBranch().getBrName());
 		BranchDto branchDto = modelMapper.map(block.getBranch(),BranchDto.class);
 		return blockDto;
@@ -196,7 +192,7 @@ public class BlockServiceImpl implements BlockService {
 
 
 		}
-		response.setData(blockDtoList);
+		response.setData1(blockDtoList);
 		return response;
 	}
 
@@ -214,7 +210,7 @@ public class BlockServiceImpl implements BlockService {
 
 				BlockDto blockDto1 = new BlockDto();
 				blockDto1.setBlkId(Integer.valueOf(p[0].toString()));
-				blockDto1.setBlkName(p[1].toString());
+				blockDto1.setBlkLogicalName(p[1].toString());
 				blockDto1.setBlkGPSRadius(Integer.valueOf(p[2].toString()));
 				blockDto1.setBlkLatLong(p[3].toString());
 				blockDto1.setCustId(Integer.valueOf(p[4].toString()));
@@ -229,7 +225,27 @@ public class BlockServiceImpl implements BlockService {
 
 
 		}
-		response.setData(blockDtoList);
+		response.setData1(blockDtoList);
+		return response;
+	}
+
+	@Override
+	public BlockResponse getBlockByBlkId(Integer blkId) {
+		BlockResponse response = new BlockResponse();
+		try {
+			Block block=blockRepository.findBlockByblkId(blkId);
+			if(block != null) {
+				BlockDto blockDto = convertToBlockDto(block);
+				response.data = blockDto;
+				response.status = new Status(false,200, "successfully  GetBlockDetails");
+			}
+			else {
+				response.status = new Status(true, 4000, "Not found");
+			}
+		}catch(Exception e) {
+			response.status = new Status(true,3000, e.getMessage()); 
+
+		}
 		return response;
 	}
 }

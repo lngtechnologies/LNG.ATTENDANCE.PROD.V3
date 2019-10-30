@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecustomerservice.service.masters.DepartmentService;
 import com.lng.dto.masters.department.DepartmentDto;
 import com.lng.dto.masters.department.DepartmentResponse;
+import com.lng.dto.masters.shift.ShiftDto;
+import com.lng.dto.masters.shift.ShiftResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
@@ -32,8 +34,8 @@ public class DepartmentController {
 
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<DepartmentResponse> getAll() {
-		DepartmentResponse departmentDto=  departmentService.getAll();
-		if(departmentDto.getData().isEmpty()) {
+		DepartmentResponse departmentDto= departmentService.getAll();
+		if(departmentDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<DepartmentResponse>(departmentDto, HttpStatus.OK);
@@ -43,7 +45,7 @@ public class DepartmentController {
 	public ResponseEntity<status.Status> update(@RequestBody DepartmentDto departmentDto){
 		status.Status status = departmentService.updateDepartmentByDepartmentId(departmentDto);
 		if(departmentDto != null){
-			return  new ResponseEntity<status.Status>(status, HttpStatus.OK);
+			return new ResponseEntity<status.Status>(status, HttpStatus.OK);
 		}
 		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
@@ -54,6 +56,14 @@ public class DepartmentController {
 			return new ResponseEntity<DepartmentResponse>(departmentDto2,HttpStatus.OK);
 		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
-}
 
+	@PostMapping(value = "/getDepartmenDetailsByDepartmenId")
+	public ResponseEntity<DepartmentResponse> findByShiftId(@RequestBody DepartmentDto departmentDto) {
+		DepartmentResponse departmentResponse = departmentService.getDepartmentByDeptId(departmentDto.getDeptId());
+		if (departmentResponse !=null){
+			return new ResponseEntity<DepartmentResponse>(departmentResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+}
 

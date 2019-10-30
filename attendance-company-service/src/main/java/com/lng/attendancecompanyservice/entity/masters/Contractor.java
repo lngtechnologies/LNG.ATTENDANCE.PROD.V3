@@ -18,6 +18,9 @@ public class Contractor {
 	
 	@Column(name = "contractorName")
 	private String contractorName;
+	
+	@Column(name="contractorIsActive")
+	private Boolean contractorIsActive;
 
 	public Integer getContractorId() {
 		return contractorId;
@@ -33,6 +36,14 @@ public class Contractor {
 
 	public void setContractorName(String contractorName) {
 		this.contractorName = contractorName;
+	}
+
+	public Boolean getContractorIsActive() {
+		return contractorIsActive;
+	}
+
+	public void setContractorIsActive(Boolean contractorIsActive) {
+		this.contractorIsActive = contractorIsActive;
 	}
 
 }

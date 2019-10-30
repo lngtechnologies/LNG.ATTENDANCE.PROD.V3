@@ -20,6 +20,8 @@ public class Department {
 	@Column(name = "deptName")
 	private String deptName;
 	
+	@Column(name = "deptIsActive")
+	private Boolean deptIsActive;
 	
 	@ManyToOne
 	@JoinColumn(name = "refCustId")
@@ -44,6 +46,11 @@ public class Department {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
-	
+	public Boolean getDeptIsActive() {
+		return deptIsActive;
+	}
+	public void setDeptIsActive(Boolean deptIsActive) {
+		this.deptIsActive = deptIsActive;
+	}
 
 }

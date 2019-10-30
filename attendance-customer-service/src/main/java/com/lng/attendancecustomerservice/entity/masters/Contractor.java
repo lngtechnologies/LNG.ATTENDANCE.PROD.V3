@@ -26,6 +26,9 @@ public class Contractor {
 	@JoinColumn(name = "refCustId")
 	private Customer customer;
 	
+	@Column(name="contractorIsActive")
+	private Boolean contractorIsActive;
+	
 	public Integer getContractorId() {
 		return contractorId;
 	}
@@ -44,6 +47,11 @@ public class Contractor {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
-	
+	public Boolean getContractorIsActive() {
+		return contractorIsActive;
+	}
+	public void setContractorIsActive(Boolean contractorIsActive) {
+		this.contractorIsActive = contractorIsActive;
+	}
 
 }

@@ -11,5 +11,6 @@ public interface BranchService {
 	BranchResponse getAll();
 	Status updateBranchByBrId(BranchDto branchDto); 
 	BranchResponse deleteByBrId(Integer brId);
+	BranchResponse getBranchByBrId(int brId);
 
 }

@@ -21,19 +21,19 @@ import status.StatusDto;
 
 @Service
 public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
-	
+
 	@Autowired
 	BlockBeaconMapRepository blockBeaconMapRepository;
-	
+
 	@Autowired
 	BlockRepository blockRepository;
-	
+
 	ModelMapper modelMapper = new ModelMapper();
 
 	@Override
 	public StatusDto saveBlkBeaconMap(BlockBeaconMapDto blockBeaconMapDto) {
 		StatusDto statusDto = new StatusDto();
-		
+
 		Block block = blockRepository.findByBlkId(blockBeaconMapDto.getRefBlkId());
 		BlockBeaconMap blockBeaconMap1 = blockBeaconMapRepository.findBlockBeaconMapByBeaconCode(blockBeaconMapDto.getBeaconCode());
 		try {
@@ -89,17 +89,19 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 	@Override
 	public StatusDto update(BlockBeaconMapDto blockBeaconMapDto) {
 		StatusDto statusDto = new StatusDto();
-		
+
 		BlockBeaconMap blockBeaconMap1 = blockBeaconMapRepository.findBlockBeaconMapByblkBeaconMapId(blockBeaconMapDto.getBlkBeaconMapId());
 		BlockBeaconMap blockBeaconMap2 = blockBeaconMapRepository.findBlockBeaconMapByBeaconCode(blockBeaconMapDto.getBeaconCode());
 		Block block = blockRepository.findByBlkId(blockBeaconMapDto.getRefBlkId());
 		try {
 			if(blockBeaconMap1 != null && block != null) {
-				if(blockBeaconMap2 == null) {
+				if(blockBeaconMap2 == null || (blockBeaconMap1.getBlkBeaconMapId() == blockBeaconMapDto.getBlkBeaconMapId() && blockBeaconMap1.getBeaconCode().equals(blockBeaconMapDto.getBeaconCode()))) {
 					blockBeaconMap1.setBeaconCode(blockBeaconMapDto.getBeaconCode());
+					blockBeaconMap1.setBeaconType(blockBeaconMapDto.getBeaconType());
 					blockBeaconMap1.setBlock(block);
 					blockBeaconMap1.setBlkBeaconMapCreatedDate(new Date());
 					blockBeaconMap1.setBlkBeaconMapIsActive(true);
+					blockBeaconMapRepository.save(blockBeaconMap1);
 					statusDto.setCode(200);
 					statusDto.setError(false);
 					statusDto.setMessage("Successfully Updated");
@@ -117,13 +119,13 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Opps...! Somenthing Went Wrong!");
-		}
-		
+		}		
 		return statusDto;
 	}
 
 	public BlockBeaconMapDto convertToIndustryTypeDto(BlockBeaconMap blockBeaconMap) {
 		BlockBeaconMapDto  blockBeaconMapDto = modelMapper.map(blockBeaconMap, BlockBeaconMapDto.class);
+		blockBeaconMapDto.setRefBlkId(blockBeaconMap.getBlock().getBlkId());
 		blockBeaconMapDto.setBlkLogicalName(blockBeaconMap.getBlock().getBlkLogicalName());
 		return blockBeaconMapDto;
 	}

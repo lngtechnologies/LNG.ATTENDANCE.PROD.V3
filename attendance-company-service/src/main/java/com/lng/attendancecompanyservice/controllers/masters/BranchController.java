@@ -20,7 +20,7 @@ import com.lng.dto.masters.branch.BranchResponse;
 public class BranchController {
 	@Autowired
 	BranchService branchService;
-	
+
 	@PostMapping(value = "/create")
 	public ResponseEntity<BranchResponse> save(@RequestBody BranchDto branchDto) {
 		BranchResponse branchDto1 = branchService.saveBranch(branchDto);
@@ -31,13 +31,13 @@ public class BranchController {
 	}
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<BranchResponse> getAll() {
-		BranchResponse branchDto =  branchService.getAll();
-		if(branchDto.getData().isEmpty()) {
+		BranchResponse branchDto = branchService.getAll();
+		if(branchDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<BranchResponse>(branchDto, HttpStatus.OK);
 	}
-	
+
 
 	@PostMapping(value = "/deleteByBranchId")
 	public ResponseEntity<BranchResponse> delete(@RequestBody BranchDto branchDto) {
@@ -52,9 +52,16 @@ public class BranchController {
 	public ResponseEntity<status.Status> update(@RequestBody BranchDto branchDto){
 		status.Status status = branchService.updateBranchByBrId(branchDto);
 		if(branchDto != null){
-			return  new ResponseEntity<status.Status>(status, HttpStatus.OK);
+			return new ResponseEntity<status.Status>(status, HttpStatus.OK);
 		}
 		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
-
+	@PostMapping(value = "/getBranchDetailsByBranchId")
+	public ResponseEntity<BranchResponse> findByBranchId(@RequestBody BranchDto branchDto) {
+		BranchResponse branchResponse = branchService.getBranchByBrId(branchDto.getBrId());
+		if (branchResponse !=null){
+			return new ResponseEntity<BranchResponse>(branchResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
 }

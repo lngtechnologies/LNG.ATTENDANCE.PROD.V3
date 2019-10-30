@@ -18,7 +18,7 @@ import com.lng.dto.masters.block.BlockResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
-@RequestMapping(value="/maste/blockr")
+@RequestMapping(value="/master/block")
 public class BlockController {
 	
 	@Autowired
@@ -36,7 +36,7 @@ public class BlockController {
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<BlockResponse> getAll() {
 		BlockResponse blockDto =  blockService.getAll();
-		if(blockDto.getData().isEmpty()) {
+		if(blockDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<BlockResponse>(blockDto, HttpStatus.OK);
@@ -75,6 +75,15 @@ public class BlockController {
 			return new ResponseEntity<BlockResponse>(blockDto1, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(value = "/getBlockDetailsByBlockId")
+	public ResponseEntity<BlockResponse> findByBlockId(@RequestBody BlockDto blockDto) {
+		BlockResponse blockResponse = blockService.getBlockByBlkId(blockDto.getBlkId());
+		if (blockResponse !=null){
+			return new ResponseEntity<BlockResponse>(blockResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 
 }

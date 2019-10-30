@@ -28,6 +28,7 @@ public class ContractorServiceImpl implements ContractorService {
 	@Autowired
 	CustomerRepository customerRepository;
 	@Override
+
 	public ContractorResponse saveContractor(ContractorDto contractorDto) {
 		ContractorResponse response = new ContractorResponse();
 		try{
@@ -43,6 +44,7 @@ public class ContractorServiceImpl implements ContractorService {
 					Contractor contractor = new Contractor();
 					contractor.setCustomer(customer);
 					contractor.setContractorName(contractorDto.getContractorName());
+					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					response.status = new Status(false,200, "successfully created");
 
@@ -62,20 +64,13 @@ public class ContractorServiceImpl implements ContractorService {
 		return response;
 	}
 
-
-	/*
-	 * private Boolean CheckContractorExists(String contractorName) { Contractor
-	 * contractor = contractorRepository.findByContractorName(contractorName);
-	 * if(contractor != null) { return true; } else { return false; } }
-	 */
-
 	@Override
 	public ContractorResponse getAll() {
 		ContractorResponse response = new ContractorResponse();
 		try {
-			List<Contractor> contractorList=contractorRepository.findAll();
-			response.setData(contractorList.stream().map(contractor -> convertToContractorDto(contractor)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully  GetAll");
+			List<Contractor> contractorList=contractorRepository.findAllByContractorIsActive(true);
+			response.setData1(contractorList.stream().map(contractor -> convertToContractorDto(contractor)).collect(Collectors.toList()));
+			response.status = new Status(false,200, "successfully GetAll");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -90,7 +85,7 @@ public class ContractorServiceImpl implements ContractorService {
 			if(contractorDto.getContractorName() == null || contractorDto.getContractorName().isEmpty()) throw new Exception("Please enter Contractor name");
 			if(contractorDto.getContractorId() == null || contractorDto.getContractorId() == 0) throw new Exception("Contractor id is null or zero");
 
-			Contractor 	contractor = contractorRepository.findContractorByContractorId(contractorDto.getContractorId())	;		
+			Contractor contractor = contractorRepository.findContractorByContractorId(contractorDto.getContractorId())	;	
 
 			Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());
 			if(customer != null) {
@@ -99,6 +94,7 @@ public class ContractorServiceImpl implements ContractorService {
 
 					contractor = modelMapper.map(contractorDto,Contractor.class);
 					contractor.setCustomer(customer);
+					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					status = new Status(false, 200, "Updated successfully");
 				} else if (ch.getContractorId() == contractorDto.getContractorId()) { 
@@ -137,24 +133,47 @@ public class ContractorServiceImpl implements ContractorService {
 	public ContractorResponse deleteByContractorId(Integer contractorId) {
 		ContractorResponse scontractorResponse=new ContractorResponse();
 		try {
-
+			Contractor contractor = contractorRepository.findContractorByContractorId(contractorId);
 			int a = contractorRepository.findEmployeeByContractorContractorId(contractorId);
-			if(a == 0) {
-				Contractor contractor = contractorRepository.findContractorByContractorId(contractorId);
-				if(contractor!= null) {
-					contractorRepository.delete(contractor);					
+			if(contractor!= null) {
+				if(a == 0) {
+					contractorRepository.delete(contractor);	
 					scontractorResponse.status = new Status(false,200, "successfully deleted");
+				}else {
+					contractor.setContractorIsActive(false);
+					contractorRepository.save(contractor);
+					scontractorResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
 				}
 
-			} else  {
-				scontractorResponse.status = new Status(true,400, "Cannot Delete");
+			} else {
+				scontractorResponse.status = new Status(true,400, "contractorId Not Found");
 			}
 
 		}catch(Exception e) { 
-			scontractorResponse.status = new Status(true,400, "contractorId Not Found");
+			scontractorResponse.status = new Status(true,400, e.getMessage());
 		}
 
 		return scontractorResponse;
+	}
+
+	@Override
+	public ContractorResponse getContractorByContractorId(Integer contractorId) {
+		ContractorResponse response=new ContractorResponse();
+		try {
+			Contractor contractor = contractorRepository.findContractorByContractorId(contractorId);
+			if(contractor != null) {
+				ContractorDto contractorDto = convertToContractorDto(contractor);
+				response.data = contractorDto;
+				response.status = new Status(false,200, "successfully GetContractorDetails");
+			}
+			else {
+				response.status = new Status(true, 4000, "Not found");
+			}
+		}catch(Exception e) {
+			response.status = new Status(true,3000, e.getMessage()); 
+
+		}
+		return response;
 	}
 
 

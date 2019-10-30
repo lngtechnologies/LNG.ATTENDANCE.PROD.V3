@@ -52,10 +52,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 				// Employee not exist
 				if(employee == null) throw new Exception("Employee doesn't exist or Invalid Data");
 				if(employee != null)  {
+					
 					byte[] custLogo = employee.getCustomer().getCustLogoFile();
 					String base64CustLogo = byteTobase64(custLogo);
+					
 					response.status = new Status(false,200,"success");
-					response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrCode(), employee.getEmpId(), employee.getEmpName(), employee.getEmpPresistedFaceId(), employee.getEmpAppSetupStatus(), base64CustLogo);					
+					response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), employee.getBranch().getBrCode(), employee.getEmpId(), employee.getEmpName(), base64CustLogo);					
 				}
 			} else {
 				throw new Exception("Invalid Data");
@@ -89,11 +91,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 			if(employee != null) {
 
 				String mobileNo = employee.getEmpMobile();
-				String mobileSmS = "Welcome to LNG Attendance System, Your OTP is : "+ otp;	
+				String mobileSmS = otp +" is OTP to verify your Employee details with "+ employee.getEmpName();	
 				String s = messageUtil.sms(mobileNo, mobileSmS);
-				otpResponseDto.status = new Status(false,200,"Successfully sent OTP");
-				otpResponseDto.otpDto = new OtpDto(otp);
-
+				if(s != null) {
+					otpResponseDto.status = new Status(false,200,"Successfully sent OTP");
+					otpResponseDto.otpDto = new OtpDto(otp);				
+				}else {
+					otpResponseDto.status = new Status(true,400,"There is some problem with the message utility");
+				}
 			}
 		} catch(Exception ex) {
 			otpResponseDto.status = new Status(true,400,ex.getMessage());

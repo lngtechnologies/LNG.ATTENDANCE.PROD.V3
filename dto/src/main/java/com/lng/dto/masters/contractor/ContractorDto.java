@@ -5,6 +5,7 @@ public class ContractorDto {
 	private String contractorName;
 	private Integer  refCustId;
 	private String  custName;
+	private Boolean contractorIsActive;
 
 	public Integer getContractorId() {
 		return contractorId;
@@ -30,6 +31,11 @@ public class ContractorDto {
 	public void setCustName(String custName) {
 		this.custName = custName;
 	}
-
+	public Boolean getContractorIsActive() {
+		return contractorIsActive;
+	}
+	public void setContractorIsActive(Boolean contractorIsActive) {
+		this.contractorIsActive = contractorIsActive;
+	}
 
 }

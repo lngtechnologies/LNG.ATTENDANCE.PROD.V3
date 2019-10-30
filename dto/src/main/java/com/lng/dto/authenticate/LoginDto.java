@@ -12,12 +12,14 @@ public class LoginDto {
 	private Integer refCustId;
 	private String loginName;
 	private String token;
+	private String custLogo;
 	
-	public LoginDto(Integer id, Integer custId, String name, String token) {
+	public LoginDto(Integer id, Integer custId, String name, String token, String logo) {
 		this.loginId = id;
 		this.refCustId = custId;
 		this.loginName = name;
 		this.token = token;
+		this.custLogo = logo;
 	}
 	
 	public Integer getRefCustId() {
@@ -29,6 +31,14 @@ public class LoginDto {
 	}
 
 
+
+	public String getCustLogo() {
+		return custLogo;
+	}
+
+	public void setCustLogo(String custLogo) {
+		this.custLogo = custLogo;
+	}
 
 	public String getLoginName() {
 		return loginName;

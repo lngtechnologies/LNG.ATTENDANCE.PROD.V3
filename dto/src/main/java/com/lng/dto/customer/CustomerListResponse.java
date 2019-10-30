@@ -7,6 +7,7 @@ import status.Status;
 public class CustomerListResponse {
 
 	private List<CustomerDtoTwo> dataList;
+	public CustomerDtoTwo data; 
 	public Status status;
 	
 	public List<CustomerDtoTwo> getDataList() {
@@ -15,8 +16,6 @@ public class CustomerListResponse {
 	public void setDataList(List<CustomerDtoTwo> dataList) {
 		this.dataList = dataList;
 	}
-	
-	
 	
 	
 	

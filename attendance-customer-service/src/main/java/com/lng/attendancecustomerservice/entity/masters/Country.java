@@ -12,7 +12,7 @@ import javax.persistence.Table;
 public class Country {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "countryId")
 	private Integer countryId;
 	
@@ -21,6 +21,9 @@ public class Country {
 	
 	@Column(name = "countryName")
 	private String countryName;
+	
+	@Column(name = "countryIsActive")
+	private Boolean countryIsActive;
 
 	public Integer getCountryId() {
 		return countryId;
@@ -46,4 +49,13 @@ public class Country {
 		this.countryName = countryName;
 	}
 
+	public Boolean getCountryIsActive() {
+		return countryIsActive;
+	}
+
+	public void setCountryIsActive(Boolean countryIsActive) {
+		this.countryIsActive = countryIsActive;
+	}
+
+	
 }

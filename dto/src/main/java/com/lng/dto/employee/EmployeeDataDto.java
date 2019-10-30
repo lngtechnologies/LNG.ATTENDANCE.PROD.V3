@@ -5,6 +5,10 @@ public class EmployeeDataDto {
 	private Integer custId;
 
 	private String custName;
+	
+	private Integer brId;
+	
+	private String brName;
 
 	private String brCode;
 
@@ -12,22 +16,20 @@ public class EmployeeDataDto {
 
 	private String employeeName;
 
-	private String empPresistedFaceId;
-
-	private Boolean empAppSetupStatus;
+	// private Integer otp;
 
 	private String custLogo;
 
 	//private Boolean empAppSetupStatus;
 
-	public EmployeeDataDto(Integer custId, String custName, String brCode, Integer empid, String empName, String empPresistedFaceId, Boolean empAppSetupStatus, String custLogo) {
+	public EmployeeDataDto(Integer custId, String custName, Integer brId, String brName, String brCode, Integer empid, String empName, String custLogo) {
 		this.custId = custId;
 		this.custName = custName;
+		this.brId = brId;
+		this.brName = brName;
 		this.brCode = brCode;		
 		this.empId = empid;
-		this.employeeName = empName;		
-		this.empPresistedFaceId = empPresistedFaceId;
-		this.empAppSetupStatus = empAppSetupStatus;
+		this.employeeName = empName;
 		this.custLogo = custLogo;
 	}
 
@@ -70,7 +72,6 @@ public class EmployeeDataDto {
 	public void setEmployeeName(String employeeName) {
 		this.employeeName = employeeName;
 	}
-
 	public String getCustLogo() {
 		return custLogo;
 	}
@@ -79,21 +80,20 @@ public class EmployeeDataDto {
 		this.custLogo = custLogo;
 	}
 
-	public String getEmpPresistedFaceId() {
-		return empPresistedFaceId;
+	public Integer getBrId() {
+		return brId;
 	}
 
-	public void setEmpPresistedFaceId(String empPresistedFaceId) {
-		this.empPresistedFaceId = empPresistedFaceId;
+	public void setBrId(Integer brId) {
+		this.brId = brId;
 	}
 
-	public Boolean getEmpAppSetupStatus() {
-		return empAppSetupStatus;
+	public String getBrName() {
+		return brName;
 	}
 
-	public void setEmpAppSetupStatus(Boolean empAppSetupStatus) {
-		this.empAppSetupStatus = empAppSetupStatus;
+	public void setBrName(String brName) {
+		this.brName = brName;
 	}
-
-
+	
 }

@@ -6,12 +6,13 @@ import com.lng.dto.masters.designation.DesignationResponse;
 import status.Status;
 
 public interface DesignationService {
-	
+
 	DesignationResponse saveDesignation(DesignationDto designationDto);
-	
+
 	DesignationResponse getAll();
-	  Status updateDesignationBydesignationId(DesignationDto designationDto); 
-	  DesignationResponse deleteByDesignationId(Integer designationId);
-	  	
+	Status updateDesignationBydesignationId(DesignationDto designationDto); 
+	DesignationResponse deleteByDesignationId(Integer designationId);
+	DesignationResponse getDesignationByDesignationId(Integer designationId);
+
 
 }

@@ -32,6 +32,9 @@ public class Shift {
 	
 	@Column(name = "shiftEnd")
 	private String shiftEnd;
+	
+	@Column(name = "shiftIsActive")
+	private Boolean shiftIsActive;
 
 	public Integer getShiftId() {
 		return shiftId;
@@ -73,6 +76,12 @@ public class Shift {
 		this.shiftEnd = shiftEnd;
 	}
 
-	
-	
+	public Boolean getShiftIsActive() {
+		return shiftIsActive;
+	}
+
+	public void setShiftIsActive(Boolean shiftIsActive) {
+		this.shiftIsActive = shiftIsActive;
+	}
+
 }

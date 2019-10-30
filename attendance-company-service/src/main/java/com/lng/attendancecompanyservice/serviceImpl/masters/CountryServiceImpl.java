@@ -44,8 +44,12 @@ public class CountryServiceImpl implements CountryService {
 			//System.out.println("country name "+countryName.getCountryName());
 			if(countryDto.getCountryName() != null) {
 				Country country = new Country();
-				country = modelMapper.map(countryDto, Country.class);
-				response = modelMapper.map(countryRepositary.save(country),CountryResponse.class);
+				country.setCountryName(countryDto.getCountryName());
+				country.setCountryTelCode(countryDto.getCountryTelCode());
+				country.setCountryIsActive(true);
+				countryRepositary.save(country);
+				//country = modelMapper.map(countryDto, Country.class);
+				//response = modelMapper.map(countryRepositary.save(country),CountryResponse.class);
 				response.status = new Status(false,200, "successfully created");
 			}
 
@@ -75,7 +79,7 @@ public class CountryServiceImpl implements CountryService {
 			return false;
 		}
 	}
-	
+
 	private Boolean CheckCoutryTelExistsForUpdate(String CountryTelCode, Integer cId) {
 		Country countryTel =  countryRepositary.findByCountryTelCode(CountryTelCode);
 
@@ -92,8 +96,8 @@ public class CountryServiceImpl implements CountryService {
 		//CountryDto countryDto2=new CountryDto();
 		CountryResponse response = new CountryResponse();
 		try {
-			List<Country> countryList=countryRepositary.findAll();
-			response.setData(countryList.stream().map(country -> convertToCountryDto(country)).collect(Collectors.toList()));
+			List<Country> countryList=countryRepositary.findAllByCountryIsActive(true);
+			response.setData1(countryList.stream().map(country -> convertToCountryDto(country)).collect(Collectors.toList()));
 			response.status = new Status(false,200, "GetAll Successfully ");
 
 		}catch(Exception e) {
@@ -111,15 +115,32 @@ public class CountryServiceImpl implements CountryService {
 			if(countryDto.getCountryId() == null || countryDto.getCountryId() == 0) throw new Exception("Country id is null or zero");
 
 			Country country = countryRepositary.findCountryByCountryId(countryDto.getCountryId());			
-			if(CheckCountryExists(countryDto.getCountryName())) throw new Exception("Country already exists");
+			//if(CheckCountryExists(countryDto.getCountryName())) throw new Exception("Country already exists");
 
-			if(CheckCoutryTelExistsForUpdate(countryDto.getCountryTelCode(), countryDto.getCountryId())) throw new Exception("Country Tel code already exists");
+			//if(CheckCoutryTelExistsForUpdate(countryDto.getCountryTelCode(), countryDto.getCountryId())) throw new Exception("Country Tel code already exists");
+			if(country != null) {
+				Country ct = countryRepositary.findCountryNameByCountryTelCode(countryDto.getCountryTelCode());
+				if(ct == null) {
+					country = modelMapper.map(countryDto,Country.class);
+					country.setCountryIsActive(true);
+					countryRepositary.save(country);
+					status = new Status(false, 200, "Updated successfully");
+				} else if (ct.getCountryId() == countryDto.getCountryId()) { 
 
-			country = modelMapper.map(countryDto,Country.class);
-			countryRepositary.save(country);
-			status = new Status(false, 200, "Updated successfully");
+					country = modelMapper.map(countryDto,Country.class);
+					countryRepositary.save(country);
+					status = new Status(false, 200, "Updated successfully");
+				}
+				else{ 
+					status = new Status(true,400,"CountryName already exist for CountryId :" + countryDto.getCountryTelCode());
+				}
+			}
+
+			else {
+				status = new Status(true, 400, "CountryId Not Found");
+
+			}
 		}
-
 		catch(Exception e) {
 			status = new Status(true, 4000, e.getMessage());
 		}
@@ -131,22 +152,20 @@ public class CountryServiceImpl implements CountryService {
 		CountryResponse countryResponse=new CountryResponse(); 
 		//CountryDto  countryDto = new CountryDto();
 		try { 
-			//if(countryDto.getCountryId() == null || countryDto.getCountryId() == 0) throw new Exception("Country id is not found");
-			// Get state by countryId
+			Country country=countryRepositary.findCountryByCountryId(countryId);
 			List<State> state = stateRepository.findStateByCountryCountryId(countryId);
-
+			if(country!= null) {
 			if(state.size() == 0 || state == null) {
-				Country country=countryRepositary.findCountryByCountryId(countryId);
-				if(country!= null) {
+
 					countryRepositary.delete(country);					
 					countryResponse.status = new Status(false,200, "successfully deleted");
+				}else {
+					country.setCountryIsActive(false);
+					countryRepositary.save(country);
+					countryResponse.status = new Status(true,400, "The record has been just disabled as it is already used");
 				}
-				else {
-					throw new Exception("CountryId Not Found");
-				}
-
 			} else  {
-				countryResponse.status = new Status(true,400, "Cannot Delete");
+				countryResponse.status = new Status(true,400, "Country Not Found");
 			}
 
 		}catch(Exception e) { 

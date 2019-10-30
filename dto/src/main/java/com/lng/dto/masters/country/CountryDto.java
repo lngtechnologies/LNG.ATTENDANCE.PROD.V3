@@ -7,6 +7,7 @@ public class CountryDto {
 	private Integer countryId;
 	private String countryTelCode;
 	private String countryName;
+	private Boolean countryIsActive;
 	private  List<CountryDto>countryDtoList;
 	
 	public Integer getCountryId() {
@@ -33,6 +34,11 @@ public class CountryDto {
 	public void setCountryDtoList(List<CountryDto> countryDtoList) {
 		this.countryDtoList = countryDtoList;
 	}
-  
-
+	public Boolean getCountryIsActive() {
+		return countryIsActive;
+	}
+	public void setCountryIsActive(Boolean countryIsActive) {
+		this.countryIsActive = countryIsActive;
+	}
+	
 }

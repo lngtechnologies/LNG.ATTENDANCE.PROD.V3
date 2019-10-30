@@ -1,5 +1,7 @@
 package com.lng.attendancecompanyservice.serviceImpl.authentication;
 
+import java.util.Base64;
+
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
@@ -58,6 +60,8 @@ public class LoginServiceImpl implements ILogin {
 	public LoginResponse AuthenticateUser(LoginParamDto loginDto) {
 		// Object to hold response
 		LoginResponse response = new LoginResponse();
+		
+		String logo = null;
 
 		try {
 			//String hashedPassword = BCrypt.hashpw(loginDto.getLoginPassword(), BCrypt.gensalt(4));
@@ -85,6 +89,11 @@ public class LoginServiceImpl implements ILogin {
 
 				//
 				if(!cust.getCustIsActive()) throw new Exception("Subscription expired, please contact admin");
+				
+				// convert byte to base64
+				if(cust != null)
+				logo = Base64.getEncoder().encodeToString(cust.getCustLogoFile());
+
 			}
 
 			// Check user is active
@@ -95,7 +104,7 @@ public class LoginServiceImpl implements ILogin {
 			if(encoder.getEncoder().matches(loginDto.getLoginPassword(), user.getLoginPassword())) {
 
 				// Generate token and send user details to client 
-				response.data = new LoginDto(user.getLoginId(), user.getRefCustId(), user.getLoginName(), jwtTokenService.generateToken(user.getLoginName()).toString());
+				response.data = new LoginDto(user.getLoginId(), user.getRefCustId(), user.getLoginName(), jwtTokenService.generateToken(user.getLoginName()).toString(), logo);
 				response.status = new Status(false,200,"success");
 
 			} else {
@@ -158,7 +167,7 @@ public class LoginServiceImpl implements ILogin {
 			
 			// Send new password to registered mobile
 			String mobileNo = user.getLoginMobile();
-			String mobileSmS = "Dear " + loginDto.getUserName() +" \n, Your new login password is " + nPassword;	
+			String mobileSmS = "Password to access the Attendance System Web Application has been reset to : " + nPassword;	
 			String s = messageUtil.sms(mobileNo, mobileSmS);
 			
 			//Set msg

@@ -34,7 +34,7 @@ public class StateController {
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<StateResponse> getAll() {
 		StateResponse stateDto =  stateService.getAll();
-		if(stateDto.getData().isEmpty()) {
+		if(stateDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<StateResponse>(stateDto, HttpStatus.OK);
@@ -57,11 +57,20 @@ public class StateController {
 	}
 	
 	@PostMapping(value = "/getStateDetailsByCountryId")
-	public ResponseEntity<StateResponse> edit(@RequestBody StateDto StateDto) {
-		StateResponse stateDto1 = stateService.getStateDetailsByRefCountryId(StateDto.getRefCountryId());
+	public ResponseEntity<StateResponse> edit(@RequestBody StateDto stateDto) {
+		StateResponse stateDto1 = stateService.getStateDetailsByRefCountryId(stateDto.getRefCountryId());
 		if(stateDto1 !=null){
 			return new ResponseEntity<StateResponse>(stateDto1, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(value = "/getStateDetailsByStateId")
+	public ResponseEntity<StateResponse> findByStateId(@RequestBody StateDto stateDto) {
+		StateResponse stateResponse = stateService.getStateDetailsByStateId(stateDto.getStateId());
+		if (stateResponse !=null){
+			return new ResponseEntity<StateResponse>(stateResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 }

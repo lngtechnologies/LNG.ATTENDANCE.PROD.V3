@@ -13,6 +13,6 @@ public interface StateService {
 	Status updateSateByStateId(StateDto stateDto); 
 	StateResponse deleteByStateId(Integer stateId);
 	StateResponse getStateDetailsByRefCountryId(Integer refCountryId);
-
+	StateResponse  getStateDetailsByStateId(Integer stateId);
 
 }

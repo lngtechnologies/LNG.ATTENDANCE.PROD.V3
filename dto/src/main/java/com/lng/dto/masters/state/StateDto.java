@@ -12,6 +12,8 @@ public class StateDto {
 	
 	private String countryName;
 	
+	private Boolean stateIsActive;
+	
 	private  List<StateDto>stateDtoList;
 	
 	public Integer getStateId() {
@@ -45,6 +47,11 @@ public class StateDto {
 	public void setCountryName(String countryName) {
 		this.countryName = countryName;
 	}
-
+	public Boolean getStateIsActive() {
+		return stateIsActive;
+	}
+	public void setStateIsActive(Boolean stateIsActive) {
+		this.stateIsActive = stateIsActive;
+	}
 	
 }
