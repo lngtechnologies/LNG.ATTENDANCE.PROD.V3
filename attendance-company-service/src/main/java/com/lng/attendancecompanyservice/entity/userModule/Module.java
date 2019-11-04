@@ -17,6 +17,7 @@ public class Module {
 	private Integer parentId;
 	private String icon;
 	private String classes;
+	private Integer moduleDefault;
 	
 	public Integer getModuleId() {
 		return moduleId;
@@ -64,6 +65,14 @@ public class Module {
 
 	public void setClasses(String classes) {
 		this.classes = classes;
+	}
+
+	public Integer getModuleDefault() {
+		return moduleDefault;
+	}
+
+	public void setModuleDefault(Integer moduleDefault) {
+		this.moduleDefault = moduleDefault;
 	}
 	
 }

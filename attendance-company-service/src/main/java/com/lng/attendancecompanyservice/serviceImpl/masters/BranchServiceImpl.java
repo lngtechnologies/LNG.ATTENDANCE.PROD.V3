@@ -283,4 +283,23 @@ public class BranchServiceImpl implements BranchService {
 		CountryDto countryDto = modelMapper.map(branch.getCountry(),CountryDto.class);
 		return branchDto;
 	}
+
+
+	@Override
+	public BranchResponse getAllByCustId(Integer custId) {
+		BranchResponse response = new BranchResponse();
+		try {
+			List<Branch> branchList=branchRepository.findAllByCustomer_CustIdAndBrIsActive(custId, true);
+			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+			if(response != null && response.getData1() != null) {
+				response.status = new Status(false,200, "success");
+			}else {
+				response.status = new Status(true,400, "Branch Not Found"); 
+			}
+			
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Somenthing Went Wrong.."); 
+		}
+		return response;
+	}
 }

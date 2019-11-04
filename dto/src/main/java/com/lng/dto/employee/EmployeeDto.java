@@ -32,6 +32,8 @@ public class EmployeeDto {
 	
 	private String empPicBlobPath;
 	
+	private String employeePic;
+	
 	private String empPresistedFaceId;
 	
 	private String empDeviceName;
@@ -193,5 +195,13 @@ public class EmployeeDto {
 	public void setCustCode(String custCode) {
 		this.custCode = custCode;
 	}
-	
+
+	public String getEmployeePic() {
+		return employeePic;
+	}
+
+	public void setEmployeePic(String employeePic) {
+		this.employeePic = employeePic;
+	}
+
 }

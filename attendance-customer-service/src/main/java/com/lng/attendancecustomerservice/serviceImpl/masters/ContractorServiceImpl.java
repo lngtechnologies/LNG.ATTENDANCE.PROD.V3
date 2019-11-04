@@ -101,6 +101,7 @@ public class ContractorServiceImpl implements ContractorService {
 
 					contractor = modelMapper.map(contractorDto,Contractor.class);
 					contractor.setCustomer(customer);
+					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					status = new Status(false, 200, "Updated successfully");
 				}
@@ -176,5 +177,23 @@ public class ContractorServiceImpl implements ContractorService {
 		return response;
 	}
 
+	@Override
+	public ContractorResponse getAllByCustId(Integer custId) {
+		ContractorResponse response = new ContractorResponse();
+		try {
+			List<Contractor> contractorList = contractorRepository.findAllByCustomer_CustIdAndContractorIsActive(custId, true);
+			response.setData1(contractorList.stream().map(contractor -> convertToContractorDto(contractor)).collect(Collectors.toList()));
+			
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(true,400, "Contractor Not found"); 
+			}else {
+				response.status = new Status(false,200, "success");
+			}
 
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Something went wrong"); 
+		}
+		return response;
+	}
 }
+

@@ -20,5 +20,7 @@ public interface CustomerService {
 	CustomerResponse deleteCustomerByCustomerId(int custId);
 	
 	CustomerListResponse searchCustByNameOrCode(String cust);
+	
+	void createBranchFaceListId(String branchCode) throws Exception;
 
 }

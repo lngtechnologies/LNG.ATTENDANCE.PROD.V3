@@ -101,12 +101,14 @@ public class BlockServiceImpl implements BlockService {
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
 					block.setBlkCreatedDate(new Date());
+					block.setBlkIsActive(false);
 					blockRepository.save(block);
 					status = new Status(false, 200, "Updated successfully");
 				} else if (bl.getBlkId() == blockDto.getBlkId()) { 
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
 					block.setBlkCreatedDate(new Date());
+					block.setBlkIsActive(false);
 					blockRepository.save(block);
 					status = new Status(false, 200, "Updated successfully");
 				}

@@ -13,6 +13,6 @@ public interface DesignationService {
 	Status updateDesignationBydesignationId(DesignationDto designationDto); 
 	DesignationResponse deleteByDesignationId(Integer designationId);
 	DesignationResponse getDesignationByDesignationId(Integer designationId);
-
+	DesignationResponse getAllByCustId(Integer custId);
 
 }

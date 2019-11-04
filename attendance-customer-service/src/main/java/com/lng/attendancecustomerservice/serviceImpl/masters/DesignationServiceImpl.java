@@ -97,6 +97,7 @@ public class DesignationServiceImpl implements DesignationService{
 
 					designation.setCustomer(customer);
 					designation.setDesignationName(designationDto.getDesignationName());
+					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					status = new Status(false,200, "Updated successfully");
 
@@ -168,6 +169,26 @@ public class DesignationServiceImpl implements DesignationService{
 			}
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
+
+		}
+		return response;
+	}
+
+	@Override
+	public DesignationResponse getAllByCustId(Integer custId) {
+		DesignationResponse response = new DesignationResponse();
+		try {
+			List<Designation> designationList=designationRepository.findAllByCustomer_CustIdAndDesigIsActive(custId, true);
+			response.setData1(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
+			
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(true,400, "Designation Not Found"); 
+				
+			}else {
+				response.status = new Status(false,200, "success");
+			}			
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Something went wrong"); 
 
 		}
 		return response;

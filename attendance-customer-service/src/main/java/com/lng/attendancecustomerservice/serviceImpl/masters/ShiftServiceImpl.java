@@ -112,6 +112,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 					shift = modelMapper.map(shiftDto,Shift.class);
 					shift.setBranch(branch);
+					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					status = new Status(false, 200, "Updated successfully");
 				}
@@ -138,8 +139,8 @@ public class ShiftServiceImpl implements ShiftService {
 			Shift shift = shiftRepository.findShiftByShiftId(shiftId);
 			int b = shiftRepository.findEmployeeByShiftShiftId(shiftId);
 			if(shift!= null) {
-			if(b == 0) {
-			
+				if(b == 0) {
+
 					shiftRepository.delete(shift);	
 					shiftResponse.status = new Status(false,200, "successfully deleted");
 				} else {
@@ -169,25 +170,28 @@ public class ShiftServiceImpl implements ShiftService {
 
 
 	@Override
-	public ShiftResponse getBlockDetailsByRefBrId(Integer refBrId) {
+	public ShiftResponse getShiftDetailsByRefBrId(Integer refBrId) {
 		//ShiftDto shiftDto = new ShiftDto();
 		ShiftResponse response = new ShiftResponse();
 		List<ShiftDto> shiftDtoList = new ArrayList<>();
 		try {
 
-			List<Object[]> shiftList = shiftRepository.findShiftDetailsByBranch_RefBrId(refBrId);
-
-			for (Object[] p : shiftList) {	
-				ShiftDto shiftDto1 = new ShiftDto();
-				shiftDto1.setShiftName(p[0].toString());
-				shiftDto1.setShiftStart((p[1].toString()));
-				shiftDto1.setShiftEnd((p[2].toString()));
-				shiftDto1.setRefBrId(Integer.valueOf(p[3].toString()));
-				shiftDtoList.add(shiftDto1);
-				response.status = new Status(false,200, "successfully GetShiftDetails");
+			List<Object[]> shiftList = shiftRepository.findShiftDetailsByBranch_RefBrIdAndShiftIsActive(refBrId, true);
+			if(shiftList.isEmpty()) {
+				response.status = new Status(true,400, "Shift Not Found");
+			}else {
+				for (Object[] p : shiftList) {	
+			
+					ShiftDto shiftDto1 = new ShiftDto();
+					shiftDto1.setShiftName(p[0].toString());
+					shiftDto1.setShiftStart((p[1].toString()));
+					shiftDto1.setShiftEnd((p[2].toString()));
+					shiftDto1.setRefBrId(Integer.valueOf(p[3].toString()));
+					shiftDtoList.add(shiftDto1);
+					response.status = new Status(false,200, "success");
+				}
 
 			}
-
 
 		}catch (Exception e){
 			response.status = new Status(true,4000, e.getMessage());
@@ -221,6 +225,21 @@ public class ShiftServiceImpl implements ShiftService {
 	}
 
 
+	@Override
+	public ShiftResponse getAllByCustId(Integer custId) {
+		ShiftResponse response = new ShiftResponse();
+		try {
+			List<Shift> shiftList=shiftRepository.findByCustomer_CustIdAndShiftIsActive(custId);
+			response.setData1(shiftList.stream().map(shift -> convertToShiftDto(shift)).collect(Collectors.toList()));
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(true,400, "Shift Not Found"); 
+			}else {
+				response.status = new Status(false,200, "success");
+			}
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Something Went Wrong"); 
 
-
+		}
+		return response;
+	}
 }

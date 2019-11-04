@@ -58,7 +58,7 @@ public class ShiftController {
 
 	@PostMapping(value = "/getShiftDetailsByBranchId")
 	public ResponseEntity<ShiftResponse> edit(@RequestBody ShiftDto shiftDto) {
-		ShiftResponse shiftDto1 = shiftService.getBlockDetailsByRefBrId(shiftDto.getRefBrId());
+		ShiftResponse shiftDto1 = shiftService.getShiftDetailsByRefBrId(shiftDto.getRefBrId());
 		if(shiftDto !=null){
 			return new ResponseEntity<ShiftResponse>(shiftDto1, HttpStatus.CREATED);
 		}
@@ -72,5 +72,11 @@ public class ShiftController {
 			return new ResponseEntity<ShiftResponse>(shiftResponse, HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+	
+	@PostMapping(value = "/getAllByCustId")
+	public ResponseEntity<ShiftResponse> getAllByCustId(@RequestBody ShiftDto shiftDto) {
+		ShiftResponse shiftResponse = shiftService.getAllByCustId(shiftDto.getRefCustId());
+		return new ResponseEntity<ShiftResponse>(shiftResponse, HttpStatus.OK);
 	}
 }

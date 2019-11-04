@@ -108,12 +108,14 @@ public class StateServiceImpl implements StateService {
 
 					state = modelMapper.map(stateDto,State.class);
 					state.setCountry(country);
+					state.setStateIsActive(true);
 					stateRepository.save(state);
 					status = new Status(false, 200, "Updated successfully");
 				} else if (st.getStateId() == stateDto.getStateId()) { 
 
 					state = modelMapper.map(stateDto,State.class);
 					state.setCountry(country);
+					state.setStateIsActive(true);
 					stateRepository.save(state);
 					status = new Status(false, 200, "Updated successfully");
 				}

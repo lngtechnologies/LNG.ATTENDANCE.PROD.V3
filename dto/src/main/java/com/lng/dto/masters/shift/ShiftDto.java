@@ -2,6 +2,7 @@ package com.lng.dto.masters.shift;
 
 public class ShiftDto {
 	private Integer shiftId;
+	private Integer refCustId;
 	private Integer refBrId;
 	private String  shiftName;
 	private String  shiftStart;
@@ -53,6 +54,12 @@ public class ShiftDto {
 	}
 	public void setShiftIsActive(Boolean shiftIsActive) {
 		this.shiftIsActive = shiftIsActive;
+	}
+	public Integer getRefCustId() {
+		return refCustId;
+	}
+	public void setRefCustId(Integer refCustId) {
+		this.refCustId = refCustId;
 	}
 	
 }

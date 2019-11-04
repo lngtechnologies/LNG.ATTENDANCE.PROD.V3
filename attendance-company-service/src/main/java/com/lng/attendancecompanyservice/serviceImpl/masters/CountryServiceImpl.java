@@ -128,6 +128,7 @@ public class CountryServiceImpl implements CountryService {
 				} else if (ct.getCountryId() == countryDto.getCountryId()) { 
 
 					country = modelMapper.map(countryDto,Country.class);
+					country.setCountryIsActive(true);
 					countryRepositary.save(country);
 					status = new Status(false, 200, "Updated successfully");
 				}

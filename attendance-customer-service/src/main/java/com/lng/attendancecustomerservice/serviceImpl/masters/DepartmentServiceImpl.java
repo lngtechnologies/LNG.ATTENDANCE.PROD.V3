@@ -106,6 +106,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 					department = modelMapper.map(departmentDto,Department.class);
 					department.setCustomer(customer);
+					department.setDeptIsActive(true);
 					departmentRepository.save(department);
 					status = new Status(false, 200, "Updated successfully");
 				}
@@ -181,4 +182,22 @@ public class DepartmentServiceImpl implements DepartmentService {
 		return response;
 	}
 
+	@Override
+	public DepartmentResponse getAllByCustId(Integer custId) {
+		DepartmentResponse response = new DepartmentResponse();
+		try {
+			List<Department> departments = departmentRepository.findAllByCustomer_CustIdAndDeptIsActive(custId, true);
+			response.setData1(departments.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList()));
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(true,400, "Department Not Found");
+			}else {
+				response.status = new Status(false,200, "success");
+				
+			}
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Something went wrong"); 
+
+		}
+		return response;
+	}
 }

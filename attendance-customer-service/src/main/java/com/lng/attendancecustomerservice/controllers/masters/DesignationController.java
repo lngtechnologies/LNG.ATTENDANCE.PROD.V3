@@ -24,10 +24,7 @@ public class DesignationController {
 	@PostMapping(value = "/create")
 	public ResponseEntity<DesignationResponse> save(@RequestBody DesignationDto designationDto) {
 		DesignationResponse DesignationDto1 = designationService.saveDesignation(designationDto);
-		if (designationDto !=null){
-			return new ResponseEntity<DesignationResponse>(DesignationDto1, HttpStatus.CREATED);
-		}
-		return new ResponseEntity(HttpStatus.NO_CONTENT);
+		return new ResponseEntity<DesignationResponse>(DesignationDto1, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/getAll")
@@ -62,6 +59,12 @@ public class DesignationController {
 			return new ResponseEntity<DesignationResponse>(designationResponse, HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+	
+	@PostMapping(value = "/getAllByCustId")
+	public ResponseEntity<DesignationResponse> getAllByCustId(@RequestBody DesignationDto designationDto) {
+		DesignationResponse designationResponse = designationService.getAllByCustId(designationDto.getRefCustId());
+		return new ResponseEntity<DesignationResponse>(designationResponse, HttpStatus.OK);
 	}
 }
 

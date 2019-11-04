@@ -1,6 +1,6 @@
 package com.lng.attendancecompanyservice.serviceImpl.custOnboarding;
 
-
+import java.net.URI;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +8,15 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
@@ -16,15 +25,21 @@ import org.springframework.stereotype.Service;
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
 import com.lng.attendancecompanyservice.entity.masters.Branch;
 import com.lng.attendancecompanyservice.entity.masters.Country;
+import com.lng.attendancecompanyservice.entity.masters.CustLeave;
 import com.lng.attendancecompanyservice.entity.masters.IndustryType;
 import com.lng.attendancecompanyservice.entity.masters.Login;
 import com.lng.attendancecompanyservice.entity.masters.State;
+import com.lng.attendancecompanyservice.entity.masters.UserRight;
+import com.lng.attendancecompanyservice.entity.masters.LeaveType;
 import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
+import com.lng.attendancecompanyservice.repositories.masters.CustLeaveRepository;
 import com.lng.attendancecompanyservice.repositories.masters.IndustryTypeRepository;
+import com.lng.attendancecompanyservice.repositories.masters.LeaveTypeRepository;
 import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
+import com.lng.attendancecompanyservice.repositories.masters.UserRightRepository;
 import com.lng.attendancecompanyservice.service.custOnboarding.CustomerService;
 import com.lng.attendancecompanyservice.utils.Encoder;
 import com.lng.attendancecompanyservice.utils.MessageUtil;
@@ -57,6 +72,15 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	IndustryTypeRepository industryTypeRepository;
+	
+	@Autowired
+	UserRightRepository userRightRepository;
+	
+	@Autowired
+	CustLeaveRepository custLeaveRepository;
+	
+	@Autowired
+	LeaveTypeRepository leaveTypeRepository;
 
 	@Autowired
 	MailProperties mailProperties;
@@ -95,6 +119,20 @@ public class CustomerServiceImpl implements CustomerService {
 
 				Customer customer = saveCustomerData(customerDto);
 				if(customer != null) {
+					
+					List<LeaveType> leaveTypes = leaveTypeRepository.findAll();
+					
+					if(leaveTypes.isEmpty()) {
+						
+						statusDto.setCode(400);
+						statusDto.setError(true);
+						statusDto.setMessage("Leave type not found");
+					
+					}else {
+						List<CustLeave> custLeaves = custLeaveRepository.assignCustLeaveToCustomer(customer.getCustId());
+					}
+					
+					
 					Branch branch = setCustomerDetailsToBranch(customer);
 
 					if(branch != null) {
@@ -104,7 +142,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 						if(login != null) {
 							int loginId = saveLogin(login);
+							if(loginId != 0) {
+								List<UserRight> userRights = userRightRepository.assignDefaultModulesToDefaultCustomerAdmin(loginId);
+							}
 						}
+						
 					}
 				}
 				//send mail
@@ -180,7 +222,7 @@ public class CustomerServiceImpl implements CustomerService {
 				"                                                                            <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
 				"                                                                                <center data-parsed=\"\" style=\"width: 100%; min-width: 532px;\">\r\n" + 
 				"                                                                                    <a href=\"http://www.lngtechnologies.in\" align=\"center\" class=\"text-center\" target=\"new\" style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; line-height: 1.3; color: #f7931d; text-decoration: none;\">\r\n" + 
-				"                                                                                        <img src=\"http://40.112.180.100/welcomekit/images/lng_logo.png\" class=\"swu-logo\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; max-width: 100%; clear: both; display: block; border: none; width: 230px; height: auto; padding: 15px 0px 0px 0px;\" width=\"230\">\r\n" + 
+				"                                                                                        <img src=\"http://52.183.143.13/welcomekit/images/lng_logo.png\" class=\"swu-logo\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; max-width: 100%; clear: both; display: block; border: none; width: 230px; height: auto; padding: 15px 0px 0px 0px;\" width=\"230\">\r\n" + 
 				"                                                                                    </a>\r\n" + 
 				"                                                                                </center>\r\n" + 
 				"                                                                            </th>\r\n" + 
@@ -196,7 +238,7 @@ public class CustomerServiceImpl implements CustomerService {
 				"                                                                                    <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
 				"                                                                                        <h1 class=\"text-center\" style=\"margin: 0; Margin: 0; line-height: 1.3; word-wrap: normal; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin-bottom: 10px; Margin-bottom: 10px; font-size: 34px; text-align: center; color: #f7931d; padding: 35px 0px 15px 0px;\">Welcome to LNG Attendance System!</h1>\r\n" + 
 				"                                                                                        <center data-parsed=\"\" style=\"width: 100%; min-width: 532px;\">\r\n" + 
-				"                                                                                            <img src=\"http://40.112.180.100/welcomekit/images/welcome_img.png\" valign=\"bottom\" align=\"center\" class=\"text-center\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; clear: both; display: block; margin: 0 auto; Margin: 0 auto; float: none; text-align: center;\">\r\n" + 
+				"                                                                                            <img src=\"http://52.183.143.13/welcomekit/images/welcome_img.png\" valign=\"bottom\" align=\"center\" class=\"text-center\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; clear: both; display: block; margin: 0 auto; Margin: 0 auto; float: none; text-align: center;\">\r\n" + 
 				"                                                                                        </center>\r\n" + 
 				"                                                                                    </th>\r\n" + 
 				"                                                                                    <th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
@@ -294,7 +336,7 @@ public class CustomerServiceImpl implements CustomerService {
 				"																								<tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
 				"																									<th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
 				"																										<center data-parsed=\"\" style=\"width: 100%; min-width: 532px;\">\r\n" + 
-				"																											<img src=\"http://40.112.180.100/welcomekit/images/social-media-icon.png\" alt=\"\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; width: 124px; max-width: 600px; height: auto; display: block; padding-top: 6px;\" width=\"124\">																											\r\n" + 
+				"																											<img src=\"http://52.183.143.13/welcomekit/images/social-media-icon.png\" alt=\"\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; width: 124px; max-width: 600px; height: auto; display: block; padding-top: 6px;\" width=\"124\">																											\r\n" + 
 				"																										</center>\r\n" + 
 				"																									</th>\r\n" + 
 				"																								</tr>\r\n" + 
@@ -345,6 +387,11 @@ public class CustomerServiceImpl implements CustomerService {
 			System.out.println("Email sent.");
 		} catch (Exception ex) {
 			System.out.println("Could not send email.");
+			StringBuffer exception = new StringBuffer(ex.getMessage().toString());
+			if (exception.indexOf("SendFailedException") >= 0)      // Wrong To Address 
+            {
+                System.out.println("Wrong To Mail address");
+            }
 			ex.printStackTrace();
 		}
 	}
@@ -356,7 +403,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 		try {
 			String custCode = customerRepository.generateCustCode();
-
 			customer.setCustIsActive(true);
 			customer.setCustCreatedDate(new Date());
 			customer.setCustCode(customerDto.getCustCode() + custCode);
@@ -401,28 +447,34 @@ public class CustomerServiceImpl implements CustomerService {
 	 * = ImageIO.read(bis); ImageIO.write(bImage2, "jpg", new File("output.jpg") );
 	 * }
 	 */
+	
 
 	// Set Customer Details to Branch
 	private Branch setCustomerDetailsToBranch(Customer customer){
 		Branch branch = new Branch();
-		String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
-		//Customer customer = new Customer();
-		branch.setBrAddress(customer.getCustAddress());
-		branch.setBrCity(customer.getCustCity());
-		branch.setBrCode(customer.getCustCode() + brnchCode);
-		branch.setBrCreatedDate(new Date());
-		branch.setBrEmail(customer.getCustEmail());
-		branch.setBrIsActive(true);
-		branch.setBrIsBillable(true);
-		branch.setBrLandline(customer.getCustLandline());
-		branch.setBrMobile(customer.getCustMobile());
-		branch.setBrName(customer.getCustName());
-		branch.setBrPincode(customer.getCustPincode());
-		branch.setBrValidityEnd(customer.getCustValidityEnd());
-		branch.setBrValidityStart(customer.getCustValidityStart());
-		branch.setCountry(customer.getCountry());
-		branch.setCustomer(customer);
-		branch.setState(customer.getState());
+		try {
+			String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
+			//Customer customer = new Customer();
+			branch.setBrAddress(customer.getCustAddress());
+			branch.setBrCity(customer.getCustCity());
+			branch.setBrCode(customer.getCustCode() + brnchCode);
+			branch.setBrCreatedDate(new Date());
+			branch.setBrEmail(customer.getCustEmail());
+			branch.setBrIsActive(true);
+			branch.setBrIsBillable(true);
+			branch.setBrLandline(customer.getCustLandline());
+			branch.setBrMobile(customer.getCustMobile());
+			branch.setBrName(customer.getCustName());
+			branch.setBrPincode(customer.getCustPincode());
+			branch.setBrValidityEnd(customer.getCustValidityEnd());
+			branch.setBrValidityStart(customer.getCustValidityStart());
+			branch.setCountry(customer.getCountry());
+			branch.setCustomer(customer);
+			branch.setState(customer.getState());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return branch;
 	}
 
@@ -460,31 +512,48 @@ public class CustomerServiceImpl implements CustomerService {
 
 	//Save to Branch Table
 	private int saveBranch(Branch branch) {
-		branchRepository.save(branch);
+		
+		try {
+			branchRepository.save(branch);
+			createBranchFaceListId(branch.getBrCode());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return branch.getCustomer().getCustId();
 	}
 
 	//Set Customer to Login 
 	private Login setCustomerToLogin(Customer customer){
 		Login login = new Login();
-		login.setRefCustId(customer.getCustId());
-		login.setLoginName("admin@"+customer.getCustCode());
-		login.setLoginMobile(customer.getCustMobile());
-		login.setLoginIsActive(true);
-		login.setLoginCreatedDate(new Date());
+		try {
+			
+			login.setRefCustId(customer.getCustId());
+			login.setLoginName("admin@"+customer.getCustCode());
+			login.setLoginMobile(customer.getCustMobile());
+			login.setLoginIsActive(true);
+			login.setLoginCreatedDate(new Date());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return login;
 	}
 
 	//save to Login Table
 	private int saveLogin(Login login){
 		//CustomerDto customerDto = new CustomerDto();
-		String randomPassword = loginRepository.generatePassword();
-		login.setLoginPassword(Encoder.getEncoder().encode(randomPassword));
-		loginRepository.save(login);
-		String mobileNo = login.getLoginMobile();
-		String mobileSmS = "Greetings from LNG! Your account has been created successfully. "
-				          + "The login details has been sent to your E-Mail and password is : "+ randomPassword;	
-		String s = messageUtil.sms(mobileNo, mobileSmS);
+		try {
+			String randomPassword = loginRepository.generatePassword();
+			login.setLoginPassword(Encoder.getEncoder().encode(randomPassword));
+			loginRepository.save(login);
+			String mobileNo = login.getLoginMobile();
+			String mobileSmS = "Greetings from LNG! Your account has been created successfully. "
+					+ "The login details has been sent to your E-Mail and password is : "+ randomPassword;	
+			String s = messageUtil.sms(mobileNo, mobileSmS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		return login.getLoginId();
 	}
 
@@ -583,19 +652,19 @@ public class CustomerServiceImpl implements CustomerService {
 	public CustomerResponse deleteCustomerByCustomerId(int custId) {
 		CustomerResponse customerResponse = new CustomerResponse();
 
-			Customer customer = customerRepository.findCustomerByCustId(custId);
-			try {
-				if(customer != null) {
-					customer.setCustIsActive(false);
-					customerRepository.save(customer);
-					customerResponse.status = new Status(false, 200, "Successfully Deleted");
-				} else {
-					customerResponse.status = new Status(true, 400, "Customer Not Found");
-				}
-			} catch (Exception e) {
-				e.printStackTrace(); 
-				customerResponse.status = new Status(true, 5000, "Something went wrong");
+		Customer customer = customerRepository.findCustomerByCustId(custId);
+		try {
+			if(customer != null) {
+				customer.setCustIsActive(false);
+				customerRepository.save(customer);
+				customerResponse.status = new Status(false, 200, "Successfully Deleted");
+			} else {
+				customerResponse.status = new Status(true, 400, "Customer Not Found");
 			}
+		} catch (Exception e) {
+			e.printStackTrace(); 
+			customerResponse.status = new Status(true, 5000, "Something went wrong");
+		}
 		return customerResponse;
 	}
 
@@ -648,5 +717,47 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerDtoTwo;
 	}
 
+	@Override
+	public void createBranchFaceListId(String branchCode) throws Exception {
 
+		HttpClient httpclient = HttpClients.createDefault();
+		
+		try
+		{
+			String brCode = branchCode.toLowerCase();
+			
+			URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/facelists/"+brCode);
+
+
+			URI uri = builder.build();
+			HttpPut request = new HttpPut(uri);
+			request.setHeader("Content-Type", "application/json");
+			request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
+
+			// Creating API Body
+			JSONObject json = new JSONObject();
+			json.put("name", brCode);
+			json.put("userData", "User-provided data attached to the face list.");
+			json.put("recognitionModel", "recognition_02");
+			// Request body
+			StringEntity reqEntity = new StringEntity(json.toJSONString());
+			request.setEntity(reqEntity);
+
+			HttpResponse response = httpclient.execute(request);
+			HttpEntity entity = response.getEntity();
+
+			if (entity != null) 
+			{
+				System.out.println(EntityUtils.toString(entity));
+			}
+		}
+		catch (Exception e)
+		{
+			throw e;
+			// System.out.println(e.getMessage());
+		}
+	}
 }
+
+
+

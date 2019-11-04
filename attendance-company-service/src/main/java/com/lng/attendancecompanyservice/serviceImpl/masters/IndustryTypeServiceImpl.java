@@ -111,6 +111,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 			if(industryType1 != null) {
 				if(industryType2 == null) {
 					industryType1.setIndustryName(industryTypeDto.getIndustryName());
+					industryType1.setIndustryIsActive(true);
 					industryTypeRepository.save(industryType1);
 					statusDto.setCode(200);
 					statusDto.setError(false);

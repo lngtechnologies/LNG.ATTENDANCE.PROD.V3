@@ -14,6 +14,7 @@ public interface ContractorService {
 	Status updateContractorByContractorId(ContractorDto contractorDto); 
 	ContractorResponse deleteByContractorId(Integer contractorId);
 	ContractorResponse getContractorByContractorId(Integer contractorId);
+	ContractorResponse getAllByCustId(Integer custId);
 	
 
 }

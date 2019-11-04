@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.Customer;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
+import com.lng.attendancecustomerservice.entity.masters.EmployeePic;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
+import com.lng.attendancecustomerservice.repositories.masters.EmployeePicRepository;
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
 import com.lng.attendancecustomerservice.utils.MessageUtil;
 import com.lng.dto.employee.EmployeeDataDto;
@@ -28,6 +30,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
+	
+	@Autowired
+	EmployeePicRepository employeePicRepository;
 
 	MessageUtil messageUtil = new MessageUtil();
 
@@ -55,9 +60,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 					
 					byte[] custLogo = employee.getCustomer().getCustLogoFile();
 					String base64CustLogo = byteTobase64(custLogo);
-					
+					String brCode = employee.getBranch().getBrCode().toLowerCase();
 					response.status = new Status(false,200,"success");
-					response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), employee.getBranch().getBrCode(), employee.getEmpId(), employee.getEmpName(), base64CustLogo);					
+					response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo);					
 				}
 			} else {
 				throw new Exception("Invalid Data");
@@ -109,18 +114,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public StatusDto updateEmpAppStatus(EmployeeDto employeeDto) {
 		StatusDto statusDto = new StatusDto();
+		EmployeePic employeePic = new EmployeePic();
 		Employee employee = employeeRepository.getByEmpId(employeeDto.getEmpId());
 
 		try {
 			if(employee != null) {
-				employee.setEmpPicBlobPath(employeeDto.getEmpPicBlobPath());
+				//employee.setEmpPicBlobPath(employeeDto.getEmpPicBlobPath());
 				employee.setEmpPresistedFaceId(employeeDto.getEmpPresistedFaceId());
 				employee.setEmpDeviceName(employeeDto.getEmpDeviceName());
 				employee.setEmpModelNumber(employeeDto.getEmpModelNumber());
 				employee.setEmpAndriodVersion(employeeDto.getEmpAndriodVersion());
 				employee.setEmpAppSetupStatus(true);
 				employeeRepository.save(employee);
-				//empAppStatusResponseDto.empAppStatusDto = new EmpAppStatusDto(employee.getEmpAppSetupStatus());
+				try {
+					employeePic = employeePicRepository.findByEmployee_EmpId(employee.getEmpId());
+					
+					if(employeePic == null) {
+						EmployeePic employeePic1 = new EmployeePic();
+						employeePic1.setEmployee(employee);
+						employeePic1.setEmployeePic(base64ToByte(employeeDto.getEmployeePic()));
+						employeePicRepository.save(employeePic1);
+							
+					} else {
+						employeePic.setEmployeePic(base64ToByte(employeeDto.getEmployeePic()));
+						employeePicRepository.save(employeePic);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("Succesfully Updated");
@@ -129,8 +152,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 				statusDto.setError(true);
 				statusDto.setMessage("Employee not found");
 			}
-
-
 		} catch (Exception ex) {
 			statusDto.setCode(200);
 			statusDto.setError(false);
@@ -138,6 +159,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		return statusDto;
 	}
+	
+	// Convert base64 to byte
+		public  byte[] base64ToByte(String base64) {
+			byte[] decodedByte = Base64.getDecoder().decode(base64);
+			return decodedByte;
+		}
+
 
 
 	//Employee Application Setup Stage 2

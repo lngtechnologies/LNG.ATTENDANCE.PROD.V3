@@ -64,4 +64,14 @@ public class BranchController {
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
+	
+	@PostMapping(value = "/getAllByCustId")
+	public ResponseEntity<BranchResponse> getAllByCustId(@RequestBody BranchDto branchDto) {
+		BranchResponse branchResponse = branchService.getAllByCustId(branchDto.getRefCustomerId());
+		if(branchResponse.getData1().isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<BranchResponse>(branchResponse, HttpStatus.OK);
+	}
+
 }

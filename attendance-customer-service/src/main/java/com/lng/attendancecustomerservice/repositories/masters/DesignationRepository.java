@@ -26,5 +26,7 @@ public interface DesignationRepository extends CrudRepository<Designation,Intege
 
 	@Query(value = "SELECT a.* FROM tmdesignation a LEFT JOIN ttempdesignation b ON a.designationId = b.refDesignationId WHERE b.refEmpId = ?1",nativeQuery = true)
 	Designation findDesignationByEmployee_EmpId(Integer empId);
+	
+	List<Designation> findAllByCustomer_CustIdAndDesigIsActive(int custId, Boolean desigIsActive);
 
 }

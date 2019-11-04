@@ -9,6 +9,7 @@ public interface ShiftService {
 	ShiftResponse getAll();
 	Status updateShiftByShiftId(ShiftDto shiftDto);
 	ShiftResponse deleteByShiftId(Integer shiftId);
-	ShiftResponse getBlockDetailsByRefBrId(Integer refBrId);
+	ShiftResponse getShiftDetailsByRefBrId(Integer refBrId);
 	ShiftResponse getShiftDetailsByShiftId(Integer shiftId);
+	ShiftResponse getAllByCustId(Integer custId);
 }

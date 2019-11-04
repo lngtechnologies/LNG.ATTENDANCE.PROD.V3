@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.mail.Address;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -60,41 +61,83 @@ public class MessageUtil {
 			final String userName, final String password, String toAddress,
 			String subject, String message)
 					throws AddressException, MessagingException {
-		// sets SMTP server properties
-		Properties properties = new Properties();
-		properties.put("mail.smtp.host", host);
-		properties.put("mail.smtp.port", port);
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
-		properties.put("mail.user", userName);
-		properties.put("mail.password", password);
+		try {
+			// sets SMTP server properties
+			Properties properties = new Properties();
+			properties.put("mail.smtp.host", host);
+			properties.put("mail.smtp.port", port);
+			properties.put("mail.smtp.auth", "true");
+			properties.put("mail.smtp.starttls.enable", "true");
+			properties.put("mail.user", userName);
+			properties.put("mail.password", password);
 
-		// creates a new session with an authenticator
-		Authenticator auth = new Authenticator() {
-			public PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(userName, password);
-			}
-		};
-		Session session = Session.getInstance(properties, auth);
+			// creates a new session with an authenticator
+			Authenticator auth = new Authenticator() {
+				public PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(userName, password);
+				}
+			};
+			Session session = Session.getInstance(properties, auth);
 
-		// creates a new e-mail message
-		Message msg = new MimeMessage(session);
+			// creates a new e-mail message
+			Message msg = new MimeMessage(session);
 
-		msg.setFrom(new InternetAddress(userName));
-		InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
-		msg.setRecipients(Message.RecipientType.TO, toAddresses);
-		msg.setSubject(subject);
-		msg.setSentDate(new Date());
+			msg.setFrom(new InternetAddress(userName, "LNGAdmin"));
+			InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
+			msg.setRecipients(Message.RecipientType.TO, toAddresses);
+			msg.setSubject(subject);
+			msg.setSentDate(new Date());
 
-		// creates message part
-		MimeBodyPart messageBodyPart = new MimeBodyPart();
-		messageBodyPart.setContent(message, "text/html");
-		Multipart multipart = new MimeMultipart();
-		multipart.addBodyPart(messageBodyPart);
-		msg.setContent(multipart);
+			// creates message part
+			MimeBodyPart messageBodyPart = new MimeBodyPart();
+			messageBodyPart.setContent(message, "text/html");
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(messageBodyPart);
+			msg.setContent(multipart);
 
-		// sends the e-mail
-		Transport.send(msg);
+			// sends the e-mail
+			Transport.send(msg);
+			
+		} catch(javax.mail.SendFailedException  mx) {
+			StringBuilder errorSB = null;
+			 
+		    if(mx.getInvalidAddresses() != null) {
+		        errorSB = new StringBuilder();
+		        for(Address email: mx.getInvalidAddresses()) {
+		            errorSB.append(email.toString());
+		            errorSB.append(", ");
+		        }
+		        System.out.println("Invalid Address Found: "+ errorSB);
+		    }
+		 
+		    if(mx.getValidSentAddresses() != null) {
+		        errorSB = new StringBuilder();
+		        for(Address email: mx.getValidSentAddresses()) {
+		            errorSB.append(email.toString());
+		            errorSB.append(", ");
+		        }
+		        System.out.println("Email sent to valid address: "+ errorSB);
+		    }
+		 
+		    if(mx.getValidUnsentAddresses() != null) {
+		        errorSB = new StringBuilder();
+		        for(Address email: mx.getValidUnsentAddresses()) {
+		            errorSB.append(email.toString());
+		            errorSB.append(", ");
+		        }
+		        System.out.println("Email not sent to valid address: "+ errorSB);
+		    }
+		 
+		} catch(javax.mail.MessagingException mx) {
+		 
+		    System.out.println(mx.getMessage());
+		 
+		} catch (Exception ex) {
+		 
+		    System.out.println(ex.getMessage());
+		 
+		}
+		
 
 	}
 

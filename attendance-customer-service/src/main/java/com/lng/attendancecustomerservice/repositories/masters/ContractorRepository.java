@@ -25,6 +25,8 @@ public interface ContractorRepository extends CrudRepository<Contractor,Integer>
 
 
 	Contractor findContractorBycontractorNameAndCustomer_custId(String contractorName, int custId);
+	
+	List<Contractor> findAllByCustomer_CustIdAndContractorIsActive(int custId, Boolean contractorIsActive);
 
 
 }

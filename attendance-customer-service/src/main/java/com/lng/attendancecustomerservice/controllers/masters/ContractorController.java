@@ -64,5 +64,11 @@ public class ContractorController {
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
+	
+	@PostMapping(value = "/getAllByCustId")
+	public ResponseEntity<ContractorResponse> findByCustId(@RequestBody ContractorDto contractorDto) {
+		ContractorResponse contractorResponse = contractorService.getAllByCustId(contractorDto.getRefCustId());
+		return new ResponseEntity<ContractorResponse>(contractorResponse, HttpStatus.OK);
+	}
 
 }

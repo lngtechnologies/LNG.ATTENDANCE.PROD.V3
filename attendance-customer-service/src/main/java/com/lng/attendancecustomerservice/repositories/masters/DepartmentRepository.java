@@ -13,6 +13,7 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 	List<Department> findAllByDeptIsActive(Boolean deptIsActive);
 	@Query(value = "select * from tmdepartment where deptName = ?1", nativeQuery = true)
 	Department findByDepartmentName(String stateName);
+	
 	Department findDepartmentByDeptId(Integer deptId);
 
 	@Query(value = "CALL DepartmentIdIsExistOrNot(?1)",nativeQuery = true)
@@ -26,4 +27,6 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 	
 	@Query(value = "SELECT a.* FROM tmdepartment a LEFT JOIN ttempdept b ON a.deptId = b.refDeptId WHERE b.refEmpId = ?1",nativeQuery = true)
 	Department findDepartmentByEmployee_EmpId(Integer empId);
+	
+	List<Department> findAllByCustomer_CustIdAndDeptIsActive(int custId, Boolean deptIsActive);
 }
