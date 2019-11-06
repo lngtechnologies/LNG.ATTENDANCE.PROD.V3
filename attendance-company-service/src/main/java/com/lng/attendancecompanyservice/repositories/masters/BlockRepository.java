@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.lng.attendancecompanyservice.entity.masters.Block;
+import com.lng.attendancecompanyservice.entity.masters.Branch;
 
 public interface BlockRepository extends PagingAndSortingRepository<Block, Integer> {
 
@@ -25,7 +26,7 @@ public interface BlockRepository extends PagingAndSortingRepository<Block, Integ
 	int  findEmployeeBlockByBlockBlkId(int blkId);
 
 
-	@Query(value = "CALL CheckBlockExistForBranch(?1, ?2);",nativeQuery = true)
+	@Query(value = "CALL CheckBlockExistForBranch(?1, ?2)",nativeQuery = true)
 	int  findByRefBranchIdAndBlkLogicalName(Integer refBranchId,String blkLogicalName);
 
 	@Query(value = "SELECT tb.blkId,tb.blkLogicalName,tb.blkGPSRadius,tb.blkLatLong,tmc.custId FROM  tmblock tb LEFT JOIN tmbranch  tbr ON tbr.brId = tb.refBranchId LEFT JOIN  tmcustomer tmc ON tmc.custId = tbr.refCustomerId WHERE  tmc.custId=?1 AND tb.refBranchId=?2" ,nativeQuery = true) 
@@ -40,4 +41,7 @@ public interface BlockRepository extends PagingAndSortingRepository<Block, Integ
 	int  findBlockBeaconMapByBlockBlkId(int blkId);
 	
 	List<Block> findByBranch_BrId(Integer brId);
+	
+	@Query(value ="SELECT tb.blkId,tb.refBranchId,tbr.refCustomerId,tbr.brName,tb.blkLogicalName,tb.blkGPSRadius,tb.blkLatLong,tb.blkCreatedDate,tb.blkIsActive FROM tmblock tb LEFT JOIN tmbranch tbr ON tbr.brId=tb.refBranchId WHERE  tb.blkIsActive=TRUE AND tbr.refCustomerId=?1",nativeQuery = true)
+	List<Object[]> findAllByCustomer_CustIdAndBlkIsActive(Integer custId, Boolean blkIsActive);
 }

@@ -7,6 +7,8 @@ public class custLeaveDto {
 	private Integer refCustId;
 	
 	private String custLeaveName;
+	
+	  private String  custName;
 
 	public Integer getCustLeaveId() {
 		return custLeaveId;
@@ -31,5 +33,17 @@ public class custLeaveDto {
 	public void setCustLeaveName(String custLeaveName) {
 		this.custLeaveName = custLeaveName;
 	}
+
+	public String getCustName() {
+		return custName;
+	}
+
+	public void setCustName(String custName) {
+		this.custName = custName;
+	}
+
+    
+	
 	
 }
+

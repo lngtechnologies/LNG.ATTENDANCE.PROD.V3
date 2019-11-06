@@ -66,8 +66,6 @@ public class BranchServiceImpl implements BranchService {
 	public BranchResponse saveBranch(BranchDto branchDto) {
 		BranchResponse response = new BranchResponse();
 
-		// BranchDto branchDto2 = new BranchDto();
-
 		try{
 			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
 			int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
@@ -222,7 +220,7 @@ public class BranchServiceImpl implements BranchService {
 			if(branch != null) {
 				BranchDto branchDto = convertToBranchDto(branch);
 				response.data = branchDto;
-				response.status = new Status(false,200, "successfully GetBranchDetails");
+				response.status = new Status(false,200, "Success");
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -243,14 +241,14 @@ public class BranchServiceImpl implements BranchService {
 		try {
 			branch = branchRepository.findBranchByBrId(brId);
 			if(branch != null) {
-				
+
 				// Check weather the branch is used in any transaction or no
 				List<LoginDataRight> loginDataRight = loginDataRightRepository.findByBranch_BrId(brId);
 				List<Block> block = blockRepository.findByBranch_BrId(brId);
 				List<Employee> employee = custEmployeeRepository.findByBranch_BrId(brId);
 				List<Shift> shift = shiftRepository.findByBranch_BrId(brId);
 				List<EmployeeBranch> employeeBranch = employeeBranchRepositories.findByBranch_BrId(brId);
-				
+
 				if(loginDataRight.isEmpty() && block.isEmpty() && employee.isEmpty() && shift.isEmpty() && employeeBranch.isEmpty()) {
 					branchRepository.delete(branch);
 					response.status = new Status(false, 200, "Deleted successfully");
@@ -260,9 +258,9 @@ public class BranchServiceImpl implements BranchService {
 					response.status = new Status(false, 200, "Branch is used in some other transaction, so it is set to IsActivive 0");
 				}
 			}else {
-				response.status = new Status(true, 400, "Branch branch not found");
+				response.status = new Status(true, 400, "Branch  not found");
 			}
-		
+
 		}catch(Exception e) {
 			response.status = new Status(true,400, e.getMessage());
 		}
@@ -296,7 +294,7 @@ public class BranchServiceImpl implements BranchService {
 			}else {
 				response.status = new Status(true,400, "Branch Not Found"); 
 			}
-			
+
 		}catch(Exception e) {
 			response.status = new Status(true,500, "Somenthing Went Wrong.."); 
 		}

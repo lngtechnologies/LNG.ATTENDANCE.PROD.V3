@@ -40,7 +40,6 @@ import com.lng.attendancecustomerservice.repositories.masters.EmployeeTypeReposi
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.masters.CustEmployeeService;
 import com.lng.attendancecustomerservice.utils.Encoder;
-import com.lng.dto.customer.CustomerDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
@@ -241,21 +240,6 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		}
 		return employee;
 	}
-
-	//set EmpId and Branch Id to empBranch
-	/*public EmployeeBranch setEmpBranch(Employee employee) {
-		CustEmployeeDto custEmployeeDto = new CustEmployeeDto();
-		EmployeeBranch employeeBranch = new EmployeeBranch();
-		try {
-			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());		
-			employeeBranch.setEmployee(employee);
-			employeeBranch.setBranch(branch);
-			employeeBranch.setBranchFromDate(new Date());
-		}catch (Exception e) {	
-			e.printStackTrace();
-		}				
-		return employeeBranch;
-	}*/
 
 	//Save to empBranch table
 	public EmployeeBranch saveEmpBranch(EmployeeBranch employeeBranch) {

@@ -54,7 +54,7 @@ public class ContractorServiceImpl implements ContractorService {
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"ContractorName already exist for CustomerId :" + contractorDto.getRefCustId());
+				response.status = new Status(true,400,"ContractorName already exist for Customer");
 			}
 
 		}catch(Exception ex){
@@ -106,7 +106,7 @@ public class ContractorServiceImpl implements ContractorService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-					status = new Status(true,400,"ContractorName already exist for CustomerId :" + contractorDto.getRefCustId());
+					status = new Status(true,400,"ContractorName already exist for CustomerId");
 				}
 			}
 

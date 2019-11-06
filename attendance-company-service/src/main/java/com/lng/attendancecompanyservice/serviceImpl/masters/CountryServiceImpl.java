@@ -40,16 +40,12 @@ public class CountryServiceImpl implements CountryService {
 			if(CheckCountryExists(countryDto.getCountryName())) throw new Exception("Country already exists");
 
 			if(CheckCoutryTelExists(countryDto.getCountryTelCode())) throw new Exception("Country Tel code already exists");
-
-			//System.out.println("country name "+countryName.getCountryName());
 			if(countryDto.getCountryName() != null) {
 				Country country = new Country();
 				country.setCountryName(countryDto.getCountryName());
 				country.setCountryTelCode(countryDto.getCountryTelCode());
 				country.setCountryIsActive(true);
 				countryRepositary.save(country);
-				//country = modelMapper.map(countryDto, Country.class);
-				//response = modelMapper.map(countryRepositary.save(country),CountryResponse.class);
 				response.status = new Status(false,200, "successfully created");
 			}
 
@@ -80,20 +76,8 @@ public class CountryServiceImpl implements CountryService {
 		}
 	}
 
-	private Boolean CheckCoutryTelExistsForUpdate(String CountryTelCode, Integer cId) {
-		Country countryTel =  countryRepositary.findByCountryTelCode(CountryTelCode);
-
-		if(countryTel != null && cId != countryTel.getCountryId()) {
-			return true;
-		} else  {
-			return false;
-		}
-
-	}
-
 	@Override
 	public CountryResponse getAll() {
-		//CountryDto countryDto2=new CountryDto();
 		CountryResponse response = new CountryResponse();
 		try {
 			List<Country> countryList=countryRepositary.findAllByCountryIsActive(true);
@@ -133,7 +117,7 @@ public class CountryServiceImpl implements CountryService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-					status = new Status(true,400,"CountryName already exist for CountryId :" + countryDto.getCountryTelCode());
+					status = new Status(true,400,"CountryName already Exist");
 				}
 			}
 
@@ -151,12 +135,11 @@ public class CountryServiceImpl implements CountryService {
 	@Override 
 	public CountryResponse deleteByCountryId(Integer countryId) {
 		CountryResponse countryResponse=new CountryResponse(); 
-		//CountryDto  countryDto = new CountryDto();
 		try { 
 			Country country=countryRepositary.findCountryByCountryId(countryId);
 			List<State> state = stateRepository.findStateByCountryCountryId(countryId);
 			if(country!= null) {
-			if(state.size() == 0 || state == null) {
+				if(state.size() == 0 || state == null) {
 
 					countryRepositary.delete(country);					
 					countryResponse.status = new Status(false,200, "successfully deleted");

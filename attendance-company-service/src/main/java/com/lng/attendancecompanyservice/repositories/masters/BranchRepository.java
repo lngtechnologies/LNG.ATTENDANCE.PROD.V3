@@ -16,7 +16,7 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch, Int
 	
 	Branch findBranchByBrId(Integer brId);
 
-	@Query(value = "CALL CheckBranchIsExistForCustomer(?1, ?2);",nativeQuery = true)
+	@Query(value = "CALL CheckBranchIsExistForCustomer(?1, ?2)",nativeQuery = true)
 	int findByRefCustomerIdAndBrName(Integer refCustomerId,String brName);
 
 	Branch findBranchBybrNameAndCustomer_custId(String brName, int custId);

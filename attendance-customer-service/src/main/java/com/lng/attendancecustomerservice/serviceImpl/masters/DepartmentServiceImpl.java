@@ -9,13 +9,11 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.Customer;
 import com.lng.attendancecustomerservice.entity.masters.Department;
-import com.lng.attendancecustomerservice.entity.masters.Designation;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
 import com.lng.attendancecustomerservice.repositories.masters.DepartmentRepository;
 import com.lng.attendancecustomerservice.service.masters.DepartmentService;
 import com.lng.dto.masters.department.DepartmentDto;
 import com.lng.dto.masters.department.DepartmentResponse;
-import com.lng.dto.masters.designation.DesignationDto;
 
 import status.Status;
 @Service
@@ -52,7 +50,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"DepartmentName already exist for branch :" + departmentDto.getRefCustId());
+				response.status = new Status(true,400,"DepartmentName already exist for Customer");
 			}
 
 		}catch(Exception ex){
@@ -61,12 +59,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 		return response;
 	}
-
-	/*
-	 * private Boolean CheckDepartmentExists(String departmentName) { Department
-	 * department = departmentRepository.findByDepartmentName(departmentName);
-	 * if(department != null) { return true; } else { return false; } }
-	 */
 	@Override
 	public DepartmentResponse getAll() {
 		DepartmentResponse response = new DepartmentResponse();
@@ -85,7 +77,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public Status updateDepartmentByDepartmentId(DepartmentDto departmentDto) {
 		Status status = null;
-		//DepartmentResponse response = new DepartmentResponse();
 		try {
 			if(departmentDto.getDeptName() == null || departmentDto.getDeptName().isEmpty()) throw new Exception("Please enter Department name");
 			if(departmentDto.getDeptId() == null || departmentDto.getDeptId() == 0) throw new Exception("Department id is null or zero");
@@ -111,7 +102,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-					status = new Status(true,400,"DepartmentName already exist for Customer :" + departmentDto.getRefCustId());
+					status = new Status(true,400,"DepartmentName already exist for Customer");
 				}
 			}
 
@@ -192,7 +183,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				response.status = new Status(true,400, "Department Not Found");
 			}else {
 				response.status = new Status(false,200, "success");
-				
+
 			}
 		}catch(Exception e) {
 			response.status = new Status(true,500, "Something went wrong"); 
