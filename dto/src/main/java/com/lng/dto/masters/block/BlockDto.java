@@ -11,6 +11,10 @@ public class BlockDto {
 	private Boolean blkIsActive;
 	private Date blkCreatedDate;
 	private Integer custId;
+<<<<<<< HEAD
+=======
+	// private Integer brId;
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	private String brCode;
 	private String brName;
 	
@@ -65,6 +69,10 @@ public class BlockDto {
 	public void setCustId(Integer custId) {
 		this.custId = custId;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	public String getBrCode() {
 		return brCode;
 	}

@@ -4,7 +4,17 @@ import status.Status;
 
 public class CustEmployeeResponse {
 
-	public CustEmployeeDtoTwo data;
+	private CustEmployeeDtoTwo data;
 	
 	public Status status;
+
+	public CustEmployeeDtoTwo getData() {
+		return data;
+	}
+
+	public void setData(CustEmployeeDtoTwo data) {
+		this.data = data;
+	}
+	
+	
 }

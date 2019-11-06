@@ -42,15 +42,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setDeptName(departmentDto.getDeptName());
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "Successfully created");
 
 				}
 				else{ 
-					response.status = new Status(true,400, "CustomerId Not Found");
+					response.status = new Status(true,400, "Customer Not Found");
 				}
 			}
 			else{ 
+<<<<<<< HEAD
 				response.status = new Status(true,400,"DepartmentName already exist for Customer");
+=======
+				response.status = new Status(true,400,"Department Name already exist");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}
 
 		}catch(Exception ex){
@@ -65,7 +69,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 		try {
 			List<Department> stateList=departmentRepository.findAllByDeptIsActive(true);
 			response.setData1(stateList.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully GetAll");
+			response.status = new Status(false,200, "Success");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -102,12 +106,16 @@ public class DepartmentServiceImpl implements DepartmentService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
+<<<<<<< HEAD
 					status = new Status(true,400,"DepartmentName already exist for Customer");
+=======
+					status = new Status(true,400,"Department Name already exist");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "CustomerId Not Found");
+				status = new Status(false, 200, "Customer Not Found");
 
 			}
 		}
@@ -133,10 +141,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 				} else {
 					department.setDeptIsActive(false);
 					departmentRepository.save(department);
-					departmentResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
+					departmentResponse.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
 				}
 			}else {
-				departmentResponse.status = new Status(true,400, "DepartmentId Not Found");
+				departmentResponse.status = new Status(true,400, "Department Not Found");
 			}
 		}catch(Exception e) { 
 			departmentResponse.status = new Status(true,400, e.getMessage());
@@ -161,7 +169,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			if(department != null) {
 				DepartmentDto departmentDto = convertToDepartmentDto(department);
 				response.data = departmentDto;
-				response.status = new Status(false,200, "successfully GetDepartmentDetails");
+				response.status = new Status(false,200, "Success");
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");

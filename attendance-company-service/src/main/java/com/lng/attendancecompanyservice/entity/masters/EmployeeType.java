@@ -22,6 +22,7 @@ public class EmployeeType {
 
 	@Column(name = "empType", unique = true)
 	private String empType;
+	
 
 	public Integer getEmpTypeId() {
 		return empTypeId;

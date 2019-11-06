@@ -96,7 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			if(employee != null) {
 
 				String mobileNo = employee.getEmpMobile();
-				String mobileSmS = otp +" is OTP to verify your Employee details with "+ employee.getEmpName();	
+				String mobileSmS = otp +" is OTP to verify your Employee details with "+ employee.getCustomer().getCustName();	
 				String s = messageUtil.sms(mobileNo, mobileSmS);
 				if(s != null) {
 					otpResponseDto.status = new Status(false,200,"Successfully sent OTP");

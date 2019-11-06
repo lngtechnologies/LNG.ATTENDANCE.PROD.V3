@@ -6,4 +6,5 @@ import com.lng.attendancecustomerservice.entity.masters.EmployeeBranch;
 
 public interface EmployeeBranchRepositories extends PagingAndSortingRepository<EmployeeBranch, Integer> {
 
+	EmployeeBranch findByEmployee_EmpId(Integer empId);
 }

@@ -13,6 +13,7 @@ import com.lng.attendancecompanyservice.repositories.masters.BeaconRepository;
 import com.lng.attendancecompanyservice.service.masters.BeaconService;
 import com.lng.dto.masters.beacon.BeaconDto;
 import com.lng.dto.masters.beacon.BeaconListResponseDto;
+import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
 
 import status.Status;
 import status.StatusDto;
@@ -83,7 +84,7 @@ public class BeaconServiceImpl implements BeaconService {
 		Beacon beacon2 = beaconRepository.findBeaconByBeaconCode(beaconDto.getBeaconCode());
 		try {
 			if(beacon1 != null){
-				if(beacon2 == null) {
+				if(beacon2 == null || (beacon1.getBeaconId() == beaconDto.getBeaconId() && beacon1.getBeaconCode().equals(beaconDto.getBeaconCode()))) {
 					beacon1.setBeaconCode(beaconDto.getBeaconCode());
 					beacon1.setBeaconCreatedDate(new Date());
 					beaconRepository.save(beacon1);
@@ -109,9 +110,11 @@ public class BeaconServiceImpl implements BeaconService {
 		return statusDto;
 	}
 	
+	
 	public BeaconDto convertToBeaconDto(Beacon beacon) {
 		BeaconDto  beaconDto = modelMapper.map(beacon, BeaconDto.class);
 		return beaconDto;
 	}
 
+	
 }

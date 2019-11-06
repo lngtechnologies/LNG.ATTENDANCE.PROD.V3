@@ -50,15 +50,19 @@ public class StateServiceImpl implements StateService {
 					state.setStateName(stateDto.getStateName());
 					state.setStateIsActive(true);
 					stateRepository.save(state);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "Successfully created");
 
 				}
 				else{ 
-					response.status = new Status(true,400, "CountryId Not Found");
+					response.status = new Status(true,400, "Country Not Found");
 				}
 			}
 			else{ 
+<<<<<<< HEAD
 				response.status = new Status(true,400,"StateName already exist for Country");
+=======
+				response.status = new Status(true,400,"State Name already exist");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}
 		} catch (Exception e) {
 			response.status = new Status(true, 4000, e.getMessage());
@@ -73,10 +77,17 @@ public class StateServiceImpl implements StateService {
 		StateResponse response = new StateResponse();
 		try {
 			List<State> stateList=stateRepository.findAllByStateIsActive(true);
+
 			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully  GetAll");
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(true,400, "Not found");
+				
+			}else {
+				response.status = new Status(false,200, "Success");
+			}
+
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true,500, e.getMessage()); 
 
 		}
 		return response;
@@ -110,12 +121,16 @@ public class StateServiceImpl implements StateService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
+<<<<<<< HEAD
 					status = new Status(true,400,"StateName already exist for Country");
+=======
+					status = new Status(true,400,"State Name already exist");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "CountryId Not Found");
+				status = new Status(false, 200, "Country Not Found");
 
 			}
 		}
@@ -138,7 +153,7 @@ public class StateServiceImpl implements StateService {
 				}else {
 					state.setStateIsActive(false);
 					stateRepository.save(state);
-					stateResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
+					stateResponse.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
 				}
 
 			} else  {
@@ -165,7 +180,7 @@ public class StateServiceImpl implements StateService {
 				stateDto1.setStateId(Integer.valueOf(p[0].toString()));
 				stateDto1.setStateName(p[1].toString());
 				stateDtoList.add(stateDto1);
-				stateResponse.status = new Status(false,200, "successfully GetStateDetails");
+				stateResponse.status = new Status(false,200, "Success");
 
 			}
 
@@ -184,7 +199,7 @@ public class StateServiceImpl implements StateService {
 			if(state != null) {
 				StateDto stateDto = convertToStateDto(state);
 				response.data = stateDto;
-				response.status = new Status(false,200, "successfully  GetStateDetails");
+				response.status = new Status(false,200, "Success");
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");

@@ -16,5 +16,9 @@ public interface BlockService {
 	BlockResponse getBranchDetailsByCustId(Integer custId);
 	BlockResponse getBlockDetailsByCustIdANDRefBranchId(int custId, int refBranchId);
 	BlockResponse getBlockByBlkId(Integer blkId);
+<<<<<<< HEAD
 	BlockResponse getAllByCustId(Integer custId);
+=======
+	BlockResponse getByCustomer_CustId(Integer custId);
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 }

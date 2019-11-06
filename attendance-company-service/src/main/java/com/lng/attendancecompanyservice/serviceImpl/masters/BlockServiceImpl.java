@@ -9,13 +9,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
 import com.lng.attendancecompanyservice.entity.masters.Block;
 import com.lng.attendancecompanyservice.entity.masters.Branch;
+import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BlockRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.EmployeeBlockRepository;
 import com.lng.attendancecompanyservice.service.masters.BlockService;
-import com.lng.dto.customer.BranchDto;
 import com.lng.dto.masters.block.BlockDto;
 import com.lng.dto.masters.block.BlockResponse;
 
@@ -30,6 +31,9 @@ public class BlockServiceImpl implements BlockService {
 	EmployeeBlockRepository employeeBlockRepository;
 	@Autowired
 	BranchRepository branchRepository;
+	@Autowired
+	CustomerRepository customerRepository;
+
 
 	@Override
 	public BlockResponse saveBlock(BlockDto blockDto) {
@@ -59,7 +63,6 @@ public class BlockServiceImpl implements BlockService {
 				response.status = new Status(true,400,"BlockName already exist");
 			}
 
-
 		}catch(Exception ex){
 			response.status = new Status(true,3000, ex.getMessage()); 
 		}
@@ -73,7 +76,7 @@ public class BlockServiceImpl implements BlockService {
 		try {
 			List<Block> blockList=blockRepository.findAll();
 			response.setData1(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully  GetAll");
+			response.status = new Status(false,200, "success");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -110,7 +113,7 @@ public class BlockServiceImpl implements BlockService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-					status = new Status(true,400,"BlockName already exist for Customer :" + blockDto.getRefBranchId());
+					status = new Status(true,400,"Block Name already exist");
 				}
 			}
 
@@ -143,7 +146,7 @@ public class BlockServiceImpl implements BlockService {
 				}else  {
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
-					response.status = new Status(false,200, "Block is used in other transaction, so it is set to isActive 0");
+					response.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
 				}
 			}else {
 				response.status = new Status(true,400, "BlockId Not Found");
@@ -155,15 +158,7 @@ public class BlockServiceImpl implements BlockService {
 	}
 
 
-	public BlockDto convertToBlockDto(Block block) {
-		BlockDto blockDto = modelMapper.map(block,BlockDto.class);
-		blockDto.setBlkId(block.getBlkId());
-		blockDto.setCustId(blockDto.getCustId());
-		blockDto.setRefBranchId(block.getBranch().getBrId());
-		blockDto.setBrName(block.getBranch().getBrName());
-		BranchDto branchDto = modelMapper.map(block.getBranch(),BranchDto.class);
-		return blockDto;
-	}
+	
 
 	@Override
 	public BlockResponse getBranchDetailsByCustId(Integer custId) {
@@ -180,7 +175,11 @@ public class BlockServiceImpl implements BlockService {
 				blockDto1.setBrCode(p[2].toString());
 				blockDto1.setBrName(p[3].toString());
 				blockDtoList.add(blockDto1);
+<<<<<<< HEAD
 				response.status = new Status(false,200, "Success");
+=======
+				response.status = new Status(false,200, "success");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 
 			}
 
@@ -234,7 +233,11 @@ public class BlockServiceImpl implements BlockService {
 			if(block != null) {
 				BlockDto blockDto = convertToBlockDto(block);
 				response.data = blockDto;
+<<<<<<< HEAD
 				response.status = new Status(false,200, "Success");
+=======
+				response.status = new Status(false,200, "success");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -247,6 +250,7 @@ public class BlockServiceImpl implements BlockService {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public BlockResponse getAllByCustId(Integer custId) {
 		BlockResponse response=new BlockResponse(); 
 		List<BlockDto> blockDtoList = new ArrayList<>();
@@ -277,5 +281,38 @@ public class BlockServiceImpl implements BlockService {
 		}
 		response.setData1(blockDtoList);
 		return response;
+=======
+	public BlockResponse getByCustomer_CustId(Integer custId) {
+		BlockResponse response = new BlockResponse();
+		
+		try {
+			Customer customer = customerRepository.findCustomerByCustId(custId);
+			if(customer != null) {
+				List<Block> blockList = blockRepository.findByCustomer_CustId(custId);
+				response.setData1(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
+				
+				if(response.getData1().isEmpty()) {
+					response.status = new Status(true,400, "Not found"); 
+				}else {
+					response.status = new Status(false,200, "Success");
+				}
+			}else {
+				response.status = new Status(true,400, "Not found for this customer"); 
+			}
+
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Something went wrong"); 
+		}
+		return response;
+	}
+	
+	public BlockDto convertToBlockDto(Block block) {
+		BlockDto blockDto = modelMapper.map(block,BlockDto.class);
+		blockDto.setCustId(block.getBranch().getCustomer().getCustId());
+		blockDto.setRefBranchId(block.getBranch().getBrId());
+		blockDto.setBrName(block.getBranch().getBrName());
+		blockDto.setBrCode(block.getBranch().getBrCode());
+		return blockDto;
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	}
 }

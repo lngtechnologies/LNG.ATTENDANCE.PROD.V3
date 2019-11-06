@@ -47,10 +47,10 @@ public class CustEmplyeeController {
    }
 		
 	@PostMapping(value = "/findByEmployeeId")
-    public ResponseEntity<CustEmployeeResponse> findByEmployeeId(@RequestBody CustEmployeeDtoTwo custEmployeeDtoTwo) {
-		CustEmployeeResponse custEmployeeResponse = custEmployeeService.findEmployeeByEmpId(custEmployeeDtoTwo.getEmpId());
-        if (custEmployeeResponse !=null){
-            return new ResponseEntity<CustEmployeeResponse>(custEmployeeResponse, HttpStatus.OK);
+    public ResponseEntity<CustEmployeeListResponse> findByEmployeeId(@RequestBody CustEmployeeDtoTwo custEmployeeDtoTwo) {
+		CustEmployeeListResponse custEmployeeListResponse = custEmployeeService.findEmployeeByEmpId(custEmployeeDtoTwo.getEmpId());
+        if (custEmployeeListResponse !=null){
+            return new ResponseEntity<CustEmployeeListResponse>(custEmployeeListResponse, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }

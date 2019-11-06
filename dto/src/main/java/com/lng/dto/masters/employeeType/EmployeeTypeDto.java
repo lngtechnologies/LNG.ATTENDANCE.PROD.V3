@@ -3,8 +3,7 @@ package com.lng.dto.masters.employeeType;
 public class EmployeeTypeDto {
 
 	private Integer empTypeId;
-	
-	private Integer refCustId;
+
 	
 	private String empType;
 
@@ -15,15 +14,7 @@ public class EmployeeTypeDto {
 	public void setEmpTypeId(Integer empTypeId) {
 		this.empTypeId = empTypeId;
 	}
-
-	public Integer getRefCustId() {
-		return refCustId;
-	}
-
-	public void setRefCustId(Integer refCustId) {
-		this.refCustId = refCustId;
-	}
-
+	
 	public String getEmpType() {
 		return empType;
 	}

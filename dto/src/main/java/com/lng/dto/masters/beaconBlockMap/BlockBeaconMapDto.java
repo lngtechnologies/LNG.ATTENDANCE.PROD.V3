@@ -8,6 +8,10 @@ public class BlockBeaconMapDto {
 	
 	private Integer refBlkId;
 	
+	private Integer custId;
+	
+	private Integer brId;
+	
 	private String beaconCode;
 	
 	private Integer beaconType;
@@ -72,6 +76,22 @@ public class BlockBeaconMapDto {
 
 	public void setBeaconType(Integer beaconType) {
 		this.beaconType = beaconType;
+	}
+
+	public Integer getCustId() {
+		return custId;
+	}
+
+	public void setCustId(Integer custId) {
+		this.custId = custId;
+	}
+
+	public Integer getBrId() {
+		return brId;
+	}
+
+	public void setBrId(Integer brId) {
+		this.brId = brId;
 	}
 
 	

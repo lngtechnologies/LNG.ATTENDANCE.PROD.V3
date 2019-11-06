@@ -82,7 +82,7 @@ public class MessageUtil {
 			// creates a new e-mail message
 			Message msg = new MimeMessage(session);
 
-			msg.setFrom(new InternetAddress(userName, "LNGAdmin"));
+			msg.setFrom(new InternetAddress(userName, "LNG Admin"));
 			InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
 			msg.setRecipients(Message.RecipientType.TO, toAddresses);
 			msg.setSubject(subject);

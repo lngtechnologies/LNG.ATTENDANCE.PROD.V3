@@ -7,4 +7,5 @@ import com.lng.attendancecustomerservice.entity.masters.EmployeeDepartment;
 @Repository
 public interface EmployeeDepartmentRepository extends CrudRepository<EmployeeDepartment,Integer> {
 
+	EmployeeDepartment findByEmployee_EmpId(Integer empId);
 }

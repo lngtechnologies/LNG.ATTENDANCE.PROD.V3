@@ -48,15 +48,19 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftEnd(shiftDto.getShiftEnd());
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
-					shiftResponse.status = new Status(false,200, "successfully created");
+					shiftResponse.status = new Status(false,200, "Successfully created");
 
 				}
 				else{ 
-					shiftResponse.status = new Status(true,400, "BranchId Not Found");
+					shiftResponse.status = new Status(true,400, "Branch Not Found");
 				}
 			}
 			else{ 
+<<<<<<< HEAD
 				shiftResponse.status = new Status(true,400,"ShiftName already exist for branch");
+=======
+				shiftResponse.status = new Status(true,400,"Shift Name already exist");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}
 		} catch (Exception e) {
 			shiftResponse.status = new Status(true, 4000, e.getMessage());
@@ -106,12 +110,16 @@ public class ShiftServiceImpl implements ShiftService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
+<<<<<<< HEAD
 					status = new Status(true,400,"ShiftName already exist for Branch");
+=======
+					status = new Status(true,400,"Shift Name already exist");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "BranchId Not Found");
+				status = new Status(false, 200, "Branch Not Found");
 
 			}
 		}
@@ -131,11 +139,11 @@ public class ShiftServiceImpl implements ShiftService {
 				if(b == 0) {
 
 					shiftRepository.delete(shift);	
-					shiftResponse.status = new Status(false,200, "successfully deleted");
+					shiftResponse.status = new Status(false,200, "Successfully deleted");
 				} else {
 					shift.setShiftIsActive(false);
 					shiftRepository.save(shift);
-					shiftResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
+					shiftResponse.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
 				}
 
 			} else {
@@ -200,7 +208,7 @@ public class ShiftServiceImpl implements ShiftService {
 			if(shift != null) {
 				ShiftDto shiftDto = convertToShiftDto(shift);
 				response.data = shiftDto;
-				response.status = new Status(false,200, "successfully GetShiftDetails");
+				response.status = new Status(false,200, "Success");
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");

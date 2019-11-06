@@ -11,4 +11,6 @@ public interface EmpMonthlyNoOfDaysRepository extends PagingAndSortingRepository
 
 	@Query(value = "call WORKDAYS(?1)", nativeQuery = true)
 	Integer findNoOfDaysByYearMonth(Date yearMonth);
+	
+	EmpMonthlyNoOfDays findByEmployee_EmpId(Integer empId);
 }

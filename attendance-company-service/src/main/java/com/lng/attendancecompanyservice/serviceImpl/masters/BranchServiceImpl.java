@@ -89,7 +89,7 @@ public class BranchServiceImpl implements BranchService {
 							branch.setBrEmail(branchDto.getBrEmail());
 							branch.setBrLatLong(branchDto.getBrLatLong());
 							branch.setBrIsActive(true);
-							branch.setBrIsBillable(true);
+							branch.setBrIsBillable(branchDto.getBrIsBillable());
 							branch.setBrLandline(branchDto.getBrLandline());
 							branch.setBrMobile(branchDto.getBrMobile());
 							branch.setBrName(branchDto.getBrName());
@@ -108,18 +108,18 @@ public class BranchServiceImpl implements BranchService {
 								e.printStackTrace();
 							}
 
-							response.status = new Status(false,200, "Successfully Branch created with code: "+ branch.getBrCode());
+							response.status = new Status(false,200, "Successfully Created");
 						}
 						else{ 
-							response.status = new Status(true,400, "StateId Not Found");
+							response.status = new Status(true,400, "State Not Found");
 						}
 					}
 					else{ 
-						response.status = new Status(true,400, "CountryId Not Found");
+						response.status = new Status(true,400, "Country Not Found");
 					}
 				}
 				else{ 
-					response.status = new Status(true,400, "CustomerId Not Found");
+					response.status = new Status(true,400, "Customer Not Found");
 				}
 			}
 			else{ 
@@ -139,7 +139,7 @@ public class BranchServiceImpl implements BranchService {
 		try {
 			List<Branch> branchList=branchRepository.findAllBranchByBrIsActive(true);
 			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully GetAll");
+			response.status = new Status(false,200, "success");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -190,20 +190,20 @@ public class BranchServiceImpl implements BranchService {
 							branchRepository.save(branch);
 							status = new Status(false, 200, "Updated successfully");
 						} else {
-							status = new Status(true,400,"BranchName already exist for branch"); 
+							status = new Status(true,400,"Branch Name already exist"); 
 						}
 					}
 
 					else{ 
-						status = new Status(true,400, "StateI Not Found");
+						status = new Status(true,400, "State Not Found");
 					}
 				}
 				else{ 
-					status = new Status(true,400, "CountryId Not Found");
+					status = new Status(true,400, "Country Not Found");
 				}
 			}
 			else{ 
-				status = new Status(true,400, "CustomerId Not Found");
+				status = new Status(true,400, "Customer Not Found");
 			}
 
 		}catch(Exception e) {
@@ -220,7 +220,11 @@ public class BranchServiceImpl implements BranchService {
 			if(branch != null) {
 				BranchDto branchDto = convertToBranchDto(branch);
 				response.data = branchDto;
+<<<<<<< HEAD
 				response.status = new Status(false,200, "Success");
+=======
+				response.status = new Status(false,200, "success");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -255,10 +259,14 @@ public class BranchServiceImpl implements BranchService {
 				}else {
 					branch.setBrIsActive(false);
 					branchRepository.save(branch);
-					response.status = new Status(false, 200, "Branch is used in some other transaction, so it is set to IsActivive 0");
+					response.status = new Status(false, 200, "The record has been just disabled as it has been used in another transaction");
 				}
 			}else {
+<<<<<<< HEAD
 				response.status = new Status(true, 400, "Branch  not found");
+=======
+				response.status = new Status(true, 400, "Branch not found");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}
 
 		}catch(Exception e) {

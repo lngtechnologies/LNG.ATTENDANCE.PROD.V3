@@ -25,7 +25,6 @@ public class BlockResponse {
 	}
 	public void setData(BlockDto data) {
 		this.data = data;
-	}
-	
+	}	
 	
 }

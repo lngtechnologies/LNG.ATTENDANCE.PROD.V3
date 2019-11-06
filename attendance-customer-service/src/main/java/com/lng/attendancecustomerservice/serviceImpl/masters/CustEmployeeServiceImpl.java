@@ -1,6 +1,9 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,10 +68,10 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	CustomerRepository customerRepository;
 
 	@Autowired
-	EmployeeBranchRepositories employeeBranchRepositories;
+	DepartmentRepository departmentRepository;
 
 	@Autowired
-	DepartmentRepository departmentRepository;
+	EmployeeBranchRepositories employeeBranchRepositories;
 
 	@Autowired
 	EmployeeDepartmentRepository employeeDepartmentRepository;
@@ -102,7 +105,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	public CustEmployeeStatus save(CustEmployeeDto custEmployeeDto) {
 		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
 		Employee employee = new Employee();
-		
+
 		try {
 			List<Employee> employee1 = custEmployeeRepository.findAllEmployeeByEmpMobile(custEmployeeDto.getEmpMobile());
 
@@ -120,7 +123,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						if(branch == null) throw new Exception("Cannot find branch id for Employee Branch");
 						employeeBranch.setEmployee(employee);
 						employeeBranch.setBranch(branch);
-						employeeBranch.setBranchFromDate(new Date());
+						employeeBranch.setBranchFromDate(custEmployeeDto.getEmployeeBranchFromDate());
+						Date empBrToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeBranchFromDate());
+						employeeBranch.setBranchToDate(empBrToDate);
 
 					}catch (Exception e) {
 						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
@@ -133,11 +138,13 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					//set EmpId and DeptId to empDept
 					EmployeeDepartment employeeDepartment = new EmployeeDepartment();
 					try {
-						Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDeptartmentId());
+						Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
 						if(department == null) throw new Exception("Cannot find department id for Employee Department");
 						employeeDepartment.setEmployee(employee);
 						employeeDepartment.setDepartment(department);
-						employeeDepartment.setEmpFromDate(new Date());
+						employeeDepartment.setEmpFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
+						Date empDeptToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
+						employeeDepartment.setEmpToDate(empDeptToDate);
 					}catch (Exception e) {	
 						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 					}
@@ -153,7 +160,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						if(designation == null) throw new Exception("Cannot find designation id for Employee Designation");
 						employeeDesignation.setEmployee(employee);
 						employeeDesignation.setDesignation(designation);
-						employeeDesignation.setEmpFromDate(new Date());
+						employeeDesignation.setEmpFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
+						Date empDesgToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
+						employeeDesignation.setEmpToDate(empDesgToDate);
 					}catch (Exception e) {	
 						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 					}
@@ -169,7 +178,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						if(shift == null) throw new Exception("Cannot find shift id for Employee Shift");
 						employeeShift.setEmployee(employee);
 						employeeShift.setShift(shift);
-						employeeShift.setShiftFromDate(new Date());
+						employeeShift.setShiftFromDate(custEmployeeDto.getEmployeeShiftFromDate());
+						Date empShiftToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeShiftFromDate());
+						employeeShift.setShiftToDate(empShiftToDate);
 					}catch (Exception e) {	
 						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 					}
@@ -183,8 +194,10 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					try {
 						empWeeklyOffDay.setEmployee(employee);
 						empWeeklyOffDay.setYearMonth(new Date());
-						empWeeklyOffDay.setDayOfWeek("sunday");
-						empWeeklyOffDay.setFromDate(new Date());
+						empWeeklyOffDay.setDayOfWeek(custEmployeeDto.getDayOfWeek());
+						empWeeklyOffDay.setFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
+						Date empweeklyOffToDate = subtractDaysFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
+						empWeeklyOffDay.setToDate(empweeklyOffToDate);
 					}catch (Exception e) {
 						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 					}
@@ -229,6 +242,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		try {
 			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
 			Customer customer = customerRepository.findCustomerByCustId(custEmployeeDto.getCustId());
+
+			if(custEmployeeDto.getContractorId() == null) {
+				employee.setRefContractorId(0);
+			}else {
+				employee.setRefContractorId(custEmployeeDto.getContractorId());
+			}
 			employee.setBranch(branch);
 			employee.setCustomer(customer);
 			employee.setEmpInService(true);
@@ -352,39 +371,54 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		return empMonthlyNoOfDays;
 	}
 
+
 	@Override
-	public CustEmployeeResponse findEmployeeByEmpId(Integer empId) {
-		CustEmployeeResponse custEmployeeResponse = new CustEmployeeResponse();
+	public CustEmployeeListResponse findEmployeeByEmpId(Integer empId) {
 
-		Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(empId, true);
-		
-		Department department = departmentRepository.findDepartmentByEmployee_EmpId(empId);
-		EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpId(empId);
-		Designation designation = designationRepository.findDesignationByEmployee_EmpId(empId);
-		Employee employee2 = custEmployeeRepository.findEmpReportingToByEmpId(empId);
-		
+		CustEmployeeListResponse custEmployeeListResponse = new CustEmployeeListResponse();
+		List<CustEmployeeDtoTwo> custEmployeeDtoTwoList = new ArrayList<>();
+
 		try {
-			if(employee != null) {
-				CustEmployeeDtoTwo custEmployeeDtoTwo = convertToCustEmployeeDtoTwo(employee);
-				custEmployeeDtoTwo.setDeptartmentId(department.getDeptId());
-				custEmployeeDtoTwo.setDeptName(department.getDeptName());
-				custEmployeeDtoTwo.setWeekOffDay(empWeeklyOffDay.getDayOfWeek());
-				custEmployeeDtoTwo.setDesignationId(designation.getDesignationId());
-				custEmployeeDtoTwo.setDesignationName(designation.getDesignationName());
-				custEmployeeDtoTwo.setEmpReportingToId(employee2.getEmpReportingTo());
-				custEmployeeDtoTwo.setEmpReportingTo(employee2.getEmpName());
-				custEmployeeResponse.data = custEmployeeDtoTwo;
-				custEmployeeResponse.status = new Status(false, 200, "Success");
-			}
-			else {
-				custEmployeeResponse.status = new Status(true, 4000, "Not found or Employee Is Not In Service");
-			}
+			List<Object[]> employeeList = custEmployeeRepository.findAllEmployeeByEmpIdAndEmpInService(empId);
+			Employee employee = custEmployeeRepository.findEmpReportingToByEmpId(empId);
 
-		}catch (Exception e) {
-			custEmployeeResponse.status = new Status(true, 5000, "Opps...! Something went wrong");
+			if(employeeList.isEmpty()) {
+				custEmployeeListResponse.status = new Status(true, 4000, "Not Found");
+
+			} else {
+				for(Object[] p : employeeList) {
+
+					CustEmployeeDtoTwo custEmployeeDto = new CustEmployeeDtoTwo();
+					custEmployeeDto.setEmpId(Integer.valueOf(p[0].toString()));
+					custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
+					custEmployeeDto.setCustId(Integer.valueOf(p[2].toString()));
+					custEmployeeDto.setContractorId(Integer.valueOf(p[3].toString()));
+					custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
+					custEmployeeDto.setEmpTypeId(Integer.valueOf(p[5].toString()));
+					custEmployeeDto.setEmpName(p[6].toString());
+					custEmployeeDto.setEmpMobile(p[7].toString());
+					custEmployeeDto.setEmpGender(p[8].toString());
+					custEmployeeDto.setEmpInService(Boolean.valueOf(p[9].toString()));
+					custEmployeeDto.setEmpIsSupervisor_Manager(Boolean.valueOf(p[10].toString()));
+					custEmployeeDto.setEmpReportingToId(Integer.valueOf(p[11].toString()));
+					custEmployeeDto.setEmpJoiningDate((Date)p[12]);
+					custEmployeeDto.setBrName(p[13].toString());
+					custEmployeeDto.setShiftName(p[14].toString());
+					custEmployeeDto.setDeptName(p[15].toString());
+					custEmployeeDto.setDesignationName(p[16].toString());
+					custEmployeeDto.setContractorName(p[17].toString());
+					custEmployeeDto.setEmpType(p[18].toString());
+					custEmployeeDto.setEmpReportingTo(employee.getEmpName());
+
+					custEmployeeDtoTwoList.add(custEmployeeDto);
+					custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
+					custEmployeeListResponse.status = new Status(false, 2000, "Success");
+				}
+			}
+		} catch (Exception e) {
+			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
 		}
-
-		return custEmployeeResponse;
+		return custEmployeeListResponse;
 	}
 
 	@Override
@@ -395,18 +429,113 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custEmployeeDto.getEmpId(), true);
 			Customer customer =  customerRepository.findCustomerByCustId(custEmployeeDto.getCustId());
 			EmployeeType employeeType = employeeTypeRepository.findEmployeeTypeByEmpTypeId(custEmployeeDto.getEmpTypeId());
-			Contractor contractor = contractorRepository.findContractorByContractorId(custEmployeeDto.getContractorId());
+			Shift shift = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
+			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
+			// Contractor contractor = contractorRepository.findContractorByContractorId(custEmployeeDto.getContractorId());
 			if(employee != null) {
+				employee.setBranch(branch);
 				employee.setCustomer(customer);
 				employee.setEmployeeType(employeeType);
-				employee.setContractor(contractor);
+				employee.setShift(shift);
+				if(custEmployeeDto.getContractorId() != null) {
+					employee.setRefContractorId(custEmployeeDto.getContractorId());
+				}else {
+					employee.setRefContractorId(0);
+				}
+
 				employee.setEmpReportingTo(custEmployeeDto.getEmpReportingToId());
 				employee.setEmpName(custEmployeeDto.getEmpName());
 				employee.setEmpMobile(custEmployeeDto.getEmpMobile());
 				employee.setEmpGender(custEmployeeDto.getEmpGender());
 				employee.setEmpJoiningDate(custEmployeeDto.getEmpJoiningDate());
-
+				employee.setEmpIsSupervisor_Manager(custEmployeeDto.getEmpIsSupervisor_Manager());
 				custEmployeeRepository.save(employee);
+
+				if(employee != null) {
+
+					EmployeeDepartment employeeDepartment = employeeDepartmentRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+					try {
+						Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
+						if(department == null) throw new Exception("Cannot find department id for Employee Department");
+						employeeDepartment.setEmployee(employee);
+						employeeDepartment.setDepartment(department);
+						employeeDepartment.setEmpFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
+						Date empDeptToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
+						employeeDepartment.setEmpToDate(empDeptToDate);
+
+						employeeDepartmentRepository.save(employeeDepartment);
+					}catch (Exception e) {	
+						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+					}
+
+					//set EmpId and DesignationId to empDesg
+					EmployeeDesignation employeeDesignation = employeeDesignationRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+					try {
+						Designation designation = designationRepository.findDesignationByDesignationId(custEmployeeDto.getDesignationId());
+						if(designation == null) throw new Exception("Cannot find designation id for Employee Designation");
+						employeeDesignation.setEmployee(employee);
+						employeeDesignation.setDesignation(designation);
+						employeeDesignation.setEmpFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
+						Date empDesgToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
+						employeeDesignation.setEmpToDate(empDesgToDate);
+
+						employeeDesignationRepository.save(employeeDesignation);
+
+					}catch (Exception e) {	
+						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+					}
+
+					//set EmpId and ShiftId to empShift
+					EmployeeShift employeeShift = employeeShiftRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+					try {
+						Shift shift1 = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
+						if(shift1 == null) throw new Exception("Cannot find shift id for Employee Shift");
+						employeeShift.setEmployee(employee);
+						employeeShift.setShift(shift1);
+						employeeShift.setShiftFromDate(custEmployeeDto.getEmployeeShiftFromDate());
+						Date empShiftToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeShiftFromDate());
+						employeeShift.setShiftToDate(empShiftToDate);
+
+						employeeShiftRepository.save(employeeShift);
+
+					}catch (Exception e) {	
+						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+					}
+
+
+					//set EmpId and WeekoffDay to empShift
+					EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpId(custEmployeeDto.getEmpId());
+					try {
+						empWeeklyOffDay.setEmployee(employee);
+						empWeeklyOffDay.setYearMonth(new Date());
+						empWeeklyOffDay.setDayOfWeek(custEmployeeDto.getDayOfWeek());
+						empWeeklyOffDay.setFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
+						Date empweeklyOffToDate = subtractDaysFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
+						empWeeklyOffDay.setToDate(empweeklyOffToDate);
+
+						empWeeklyOffDayRepository.save(empWeeklyOffDay);
+
+					}catch (Exception e) {
+						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+					}
+
+
+					//set EmpId and MonthlyNoOfDays to empShift
+					EmpMonthlyNoOfDays empMonthlyNoOfDays = empMonthlyNoOfDaysRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+					try {
+						empMonthlyNoOfDays.setEmployee(employee);
+						empMonthlyNoOfDays.setYearMonth(new Date());
+						Integer NoOfDays = empMonthlyNoOfDaysRepository.findNoOfDaysByYearMonth(empMonthlyNoOfDays.getYearMonth());
+						empMonthlyNoOfDays.setNoOfDays(NoOfDays);
+						
+						empMonthlyNoOfDaysRepository.save(empMonthlyNoOfDays);
+						
+					}catch (Exception e) {
+						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+					}
+
+				}
+
 				custEmployeeStatus.status = new Status(false, 200, "Successfully Updated");
 			} else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee Not Found or Employee Not In Service");
@@ -420,16 +549,43 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	@Override
 	public CustEmployeeListResponse findAll() {
 		CustEmployeeListResponse custEmployeeListResponse = new CustEmployeeListResponse();
+		List<CustEmployeeDtoTwo> custEmployeeDtoTwoList = new ArrayList<>();
 
 		try {
 
-			List<Employee> employeeList = custEmployeeRepository.findAllEmployeeByEmpInService(true);
-			custEmployeeListResponse.setEmployyeList(employeeList.stream().map(employee -> convertToCustEmployeeDtoTwo(employee)).collect(Collectors.toList()));
+			List<Object[]> employeeList = custEmployeeRepository.findAllEmployeeByEmpInService();
 
-			if(custEmployeeListResponse != null && custEmployeeListResponse.getEmployyeList() != null) {
-				custEmployeeListResponse.status = new Status(false, 2000, "Success");
-			}else {
+			if(employeeList.isEmpty()) {
 				custEmployeeListResponse.status = new Status(true, 4000, "Not Found");
+			}else {
+				for(Object[] p : employeeList) {
+
+					CustEmployeeDtoTwo custEmployeeDto = new CustEmployeeDtoTwo();
+					custEmployeeDto.setEmpId(Integer.valueOf(p[0].toString()));
+					custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
+					custEmployeeDto.setCustId(Integer.valueOf(p[2].toString()));
+					custEmployeeDto.setContractorId(Integer.valueOf(p[3].toString()));
+					custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
+					custEmployeeDto.setEmpTypeId(Integer.valueOf(p[5].toString()));
+					custEmployeeDto.setEmpName(p[6].toString());
+					custEmployeeDto.setEmpMobile(p[7].toString());
+					custEmployeeDto.setEmpGender(p[8].toString());
+					custEmployeeDto.setEmpInService(Boolean.valueOf(p[9].toString()));
+					custEmployeeDto.setEmpIsSupervisor_Manager(Boolean.valueOf(p[10].toString()));
+					custEmployeeDto.setEmpReportingToId(Integer.valueOf(p[11].toString()));
+					custEmployeeDto.setEmpJoiningDate((Date)p[12]);
+					custEmployeeDto.setBrName(p[13].toString());
+					custEmployeeDto.setShiftName(p[14].toString());
+					custEmployeeDto.setDeptName(p[15].toString());
+					custEmployeeDto.setDesignationName(p[16].toString());
+					custEmployeeDto.setContractorName(p[17].toString());
+					custEmployeeDto.setEmpType(p[18].toString());
+
+					custEmployeeDtoTwoList.add(custEmployeeDto);
+					custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
+					custEmployeeListResponse.status = new Status(false, 2000, "Success");
+				}
+
 			}
 		} catch (Exception e) {
 			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
@@ -491,19 +647,24 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		CustEmployeeDto custEmployeeDto = modelMapper.map(employee, CustEmployeeDto.class);
 		custEmployeeDto.setBrId(employee.getBranch().getBrId());
 		custEmployeeDto.setCustId(employee.getCustomer().getCustId());
-		custEmployeeDto.setContractorId(employee.getContractor().getContractorId());		
+		//custEmployeeDto.setContractorId(employee.getContractor().getContractorId());		
 		return custEmployeeDto;
 	}
 
 	public CustEmployeeDtoTwo convertToCustEmployeeDtoTwo(Employee employee) {
+
 		CustEmployeeDtoTwo custEmployeeDtoTwo = modelMapper.map(employee, CustEmployeeDtoTwo.class);
+		Contractor contractor = contractorRepository.findContractorByContractorId(custEmployeeDtoTwo.getContractorId());
 		custEmployeeDtoTwo.setBrId(employee.getBranch().getBrId());
 		custEmployeeDtoTwo.setBrName(employee.getBranch().getBrName());
-		custEmployeeDtoTwo.setContractorName(employee.getContractor().getContractorName());
+		custEmployeeDtoTwo.setContractorName(contractor.getContractorName());
 		custEmployeeDtoTwo.setShiftName(employee.getShift().getShiftName());
 		custEmployeeDtoTwo.setEmpType(employee.getEmployeeType().getEmpType());
 		return custEmployeeDtoTwo;
 	}
 
-
+	public Date subtractDaysFromDate(Date date) {
+		Date toDate = custEmployeeRepository.subtractDaysFromDate(date);
+		return toDate;
+	}
 }
