@@ -8,11 +8,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
+import com.lng.attendancecompanyservice.entity.masters.Beacon;
 import com.lng.attendancecompanyservice.entity.masters.Block;
 import com.lng.attendancecompanyservice.entity.masters.BlockBeaconMap;
+import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
+import com.lng.attendancecompanyservice.repositories.masters.BeaconRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BlockBeaconMapRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BlockRepository;
 import com.lng.attendancecompanyservice.service.masters.BlockBeaconMapService;
+import com.lng.dto.masters.beacon.BeaconDto;
+import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
 
@@ -27,6 +33,12 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 
 	@Autowired
 	BlockRepository blockRepository;
+
+	@Autowired
+	BeaconRepository beaconRepository;
+
+	@Autowired
+	CustomerRepository customerRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
 
@@ -70,7 +82,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 		try {
 			List<BlockBeaconMap> blockBeaconMapList =  blockBeaconMapRepository.findAll();
 
-			blockBeaconMapListResponse.setBeaconMapDtolist(blockBeaconMapList.stream().map(blockBeaconMap -> convertToIndustryTypeDto(blockBeaconMap)).collect(Collectors.toList()));
+			blockBeaconMapListResponse.setBeaconMapDtolist(blockBeaconMapList.stream().map(blockBeaconMap -> convertToBlockBeaconMapDto(blockBeaconMap)).collect(Collectors.toList()));
 
 			if(blockBeaconMapListResponse != null && blockBeaconMapListResponse.getBeaconMapDtolist() != null) {
 
@@ -123,10 +135,101 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 		return statusDto;
 	}
 
-	public BlockBeaconMapDto convertToIndustryTypeDto(BlockBeaconMap blockBeaconMap) {
+
+	@Override
+	public BlockBeaconMapListResponse findByCustId(Integer custId) {
+		BlockBeaconMapListResponse blockBeaconMapListResponse = new BlockBeaconMapListResponse();
+
+		try {
+			Customer customer = customerRepository.findCustomerByCustId(custId);
+			if(customer != null) {
+				List<BlockBeaconMap> blockBeaconMapList =  blockBeaconMapRepository.findByCustomer_CustId(custId);
+
+				blockBeaconMapListResponse.setBeaconMapDtolist(blockBeaconMapList.stream().map(blockBeaconMap -> convertToBlockBeaconMapDto(blockBeaconMap)).collect(Collectors.toList()));
+
+				if(blockBeaconMapListResponse.getBeaconMapDtolist().isEmpty()) {
+					blockBeaconMapListResponse.status = new Status(true, 4000, "Not Found");
+
+				}else {
+					blockBeaconMapListResponse.status = new Status(false, 2000, "Success");
+
+				}
+			}else {
+				blockBeaconMapListResponse.status = new Status(true, 4000, "Not Found for this customer");
+			}
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			blockBeaconMapListResponse.status = new Status(true, 5000, "Oops...! Something went wrong!");
+		}
+		return blockBeaconMapListResponse;
+	}
+
+
+	@Override
+	public BlockBeaconMapResponse mapBeacons(BlockBeaconMapDto blockBeaconMapDto) {
+		BlockBeaconMapResponse blockBeaconMapResponse = new BlockBeaconMapResponse();
+		try {
+			List<BlockBeaconMap> usedBeaconList = blockBeaconMapRepository.findByBlock_BlkId(blockBeaconMapDto.getRefBlkId());
+			blockBeaconMapResponse.setUsedBeacons(usedBeaconList.stream().map(blockBeaconMap -> convertToBlockBeaconMapDto(blockBeaconMap)).collect(Collectors.toList()));
+
+
+			List<Beacon> availableBeaconList = beaconRepository.findAllAvailableBeacons();
+			blockBeaconMapResponse.setAvailableBeacons(availableBeaconList.stream().map(beacon -> convertToBeaconDto(beacon)).collect(Collectors.toList()));
+
+			if(blockBeaconMapResponse.getUsedBeacons().isEmpty()) {
+				blockBeaconMapResponse.status = new Status(false, 200, "There is no beacons are used for this block");
+
+			} else if(blockBeaconMapResponse.getAvailableBeacons().isEmpty())  {
+
+				blockBeaconMapResponse.status = new Status(false, 200, "There is no available beacons, all are used");
+
+			}else {
+
+				blockBeaconMapResponse.status = new Status(false, 200, "Success");
+			}
+		} catch (Exception e) {
+			blockBeaconMapResponse.status = new Status(true, 500, "Opps..! Sometging went wrong..");
+		}
+
+		return blockBeaconMapResponse;
+	}
+
+	public BlockBeaconMapDto convertToBlockBeaconMapDto(BlockBeaconMap blockBeaconMap) {
 		BlockBeaconMapDto  blockBeaconMapDto = modelMapper.map(blockBeaconMap, BlockBeaconMapDto.class);
+		blockBeaconMapDto.setBrId(blockBeaconMap.getBlock().getBranch().getBrId());
 		blockBeaconMapDto.setRefBlkId(blockBeaconMap.getBlock().getBlkId());
 		blockBeaconMapDto.setBlkLogicalName(blockBeaconMap.getBlock().getBlkLogicalName());
+		blockBeaconMapDto.setCustId(blockBeaconMap.getBlock().getBranch().getCustomer().getCustId());
 		return blockBeaconMapDto;
 	}
+	public BeaconDto convertToBeaconDto(Beacon beacon) {
+		BeaconDto  beaconDto = modelMapper.map(beacon, BeaconDto.class);
+		return beaconDto;
+	}
+
+	@Override
+	public StatusDto deleteBlockBeaconmap(BlockBeaconMapDto blockBeaconMapDto) {
+		StatusDto statusDto = new StatusDto();
+
+		BlockBeaconMap blockBeaconMap = blockBeaconMapRepository.findBlockBeaconMapByblkBeaconMapId(blockBeaconMapDto.getBlkBeaconMapId());
+		try {
+			if(blockBeaconMap != null) {
+				blockBeaconMapRepository.delete(blockBeaconMap);
+				statusDto.setError(false);
+				statusDto.setCode(200);					
+				statusDto.setMessage("Successfully deleted");
+			}else {
+				statusDto.setError(true);
+				statusDto.setCode(400);
+				statusDto.setMessage("BlockBeaconMap Not Found");	
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return statusDto;
+	}
+
 }

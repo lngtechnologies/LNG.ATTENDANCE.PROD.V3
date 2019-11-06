@@ -68,7 +68,7 @@ public class BlockController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
-	@PostMapping(value = "/getBranchDetailsByCustomerIdAndBranchId")
+	@PostMapping(value = "/getBlockDetailsByCustomerIdAndBranchId")
 	public ResponseEntity<BlockResponse> edit (@RequestBody BlockDto blockDto){
 		BlockResponse blockDto1 = blockService.getBlockDetailsByCustIdANDRefBranchId(blockDto.getCustId(), blockDto.getRefBranchId());
 		if(blockDto !=null){
@@ -85,5 +85,13 @@ public class BlockController {
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
-
+	
+	@PostMapping(value = "/getAllByCustId")
+	public ResponseEntity<BlockResponse> getByCustId(@RequestBody BlockDto blockDto) {
+		BlockResponse blockResponse = blockService.getByCustomer_CustId(blockDto.getCustId());
+		if(blockDto !=null){
+			return new ResponseEntity<BlockResponse>(blockResponse, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 }

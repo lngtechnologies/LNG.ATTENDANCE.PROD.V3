@@ -46,15 +46,15 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorName(contractorDto.getContractorName());
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "Successfully created");
 
 				}
 				else{ 
-					response.status = new Status(true,400, "CustomerId Not Found");
+					response.status = new Status(true,400, "Customer Not Found");
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"ContractorName already exist for CustomerId :" + contractorDto.getRefCustId());
+				response.status = new Status(true,400,"Contractor Name already exist");
 			}
 
 		}catch(Exception ex){
@@ -70,7 +70,7 @@ public class ContractorServiceImpl implements ContractorService {
 		try {
 			List<Contractor> contractorList=contractorRepository.findAllByContractorIsActive(true);
 			response.setData1(contractorList.stream().map(contractor -> convertToContractorDto(contractor)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully GetAll");
+			response.status = new Status(false,200, "Success");
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -106,12 +106,12 @@ public class ContractorServiceImpl implements ContractorService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-					status = new Status(true,400,"ContractorName already exist for CustomerId :" + contractorDto.getRefCustId());
+					status = new Status(true,400,"Contractor Name already exist");
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "CustomerId Not Found");
+				status = new Status(false, 200, "Customer Not Found");
 
 			}
 		}
@@ -143,7 +143,7 @@ public class ContractorServiceImpl implements ContractorService {
 				}else {
 					contractor.setContractorIsActive(false);
 					contractorRepository.save(contractor);
-					scontractorResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
+					scontractorResponse.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
 				}
 
 			} else {
@@ -165,7 +165,7 @@ public class ContractorServiceImpl implements ContractorService {
 			if(contractor != null) {
 				ContractorDto contractorDto = convertToContractorDto(contractor);
 				response.data = contractorDto;
-				response.status = new Status(false,200, "successfully GetContractorDetails");
+				response.status = new Status(false,200, "Success");
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -187,7 +187,7 @@ public class ContractorServiceImpl implements ContractorService {
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(true,400, "Contractor Not found"); 
 			}else {
-				response.status = new Status(false,200, "success");
+				response.status = new Status(false,200, "Success");
 			}
 
 		}catch(Exception e) {

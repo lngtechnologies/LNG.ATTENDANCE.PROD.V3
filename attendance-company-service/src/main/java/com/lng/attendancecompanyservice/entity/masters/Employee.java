@@ -32,9 +32,8 @@ public class Employee {
     @JoinColumn(name = "refEmpType")
 	private EmployeeType employeeType;
 
-	@ManyToOne
-    @JoinColumn(name = "refContractorId")
-	private Contractor contractor;
+	@Column(name = "refContractorId")
+	private Integer refContractorId;
 
 	@ManyToOne
     @JoinColumn(name = "refShiftId")
@@ -66,6 +65,9 @@ public class Employee {
 
 	@Column(name = "empInService")
 	private Boolean empInService;
+	
+	@Column(name = "empIsSupervisor_Manager")
+	private Boolean	empIsSupervisor_Manager;
 
 	@Column(name = "empReportingTo")
 	@NotNull(message = "This field should not be an empty")
@@ -120,12 +122,12 @@ public class Employee {
 		this.employeeType = employeeType;
 	}
 
-	public Contractor getContractor() {
-		return contractor;
+	public Integer getRefContractorId() {
+		return refContractorId;
 	}
 
-	public void setContractor(Contractor contractor) {
-		this.contractor = contractor;
+	public void setRefContractorId(Integer refContractorId) {
+		this.refContractorId = refContractorId;
 	}
 
 	public Shift getShift() {
@@ -190,6 +192,14 @@ public class Employee {
 
 	public void setEmpReportingTo(Integer empReportingTo) {
 		this.empReportingTo = empReportingTo;
+	}
+
+	public Boolean getEmpIsSupervisor_Manager() {
+		return empIsSupervisor_Manager;
+	}
+
+	public void setEmpIsSupervisor_Manager(Boolean empIsSupervisor_Manager) {
+		this.empIsSupervisor_Manager = empIsSupervisor_Manager;
 	}
 
 	public Date getEmpJoiningDate() {

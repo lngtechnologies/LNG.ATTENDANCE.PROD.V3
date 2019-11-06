@@ -17,12 +17,14 @@ public class CustEmployeeDto {
 	private String empGender;
 
 	private Boolean empInService;
+	
+	private Boolean	empIsSupervisor_Manager;
 
 	private Integer brId;
 
 	private Integer shiftId;
 
-	private Integer deptartmentId;
+	private Integer departmentId;
 
 	private Integer designationId;
 
@@ -31,8 +33,20 @@ public class CustEmployeeDto {
 	private Integer contractorId;
 
 	private Integer empReportingToId;
+	
+	private String dayOfWeek;
 
 	private Date empJoiningDate;
+	
+	private Date employeeBranchFromDate;
+	
+	private Date employeeDepartmentFromDate;
+	
+	private Date employeeDesignationFromDate;
+	
+	private Date employeeShiftFromDate;
+	
+	private Date empWeeklyOffDayFromDate;
 	
 	public Integer getEmpId() {
 		return empId;
@@ -106,12 +120,12 @@ public class CustEmployeeDto {
 		this.shiftId = shiftId;
 	}
 
-	public Integer getDeptartmentId() {
-		return deptartmentId;
+	public Integer getDepartmentId() {
+		return departmentId;
 	}
 
-	public void setDeptartmentId(Integer deptartmentId) {
-		this.deptartmentId = deptartmentId;
+	public void setDepartmentId(Integer departmentId) {
+		this.departmentId = departmentId;
 	}
 
 	public Integer getDesignationId() {
@@ -152,6 +166,62 @@ public class CustEmployeeDto {
 
 	public void setEmpJoiningDate(Date empJoiningDate) {
 		this.empJoiningDate = empJoiningDate;
+	}
+
+	public Boolean getEmpIsSupervisor_Manager() {
+		return empIsSupervisor_Manager;
+	}
+
+	public void setEmpIsSupervisor_Manager(Boolean empIsSupervisor_Manager) {
+		this.empIsSupervisor_Manager = empIsSupervisor_Manager;
+	}
+
+	public Date getEmployeeBranchFromDate() {
+		return employeeBranchFromDate;
+	}
+
+	public void setEmployeeBranchFromDate(Date employeeBranchFromDate) {
+		this.employeeBranchFromDate = employeeBranchFromDate;
+	}
+
+	public Date getEmployeeDepartmentFromDate() {
+		return employeeDepartmentFromDate;
+	}
+
+	public void setEmployeeDepartmentFromDate(Date employeeDepartmentFromDate) {
+		this.employeeDepartmentFromDate = employeeDepartmentFromDate;
+	}
+
+	public Date getEmployeeDesignationFromDate() {
+		return employeeDesignationFromDate;
+	}
+
+	public void setEmployeeDesignationFromDate(Date employeeDesignationFromDate) {
+		this.employeeDesignationFromDate = employeeDesignationFromDate;
+	}
+
+	public Date getEmployeeShiftFromDate() {
+		return employeeShiftFromDate;
+	}
+
+	public void setEmployeeShiftFromDate(Date employeeShiftFromDate) {
+		this.employeeShiftFromDate = employeeShiftFromDate;
+	}
+
+	public Date getEmpWeeklyOffDayFromDate() {
+		return empWeeklyOffDayFromDate;
+	}
+
+	public void setEmpWeeklyOffDayFromDate(Date empWeeklyOffDayFromDate) {
+		this.empWeeklyOffDayFromDate = empWeeklyOffDayFromDate;
+	}
+
+	public String getDayOfWeek() {
+		return dayOfWeek;
+	}
+
+	public void setDayOfWeek(String dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
 	}
 
 }

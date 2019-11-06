@@ -26,6 +26,8 @@ public class EmployeeDto {
 	
 	private Boolean empInService;
 	
+	private Boolean	empIsSupervisor_Manager;
+	
 	private Integer empReportingTo;
 	
 	private Date empJoiningDate;
@@ -202,6 +204,14 @@ public class EmployeeDto {
 
 	public void setEmployeePic(String employeePic) {
 		this.employeePic = employeePic;
+	}
+
+	public Boolean getEmpIsSupervisor_Manager() {
+		return empIsSupervisor_Manager;
+	}
+
+	public void setEmpIsSupervisor_Manager(Boolean empIsSupervisor_Manager) {
+		this.empIsSupervisor_Manager = empIsSupervisor_Manager;
 	}
 
 }

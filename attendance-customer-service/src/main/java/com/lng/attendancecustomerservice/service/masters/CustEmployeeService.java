@@ -10,7 +10,7 @@ public interface CustEmployeeService {
 
 	CustEmployeeStatus save(CustEmployeeDto custEmployeeDto);
 	
-	CustEmployeeResponse findEmployeeByEmpId(Integer empId);
+	CustEmployeeListResponse findEmployeeByEmpId(Integer empId);
 	
 	CustEmployeeListResponse findAll();
 	

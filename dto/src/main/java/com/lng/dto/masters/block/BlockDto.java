@@ -11,7 +11,7 @@ public class BlockDto {
 	private Boolean blkIsActive;
 	private Date blkCreatedDate;
 	private Integer custId;
-	private Integer brId;
+	// private Integer brId;
 	private String brCode;
 	private String brName;
 	
@@ -66,12 +66,7 @@ public class BlockDto {
 	public void setCustId(Integer custId) {
 		this.custId = custId;
 	}
-	public Integer getBrId() {
-		return brId;
-	}
-	public void setBrId(Integer brId) {
-		this.brId = brId;
-	}
+
 	public String getBrCode() {
 		return brCode;
 	}

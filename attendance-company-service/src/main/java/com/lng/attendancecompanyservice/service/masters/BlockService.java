@@ -15,4 +15,5 @@ public interface BlockService {
 	BlockResponse getBranchDetailsByCustId(Integer custId);
 	BlockResponse getBlockDetailsByCustIdANDRefBranchId(int custId, int refBranchId);
 	BlockResponse getBlockByBlkId(Integer blkId);
+	BlockResponse getByCustomer_CustId(Integer custId);
 }

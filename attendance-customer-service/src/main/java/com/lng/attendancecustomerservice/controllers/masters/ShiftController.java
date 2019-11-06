@@ -65,7 +65,7 @@ public class ShiftController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 
-	@PostMapping(value = "/getStateDetailsByStateId")
+	@PostMapping(value = "/getShiftDetailsByShiftId")
 	public ResponseEntity<ShiftResponse> findByShiftId(@RequestBody ShiftDto shiftDto) {
 		ShiftResponse shiftResponse = shiftService.getShiftDetailsByShiftId(shiftDto.getShiftId());
 		if (shiftResponse !=null){

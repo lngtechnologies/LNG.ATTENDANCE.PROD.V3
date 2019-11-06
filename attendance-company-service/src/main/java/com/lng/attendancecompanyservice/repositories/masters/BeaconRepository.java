@@ -2,6 +2,7 @@ package com.lng.attendancecompanyservice.repositories.masters;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,4 +16,7 @@ public interface BeaconRepository extends PagingAndSortingRepository<Beacon, Int
 	Beacon findBeaconByBeaconId(Integer beaconId);
 	
 	List<Beacon> findAll();
+	
+	@Query(value = "CALL getAvailableBeaconCode()", nativeQuery = true)
+	List<Beacon> findAllAvailableBeacons();
 }

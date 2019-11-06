@@ -137,7 +137,10 @@ public class CustomerServiceImpl implements CustomerService {
 
 					if(branch != null) {
 						int custId = saveBranch(branch);
-
+						
+						// Create faceList in Azure
+						createBranchFaceListId(branch.getBrCode());
+						
 						login = setCustomerToLogin(customer);
 
 						if(login != null) {
@@ -279,7 +282,7 @@ public class CustomerServiceImpl implements CustomerService {
 				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\"> Weblink</p>\r\n" + 
 				"																													</td>\r\n" + 
 				"																													<td style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; border-collapse: collapse;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\">: <a href=\"http://52.183.143.13/lngattendancesystemv1\" style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; line-height: 1.3; color: #f7931d; text-decoration: none;\" target = \"_blank\">https://www.lngattendancesystem/SignIn </a> </p>\r\n" + 
+				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\">: <a href=\"http://52.183.143.13/lngattendancesystemv5\" style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; line-height: 1.3; color: #f7931d; text-decoration: none;\" target = \"_blank\">https://www.lngattendancesystem.com</a> </p>\r\n" + 
 				"																													</td>\r\n" + 
 				"																												</tr>\r\n" + 
 				"																												<tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
@@ -515,7 +518,6 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		try {
 			branchRepository.save(branch);
-			createBranchFaceListId(branch.getBrCode());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

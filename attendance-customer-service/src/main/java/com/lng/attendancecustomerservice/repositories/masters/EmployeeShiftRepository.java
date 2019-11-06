@@ -6,4 +6,5 @@ import com.lng.attendancecustomerservice.entity.masters.EmployeeShift;
 
 public interface EmployeeShiftRepository extends PagingAndSortingRepository<EmployeeShift, Integer> {
 
+	EmployeeShift findByEmployee_EmpId(Integer empId);
 }

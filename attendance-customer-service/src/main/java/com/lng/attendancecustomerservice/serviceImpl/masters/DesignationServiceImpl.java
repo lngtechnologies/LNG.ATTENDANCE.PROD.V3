@@ -40,14 +40,14 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesignationName(designationDto.getDesignationName());
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "Successfully created");
 				}
 				else{ 
-					response.status = new Status(true,400, "CustomerId Not Found");
+					response.status = new Status(true,400, "Customer Not Found");
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"DesignationName already exist for Customer :" + designationDto.getRefCustId());
+				response.status = new Status(true,400,"Designation Name already exist");
 			}
 		}catch(Exception e){
 			response.status = new Status(true, 4000, e.getMessage());
@@ -103,12 +103,12 @@ public class DesignationServiceImpl implements DesignationService{
 
 				}
 				else{ 
-					status = new Status(true,400,"DesignationName already exist for Customer :" + designationDto.getRefCustId());
+					status = new Status(true,400,"Designation Name already exist");
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "CustomerId Not Found");
+				status = new Status(false, 200, "Customer Not Found");
 
 			}
 		}
@@ -136,11 +136,11 @@ public class DesignationServiceImpl implements DesignationService{
 			if(a == 0) {
 			
 					designationRepository.delete(designation);	
-					designationResponse.status = new Status(false,200, "successfully deleted");
+					designationResponse.status = new Status(false,200, "Successfully deleted");
 				}else {
 					designation.setDesigIsActive(false);
 					designationRepository.save(designation);
-					designationResponse.status = new Status(false,200, "The record has been just disabled as it is already used");
+					designationResponse.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
 				}
 
 			} else {
@@ -162,7 +162,7 @@ public class DesignationServiceImpl implements DesignationService{
 			if(designation != null) {
 				DesignationDto designationDto = convertToDesignationDto(designation);
 				response.data = designationDto;
-				response.status = new Status(false,200, "successfully GetDesignationDetails");
+				response.status = new Status(false,200, "Success");
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -185,7 +185,7 @@ public class DesignationServiceImpl implements DesignationService{
 				response.status = new Status(true,400, "Designation Not Found"); 
 				
 			}else {
-				response.status = new Status(false,200, "success");
+				response.status = new Status(false,200, "Success");
 			}			
 		}catch(Exception e) {
 			response.status = new Status(true,500, "Something went wrong"); 

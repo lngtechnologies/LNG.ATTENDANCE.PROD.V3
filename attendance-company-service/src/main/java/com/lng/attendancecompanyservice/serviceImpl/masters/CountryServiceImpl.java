@@ -98,7 +98,7 @@ public class CountryServiceImpl implements CountryService {
 		try {
 			List<Country> countryList=countryRepositary.findAllByCountryIsActive(true);
 			response.setData1(countryList.stream().map(country -> convertToCountryDto(country)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "GetAll Successfully ");
+			response.status = new Status(false,200, "Success");
 
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
@@ -133,12 +133,12 @@ public class CountryServiceImpl implements CountryService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-					status = new Status(true,400,"CountryName already exist for CountryId :" + countryDto.getCountryTelCode());
+					status = new Status(true,400,"Country Name already exist");
 				}
 			}
 
 			else {
-				status = new Status(true, 400, "CountryId Not Found");
+				status = new Status(true, 400, "Country Not Found");
 
 			}
 		}
@@ -163,7 +163,7 @@ public class CountryServiceImpl implements CountryService {
 				}else {
 					country.setCountryIsActive(false);
 					countryRepositary.save(country);
-					countryResponse.status = new Status(true,400, "The record has been just disabled as it is already used");
+					countryResponse.status = new Status(true,400, "The record has been just disabled as it has been used in another transaction");
 				}
 			} else  {
 				countryResponse.status = new Status(true,400, "Country Not Found");

@@ -7,6 +7,8 @@ public class CustEmployeeDtoTwo {
 	
 	private Integer empId;
 
+	private Integer custId;
+	
 	private String empName;
 
 	private String empMobile;
@@ -28,6 +30,8 @@ public class CustEmployeeDtoTwo {
 	private String deptName;
 
 	private Integer designationId;
+	
+	private Boolean empIsSupervisor_Manager;
 
 	private String designationName;
 	
@@ -213,6 +217,22 @@ public class CustEmployeeDtoTwo {
 
 	public void setWeekOffDay(String weekOffDay) {
 		this.weekOffDay = weekOffDay;
+	}
+
+	public Boolean getEmpIsSupervisor_Manager() {
+		return empIsSupervisor_Manager;
+	}
+
+	public void setEmpIsSupervisor_Manager(Boolean empIsSupervisor_Manager) {
+		this.empIsSupervisor_Manager = empIsSupervisor_Manager;
+	}
+
+	public Integer getCustId() {
+		return custId;
+	}
+
+	public void setCustId(Integer custId) {
+		this.custId = custId;
 	}
 
 }

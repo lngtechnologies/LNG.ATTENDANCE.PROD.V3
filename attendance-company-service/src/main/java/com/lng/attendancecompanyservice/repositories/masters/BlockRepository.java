@@ -40,4 +40,7 @@ public interface BlockRepository extends PagingAndSortingRepository<Block, Integ
 	int  findBlockBeaconMapByBlockBlkId(int blkId);
 	
 	List<Block> findByBranch_BrId(Integer brId);
+	
+	@Query(value = "CALL getBlockByCustId(?1)",nativeQuery = true)
+	List<Block> findByCustomer_CustId(Integer custId);
 }

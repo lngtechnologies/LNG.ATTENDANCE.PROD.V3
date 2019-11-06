@@ -1,6 +1,5 @@
 package com.lng.attendancecompanyservice.entity.masters;
 
-import java.awt.Point;
 import java.util.Date;
 
 import javax.persistence.Column;

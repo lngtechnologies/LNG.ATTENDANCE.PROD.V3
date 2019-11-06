@@ -156,7 +156,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 					industryTypeRepository.save(industryType);
 					statusDto.setCode(200);
 					statusDto.setError(false);
-					statusDto.setMessage("The record has been just disabled as it is already used");
+					statusDto.setMessage("The record has been just disabled as it has been used in another transaction");
 				}
 				
 			}else {
