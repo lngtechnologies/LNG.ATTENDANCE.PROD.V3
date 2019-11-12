@@ -50,11 +50,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				}
 			}
 			else{ 
-<<<<<<< HEAD
-				response.status = new Status(true,400,"DepartmentName already exist for Customer");
-=======
-				response.status = new Status(true,400,"Department Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+				response.status = new Status(true,400,"DepartmentName already exists");
 			}
 
 		}catch(Exception ex){
@@ -106,11 +102,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-<<<<<<< HEAD
+
 					status = new Status(true,400,"DepartmentName already exist for Customer");
-=======
-					status = new Status(true,400,"Department Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 				}
 			}
 

@@ -44,7 +44,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeave.setCustomer(customer);
 					custLeave.setCustLeaveName(custLeaveDto.getCustLeaveName());
 					custLeaveRepository.save(custLeave);
-					custLeaveResponse.status = new Status(false,200, "success");
+					custLeaveResponse.status = new Status(false,200, "Successfully Created");
 
 				}
 				else{ 
@@ -115,7 +115,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true, 400, e.getMessage());
 		}
 		return status;
 	}
@@ -131,8 +131,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeaveRepository.delete(custLeave);
 					custLeaveResponse.status = new Status(false, 200, "Deleted successfully");
 				}else {
-					custLeaveRepository.save(custLeave);
-					custLeaveResponse.status = new Status(false, 200, "CustLeave is used in some other transaction");
+					custLeaveResponse.status = new Status(false, 200, "The record cannot be deleted as it is already used");
 				}
 			}else {
 				custLeaveResponse.status = new Status(true, 400, "CustLeave  not found");

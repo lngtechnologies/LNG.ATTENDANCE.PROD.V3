@@ -175,11 +175,8 @@ public class BlockServiceImpl implements BlockService {
 				blockDto1.setBrCode(p[2].toString());
 				blockDto1.setBrName(p[3].toString());
 				blockDtoList.add(blockDto1);
-<<<<<<< HEAD
 				response.status = new Status(false,200, "Success");
-=======
-				response.status = new Status(false,200, "success");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 
 			}
 
@@ -233,11 +230,9 @@ public class BlockServiceImpl implements BlockService {
 			if(block != null) {
 				BlockDto blockDto = convertToBlockDto(block);
 				response.data = blockDto;
-<<<<<<< HEAD
+
 				response.status = new Status(false,200, "Success");
-=======
-				response.status = new Status(false,200, "success");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -249,39 +244,33 @@ public class BlockServiceImpl implements BlockService {
 		return response;
 	}
 
-	@Override
-<<<<<<< HEAD
-	public BlockResponse getAllByCustId(Integer custId) {
-		BlockResponse response=new BlockResponse(); 
-		List<BlockDto> blockDtoList = new ArrayList<>();
-		try {
-			List<Object[]> blockList = blockRepository.findAllByCustomer_CustIdAndBlkIsActive(custId, true);
-
-			for (Object[] p : blockList) {
-				BlockDto blockDto1 = new BlockDto();
-				blockDto1.setBlkId(Integer.valueOf(p[0].toString()));
-				blockDto1.setRefBranchId(Integer.valueOf(p[1].toString()));
-				blockDto1.setCustId(Integer.valueOf(p[2].toString()));
-				blockDto1.setBrName(p[3].toString());
-				blockDto1.setBlkLogicalName(p[4].toString());
-				blockDto1.setBlkGPSRadius(Integer.valueOf(p[5].toString()));
-				blockDto1.setBlkLatLong(p[6].toString());
-				blockDto1.setBlkCreatedDate((Date)p[7]);
-				blockDto1.setBlkIsActive(Boolean.valueOf(p[8].toString()));
-				blockDtoList.add(blockDto1);
-				response.status = new Status(false,200, "Success");
-
-			}
-
-
-		}catch (Exception e){
-			response.status = new Status(true,4000,e.getMessage());
-
-
-		}
-		response.setData1(blockDtoList);
-		return response;
-=======
+	/*
+	 * @Override public BlockResponse getAllByCustId(Integer custId) { BlockResponse
+	 * response=new BlockResponse(); List<BlockDto> blockDtoList = new
+	 * ArrayList<>(); try { List<Object[]> blockList =
+	 * blockRepository.findAllByCustomer_CustIdAndBlkIsActive(custId, true);
+	 * 
+	 * for (Object[] p : blockList) { BlockDto blockDto1 = new BlockDto();
+	 * blockDto1.setBlkId(Integer.valueOf(p[0].toString()));
+	 * blockDto1.setRefBranchId(Integer.valueOf(p[1].toString()));
+	 * blockDto1.setCustId(Integer.valueOf(p[2].toString()));
+	 * blockDto1.setBrName(p[3].toString());
+	 * blockDto1.setBlkLogicalName(p[4].toString());
+	 * blockDto1.setBlkGPSRadius(Integer.valueOf(p[5].toString()));
+	 * blockDto1.setBlkLatLong(p[6].toString());
+	 * blockDto1.setBlkCreatedDate((Date)p[7]);
+	 * blockDto1.setBlkIsActive(Boolean.valueOf(p[8].toString()));
+	 * blockDtoList.add(blockDto1); response.status = new Status(false,200,
+	 * "Success");
+	 * 
+	 * }
+	 * 
+	 * 
+	 * }catch (Exception e){ response.status = new Status(true,4000,e.getMessage());
+	 * 
+	 * 
+	 * } response.setData1(blockDtoList); return response; }
+	 */
 	public BlockResponse getByCustomer_CustId(Integer custId) {
 		BlockResponse response = new BlockResponse();
 		
@@ -295,6 +284,7 @@ public class BlockServiceImpl implements BlockService {
 					response.status = new Status(true,400, "Not found"); 
 				}else {
 					response.status = new Status(false,200, "Success");
+					
 				}
 			}else {
 				response.status = new Status(true,400, "Not found for this customer"); 
@@ -313,6 +303,5 @@ public class BlockServiceImpl implements BlockService {
 		blockDto.setBrName(block.getBranch().getBrName());
 		blockDto.setBrCode(block.getBranch().getBrCode());
 		return blockDto;
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	}
 }

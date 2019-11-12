@@ -1,11 +1,9 @@
 package com.lng.attendancecustomerservice.service.masters;
 
 import com.lng.dto.masters.custLeave.CustLeaveResponse;
+import com.lng.dto.masters.custLeave.custLeaveDto;
 
 import status.Status;
-
-
-import com.lng.dto.masters.custLeave.custLeaveDto;
 
 public interface CustLeaveService {
 	

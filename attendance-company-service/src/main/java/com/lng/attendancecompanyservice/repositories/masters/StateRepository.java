@@ -20,7 +20,7 @@ public interface StateRepository extends CrudRepository<State,Integer> {
 	State findByStateName(String stateName);
 	State findStateByStateId(Integer stateId);
 	//State findCountryByCountryId(Integer countryId);
-	@Query(value = "SELECT stateId,stateName FROM   tmstate WHERE  refCountryId=?1",nativeQuery = true)
+	@Query(value = "SELECT stateId,stateName,stateIsActive FROM   tmstate WHERE  refCountryId=?1 and stateIsActive=TRUE",nativeQuery = true)
 	List<Object[]> findStateDetailsByCountry_RefCountryId(int refCountryId);
 
 	@Query(value = "CALL CheckStateIdIsExistOrNot(?1)",nativeQuery = true)

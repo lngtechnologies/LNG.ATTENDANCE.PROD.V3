@@ -11,7 +11,8 @@ import com.lng.attendancecompanyservice.entity.masters.Country;
 @Repository
 public interface CountryRepository extends CrudRepository<Country,Integer> {
 
-	List<Country> findAllByCountryIsActive(Boolean countryIsActive);
+	@Query(value = "SELECT * FROM tmcountry WHERE countryIsActive = TRUE  ORDER BY countryName ASC;", nativeQuery = true)
+	List<Country> findAll();
 	Country findCountryByCountryId(Integer countryId);
 	// Country findCountry(Integer countryId, String CountryTelCode,String countryName);
 	@Query(value = "select * from tmcountry where countryName = ?1", nativeQuery = true)

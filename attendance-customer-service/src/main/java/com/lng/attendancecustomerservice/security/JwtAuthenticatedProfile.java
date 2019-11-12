@@ -1,10 +1,10 @@
 package com.lng.attendancecustomerservice.security;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-
 import java.util.ArrayList;
 import java.util.Collection;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 @SuppressWarnings("serial")
 public class JwtAuthenticatedProfile implements Authentication {

@@ -72,6 +72,9 @@ public class BranchServiceImpl implements BranchService {
 			if(b == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
 				if(customer != null) {
+					//int c =customerRepository.findCustomerByCustNoOfBranch(branchDto.getCustNoOfBranch());
+					//for(int i=1;i<=c;i++) {
+
 					Country country = countryRepository.findCountryByCountryId(branchDto.getRefCountryId());
 					if(country != null) {
 
@@ -118,6 +121,8 @@ public class BranchServiceImpl implements BranchService {
 						response.status = new Status(true,400, "Country Not Found");
 					}
 				}
+				/*response.status = new Status(true,400, " Branch Can't Create");
+				}*/
 				else{ 
 					response.status = new Status(true,400, "Customer Not Found");
 				}
@@ -220,11 +225,7 @@ public class BranchServiceImpl implements BranchService {
 			if(branch != null) {
 				BranchDto branchDto = convertToBranchDto(branch);
 				response.data = branchDto;
-<<<<<<< HEAD
 				response.status = new Status(false,200, "Success");
-=======
-				response.status = new Status(false,200, "success");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -262,11 +263,9 @@ public class BranchServiceImpl implements BranchService {
 					response.status = new Status(false, 200, "The record has been just disabled as it has been used in another transaction");
 				}
 			}else {
-<<<<<<< HEAD
+
 				response.status = new Status(true, 400, "Branch  not found");
-=======
-				response.status = new Status(true, 400, "Branch not found");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 			}
 
 		}catch(Exception e) {

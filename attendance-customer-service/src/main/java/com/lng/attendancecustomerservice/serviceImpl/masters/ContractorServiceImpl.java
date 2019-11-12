@@ -54,11 +54,9 @@ public class ContractorServiceImpl implements ContractorService {
 				}
 			}
 			else{ 
-<<<<<<< HEAD
+
 				response.status = new Status(true,400,"ContractorName already exist for Customer");
-=======
-				response.status = new Status(true,400,"Contractor Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 			}
 
 		}catch(Exception ex){
@@ -109,12 +107,9 @@ public class ContractorServiceImpl implements ContractorService {
 					contractorRepository.save(contractor);
 					status = new Status(false, 200, "Updated successfully");
 				}
-				else{ 
-<<<<<<< HEAD
+				else{
 					status = new Status(true,400,"ContractorName already exist for CustomerId");
-=======
-					status = new Status(true,400,"Contractor Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 				}
 			}
 

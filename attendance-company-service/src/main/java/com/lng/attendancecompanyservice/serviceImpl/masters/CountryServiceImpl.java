@@ -80,7 +80,7 @@ public class CountryServiceImpl implements CountryService {
 	public CountryResponse getAll() {
 		CountryResponse response = new CountryResponse();
 		try {
-			List<Country> countryList=countryRepositary.findAllByCountryIsActive(true);
+			List<Country> countryList=countryRepositary.findAll();
 			response.setData1(countryList.stream().map(country -> convertToCountryDto(country)).collect(Collectors.toList()));
 			response.status = new Status(false,200, "Success");
 
@@ -117,11 +117,8 @@ public class CountryServiceImpl implements CountryService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-<<<<<<< HEAD
 					status = new Status(true,400,"CountryName already Exist");
-=======
-					status = new Status(true,400,"Country Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 				}
 			}
 
@@ -168,5 +165,7 @@ public class CountryServiceImpl implements CountryService {
 		countryDto.setCountryId(country.getCountryId());
 		return countryDto;
 	}
+	
+	
 
 }

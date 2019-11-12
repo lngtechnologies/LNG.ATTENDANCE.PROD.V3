@@ -63,7 +63,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 
 		IndustryTypeListResponse industryTypeListResponse = new IndustryTypeListResponse();
 		try {
-			List<IndustryType> industryTypeDtoList =  industryTypeRepository.findAll();
+			List<IndustryType> industryTypeDtoList =  industryTypeRepository.findAllByIndustryIsActive(true);
 
 			industryTypeListResponse.setIndustryTypeDtoList(industryTypeDtoList.stream().map(industryType -> convertToIndustryTypeDto(industryType)).collect(Collectors.toList()));
 

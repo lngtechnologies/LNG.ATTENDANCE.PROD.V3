@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.Shift;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
@@ -56,11 +57,8 @@ public class ShiftServiceImpl implements ShiftService {
 				}
 			}
 			else{ 
-<<<<<<< HEAD
+
 				shiftResponse.status = new Status(true,400,"ShiftName already exist for branch");
-=======
-				shiftResponse.status = new Status(true,400,"Shift Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}
 		} catch (Exception e) {
 			shiftResponse.status = new Status(true, 4000, e.getMessage());
@@ -110,11 +108,9 @@ public class ShiftServiceImpl implements ShiftService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-<<<<<<< HEAD
+
 					status = new Status(true,400,"ShiftName already exist for Branch");
-=======
-					status = new Status(true,400,"Shift Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 				}
 			}
 

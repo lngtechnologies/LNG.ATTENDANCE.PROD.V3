@@ -1,9 +1,7 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +44,6 @@ import com.lng.attendancecustomerservice.utils.Encoder;
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
-import com.lng.dto.masters.custEmployee.CustEmployeeResponse;
 import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
 
 import status.Status;

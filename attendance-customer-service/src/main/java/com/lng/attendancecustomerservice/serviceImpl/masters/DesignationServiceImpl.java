@@ -14,6 +14,7 @@ import com.lng.attendancecustomerservice.repositories.masters.DesignationReposit
 import com.lng.attendancecustomerservice.service.masters.DesignationService;
 import com.lng.dto.masters.designation.DesignationDto;
 import com.lng.dto.masters.designation.DesignationResponse;
+
 import status.Status;
 @Service
 public class DesignationServiceImpl implements DesignationService{
@@ -47,11 +48,8 @@ public class DesignationServiceImpl implements DesignationService{
 				}
 			}
 			else{ 
-<<<<<<< HEAD
 				response.status = new Status(true,400,"DesignationName already exist for Customer");
-=======
-				response.status = new Status(true,400,"Designation Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 			}
 		}catch(Exception e){
 			response.status = new Status(true, 4000, e.getMessage());
@@ -107,11 +105,9 @@ public class DesignationServiceImpl implements DesignationService{
 
 				}
 				else{ 
-<<<<<<< HEAD
+
 					status = new Status(true,400,"DesignationName already exist for Customer");
-=======
-					status = new Status(true,400,"Designation Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 				}
 			}
 

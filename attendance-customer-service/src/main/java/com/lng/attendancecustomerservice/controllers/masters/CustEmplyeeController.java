@@ -11,13 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.masters.CustEmployeeService;
-import com.lng.dto.customer.CustomerDto;
-import com.lng.dto.customer.CustomerListResponse;
-import com.lng.dto.customer.CustomerResponse;
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
-import com.lng.dto.masters.custEmployee.CustEmployeeResponse;
 import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
 
 @RestController

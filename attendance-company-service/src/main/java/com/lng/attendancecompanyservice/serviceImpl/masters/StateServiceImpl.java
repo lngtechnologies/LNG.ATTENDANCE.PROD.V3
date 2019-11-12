@@ -58,14 +58,11 @@ public class StateServiceImpl implements StateService {
 				}
 			}
 			else{ 
-<<<<<<< HEAD
-				response.status = new Status(true,400,"StateName already exist for Country");
-=======
-				response.status = new Status(true,400,"State Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+				response.status = new Status(true,400,"State name already exists");
+
 			}
 		} catch (Exception e) {
-			response.status = new Status(true, 4000, e.getMessage());
+			response.status = new Status(true, 400, e.getMessage());
 		}
 
 		return response;
@@ -121,11 +118,8 @@ public class StateServiceImpl implements StateService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-<<<<<<< HEAD
-					status = new Status(true,400,"StateName already exist for Country");
-=======
 					status = new Status(true,400,"State Name already exist");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 				}
 			}
 

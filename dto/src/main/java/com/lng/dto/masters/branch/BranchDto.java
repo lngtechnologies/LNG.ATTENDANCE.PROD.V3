@@ -46,6 +46,8 @@ public class BranchDto {
 	
 	private String stateName;
 	
+	private Integer custNoOfBranch;
+	
 
 	public Integer getBrId() {
 		return brId;
@@ -213,6 +215,14 @@ public class BranchDto {
 
 	public void setStateName(String stateName) {
 		this.stateName = stateName;
+	}
+
+	public Integer getCustNoOfBranch() {
+		return custNoOfBranch;
+	}
+
+	public void setCustNoOfBranch(Integer custNoOfBranch) {
+		this.custNoOfBranch = custNoOfBranch;
 	}
 	
 	
