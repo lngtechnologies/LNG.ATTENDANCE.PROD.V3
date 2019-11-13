@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.Shift;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
@@ -24,10 +25,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Autowired
 	ShiftRepository shiftRepository;
-	/*
-	 * @Autowired EmployeeRepository employeeRepository;
-	 */
-
 	@Autowired
 	BranchRepository branchRepository;
 
@@ -60,7 +57,8 @@ public class ShiftServiceImpl implements ShiftService {
 				}
 			}
 			else{ 
-				shiftResponse.status = new Status(true,400,"Shift Name already exist");
+
+				shiftResponse.status = new Status(true,400,"ShiftName already exist for branch");
 			}
 		} catch (Exception e) {
 			shiftResponse.status = new Status(true, 4000, e.getMessage());
@@ -68,13 +66,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 		return shiftResponse;
 	}
-
-
-	/*
-	 * private Boolean CheckShiftExists(String shiftName) { Shift shift =
-	 * shiftRepository.findByShiftName(shiftName); if(shift != null) { return true;
-	 * } else { return false; } }
-	 */
 
 	@Override
 	public ShiftResponse getAll() {
@@ -117,7 +108,9 @@ public class ShiftServiceImpl implements ShiftService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{ 
-					status = new Status(true,400,"Shift Name already exist");
+
+					status = new Status(true,400,"ShiftName already exist for Branch");
+
 				}
 			}
 
@@ -181,7 +174,7 @@ public class ShiftServiceImpl implements ShiftService {
 				response.status = new Status(true,400, "Shift Not Found");
 			}else {
 				for (Object[] p : shiftList) {	
-			
+
 					ShiftDto shiftDto1 = new ShiftDto();
 					shiftDto1.setShiftName(p[0].toString());
 					shiftDto1.setShiftStart((p[1].toString()));
@@ -199,7 +192,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 		}
 		response.setData1(shiftDtoList);
-		//response.status = new Status(false,4000, "BranchId not Found");
 		return response;
 	}
 

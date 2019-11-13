@@ -85,13 +85,24 @@ public class BlockController {
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
-	
+
 	@PostMapping(value = "/getAllByCustId")
-	public ResponseEntity<BlockResponse> getByCustId(@RequestBody BlockDto blockDto) {
+	public ResponseEntity<BlockResponse> edit2(@RequestBody BlockDto blockDto) {
 		BlockResponse blockResponse = blockService.getByCustomer_CustId(blockDto.getCustId());
 		if(blockDto !=null){
 			return new ResponseEntity<BlockResponse>(blockResponse, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
+
+
+	
+	/*
+	 * @PostMapping(value = "/getAllByCustId") public ResponseEntity<BlockResponse>
+	 * getByCustId(@RequestBody BlockDto blockDto) { BlockResponse blockResponse =
+	 * blockService.getByCustomer_CustId(blockDto.getCustId()); if(blockDto !=null){
+	 * return new ResponseEntity<BlockResponse>(blockResponse, HttpStatus.CREATED);
+	 * } return new ResponseEntity(HttpStatus.NO_CONTENT); }
+	 */
+
 }

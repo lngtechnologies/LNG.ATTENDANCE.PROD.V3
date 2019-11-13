@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.BlockBeaconMapService;
-import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapList;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
@@ -40,6 +39,9 @@ public class BlockBeaconMapController {
 	@GetMapping(value = "/findAll")
 	public ResponseEntity<BlockBeaconMapListResponse> findAll() {
 		BlockBeaconMapListResponse blockBeaconMapListResponse = blockBeaconMapService.findAll(); 
+		if(blockBeaconMapListResponse.getBeaconMapDtolist().isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
 		return new ResponseEntity<BlockBeaconMapListResponse>(blockBeaconMapListResponse, HttpStatus.OK);
 	}
 
@@ -51,25 +53,5 @@ public class BlockBeaconMapController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
-	@PostMapping(value = "/findByCustId")
-	public ResponseEntity<BlockBeaconMapListResponse> findByCustId(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
-		BlockBeaconMapListResponse blockBeaconMapListResponse = blockBeaconMapService.findByCustId(blockBeaconMapDto.getCustId());
-		return new ResponseEntity<BlockBeaconMapListResponse>(blockBeaconMapListResponse, HttpStatus.OK);
-	}
-	
-	@PostMapping(value = "/delete")
-	public ResponseEntity<StatusDto> delete(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
-		StatusDto statusDto = blockBeaconMapService.deleteBlockBeaconmap(blockBeaconMapDto);
-		if (statusDto !=null){
-			return new ResponseEntity<StatusDto>(statusDto, HttpStatus.CREATED);
-		}
-		return new ResponseEntity(HttpStatus.NO_CONTENT);
-	}
-	
-	@PostMapping(value = "/findAllUsedAndAvailableBeacond")
-	public ResponseEntity<BlockBeaconMapResponse> findAllUsedAndAvailableBeacond(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
-		BlockBeaconMapResponse blockBeaconMapResponse = blockBeaconMapService.mapBeacons(blockBeaconMapDto);
-		return new ResponseEntity<BlockBeaconMapResponse>(blockBeaconMapResponse, HttpStatus.OK);
-	}
-	
+
 }

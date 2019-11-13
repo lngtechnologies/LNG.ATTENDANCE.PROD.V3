@@ -72,13 +72,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	IndustryTypeRepository industryTypeRepository;
-	
+
 	@Autowired
 	UserRightRepository userRightRepository;
-	
+
 	@Autowired
 	CustLeaveRepository custLeaveRepository;
-	
+
 	@Autowired
 	LeaveTypeRepository leaveTypeRepository;
 
@@ -119,20 +119,20 @@ public class CustomerServiceImpl implements CustomerService {
 
 				Customer customer = saveCustomerData(customerDto);
 				if(customer != null) {
-					
+
 					List<LeaveType> leaveTypes = leaveTypeRepository.findAll();
-					
+
 					if(leaveTypes.isEmpty()) {
-						
+
 						statusDto.setCode(400);
 						statusDto.setError(true);
 						statusDto.setMessage("Leave type not found");
-					
+
 					}else {
 						List<CustLeave> custLeaves = custLeaveRepository.assignCustLeaveToCustomer(customer.getCustId());
 					}
-					
-					
+
+
 					Branch branch = setCustomerDetailsToBranch(customer);
 
 					if(branch != null) {
@@ -149,7 +149,7 @@ public class CustomerServiceImpl implements CustomerService {
 								List<UserRight> userRights = userRightRepository.assignDefaultModulesToDefaultCustomerAdmin(loginId);
 							}
 						}
-						
+
 					}
 				}
 				//send mail
@@ -392,9 +392,9 @@ public class CustomerServiceImpl implements CustomerService {
 			System.out.println("Could not send email.");
 			StringBuffer exception = new StringBuffer(ex.getMessage().toString());
 			if (exception.indexOf("SendFailedException") >= 0)      // Wrong To Address 
-            {
-                System.out.println("Wrong To Mail address");
-            }
+			{
+				System.out.println("Wrong To Mail address");
+			}
 			ex.printStackTrace();
 		}
 	}
@@ -441,17 +441,6 @@ public class CustomerServiceImpl implements CustomerService {
 		String base64 = Base64.getEncoder().encodeToString(custLogoFile);
 		return base64;
 	}
-
-
-	// Convert byteArray to image and storing in file system
-	/*
-	 * public void byteToImage() { String path = "F:\\custLogo";
-	 * ByteArrayInputStream bis = new ByteArrayInputStream(); BufferedImage bImage2
-	 * = ImageIO.read(bis); ImageIO.write(bImage2, "jpg", new File("output.jpg") );
-	 * }
-	 */
-	
-
 	// Set Customer Details to Branch
 	private Branch setCustomerDetailsToBranch(Customer customer){
 		Branch branch = new Branch();
@@ -477,7 +466,7 @@ public class CustomerServiceImpl implements CustomerService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return branch;
 	}
 
@@ -515,7 +504,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	//Save to Branch Table
 	private int saveBranch(Branch branch) {
-		
+
 		try {
 			branchRepository.save(branch);
 		} catch (Exception e) {
@@ -528,7 +517,7 @@ public class CustomerServiceImpl implements CustomerService {
 	private Login setCustomerToLogin(Customer customer){
 		Login login = new Login();
 		try {
-			
+
 			login.setRefCustId(customer.getCustId());
 			login.setLoginName("admin@"+customer.getCustCode());
 			login.setLoginMobile(customer.getCustMobile());
@@ -537,13 +526,12 @@ public class CustomerServiceImpl implements CustomerService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return login;
 	}
 
 	//save to Login Table
 	private int saveLogin(Login login){
-		//CustomerDto customerDto = new CustomerDto();
 		try {
 			String randomPassword = loginRepository.generatePassword();
 			login.setLoginPassword(Encoder.getEncoder().encode(randomPassword));
@@ -555,7 +543,7 @@ public class CustomerServiceImpl implements CustomerService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return login.getLoginId();
 	}
 
@@ -724,11 +712,11 @@ public class CustomerServiceImpl implements CustomerService {
 	public void createBranchFaceListId(String branchCode) throws Exception {
 
 		HttpClient httpclient = HttpClients.createDefault();
-		
+
 		try
 		{
 			String brCode = branchCode.toLowerCase();
-			
+
 			URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/facelists/"+brCode);
 
 

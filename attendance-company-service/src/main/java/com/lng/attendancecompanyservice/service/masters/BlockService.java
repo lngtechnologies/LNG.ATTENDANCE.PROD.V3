@@ -3,6 +3,7 @@ package com.lng.attendancecompanyservice.service.masters;
 
 import com.lng.dto.masters.block.BlockDto;
 import com.lng.dto.masters.block.BlockResponse;
+import com.lng.dto.masters.branch.BranchResponse;
 
 import status.Status;
 
@@ -16,4 +17,5 @@ public interface BlockService {
 	BlockResponse getBlockDetailsByCustIdANDRefBranchId(int custId, int refBranchId);
 	BlockResponse getBlockByBlkId(Integer blkId);
 	BlockResponse getByCustomer_CustId(Integer custId);
+
 }

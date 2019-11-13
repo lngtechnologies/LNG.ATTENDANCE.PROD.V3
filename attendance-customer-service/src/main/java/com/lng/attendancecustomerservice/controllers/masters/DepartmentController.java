@@ -11,11 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.masters.DepartmentService;
-import com.lng.dto.masters.custLeave.custLeaveDto;
 import com.lng.dto.masters.department.DepartmentDto;
 import com.lng.dto.masters.department.DepartmentResponse;
-import com.lng.dto.masters.shift.ShiftDto;
-import com.lng.dto.masters.shift.ShiftResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)

@@ -38,12 +38,10 @@ public class BlockServiceImpl implements BlockService {
 	@Override
 	public BlockResponse saveBlock(BlockDto blockDto) {
 		BlockResponse response = new BlockResponse();
-		// BlockDto blockDto2 = new BlockDto();
 		Block  block = new Block();
 		try{
 			if(blockDto.getBlkLogicalName() == null || blockDto.getBlkLogicalName().isEmpty()) throw new Exception("Please enter Block name");
 			int b = blockRepository.findByRefBranchIdAndBlkLogicalName(blockDto.getRefBranchId(), blockDto.getBlkLogicalName());
-			//blockDto.setBlkCreatedDate(new Date());
 			if(b == 0) {
 				Branch branch = branchRepository.findBranchByBrId(blockDto.getRefBranchId());
 				if(branch != null) {
@@ -74,7 +72,6 @@ public class BlockServiceImpl implements BlockService {
 
 	@Override
 	public BlockResponse getAll() {
-		//BlockDto blockDto1=new BlockDto();
 		BlockResponse response = new BlockResponse();
 		try {
 			List<Block> blockList=blockRepository.findAll();
@@ -149,7 +146,7 @@ public class BlockServiceImpl implements BlockService {
 				if(a == 0 && b == 0) {
 					blockRepository.delete(block);					
 					response.status = new Status(false,200, "successfully deleted");
-					
+
 				}else  {
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
@@ -169,7 +166,6 @@ public class BlockServiceImpl implements BlockService {
 
 	@Override
 	public BlockResponse getBranchDetailsByCustId(Integer custId) {
-		//BlockDto blockDto = new BlockDto();
 		BlockResponse response=new BlockResponse(); 
 		List<BlockDto> blockDtoList = new ArrayList<>();
 		try {
@@ -183,7 +179,8 @@ public class BlockServiceImpl implements BlockService {
 				blockDto1.setBrCode(p[2].toString());
 				blockDto1.setBrName(p[3].toString());
 				blockDtoList.add(blockDto1);
-				response.status = new Status(false,200, "success");
+				response.status = new Status(false,200, "Success");
+
 
 			}
 
@@ -201,7 +198,6 @@ public class BlockServiceImpl implements BlockService {
 
 	@Override
 	public BlockResponse getBlockDetailsByCustIdANDRefBranchId(int custId,int refBranchId) { 
-		//BlockDto blockDto = new BlockDto();
 		BlockResponse response=new BlockResponse(); 
 		List<BlockDto> blockDtoList = new ArrayList<>();
 		try {
@@ -238,7 +234,9 @@ public class BlockServiceImpl implements BlockService {
 			if(block != null) {
 				BlockDto blockDto = convertToBlockDto(block);
 				response.data = blockDto;
-				response.status = new Status(false,200, "success");
+
+				response.status = new Status(false,200, "Success");
+
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -250,7 +248,33 @@ public class BlockServiceImpl implements BlockService {
 		return response;
 	}
 
-	@Override
+	/*
+	 * @Override public BlockResponse getAllByCustId(Integer custId) { BlockResponse
+	 * response=new BlockResponse(); List<BlockDto> blockDtoList = new
+	 * ArrayList<>(); try { List<Object[]> blockList =
+	 * blockRepository.findAllByCustomer_CustIdAndBlkIsActive(custId, true);
+	 * 
+	 * for (Object[] p : blockList) { BlockDto blockDto1 = new BlockDto();
+	 * blockDto1.setBlkId(Integer.valueOf(p[0].toString()));
+	 * blockDto1.setRefBranchId(Integer.valueOf(p[1].toString()));
+	 * blockDto1.setCustId(Integer.valueOf(p[2].toString()));
+	 * blockDto1.setBrName(p[3].toString());
+	 * blockDto1.setBlkLogicalName(p[4].toString());
+	 * blockDto1.setBlkGPSRadius(Integer.valueOf(p[5].toString()));
+	 * blockDto1.setBlkLatLong(p[6].toString());
+	 * blockDto1.setBlkCreatedDate((Date)p[7]);
+	 * blockDto1.setBlkIsActive(Boolean.valueOf(p[8].toString()));
+	 * blockDtoList.add(blockDto1); response.status = new Status(false,200,
+	 * "Success");
+	 * 
+	 * }
+	 * 
+	 * 
+	 * }catch (Exception e){ response.status = new Status(true,4000,e.getMessage());
+	 * 
+	 * 
+	 * } response.setData1(blockDtoList); return response; }
+	 */
 	public BlockResponse getByCustomer_CustId(Integer custId) {
 		BlockResponse response = new BlockResponse();
 		
@@ -264,6 +288,7 @@ public class BlockServiceImpl implements BlockService {
 					response.status = new Status(true,400, "Not found"); 
 				}else {
 					response.status = new Status(false,200, "Success");
+					
 				}
 			}else {
 				response.status = new Status(true,400, "Not found for this customer"); 

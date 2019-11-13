@@ -54,7 +54,9 @@ public class ContractorServiceImpl implements ContractorService {
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"Contractor Name already exist");
+
+				response.status = new Status(true,400,"ContractorName already exist for Customer");
+
 			}
 
 		}catch(Exception ex){
@@ -105,8 +107,9 @@ public class ContractorServiceImpl implements ContractorService {
 					contractorRepository.save(contractor);
 					status = new Status(false, 200, "Updated successfully");
 				}
-				else{ 
-					status = new Status(true,400,"Contractor Name already exist");
+				else{
+					status = new Status(true,400,"ContractorName already exist for CustomerId");
+
 				}
 			}
 

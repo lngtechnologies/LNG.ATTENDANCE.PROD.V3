@@ -66,10 +66,20 @@ public class BranchServiceImpl implements BranchService {
 	public BranchResponse saveBranch(BranchDto branchDto) {
 		BranchResponse response = new BranchResponse();
 
-		// BranchDto branchDto2 = new BranchDto();
-
 		try{
 			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
+<<<<<<< HEAD
+=======
+			int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
+			if(b == 0) {
+				Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
+				if(customer != null) {
+					//int c =customerRepository.findCustomerByCustNoOfBranch(branchDto.getCustNoOfBranch());
+					//for(int i=1;i<=c;i++) {
+
+					Country country = countryRepository.findCountryByCountryId(branchDto.getRefCountryId());
+					if(country != null) {
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 
 			int chechNoOfBranches = branchRepository.chechNoOfBranchesCreatedByCustomer(branchDto.getRefCustomerId());
 			if(chechNoOfBranches == 0) {
@@ -128,6 +138,8 @@ public class BranchServiceImpl implements BranchService {
 						response.status = new Status(true,400, "Customer Not Found");
 					}
 				}
+				/*response.status = new Status(true,400, " Branch Can't Create");
+				}*/
 				else{ 
 					response.status = new Status(true,400,"BranchName already exist");
 				}
@@ -236,7 +248,7 @@ public class BranchServiceImpl implements BranchService {
 			if(branch != null) {
 				BranchDto branchDto = convertToBranchDto(branch);
 				response.data = branchDto;
-				response.status = new Status(false,200, "success");
+				response.status = new Status(false,200, "Success");
 			}
 			else {
 				response.status = new Status(true, 4000, "Not found");
@@ -274,7 +286,9 @@ public class BranchServiceImpl implements BranchService {
 					response.status = new Status(false, 200, "The record has been just disabled as it has been used in another transaction");
 				}
 			}else {
-				response.status = new Status(true, 400, "Branch not found");
+
+				response.status = new Status(true, 400, "Branch  not found");
+
 			}
 
 		}catch(Exception e) {

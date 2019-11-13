@@ -3,7 +3,6 @@ package com.lng.attendancecustomerservice.service.masters;
 
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
-import com.lng.dto.masters.custEmployee.CustEmployeeResponse;
 import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
 
 public interface CustEmployeeService {

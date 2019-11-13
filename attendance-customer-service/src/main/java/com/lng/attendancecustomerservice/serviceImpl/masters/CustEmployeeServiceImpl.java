@@ -295,21 +295,6 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		return employeeBlock;
 	}
 
-	//set EmpId and Branch Id to empBranch
-	/*public EmployeeBranch setEmpBranch(Employee employee) {
-		CustEmployeeDto custEmployeeDto = new CustEmployeeDto();
-		EmployeeBranch employeeBranch = new EmployeeBranch();
-		try {
-			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());		
-			employeeBranch.setEmployee(employee);
-			employeeBranch.setBranch(branch);
-			employeeBranch.setBranchFromDate(new Date());
-		}catch (Exception e) {	
-			e.printStackTrace();
-		}				
-		return employeeBranch;
-	}*/
-
 	//Save to empBranch table
 	public EmployeeBranch saveEmpBranch(EmployeeBranch employeeBranch) {
 		try {

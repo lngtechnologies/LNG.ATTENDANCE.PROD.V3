@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
 import com.lng.attendancecompanyservice.entity.masters.Country;
-import com.lng.attendancecompanyservice.entity.masters.Employee;
 import com.lng.attendancecompanyservice.entity.masters.State;
 import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
-import com.lng.attendancecompanyservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.service.masters.StateService;
 import com.lng.dto.masters.state.StateDto;
@@ -60,22 +58,15 @@ public class StateServiceImpl implements StateService {
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"State Name already exist");
+				response.status = new Status(true,400,"State name already exists");
+
 			}
 		} catch (Exception e) {
-			response.status = new Status(true, 4000, e.getMessage());
+			response.status = new Status(true, 400, e.getMessage());
 		}
 
 		return response;
 	}
-
-
-
-	/*
-	 * private Boolean CheckStateExists(String stateName) { State state =
-	 * stateRepository.findByStateName(stateName); if(state != null) { return true;
-	 * } else { return false; } }
-	 */
 
 
 	@Override
@@ -128,6 +119,7 @@ public class StateServiceImpl implements StateService {
 				}
 				else{ 
 					status = new Status(true,400,"State Name already exist");
+
 				}
 			}
 

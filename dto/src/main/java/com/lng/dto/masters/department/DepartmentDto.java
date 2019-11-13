@@ -7,8 +7,8 @@ public class DepartmentDto {
 	private Integer refCustId;
 	private String deptName;
 	private Boolean deptIsActive;
+    private String  custName;
 	
-	private String  custName;
 	public Integer getDeptId() {
 		return deptId;
 	}
