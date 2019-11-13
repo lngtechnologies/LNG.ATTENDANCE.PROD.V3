@@ -1,6 +1,7 @@
 package com.lng.dto.masters.custEmployee;
 
 import java.util.Date;
+import java.util.List;
 
 public class CustEmployeeDto {
 	
@@ -47,6 +48,8 @@ public class CustEmployeeDto {
 	private Date employeeShiftFromDate;
 	
 	private Date empWeeklyOffDayFromDate;
+	
+	private List<EmpBlockMapDto> empBlockMapDtoList;
 	
 	public Integer getEmpId() {
 		return empId;
@@ -222,6 +225,14 @@ public class CustEmployeeDto {
 
 	public void setDayOfWeek(String dayOfWeek) {
 		this.dayOfWeek = dayOfWeek;
+	}
+
+	public List<EmpBlockMapDto> getEmpBlockMapDtoList() {
+		return empBlockMapDtoList;
+	}
+
+	public void setEmpBlockMapDtoList(List<EmpBlockMapDto> empBlockMapDtoList) {
+		this.empBlockMapDtoList = empBlockMapDtoList;
 	}
 
 }

@@ -12,6 +12,8 @@ public interface CustEmployeeService {
 	
 	CustEmployeeListResponse findEmployeeByEmpId(Integer empId);
 	
+	CustEmployeeListResponse findEmployeeByCustId(Integer custId);
+	
 	CustEmployeeListResponse findAll();
 	
 	CustEmployeeStatus updateEmployee(CustEmployeeDto custEmployeeDto);

@@ -4,6 +4,7 @@ import com.lng.dto.masters.beacon.BeaconDto;
 import com.lng.dto.masters.beacon.BeaconListResponseDto;
 import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
 
+import status.Status;
 import status.StatusDto;
 
 public interface BeaconService {
@@ -14,5 +15,5 @@ public interface BeaconService {
 	
 	StatusDto updateBeacon(BeaconDto beaconDto);
 	
-	
+	Status deleteById(Integer beaconId);
 }

@@ -25,6 +25,9 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	@Query(value = "CALL getEmpDetailsByEmpId(?1)", nativeQuery = true)
 	List<Object[]> findAllEmployeeByEmpIdAndEmpInService(Integer empId);
 	
+	@Query(value = "CALL getEmpDetailsByCustId(?1)", nativeQuery = true)
+	List<Object[]> findByCustomer_CustIdAndEmpInService(Integer custId);
+	
 	@Query(value = "CALL searchEmployeeByEmpName(?1)", nativeQuery = true)
 	List<Employee> searchAllEmployeeByEmpName(String empName);
 	

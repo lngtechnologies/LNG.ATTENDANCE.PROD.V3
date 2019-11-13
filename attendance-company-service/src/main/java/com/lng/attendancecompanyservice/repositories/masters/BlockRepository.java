@@ -12,7 +12,9 @@ public interface BlockRepository extends PagingAndSortingRepository<Block, Integ
 	Block findByBlkId(Integer blkId);
 
 	List<Block> findAll();
+	
 	Block findBlockByBlkId(Integer blkId);
+	
 	@Query(value = "select * from tmblock where blkLogicalName = ?1", nativeQuery = true)
 	Block findByBlkLogicalName(String blkLogicalName);
 	

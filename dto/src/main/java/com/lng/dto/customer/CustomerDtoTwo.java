@@ -40,6 +40,8 @@ public class CustomerDtoTwo {
 	
 	private String countryName;
 	
+	private String countryTelCode;
+	
 	private String industryName;
 	
 	private String stateName;
@@ -47,6 +49,15 @@ public class CustomerDtoTwo {
 	private String custLogoFile;
 	
 	private String custGSTIN;
+
+	
+	public String getCountryTelCode() {
+		return countryTelCode;
+	}
+
+	public void setCountryTelCode(String countryTelCode) {
+		this.countryTelCode = countryTelCode;
+	}
 
 	public Integer getCustId() {
 		return custId;

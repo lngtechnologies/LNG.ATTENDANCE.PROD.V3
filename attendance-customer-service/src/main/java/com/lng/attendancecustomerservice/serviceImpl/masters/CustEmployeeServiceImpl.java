@@ -1,9 +1,7 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecustomerservice.entity.masters.Block;
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.Contractor;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
@@ -21,12 +20,14 @@ import com.lng.attendancecustomerservice.entity.masters.Designation;
 import com.lng.attendancecustomerservice.entity.masters.EmpMonthlyNoOfDays;
 import com.lng.attendancecustomerservice.entity.masters.EmpWeeklyOffDay;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
+import com.lng.attendancecustomerservice.entity.masters.EmployeeBlock;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeBranch;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeDepartment;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeDesignation;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeShift;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeType;
 import com.lng.attendancecustomerservice.entity.masters.Shift;
+import com.lng.attendancecustomerservice.repositories.masters.BlockRepository;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ContractorRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
@@ -35,6 +36,7 @@ import com.lng.attendancecustomerservice.repositories.masters.DepartmentReposito
 import com.lng.attendancecustomerservice.repositories.masters.DesignationRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmpMonthlyNoOfDaysRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmpWeeklyOffDayRepository;
+import com.lng.attendancecustomerservice.repositories.masters.EmployeeBlockRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmployeeBranchRepositories;
 import com.lng.attendancecustomerservice.repositories.masters.EmployeeDepartmentRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmployeeDesignationRepository;
@@ -43,12 +45,11 @@ import com.lng.attendancecustomerservice.repositories.masters.EmployeeTypeReposi
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.masters.CustEmployeeService;
 import com.lng.attendancecustomerservice.utils.Encoder;
-import com.lng.dto.customer.CustomerDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
-import com.lng.dto.masters.custEmployee.CustEmployeeResponse;
 import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
+import com.lng.dto.masters.custEmployee.EmpBlockMapDto;
 
 import status.Status;
 
@@ -100,6 +101,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 	@Autowired
 	ContractorRepository contractorRepository;
+	
+	@Autowired
+	BlockRepository blockRepository;
+	
+	@Autowired
+	EmployeeBlockRepository employeeBlockRepository;
 
 	@Override
 	@Transactional(rollbackOn={Exception.class})
@@ -115,6 +122,22 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 				employee = saveCustEmployeeData(custEmployeeDto);
 
 				if(employee != null) {
+					
+					// Set empid and BlockId to empBlock
+				
+					try {
+						for(EmpBlockMapDto CustEmployeeDto : custEmployeeDto.getEmpBlockMapDtoList()){
+							EmployeeBlock employeeBlock = new EmployeeBlock();
+							Block block = blockRepository.findByBlkId(CustEmployeeDto.getRefBlkId());
+							if(block == null) throw new Exception("Cannot find block id for Employee Branch");
+							employeeBlock.setBlock(block);
+							employeeBlock.setEmployee(employee);
+							employeeBlockRepository.save(employeeBlock);
+							
+						}
+					} catch (Exception e) {
+						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+					}
 
 					//set EmpId and Branch Id to empBranch
 					EmployeeBranch employeeBranch = new EmployeeBranch();
@@ -260,6 +283,17 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		}
 		return employee;
 	}
+	
+	public EmployeeBlock saveEmpBlock(EmployeeBlock employeeBlock){
+	
+		try {
+			employeeBlockRepository.save(employeeBlock);
+			
+		} catch (Exception e) {
+			
+		}
+		return employeeBlock;
+	}
 
 	//set EmpId and Branch Id to empBranch
 	/*public EmployeeBranch setEmpBranch(Employee employee) {
@@ -397,40 +431,66 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		try {
 			List<Object[]> employeeList = custEmployeeRepository.findAllEmployeeByEmpIdAndEmpInService(empId);
 			Employee employee = custEmployeeRepository.findEmpReportingToByEmpId(empId);
+				//EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpId(employee.getEmpId());
+				if(employeeList.isEmpty()) {
+					custEmployeeListResponse.status = new Status(true, 4000, "Employee not found");
 
-			if(employeeList.isEmpty()) {
-				custEmployeeListResponse.status = new Status(true, 4000, "Not Found");
+				} else {
+					for(Object[] p : employeeList) {
 
-			} else {
-				for(Object[] p : employeeList) {
-
-					CustEmployeeDtoTwo custEmployeeDto = new CustEmployeeDtoTwo();
-					custEmployeeDto.setEmpId(Integer.valueOf(p[0].toString()));
-					custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
-					custEmployeeDto.setCustId(Integer.valueOf(p[2].toString()));
-					custEmployeeDto.setContractorId(Integer.valueOf(p[3].toString()));
-					custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
-					custEmployeeDto.setEmpTypeId(Integer.valueOf(p[5].toString()));
-					custEmployeeDto.setEmpName(p[6].toString());
-					custEmployeeDto.setEmpMobile(p[7].toString());
-					custEmployeeDto.setEmpGender(p[8].toString());
-					custEmployeeDto.setEmpInService(Boolean.valueOf(p[9].toString()));
-					custEmployeeDto.setEmpIsSupervisor_Manager(Boolean.valueOf(p[10].toString()));
-					custEmployeeDto.setEmpReportingToId(Integer.valueOf(p[11].toString()));
-					custEmployeeDto.setEmpJoiningDate((Date)p[12]);
-					custEmployeeDto.setBrName(p[13].toString());
-					custEmployeeDto.setShiftName(p[14].toString());
-					custEmployeeDto.setDeptName(p[15].toString());
-					custEmployeeDto.setDesignationName(p[16].toString());
-					custEmployeeDto.setContractorName(p[17].toString());
-					custEmployeeDto.setEmpType(p[18].toString());
-					custEmployeeDto.setEmpReportingTo(employee.getEmpName());
-
-					custEmployeeDtoTwoList.add(custEmployeeDto);
-					custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
-					custEmployeeListResponse.status = new Status(false, 2000, "Success");
-				}
+						CustEmployeeDtoTwo custEmployeeDto = new CustEmployeeDtoTwo();
+						custEmployeeDto.setEmpId(Integer.valueOf(p[0].toString()));
+						custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
+						custEmployeeDto.setCustId(Integer.valueOf(p[2].toString()));
+						custEmployeeDto.setContractorId(Integer.valueOf(p[3].toString()));
+						custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
+						custEmployeeDto.setEmpTypeId(Integer.valueOf(p[5].toString()));
+						custEmployeeDto.setEmpName(p[6].toString());
+						custEmployeeDto.setEmpMobile(p[7].toString());
+						custEmployeeDto.setEmpGender(p[8].toString());
+						custEmployeeDto.setEmpInService(Boolean.valueOf(p[9].toString()));
+						custEmployeeDto.setEmpIsSupervisor_Manager(Boolean.valueOf(p[10].toString()));
+						custEmployeeDto.setEmpReportingToId(Integer.valueOf(p[11].toString()));
+						custEmployeeDto.setEmpJoiningDate((Date)p[12]);
+						custEmployeeDto.setBrName(p[13].toString());
+						custEmployeeDto.setShiftName(p[14].toString());
+						custEmployeeDto.setDeptName(p[15].toString());
+						custEmployeeDto.setDesignationName(p[16].toString());
+						custEmployeeDto.setContractorName(p[17].toString());
+						custEmployeeDto.setEmpType(p[18].toString());
+						custEmployeeDto.setDepartmentId(Integer.valueOf(p[19].toString()));
+						custEmployeeDto.setDesignationId(Integer.valueOf(p[20].toString()));
+						if(employee != null) {
+							custEmployeeDto.setEmpReportingTo(employee.getEmpName());
+						}else {
+							custEmployeeDto.setEmpReportingTo("He is not reporting to anyone");
+						}
+						custEmployeeDto.setEmployeeBranchFromDate((Date)p[21]);
+						custEmployeeDto.setEmployeeShiftFromDate((Date)p[22]);
+						custEmployeeDto.setEmployeeDepartmentFromDate((Date)p[23]);
+						custEmployeeDto.setEmployeeDesignationFromDate((Date)p[24]);
+						custEmployeeDto.setEmpWeeklyOffDayFromDate((Date)p[25]);
+						custEmployeeDto.setDayOfWeek(p[26].toString());
+						
+						List<EmployeeBlock> empBlockMapDtoList = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+						
+						if(!empBlockMapDtoList.isEmpty()) {
+							
+							custEmployeeDto.setEmpBlockMapDtoList(empBlockMapDtoList.stream().map(employeeBlock -> convertToEmpBlockMapDto(employeeBlock)).collect(Collectors.toList()));
+							custEmployeeDtoTwoList.add(custEmployeeDto);
+							custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
+							custEmployeeListResponse.status = new Status(false, 2000, "Success");
+						}else {
+							custEmployeeDtoTwoList.add(custEmployeeDto);
+							custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
+							custEmployeeListResponse.status = new Status(false, 2000, "Success and no blocks mapped to this employee");
+						}
+						
+					}
+				
+				
 			}
+			
 		} catch (Exception e) {
 			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
 		}
@@ -468,7 +528,52 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 				custEmployeeRepository.save(employee);
 
 				if(employee != null) {
+					
+					
+					try {
+						
+						List<EmployeeBlock> alreadyMappedBlocks = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+						for(EmployeeBlock CustBlockMapDto : alreadyMappedBlocks) {
+							EmployeeBlock employeeBlock = employeeBlockRepository.findByEmpBlkId(CustBlockMapDto.getEmpBlkId());
+							employeeBlockRepository.delete(employeeBlock);
+						}
+						
+						for(EmpBlockMapDto UpdateEmpBlock : custEmployeeDto.getEmpBlockMapDtoList()){
+							if(UpdateEmpBlock.getEmpBlkId() == null) {
+								EmployeeBlock employeeBlock = new EmployeeBlock();
+								Block block = blockRepository.findByBlkId(UpdateEmpBlock.getRefBlkId());
+								employeeBlock.setBlock(block);
+								employeeBlock.setEmployee(employee);
+								employeeBlockRepository.save(employeeBlock);
+							}else if(UpdateEmpBlock.getEmpBlkId() != null) {
+								Block block = blockRepository.findByBlkId(UpdateEmpBlock.getRefBlkId());
+								EmployeeBlock employeeBlock = employeeBlockRepository.findByEmpBlkId(UpdateEmpBlock.getEmpBlkId());
+								employeeBlock.setBlock(block);
+								employeeBlock.setEmployee(employee);
+								employeeBlockRepository.save(employeeBlock);
+							}
+						
+						}
+					} catch (Exception e) {
+						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+					}
 
+
+					EmployeeBranch employeeBranch = employeeBranchRepositories.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+					try {
+						Branch branch1 = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
+						if(branch1 == null) throw new Exception("Cannot find branch id for Employee Department");
+						employeeBranch.setEmployee(employee);
+						employeeBranch.setBranch(branch1);
+						employeeBranch.setBranchFromDate(custEmployeeDto.getEmployeeBranchFromDate());
+						Date empBranchToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeBranchFromDate());
+						employeeBranch.setBranchToDate(empBranchToDate);
+
+						employeeBranchRepositories.save(employeeBranch);
+					}catch (Exception e) {	
+						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+					}
+					
 					EmployeeDepartment employeeDepartment = employeeDepartmentRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
 					try {
 						Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
@@ -543,9 +648,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						empMonthlyNoOfDays.setYearMonth(new Date());
 						Integer NoOfDays = empMonthlyNoOfDaysRepository.findNoOfDaysByYearMonth(empMonthlyNoOfDays.getYearMonth());
 						empMonthlyNoOfDays.setNoOfDays(NoOfDays);
-						
+
 						empMonthlyNoOfDaysRepository.save(empMonthlyNoOfDays);
-						
+
 					}catch (Exception e) {
 						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 					}
@@ -596,7 +701,8 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					custEmployeeDto.setDesignationName(p[16].toString());
 					custEmployeeDto.setContractorName(p[17].toString());
 					custEmployeeDto.setEmpType(p[18].toString());
-
+					custEmployeeDto.setDepartmentId(Integer.valueOf(p[19].toString()));
+					custEmployeeDto.setDesignationId(Integer.valueOf(p[20].toString()));
 					custEmployeeDtoTwoList.add(custEmployeeDto);
 					custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
 					custEmployeeListResponse.status = new Status(false, 2000, "Success");
@@ -658,6 +764,61 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	}
 
 
+	@Override
+	public CustEmployeeListResponse findEmployeeByCustId(Integer custId) {
+
+		CustEmployeeListResponse custEmployeeListResponse = new CustEmployeeListResponse();
+		List<CustEmployeeDtoTwo> custEmployeeDtoTwoList = new ArrayList<>();
+
+		try {
+
+			Customer customer = customerRepository.findCustomerByCustId(custId);
+
+			if(customer != null) {
+				List<Object[]> employeeList = custEmployeeRepository.findByCustomer_CustIdAndEmpInService(custId);
+
+				if(employeeList.isEmpty()) {
+					custEmployeeListResponse.status = new Status(true, 4000, "Not Found");
+				} else {
+					for(Object[] p : employeeList) {
+
+						CustEmployeeDtoTwo custEmployeeDto = new CustEmployeeDtoTwo();
+						custEmployeeDto.setEmpId(Integer.valueOf(p[0].toString()));
+						custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
+						custEmployeeDto.setCustId(Integer.valueOf(p[2].toString()));
+						custEmployeeDto.setContractorId(Integer.valueOf(p[3].toString()));
+						custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
+						custEmployeeDto.setEmpTypeId(Integer.valueOf(p[5].toString()));
+						custEmployeeDto.setEmpName(p[6].toString());
+						custEmployeeDto.setEmpMobile(p[7].toString());
+						custEmployeeDto.setEmpGender(p[8].toString());
+						custEmployeeDto.setEmpInService(Boolean.valueOf(p[9].toString()));
+						custEmployeeDto.setEmpIsSupervisor_Manager(Boolean.valueOf(p[10].toString()));
+						custEmployeeDto.setEmpReportingToId(Integer.valueOf(p[11].toString()));
+						custEmployeeDto.setEmpJoiningDate((Date)p[12]);
+						custEmployeeDto.setBrName(p[13].toString());
+						custEmployeeDto.setShiftName(p[14].toString());
+						custEmployeeDto.setDeptName(p[15].toString());
+						custEmployeeDto.setDesignationName(p[16].toString());
+						custEmployeeDto.setContractorName(p[17].toString());
+						custEmployeeDto.setEmpType(p[18].toString());
+						custEmployeeDto.setDepartmentId(Integer.valueOf(p[19].toString()));
+						custEmployeeDto.setDesignationId(Integer.valueOf(p[20].toString()));
+						custEmployeeDtoTwoList.add(custEmployeeDto);
+						custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
+						custEmployeeListResponse.status = new Status(false, 2000, "Success");
+					}
+				}
+			} else {
+				custEmployeeListResponse.status = new Status(true, 5000, "Customer not found");
+			}
+
+		} catch (Exception e) {
+			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
+		}
+		return custEmployeeListResponse;
+	}
+
 
 	public CustEmployeeDto convertToCustEmployeeDto(Employee employee) {
 		CustEmployeeDto custEmployeeDto = modelMapper.map(employee, CustEmployeeDto.class);
@@ -665,6 +826,14 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		custEmployeeDto.setCustId(employee.getCustomer().getCustId());
 		//custEmployeeDto.setContractorId(employee.getContractor().getContractorId());		
 		return custEmployeeDto;
+	}
+	
+	public EmpBlockMapDto convertToEmpBlockMapDto(EmployeeBlock employeeBlock) {
+		EmpBlockMapDto empBlockMapDto = modelMapper.map(employeeBlock, EmpBlockMapDto.class);
+		empBlockMapDto.setRefBlkId(employeeBlock.getBlock().getBlkId());
+		empBlockMapDto.setBlockName(employeeBlock.getBlock().getBlkLogicalName());
+		empBlockMapDto.setEmpBlkId(employeeBlock.getEmployee().getEmpId());
+		return empBlockMapDto;
 	}
 
 	public CustEmployeeDtoTwo convertToCustEmployeeDtoTwo(Employee employee) {

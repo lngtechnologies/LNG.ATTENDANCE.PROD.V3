@@ -22,6 +22,7 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	
 	Employee getEmployeeByEmpId(Integer empId);
 	
+	
 	/*
 	 * @Query(value =
 	 * "UPDATE tmemployee SET empAppSetupStatus=:empAppSetupStatus WHERE empId=:empId"

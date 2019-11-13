@@ -18,5 +18,4 @@ public class CustEmployeeListResponse {
 		this.employyeList = employyeList;
 	}
 	
-	
 }

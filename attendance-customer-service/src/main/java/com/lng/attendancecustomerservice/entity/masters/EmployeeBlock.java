@@ -1,4 +1,4 @@
-package com.lng.attendancecompanyservice.entity.masters;
+package com.lng.attendancecustomerservice.entity.masters;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +25,7 @@ public class EmployeeBlock {
 	
 	@ManyToOne
 	@JoinColumn(name = "refBlkId")
+	
 	private  Block block;
 	
 	public Integer getEmpBlkId() {

@@ -1,14 +1,15 @@
 package com.lng.dto.masters.custEmployee;
 
 import java.util.Date;
+import java.util.List;
 
 public class CustEmployeeDtoTwo {
 
-	
+
 	private Integer empId;
 
 	private Integer custId;
-	
+
 	private String empName;
 
 	private String empMobile;
@@ -18,38 +19,50 @@ public class CustEmployeeDtoTwo {
 	private Boolean empInService;
 
 	private Integer brId;
-	
+
 	private String brName;
 
 	private Integer shiftId;
-	
+
 	private String shiftName;
 
-	private Integer deptartmentId;
-	
+	private Integer departmentId;
+
 	private String deptName;
 
 	private Integer designationId;
-	
+
 	private Boolean empIsSupervisor_Manager;
 
 	private String designationName;
-	
+
 	private Integer empTypeId;
-	
+
 	private String empType;
 
 	private Integer contractorId;
-	
+
 	private String contractorName;
-	
-	private String weekOffDay;
+
+	private String dayOfWeek;
 
 	private Integer empReportingToId;
-	
+
 	private String empReportingTo;
 
 	private Date empJoiningDate;
+
+	private Date employeeBranchFromDate;
+
+	private Date employeeDepartmentFromDate;
+
+	private Date employeeDesignationFromDate;
+
+	private Date employeeShiftFromDate;
+
+	private Date empWeeklyOffDayFromDate;
+	
+	private List<EmpBlockMapDto> empBlockMapDtoList;
 
 	public Integer getEmpId() {
 		return empId;
@@ -115,12 +128,14 @@ public class CustEmployeeDtoTwo {
 		this.shiftName = shiftName;
 	}
 
-	public Integer getDeptartmentId() {
-		return deptartmentId;
+
+
+	public Integer getDepartmentId() {
+		return departmentId;
 	}
 
-	public void setDeptartmentId(Integer deptartmentId) {
-		this.deptartmentId = deptartmentId;
+	public void setDepartmentId(Integer departmentId) {
+		this.departmentId = departmentId;
 	}
 
 	public String getDeptName() {
@@ -211,12 +226,13 @@ public class CustEmployeeDtoTwo {
 		this.brName = brName;
 	}
 
-	public String getWeekOffDay() {
-		return weekOffDay;
+	
+	public String getDayOfWeek() {
+		return dayOfWeek;
 	}
 
-	public void setWeekOffDay(String weekOffDay) {
-		this.weekOffDay = weekOffDay;
+	public void setDayOfWeek(String dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
 	}
 
 	public Boolean getEmpIsSupervisor_Manager() {
@@ -233,6 +249,54 @@ public class CustEmployeeDtoTwo {
 
 	public void setCustId(Integer custId) {
 		this.custId = custId;
+	}
+
+	public Date getEmployeeBranchFromDate() {
+		return employeeBranchFromDate;
+	}
+
+	public void setEmployeeBranchFromDate(Date employeeBranchFromDate) {
+		this.employeeBranchFromDate = employeeBranchFromDate;
+	}
+
+	public Date getEmployeeDepartmentFromDate() {
+		return employeeDepartmentFromDate;
+	}
+
+	public void setEmployeeDepartmentFromDate(Date employeeDepartmentFromDate) {
+		this.employeeDepartmentFromDate = employeeDepartmentFromDate;
+	}
+
+	public Date getEmployeeDesignationFromDate() {
+		return employeeDesignationFromDate;
+	}
+
+	public void setEmployeeDesignationFromDate(Date employeeDesignationFromDate) {
+		this.employeeDesignationFromDate = employeeDesignationFromDate;
+	}
+
+	public Date getEmployeeShiftFromDate() {
+		return employeeShiftFromDate;
+	}
+
+	public void setEmployeeShiftFromDate(Date employeeShiftFromDate) {
+		this.employeeShiftFromDate = employeeShiftFromDate;
+	}
+
+	public Date getEmpWeeklyOffDayFromDate() {
+		return empWeeklyOffDayFromDate;
+	}
+
+	public void setEmpWeeklyOffDayFromDate(Date empWeeklyOffDayFromDate) {
+		this.empWeeklyOffDayFromDate = empWeeklyOffDayFromDate;
+	}
+
+	public List<EmpBlockMapDto> getEmpBlockMapDtoList() {
+		return empBlockMapDtoList;
+	}
+
+	public void setEmpBlockMapDtoList(List<EmpBlockMapDto> empBlockMapDtoList) {
+		this.empBlockMapDtoList = empBlockMapDtoList;
 	}
 
 }

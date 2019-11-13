@@ -716,6 +716,7 @@ public class CustomerServiceImpl implements CustomerService {
 		customerDtoTwo.setCountryName(customer.getCountry().getCountryName());
 		customerDtoTwo.setStateName(customer.getState().getStateName());
 		customerDtoTwo.setIndustryName(customer.getIndustryType().getIndustryName());
+		customerDtoTwo.setCountryTelCode(customer.getCountry().getCountryTelCode());
 		return customerDtoTwo;
 	}
 

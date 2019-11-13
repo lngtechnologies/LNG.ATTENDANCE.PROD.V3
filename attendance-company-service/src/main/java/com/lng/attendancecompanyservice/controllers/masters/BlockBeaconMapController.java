@@ -1,5 +1,7 @@
 package com.lng.attendancecompanyservice.controllers.masters;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecompanyservice.service.masters.BlockBeaconMapService;
 import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
+import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapList;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
 
 import status.StatusDto;
@@ -26,7 +29,7 @@ public class BlockBeaconMapController {
 	BlockBeaconMapService blockBeaconMapService;
 	
 	@PostMapping(value = "/create")
-	public ResponseEntity<StatusDto> save(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
+	public ResponseEntity<StatusDto> save(@RequestBody BlockBeaconMapList blockBeaconMapDto) {
 		StatusDto statusDto = blockBeaconMapService.saveBlkBeaconMap(blockBeaconMapDto);
 		if (statusDto !=null){
 			return new ResponseEntity<StatusDto>(statusDto, HttpStatus.CREATED);
@@ -41,8 +44,8 @@ public class BlockBeaconMapController {
 	}
 
 	@PostMapping(value = "/update")
-	public ResponseEntity<StatusDto> updateCustomer(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
-		StatusDto statusDto = blockBeaconMapService.update(blockBeaconMapDto);
+	public ResponseEntity<StatusDto> updateCustomer(@RequestBody BlockBeaconMapList blockBeaconMapList) {
+		StatusDto statusDto = blockBeaconMapService.update(blockBeaconMapList);
 		if (statusDto != null) {
 			return new ResponseEntity<StatusDto>(statusDto, HttpStatus.OK);
 		}

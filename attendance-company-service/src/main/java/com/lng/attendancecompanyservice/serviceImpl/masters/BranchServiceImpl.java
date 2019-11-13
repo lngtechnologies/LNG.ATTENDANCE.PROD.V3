@@ -70,63 +70,73 @@ public class BranchServiceImpl implements BranchService {
 
 		try{
 			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
-			int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
-			if(b == 0) {
-				Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
-				if(customer != null) {
-					Country country = countryRepository.findCountryByCountryId(branchDto.getRefCountryId());
-					if(country != null) {
 
-						State state = stateRepository.findStateByStateId(branchDto.getRefStateId());
-						if(state != null) {
-							String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
-							Branch branch = new Branch();
-							branch.setState(state);
-							branch.setCustomer(customer);
-							branch.setCountry(country);
-							branch.setBrAddress(branchDto.getBrAddress());
-							branch.setBrCity(branchDto.getBrCity());
-							branch.setBrCode(customer.getCustCode() + brnchCode);
-							branch.setBrCreatedDate(new Date());
-							branch.setBrEmail(branchDto.getBrEmail());
-							branch.setBrLatLong(branchDto.getBrLatLong());
-							branch.setBrIsActive(true);
-							branch.setBrIsBillable(branchDto.getBrIsBillable());
-							branch.setBrLandline(branchDto.getBrLandline());
-							branch.setBrMobile(branchDto.getBrMobile());
-							branch.setBrName(branchDto.getBrName());
-							branch.setBrPincode(branchDto.getBrPincode());
-							branch.setBrValidityEnd(branchDto.getBrValidityEnd());
-							branch.setBrValidityStart(branchDto.getBrValidityStart());
-							branchRepository.save(branch);
-							// Save to login data right table
-							try {
-								Login login = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
-								LoginDataRight loginDataRight = new LoginDataRight();
-								loginDataRight.setBranch(branch);
-								loginDataRight.setLogin(login);
-								loginDataRightRepository.save(loginDataRight);
-							}catch (Exception e) {
-								e.printStackTrace();
+			int chechNoOfBranches = branchRepository.chechNoOfBranchesCreatedByCustomer(branchDto.getRefCustomerId());
+			if(chechNoOfBranches == 0) {
+
+				int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
+				if(b == 0) {
+					Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
+					if(customer != null) {
+						Country country = countryRepository.findCountryByCountryId(branchDto.getRefCountryId());
+						if(country != null) {
+
+							State state = stateRepository.findStateByStateId(branchDto.getRefStateId());
+							if(state != null) {
+								String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
+								Branch branch = new Branch();
+								branch.setState(state);
+								branch.setCustomer(customer);
+								branch.setCountry(country);
+								branch.setBrAddress(branchDto.getBrAddress());
+								branch.setBrCity(branchDto.getBrCity());
+								branch.setBrCode(customer.getCustCode() + brnchCode);
+								branch.setBrCreatedDate(new Date());
+								branch.setBrEmail(branchDto.getBrEmail());
+								branch.setBrLatLong(branchDto.getBrLatLong());
+								branch.setBrIsActive(true);
+								branch.setBrIsBillable(branchDto.getBrIsBillable());
+								branch.setBrLandline(branchDto.getBrLandline());
+								branch.setBrMobile(branchDto.getBrMobile());
+								branch.setBrName(branchDto.getBrName());
+								branch.setBrPincode(branchDto.getBrPincode());
+								branch.setBrValidityEnd(branchDto.getBrValidityEnd());
+								branch.setBrValidityStart(branchDto.getBrValidityStart());
+								branchRepository.save(branch);
+								// Save to login data right table
+								try {
+									Login login = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
+									LoginDataRight loginDataRight = new LoginDataRight();
+									loginDataRight.setBranch(branch);
+									loginDataRight.setLogin(login);
+									loginDataRightRepository.save(loginDataRight);
+								}catch (Exception e) {
+									e.printStackTrace();
+								}
+
+								response.status = new Status(false,200, "Successfully Created");
 							}
-
-							response.status = new Status(false,200, "Successfully Created");
+							else{ 
+								response.status = new Status(true,400, "State Not Found");
+							}
 						}
 						else{ 
-							response.status = new Status(true,400, "State Not Found");
+							response.status = new Status(true,400, "Country Not Found");
 						}
 					}
 					else{ 
-						response.status = new Status(true,400, "Country Not Found");
+						response.status = new Status(true,400, "Customer Not Found");
 					}
 				}
 				else{ 
-					response.status = new Status(true,400, "Customer Not Found");
+					response.status = new Status(true,400,"BranchName already exist");
 				}
+
+			}else {
+				response.status = new Status(true,400,"Number of Branches allowed exceeds, Contact LNG Technologies Admin for the resolution.");
 			}
-			else{ 
-				response.status = new Status(true,400,"BranchName already exist");
-			}
+
+
 		}catch(Exception ex){
 			response.status = new Status(true,3000, ex.getMessage()); 
 		}
@@ -141,7 +151,11 @@ public class BranchServiceImpl implements BranchService {
 		try {
 			List<Branch> branchList=branchRepository.findAllBranchByBrIsActive(true);
 			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "success");
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(true,4000, "Not found"); 
+			}else {
+				response.status = new Status(false,200, "success");
+			}
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 
@@ -243,14 +257,14 @@ public class BranchServiceImpl implements BranchService {
 		try {
 			branch = branchRepository.findBranchByBrId(brId);
 			if(branch != null) {
-				
+
 				// Check weather the branch is used in any transaction or no
 				List<LoginDataRight> loginDataRight = loginDataRightRepository.findByBranch_BrId(brId);
 				List<Block> block = blockRepository.findByBranch_BrId(brId);
 				List<Employee> employee = custEmployeeRepository.findByBranch_BrId(brId);
 				List<Shift> shift = shiftRepository.findByBranch_BrId(brId);
 				List<EmployeeBranch> employeeBranch = employeeBranchRepositories.findByBranch_BrId(brId);
-				
+
 				if(loginDataRight.isEmpty() && block.isEmpty() && employee.isEmpty() && shift.isEmpty() && employeeBranch.isEmpty()) {
 					branchRepository.delete(branch);
 					response.status = new Status(false, 200, "Deleted successfully");
@@ -262,7 +276,7 @@ public class BranchServiceImpl implements BranchService {
 			}else {
 				response.status = new Status(true, 400, "Branch not found");
 			}
-		
+
 		}catch(Exception e) {
 			response.status = new Status(true,400, e.getMessage());
 		}
@@ -296,7 +310,7 @@ public class BranchServiceImpl implements BranchService {
 			}else {
 				response.status = new Status(true,400, "Branch Not Found"); 
 			}
-			
+
 		}catch(Exception e) {
 			response.status = new Status(true,500, "Somenthing Went Wrong.."); 
 		}

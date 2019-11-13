@@ -109,7 +109,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 		IndustryType industryType2 = industryTypeRepository.findIndustryTypeByIndustryName(industryTypeDto.getIndustryName());
 		try {
 			if(industryType1 != null) {
-				if(industryType2 == null) {
+				if(industryType2 == null || (industryTypeDto.getIndustryId() == industryType1.getIndustryId() && industryTypeDto.getIndustryName().equals(industryType1.getIndustryName()))) {
 					industryType1.setIndustryName(industryTypeDto.getIndustryName());
 					industryType1.setIndustryIsActive(true);
 					industryTypeRepository.save(industryType1);

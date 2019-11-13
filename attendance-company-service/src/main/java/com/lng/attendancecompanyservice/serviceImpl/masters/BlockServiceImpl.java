@@ -79,7 +79,11 @@ public class BlockServiceImpl implements BlockService {
 		try {
 			List<Block> blockList=blockRepository.findAll();
 			response.setData1(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "success");
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(true,4000, "Not found"); 
+			}else {
+				response.status = new Status(false,200, "success");
+			}
 		}catch(Exception e) {
 			response.status = new Status(true,3000, e.getMessage()); 
 

@@ -1,5 +1,6 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import com.lng.attendancecompanyservice.service.masters.BlockBeaconMapService;
 import com.lng.dto.masters.beacon.BeaconDto;
 import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
+import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapList;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
 
 import status.Status;
@@ -43,31 +45,42 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 	ModelMapper modelMapper = new ModelMapper();
 
 	@Override
-	public StatusDto saveBlkBeaconMap(BlockBeaconMapDto blockBeaconMapDto) {
-		StatusDto statusDto = new StatusDto();
-
-		Block block = blockRepository.findByBlkId(blockBeaconMapDto.getRefBlkId());
-		BlockBeaconMap blockBeaconMap1 = blockBeaconMapRepository.findBlockBeaconMapByBeaconCode(blockBeaconMapDto.getBeaconCode());
+	public StatusDto saveBlkBeaconMap(BlockBeaconMapList blockBeaconMapList) {
+		StatusDto statusDto = new StatusDto();	
+		String msg = null;
+		String beacons ="";
 		try {
+			Block block = blockRepository.findBlockByblkId(blockBeaconMapList.getRefBlkId());
 			if(block != null) {
-				if(blockBeaconMap1 == null) {
-					BlockBeaconMap blockBeaconMap = modelMapper.map(blockBeaconMapDto, BlockBeaconMap.class);
-					blockBeaconMap.setBlkBeaconMapCreatedDate(new Date());
-					blockBeaconMap.setBlkBeaconMapIsActive(true);
-					blockBeaconMapRepository.save(blockBeaconMap);
-					statusDto.setCode(200);
-					statusDto.setError(false);
-					statusDto.setMessage("Successfully Saved");
-				}else {
-					statusDto.setCode(400);
-					statusDto.setError(true);
-					statusDto.setMessage("Beacon Code Type Already Exist");
+				for(BlockBeaconMapDto BlockBeaconMapList : blockBeaconMapList.getBeacons()) {
+					List<BlockBeaconMap> blockBeaconMap1 = blockBeaconMapRepository.findBlockBeaconMapByBeaconCodeAndBlkBeaconMapIsActive(BlockBeaconMapList.getBeaconCode(), true);
+
+					if(blockBeaconMap1.isEmpty()) {
+						BlockBeaconMap blockBeaconMap = modelMapper.map(BlockBeaconMapList, BlockBeaconMap.class);
+						blockBeaconMap.setBlock(block);
+						blockBeaconMap.setBlkBeaconMapCreatedDate(new Date());
+						blockBeaconMap.setBlkBeaconMapIsActive(true);
+						blockBeaconMapRepository.save(blockBeaconMap);
+						statusDto.setCode(200);
+						statusDto.setError(false);
+						msg = "Successfully saved";
+						//statusDto.setMessage("Successfully saved");
+					}else {
+						statusDto.setCode(400);
+						statusDto.setError(true);
+						msg = "Beacon already mapped";
+						beacons += BlockBeaconMapList.getBeaconCode() + ","; 
+						//statusDto.setMessage("Beacon already mapped");
+					}
 				}
+				statusDto.setMessage(msg + " " + beacons);
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("Block id cannot be null");
+				statusDto.setMessage("Block not found");
+
 			}
+
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
@@ -80,7 +93,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 	public BlockBeaconMapListResponse findAll() {
 		BlockBeaconMapListResponse blockBeaconMapListResponse = new BlockBeaconMapListResponse();
 		try {
-			List<BlockBeaconMap> blockBeaconMapList =  blockBeaconMapRepository.findAll();
+			List<BlockBeaconMap> blockBeaconMapList =  blockBeaconMapRepository.findAllByBlkBeaconMapIsActive(true);
 
 			blockBeaconMapListResponse.setBeaconMapDtolist(blockBeaconMapList.stream().map(blockBeaconMap -> convertToBlockBeaconMapDto(blockBeaconMap)).collect(Collectors.toList()));
 
@@ -99,11 +112,66 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 	}
 
 	@Override
+	public StatusDto update(BlockBeaconMapList blockBeaconMapList) {
+		StatusDto statusDto = new StatusDto();	
+		try {
+			Block block = blockRepository.findBlockByblkId(blockBeaconMapList.getRefBlkId());
+			if(block != null) {
+
+				List<BlockBeaconMap> mapIdsAndBeaconsAndType = blockBeaconMapRepository.getBlockBeanMapByBlkId(blockBeaconMapList.getRefBlkId());
+				
+				for(BlockBeaconMap alreadyMapped: mapIdsAndBeaconsAndType) {
+					BlockBeaconMap blockBeaconMap = blockBeaconMapRepository.findBlockBeaconMapByblkBeaconMapId(alreadyMapped.getBlkBeaconMapId());
+					blockBeaconMap.setBlkBeaconMapIsActive(false);
+					blockBeaconMapRepository.save(blockBeaconMap);
+				}
+
+				for(BlockBeaconMapDto updateBeaconMap : blockBeaconMapList.getBeacons()) 
+				{
+					if(updateBeaconMap.getBlkBeaconMapId() == null)
+					{
+						BlockBeaconMap blockBeaconMap = modelMapper.map(updateBeaconMap, BlockBeaconMap.class);
+						blockBeaconMap.setBlock(block);
+						blockBeaconMap.setBlkBeaconMapCreatedDate(new Date());
+						blockBeaconMap.setBlkBeaconMapIsActive(true);
+						blockBeaconMapRepository.save(blockBeaconMap);
+					} 
+					else if(updateBeaconMap.getBlkBeaconMapId() != null) {
+						BlockBeaconMap blockBeaconMap = blockBeaconMapRepository.findBlockBeaconMapByblkBeaconMapId(updateBeaconMap.getBlkBeaconMapId());
+						blockBeaconMap.setBeaconCode(updateBeaconMap.getBeaconCode());
+						blockBeaconMap.setBeaconType(updateBeaconMap.getBeaconType());
+						blockBeaconMap.setBlock(block);
+						blockBeaconMap.setBlkBeaconMapCreatedDate(new Date());
+						blockBeaconMap.setBlkBeaconMapIsActive(true);
+						blockBeaconMapRepository.save(blockBeaconMap);
+					}
+				}
+		
+				statusDto.setCode(200);
+				statusDto.setError(false);
+				// msg = "Successfully Updates";
+				statusDto.setMessage("Successfully updated");
+				//}
+
+			}else {
+				statusDto.setCode(400);
+				statusDto.setError(true);
+				statusDto.setMessage("Block not found");
+			}
+		}catch (Exception e) {
+			statusDto.setCode(500);
+			statusDto.setError(true);
+			statusDto.setMessage("Opps...! Something Went Wrong!");
+		}
+		return statusDto;
+	}
+
+	/*@Override
 	public StatusDto update(BlockBeaconMapDto blockBeaconMapDto) {
 		StatusDto statusDto = new StatusDto();
 
 		BlockBeaconMap blockBeaconMap1 = blockBeaconMapRepository.findBlockBeaconMapByblkBeaconMapId(blockBeaconMapDto.getBlkBeaconMapId());
-		BlockBeaconMap blockBeaconMap2 = blockBeaconMapRepository.findBlockBeaconMapByBeaconCode(blockBeaconMapDto.getBeaconCode());
+		BlockBeaconMap blockBeaconMap2 = blockBeaconMapRepository.findByBeaconCode(blockBeaconMapDto.getBeaconCode());
 		Block block = blockRepository.findByBlkId(blockBeaconMapDto.getRefBlkId());
 		try {
 			if(blockBeaconMap1 != null && block != null) {
@@ -133,7 +201,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 			statusDto.setMessage("Opps...! Somenthing Went Wrong!");
 		}		
 		return statusDto;
-	}
+	}*/
 
 
 	@Override
@@ -171,7 +239,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 	public BlockBeaconMapResponse mapBeacons(BlockBeaconMapDto blockBeaconMapDto) {
 		BlockBeaconMapResponse blockBeaconMapResponse = new BlockBeaconMapResponse();
 		try {
-			List<BlockBeaconMap> usedBeaconList = blockBeaconMapRepository.findByBlock_BlkId(blockBeaconMapDto.getRefBlkId());
+			List<BlockBeaconMap> usedBeaconList = blockBeaconMapRepository.findByBlock_BlkIdAndBlkBeaconMapIsActive(blockBeaconMapDto.getRefBlkId(), true);
 			blockBeaconMapResponse.setUsedBeacons(usedBeaconList.stream().map(blockBeaconMap -> convertToBlockBeaconMapDto(blockBeaconMap)).collect(Collectors.toList()));
 
 

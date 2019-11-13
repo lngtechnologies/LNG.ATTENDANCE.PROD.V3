@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecompanyservice.service.masters.BeaconService;
 import com.lng.dto.masters.beacon.BeaconDto;
 import com.lng.dto.masters.beacon.BeaconListResponseDto;
+import com.lng.dto.masters.country.CountryDto;
+import com.lng.dto.masters.country.CountryResponse;
 
+import status.Status;
 import status.StatusDto;
 
 @CrossOrigin(origins="*", maxAge=3600)
@@ -49,5 +52,13 @@ public class BeaconController {
 			return new ResponseEntity<StatusDto>(statusDto, HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(value = "/delete")
+	public ResponseEntity<Status> delete(@RequestBody BeaconDto beaconDto) {
+		Status status = beaconService.deleteById(beaconDto.getBeaconId());
+		if(status!=null){
+			return new ResponseEntity<Status>(status,HttpStatus.OK);
+		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
 }

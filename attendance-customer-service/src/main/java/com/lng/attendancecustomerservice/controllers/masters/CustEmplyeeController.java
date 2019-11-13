@@ -40,11 +40,17 @@ public class CustEmplyeeController {
 	@GetMapping(value = "/findAll")
 	public ResponseEntity<CustEmployeeListResponse> findAll() {
 		CustEmployeeListResponse custEmployeeListResponse = custEmployeeService.findAll(); 
-       if(custEmployeeListResponse.getEmployyeList().isEmpty()) {
-           return new ResponseEntity(HttpStatus.NO_CONTENT);
-       }
        return new ResponseEntity<CustEmployeeListResponse>(custEmployeeListResponse, HttpStatus.OK);
    }
+	
+	@PostMapping(value = "/findAllByCustomerId")
+    public ResponseEntity<CustEmployeeListResponse> findByCustomerId(@RequestBody CustEmployeeDtoTwo custEmployeeDtoTwo) {
+		CustEmployeeListResponse custEmployeeListResponse = custEmployeeService.findEmployeeByCustId(custEmployeeDtoTwo.getCustId());
+        if (custEmployeeListResponse !=null){
+            return new ResponseEntity<CustEmployeeListResponse>(custEmployeeListResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
 		
 	@PostMapping(value = "/findByEmployeeId")
     public ResponseEntity<CustEmployeeListResponse> findByEmployeeId(@RequestBody CustEmployeeDtoTwo custEmployeeDtoTwo) {
@@ -54,6 +60,8 @@ public class CustEmplyeeController {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+	
+	
 	
 	@PostMapping(value = "/updateEmployee")
 	  public ResponseEntity<CustEmployeeStatus> updateEmployee(@RequestBody CustEmployeeDto custEmployeeDto) {
