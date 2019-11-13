@@ -406,6 +406,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 		try {
 			String custCode = customerRepository.generateCustCode();
+			if(customerDto.getCustNoOfBranch() == 0) {
+				customer.setCustNoOfBranch(1);
+			}else {
+				customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
+			}
 			customer.setCustIsActive(true);
 			customer.setCustCreatedDate(new Date());
 			customer.setCustCode(customerDto.getCustCode() + custCode);

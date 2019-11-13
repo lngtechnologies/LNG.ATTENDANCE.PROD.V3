@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.serviceImpl.EmployeeAttendance;
+package com.lng.attendancecustomerservice.serviceImpl.employeeAttendance;
 
 import java.util.Date;
 import java.util.List;

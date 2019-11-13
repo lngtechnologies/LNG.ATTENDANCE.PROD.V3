@@ -128,7 +128,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					try {
 						for(EmpBlockMapDto CustEmployeeDto : custEmployeeDto.getEmpBlockMapDtoList()){
 							EmployeeBlock employeeBlock = new EmployeeBlock();
-							Block block = blockRepository.findByBlkId(CustEmployeeDto.getRefBlkId());
+							Block block = blockRepository.findByBlkId(CustEmployeeDto.getBlkId());
 							if(block == null) throw new Exception("Cannot find block id for Employee Branch");
 							employeeBlock.setBlock(block);
 							employeeBlock.setEmployee(employee);
@@ -526,12 +526,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						for(EmpBlockMapDto UpdateEmpBlock : custEmployeeDto.getEmpBlockMapDtoList()){
 							if(UpdateEmpBlock.getEmpBlkId() == null) {
 								EmployeeBlock employeeBlock = new EmployeeBlock();
-								Block block = blockRepository.findByBlkId(UpdateEmpBlock.getRefBlkId());
+								Block block = blockRepository.findByBlkId(UpdateEmpBlock.getBlkId());
 								employeeBlock.setBlock(block);
 								employeeBlock.setEmployee(employee);
 								employeeBlockRepository.save(employeeBlock);
 							}else if(UpdateEmpBlock.getEmpBlkId() != null) {
-								Block block = blockRepository.findByBlkId(UpdateEmpBlock.getRefBlkId());
+								Block block = blockRepository.findByBlkId(UpdateEmpBlock.getBlkId());
 								EmployeeBlock employeeBlock = employeeBlockRepository.findByEmpBlkId(UpdateEmpBlock.getEmpBlkId());
 								employeeBlock.setBlock(block);
 								employeeBlock.setEmployee(employee);
@@ -815,9 +815,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	
 	public EmpBlockMapDto convertToEmpBlockMapDto(EmployeeBlock employeeBlock) {
 		EmpBlockMapDto empBlockMapDto = modelMapper.map(employeeBlock, EmpBlockMapDto.class);
-		empBlockMapDto.setRefBlkId(employeeBlock.getBlock().getBlkId());
+		empBlockMapDto.setBlkId(employeeBlock.getBlock().getBlkId());
 		empBlockMapDto.setBlockName(employeeBlock.getBlock().getBlkLogicalName());
-		empBlockMapDto.setEmpBlkId(employeeBlock.getEmployee().getEmpId());
+		empBlockMapDto.setRefEmpId(employeeBlock.getEmployee().getEmpId());
 		return empBlockMapDto;
 	}
 

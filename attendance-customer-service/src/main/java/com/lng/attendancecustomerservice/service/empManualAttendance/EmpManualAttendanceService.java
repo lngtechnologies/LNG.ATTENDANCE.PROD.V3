@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.service.empAttendance;
+package com.lng.attendancecustomerservice.service.empManualAttendance;
 
 import java.util.Date;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.List;
 import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
 
-public interface EmpAttendanceService {
+public interface EmpManualAttendanceService {
 	
       EmpAttendanceResponse    getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId ,Date empAttendanceDatetime );
       

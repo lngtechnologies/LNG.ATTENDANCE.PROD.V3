@@ -8,7 +8,7 @@ public class EmpBlockMapDto {
 	
 	private String blockName;
 	
-	private Integer refBlkId;
+	private Integer blkId;
 
 	public Integer getRefEmpId() {
 		return refEmpId;
@@ -18,12 +18,13 @@ public class EmpBlockMapDto {
 		this.refEmpId = refEmpId;
 	}
 
-	public Integer getRefBlkId() {
-		return refBlkId;
+
+	public Integer getBlkId() {
+		return blkId;
 	}
 
-	public void setRefBlkId(Integer refBlkId) {
-		this.refBlkId = refBlkId;
+	public void setBlkId(Integer blkId) {
+		this.blkId = blkId;
 	}
 
 	public Integer getEmpBlkId() {

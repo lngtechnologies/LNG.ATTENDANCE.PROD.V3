@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.serviceImpl.empAttendance;
+package com.lng.attendancecustomerservice.serviceImpl.empManualAttendance;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,11 +8,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lng.attendancecustomerservice.entity.empAttendance.EmpAttendance;
+import com.lng.attendancecustomerservice.entity.empManualAttendance.EmpManualAttendance;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
-import com.lng.attendancecustomerservice.repositories.empAttendance.EmpAttendanceRepository;
-import com.lng.attendancecustomerservice.service.empAttendance.EmpAttendanceService;
+import com.lng.attendancecustomerservice.repositories.empManualAttendance.EmpManualAttendanceRepository;
+import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
 import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
@@ -20,12 +20,12 @@ import com.lng.dto.empAttendance.EmpAttendanceResponse;
 import status.Status;
 
 @Service
-public class EmpAttendanceServiceImpl implements EmpAttendanceService {
+public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceService {
 
 	ModelMapper modelMapper=new ModelMapper();
 
 	@Autowired
-	EmpAttendanceRepository empAttendanceRepository;
+	EmpManualAttendanceRepository empAttendanceRepository;
 	@Autowired
 	EmployeeRepository employeeRepository;
 
@@ -81,7 +81,7 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 				if (recordCount <= 0) {
 					Employee employee  = employeeRepository.getEmployeeByEmpId(empAttendanceDto.getRefEmpId());
 					if(employee != null) {
-						EmpAttendance empAttendance  = new EmpAttendance();
+						EmpManualAttendance empAttendance  = new EmpManualAttendance();
 						empAttendance.setEmployee(employee);
 						empAttendance.setEmpAttendanceMode(empAttendanceDto.getEmpAttendanceMode());
 						empAttendance.setEmpAttendanceDatetime(empAttendanceDto.getEmpAttendanceDatetime());
@@ -106,7 +106,7 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 
 		return empAttendanceResponse;
 	}
-	public EmpAttendanceDto convertToEmpAttendanceDto(EmpAttendance empAttendance) {
+	public EmpAttendanceDto convertToEmpAttendanceDto(EmpManualAttendance empAttendance) {
 		EmpAttendanceDto empAttendanceDto = modelMapper.map(empAttendance,EmpAttendanceDto.class);
 		empAttendanceDto.setRefEmpId(empAttendance.getEmployee().getEmpId());
 		return empAttendanceDto;

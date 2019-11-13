@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.repositories.empAttendance;
+package com.lng.attendancecustomerservice.repositories.empManualAttendance;
 
 import java.util.Date;
 import java.util.List;
@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import com.lng.attendancecustomerservice.entity.empAttendance.EmpAttendance;
+import com.lng.attendancecustomerservice.entity.empManualAttendance.EmpManualAttendance;
 @Repository
-public interface EmpAttendanceRepository extends PagingAndSortingRepository<EmpAttendance, Integer> {
+public interface EmpManualAttendanceRepository extends PagingAndSortingRepository<EmpManualAttendance, Integer> {
 	
 	@Query(value = "CALL getAbsentAttendanceByDEptIdAndDate(?1,?2)",nativeQuery = true)
 	List<Object[]>  findEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId,Date empAttendanceDatetime);

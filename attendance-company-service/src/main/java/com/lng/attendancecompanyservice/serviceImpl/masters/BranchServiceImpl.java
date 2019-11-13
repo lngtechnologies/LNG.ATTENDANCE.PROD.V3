@@ -68,9 +68,8 @@ public class BranchServiceImpl implements BranchService {
 
 		try{
 			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
-<<<<<<< HEAD
-=======
-			int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
+
+			/*int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
 			if(b == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
 				if(customer != null) {
@@ -78,8 +77,8 @@ public class BranchServiceImpl implements BranchService {
 					//for(int i=1;i<=c;i++) {
 
 					Country country = countryRepository.findCountryByCountryId(branchDto.getRefCountryId());
-					if(country != null) {
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+					if(country != null) {*/
+
 
 			int chechNoOfBranches = branchRepository.chechNoOfBranchesCreatedByCustomer(branchDto.getRefCustomerId());
 			if(chechNoOfBranches == 0) {

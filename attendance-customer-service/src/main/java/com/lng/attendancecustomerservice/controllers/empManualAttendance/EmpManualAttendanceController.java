@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.controllers.empAttendance;
+package com.lng.attendancecustomerservice.controllers.empManualAttendance;
 
 import java.util.List;
 
@@ -11,20 +11,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lng.attendancecustomerservice.service.empAttendance.EmpAttendanceService;
+import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
 import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
-import com.lng.dto.masters.contractor.ContractorDto;
-import com.lng.dto.masters.contractor.ContractorResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
 @RequestMapping(value="/employee/attendance")
-public class EmpAttendanceController {
+public class EmpManualAttendanceController {
 	
 	@Autowired
-	EmpAttendanceService  empAttendanceService;
+	EmpManualAttendanceService  empAttendanceService;
 	
 	@PostMapping(value = "/getAbsentAttendanceByDeptIdAndDate")
 	public ResponseEntity<EmpAttendanceResponse> edit(@RequestBody EmpAttendanceParamDto empAttendanceDto) {

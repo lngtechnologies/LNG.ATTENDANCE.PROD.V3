@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.entity.empAttendance;
+package com.lng.attendancecustomerservice.entity.empManualAttendance;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -16,7 +16,7 @@ import com.lng.attendancecustomerservice.entity.masters.Employee;
 
 @Entity
 @Table(name = "ttempattendance")
-public class EmpAttendance {
+public class EmpManualAttendance {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
