@@ -147,7 +147,7 @@ public class CountryServiceImpl implements CountryService {
 				}else {
 					country.setCountryIsActive(false);
 					countryRepositary.save(country);
-					countryResponse.status = new Status(true,400, "The record has been just disabled as it has been used in another transaction");
+					countryResponse.status = new Status(true,400, "The record has been disabled, since it has been used in another transactions");
 				}
 			} else  {
 				countryResponse.status = new Status(true,400, "Country Not Found");

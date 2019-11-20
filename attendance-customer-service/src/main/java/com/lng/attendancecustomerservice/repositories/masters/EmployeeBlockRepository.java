@@ -10,5 +10,7 @@ public interface EmployeeBlockRepository extends PagingAndSortingRepository<Empl
 
 	List<EmployeeBlock> findByEmployee_EmpId(Integer empId);
 	
+	List<EmployeeBlock> findByEmployee_EmpIdAndBlock_BlkId(Integer empId, Integer blkId);
+	
 	EmployeeBlock findByEmpBlkId(Integer empBlkId);
 }

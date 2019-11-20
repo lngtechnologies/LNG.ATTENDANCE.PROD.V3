@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.BlockBeaconMapService;
+import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
+import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapList;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
+import com.lng.dto.masters.block.BlockDto;
 
 import status.StatusDto;
 
@@ -20,10 +23,10 @@ import status.StatusDto;
 @RestController
 @RequestMapping(value="/master/block/beacon/map")
 public class BlockBeaconMapController {
-	
+
 	@Autowired
 	BlockBeaconMapService blockBeaconMapService;
-	
+
 	@PostMapping(value = "/create")
 	public ResponseEntity<StatusDto> save(@RequestBody BlockBeaconMapList blockBeaconMapDto) {
 		StatusDto statusDto = blockBeaconMapService.saveBlkBeaconMap(blockBeaconMapDto);
@@ -51,4 +54,23 @@ public class BlockBeaconMapController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 
+	@PostMapping(value = "/getAllByCustId")
+	public ResponseEntity<BlockBeaconMapListResponse> edit2(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
+		BlockBeaconMapListResponse blockResponse = blockBeaconMapService.findByCustId(blockBeaconMapDto.getCustId());
+		if (blockResponse != null) {
+			return new ResponseEntity<BlockBeaconMapListResponse>(blockResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping(value = "/getAllAvailableAndUsedBeacons")
+	public ResponseEntity<BlockBeaconMapResponse> getAllAvailableAndUsedBeacons(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
+		BlockBeaconMapResponse blockResponse = blockBeaconMapService.mapBeacons(blockBeaconMapDto);
+		if (blockResponse != null) {
+			return new ResponseEntity<BlockBeaconMapResponse>(blockResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 }
+
+

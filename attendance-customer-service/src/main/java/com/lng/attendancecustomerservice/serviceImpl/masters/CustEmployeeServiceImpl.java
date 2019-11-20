@@ -101,10 +101,10 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 	@Autowired
 	ContractorRepository contractorRepository;
-	
+
 	@Autowired
 	BlockRepository blockRepository;
-	
+
 	@Autowired
 	EmployeeBlockRepository employeeBlockRepository;
 
@@ -122,18 +122,18 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 				employee = saveCustEmployeeData(custEmployeeDto);
 
 				if(employee != null) {
-					
+
 					// Set empid and BlockId to empBlock
-				
+
 					try {
 						for(EmpBlockMapDto CustEmployeeDto : custEmployeeDto.getEmpBlockMapDtoList()){
 							EmployeeBlock employeeBlock = new EmployeeBlock();
 							Block block = blockRepository.findByBlkId(CustEmployeeDto.getBlkId());
-							if(block == null) throw new Exception("Cannot find block id for Employee Branch");
+							if(block == null) throw new Exception("Cannot find block id for Employee Block");
 							employeeBlock.setBlock(block);
 							employeeBlock.setEmployee(employee);
 							employeeBlockRepository.save(employeeBlock);
-							
+
 						}
 					} catch (Exception e) {
 						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
@@ -272,6 +272,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			}else {
 				employee.setRefContractorId(custEmployeeDto.getContractorId());
 			}
+			
+			if(custEmployeeDto.getEmpIsSupervisor_Manager() == null) {
+				employee.setEmpIsSupervisor_Manager(false);
+			}else {
+				employee.setEmpIsSupervisor_Manager(custEmployeeDto.getEmpIsSupervisor_Manager());
+			}
 			employee.setBranch(branch);
 			employee.setCustomer(customer);
 			employee.setEmpInService(true);
@@ -283,14 +289,14 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		}
 		return employee;
 	}
-	
+
 	public EmployeeBlock saveEmpBlock(EmployeeBlock employeeBlock){
-	
+
 		try {
 			employeeBlockRepository.save(employeeBlock);
-			
+
 		} catch (Exception e) {
-			
+
 		}
 		return employeeBlock;
 	}
@@ -416,66 +422,66 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		try {
 			List<Object[]> employeeList = custEmployeeRepository.findAllEmployeeByEmpIdAndEmpInService(empId);
 			Employee employee = custEmployeeRepository.findEmpReportingToByEmpId(empId);
-				//EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpId(employee.getEmpId());
-				if(employeeList.isEmpty()) {
-					custEmployeeListResponse.status = new Status(true, 4000, "Employee not found");
+			//EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpId(employee.getEmpId());
+			if(employeeList.isEmpty()) {
+				custEmployeeListResponse.status = new Status(true, 4000, "Employee not found");
 
-				} else {
-					for(Object[] p : employeeList) {
+			} else {
+				for(Object[] p : employeeList) {
 
-						CustEmployeeDtoTwo custEmployeeDto = new CustEmployeeDtoTwo();
-						custEmployeeDto.setEmpId(Integer.valueOf(p[0].toString()));
-						custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
-						custEmployeeDto.setCustId(Integer.valueOf(p[2].toString()));
-						custEmployeeDto.setContractorId(Integer.valueOf(p[3].toString()));
-						custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
-						custEmployeeDto.setEmpTypeId(Integer.valueOf(p[5].toString()));
-						custEmployeeDto.setEmpName(p[6].toString());
-						custEmployeeDto.setEmpMobile(p[7].toString());
-						custEmployeeDto.setEmpGender(p[8].toString());
-						custEmployeeDto.setEmpInService(Boolean.valueOf(p[9].toString()));
-						custEmployeeDto.setEmpIsSupervisor_Manager(Boolean.valueOf(p[10].toString()));
-						custEmployeeDto.setEmpReportingToId(Integer.valueOf(p[11].toString()));
-						custEmployeeDto.setEmpJoiningDate((Date)p[12]);
-						custEmployeeDto.setBrName(p[13].toString());
-						custEmployeeDto.setShiftName(p[14].toString());
-						custEmployeeDto.setDeptName(p[15].toString());
-						custEmployeeDto.setDesignationName(p[16].toString());
-						custEmployeeDto.setContractorName(p[17].toString());
-						custEmployeeDto.setEmpType(p[18].toString());
-						custEmployeeDto.setDepartmentId(Integer.valueOf(p[19].toString()));
-						custEmployeeDto.setDesignationId(Integer.valueOf(p[20].toString()));
-						if(employee != null) {
-							custEmployeeDto.setEmpReportingTo(employee.getEmpName());
-						}else {
-							custEmployeeDto.setEmpReportingTo("He is not reporting to anyone");
-						}
-						custEmployeeDto.setEmployeeBranchFromDate((Date)p[21]);
-						custEmployeeDto.setEmployeeShiftFromDate((Date)p[22]);
-						custEmployeeDto.setEmployeeDepartmentFromDate((Date)p[23]);
-						custEmployeeDto.setEmployeeDesignationFromDate((Date)p[24]);
-						custEmployeeDto.setEmpWeeklyOffDayFromDate((Date)p[25]);
-						custEmployeeDto.setDayOfWeek(p[26].toString());
-						
-						List<EmployeeBlock> empBlockMapDtoList = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
-						
-						if(!empBlockMapDtoList.isEmpty()) {
-							
-							custEmployeeDto.setEmpBlockMapDtoList(empBlockMapDtoList.stream().map(employeeBlock -> convertToEmpBlockMapDto(employeeBlock)).collect(Collectors.toList()));
-							custEmployeeDtoTwoList.add(custEmployeeDto);
-							custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
-							custEmployeeListResponse.status = new Status(false, 2000, "Success");
-						}else {
-							custEmployeeDtoTwoList.add(custEmployeeDto);
-							custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
-							custEmployeeListResponse.status = new Status(false, 2000, "Success and no blocks mapped to this employee");
-						}
-						
+					CustEmployeeDtoTwo custEmployeeDto = new CustEmployeeDtoTwo();
+					custEmployeeDto.setEmpId(Integer.valueOf(p[0].toString()));
+					custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
+					custEmployeeDto.setCustId(Integer.valueOf(p[2].toString()));
+					custEmployeeDto.setContractorId(Integer.valueOf(p[3].toString()));
+					custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
+					custEmployeeDto.setEmpTypeId(Integer.valueOf(p[5].toString()));
+					custEmployeeDto.setEmpName(p[6].toString());
+					custEmployeeDto.setEmpMobile(p[7].toString());
+					custEmployeeDto.setEmpGender(p[8].toString());
+					custEmployeeDto.setEmpInService(Boolean.valueOf(p[9].toString()));
+					custEmployeeDto.setEmpIsSupervisor_Manager(Boolean.valueOf(p[10].toString()));
+					custEmployeeDto.setEmpReportingToId(Integer.valueOf(p[11].toString()));
+					custEmployeeDto.setEmpJoiningDate((Date)p[12]);
+					custEmployeeDto.setBrName(p[13].toString());
+					custEmployeeDto.setShiftName(p[14].toString());
+					custEmployeeDto.setDeptName(p[15].toString());
+					custEmployeeDto.setDesignationName(p[16].toString());
+					custEmployeeDto.setContractorName(p[17].toString());
+					custEmployeeDto.setEmpType(p[18].toString());
+					custEmployeeDto.setDepartmentId(Integer.valueOf(p[19].toString()));
+					custEmployeeDto.setDesignationId(Integer.valueOf(p[20].toString()));
+					if(employee != null) {
+						custEmployeeDto.setEmpReportingTo(employee.getEmpName());
+					}else {
+						custEmployeeDto.setEmpReportingTo("He is not reporting to anyone");
 					}
-				
-				
+					custEmployeeDto.setEmployeeBranchFromDate((Date)p[21]);
+					custEmployeeDto.setEmployeeShiftFromDate((Date)p[22]);
+					custEmployeeDto.setEmployeeDepartmentFromDate((Date)p[23]);
+					custEmployeeDto.setEmployeeDesignationFromDate((Date)p[24]);
+					custEmployeeDto.setEmpWeeklyOffDayFromDate((Date)p[25]);
+					custEmployeeDto.setDayOfWeek(p[26].toString());
+
+					List<EmployeeBlock> empBlockMapDtoList = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+
+					if(!empBlockMapDtoList.isEmpty()) {
+
+						custEmployeeDto.setEmpBlockMapDtoList(empBlockMapDtoList.stream().map(employeeBlock -> convertToEmpBlockMapDto(employeeBlock)).collect(Collectors.toList()));
+						custEmployeeDtoTwoList.add(custEmployeeDto);
+						custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
+						custEmployeeListResponse.status = new Status(false, 2000, "Success");
+					}else {
+						custEmployeeDtoTwoList.add(custEmployeeDto);
+						custEmployeeListResponse.setEmployyeList(custEmployeeDtoTwoList);
+						custEmployeeListResponse.status = new Status(false, 2000, "Success and no blocks mapped to this employee");
+					}
+
+				}
+
+
 			}
-			
+
 		} catch (Exception e) {
 			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
 		}
@@ -492,160 +498,185 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			EmployeeType employeeType = employeeTypeRepository.findEmployeeTypeByEmpTypeId(custEmployeeDto.getEmpTypeId());
 			Shift shift = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
 			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
+			Employee employee1 = custEmployeeRepository.findByEmpMobile(custEmployeeDto.getEmpMobile());
+
 			// Contractor contractor = contractorRepository.findContractorByContractorId(custEmployeeDto.getContractorId());
-			if(employee != null) {
-				employee.setBranch(branch);
-				employee.setCustomer(customer);
-				employee.setEmployeeType(employeeType);
-				employee.setShift(shift);
-				if(custEmployeeDto.getContractorId() != null) {
-					employee.setRefContractorId(custEmployeeDto.getContractorId());
-				}else {
-					employee.setRefContractorId(0);
-				}
-
-				employee.setEmpReportingTo(custEmployeeDto.getEmpReportingToId());
-				employee.setEmpName(custEmployeeDto.getEmpName());
-				employee.setEmpMobile(custEmployeeDto.getEmpMobile());
-				employee.setEmpGender(custEmployeeDto.getEmpGender());
-				employee.setEmpJoiningDate(custEmployeeDto.getEmpJoiningDate());
-				employee.setEmpIsSupervisor_Manager(custEmployeeDto.getEmpIsSupervisor_Manager());
-				custEmployeeRepository.save(employee);
-
+			if(employee1 == null || (employee.getEmpId() == custEmployeeDto.getEmpId() && employee.getEmpMobile().equals(custEmployeeDto.getEmpMobile())))
+			{
 				if(employee != null) {
-					
-					
-					try {
-						
-						List<EmployeeBlock> alreadyMappedBlocks = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
-						for(EmployeeBlock CustBlockMapDto : alreadyMappedBlocks) {
-							EmployeeBlock employeeBlock = employeeBlockRepository.findByEmpBlkId(CustBlockMapDto.getEmpBlkId());
-							employeeBlockRepository.delete(employeeBlock);
-						}
-						
-						for(EmpBlockMapDto UpdateEmpBlock : custEmployeeDto.getEmpBlockMapDtoList()){
-							if(UpdateEmpBlock.getEmpBlkId() == null) {
-								EmployeeBlock employeeBlock = new EmployeeBlock();
-								Block block = blockRepository.findByBlkId(UpdateEmpBlock.getBlkId());
-								employeeBlock.setBlock(block);
-								employeeBlock.setEmployee(employee);
-								employeeBlockRepository.save(employeeBlock);
-							}else if(UpdateEmpBlock.getEmpBlkId() != null) {
-								Block block = blockRepository.findByBlkId(UpdateEmpBlock.getBlkId());
-								EmployeeBlock employeeBlock = employeeBlockRepository.findByEmpBlkId(UpdateEmpBlock.getEmpBlkId());
-								employeeBlock.setBlock(block);
-								employeeBlock.setEmployee(employee);
-								employeeBlockRepository.save(employeeBlock);
+					employee.setBranch(branch);
+					employee.setCustomer(customer);
+					employee.setEmployeeType(employeeType);
+					employee.setShift(shift);
+					if(custEmployeeDto.getContractorId() != null) {
+						employee.setRefContractorId(custEmployeeDto.getContractorId());
+					}else {
+						employee.setRefContractorId(0);
+					}
+
+					employee.setEmpReportingTo(custEmployeeDto.getEmpReportingToId());
+					employee.setEmpName(custEmployeeDto.getEmpName());
+					employee.setEmpMobile(custEmployeeDto.getEmpMobile());
+					employee.setEmpGender(custEmployeeDto.getEmpGender());
+					employee.setEmpJoiningDate(custEmployeeDto.getEmpJoiningDate());
+					employee.setEmpIsSupervisor_Manager(custEmployeeDto.getEmpIsSupervisor_Manager());
+					custEmployeeRepository.save(employee);
+
+					if(employee != null) {
+
+
+						try {
+
+
+							List<EmployeeBlock> alreadyMappedBlocks = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+
+							List<EmpBlockMapDto> nonNullEmpBlkIds = custEmployeeDto.getEmpBlockMapDtoList().stream().filter(e -> e.getEmpBlkId() != null).collect(Collectors.toList());
+
+							List<EmployeeBlock> removed = alreadyMappedBlocks.stream().filter(o1 -> nonNullEmpBlkIds.stream().noneMatch(o2 -> o2.getEmpBlkId().equals(o1.getEmpBlkId())))
+									.collect(Collectors.toList());
+
+							for(EmployeeBlock CustBlockMapDto : removed) {
+								EmployeeBlock employeeBlock = employeeBlockRepository.findByEmpBlkId(CustBlockMapDto.getEmpBlkId());
+								employeeBlockRepository.delete(employeeBlock);
 							}
-						
+
+							for(EmpBlockMapDto UpdateEmpBlock : custEmployeeDto.getEmpBlockMapDtoList()){
+								if(UpdateEmpBlock.getEmpBlkId() == null) {
+									EmployeeBlock employeeBlock = new EmployeeBlock();
+									//EmployeeBlock employeeBlock = modelMapper.map(UpdateEmpBlock, EmployeeBlock.class);
+									Block block = blockRepository.findByBlkId(UpdateEmpBlock.getBlkId());
+									employeeBlock.setBlock(block);
+									employeeBlock.setEmployee(employee);
+									employeeBlockRepository.save(employeeBlock);
+								}else if(UpdateEmpBlock.getEmpBlkId() != null) {
+									Block block = blockRepository.findByBlkId(UpdateEmpBlock.getBlkId());
+									EmployeeBlock employeeBlock1 = employeeBlockRepository.findByEmpBlkId(UpdateEmpBlock.getEmpBlkId());
+									if(employeeBlock1 == null) {
+										EmployeeBlock employeeBlock = new EmployeeBlock();
+										employeeBlock.setBlock(block);
+										employeeBlock.setEmployee(employee);
+										employeeBlockRepository.save(employeeBlock);
+									}
+									else {
+										employeeBlock1.setBlock(block);
+										employeeBlock1.setEmployee(employee);
+										employeeBlockRepository.save(employeeBlock1);
+									}
+
+								}
+
+							}
+						} catch (Exception e) {
+							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 						}
-					} catch (Exception e) {
-						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+
+
+						EmployeeBranch employeeBranch = employeeBranchRepositories.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+						try {
+							Branch branch1 = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
+							if(branch1 == null) throw new Exception("Cannot find branch id for Employee Department");
+							employeeBranch.setEmployee(employee);
+							employeeBranch.setBranch(branch1);
+							employeeBranch.setBranchFromDate(custEmployeeDto.getEmployeeBranchFromDate());
+							Date empBranchToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeBranchFromDate());
+							employeeBranch.setBranchToDate(empBranchToDate);
+
+							employeeBranchRepositories.save(employeeBranch);
+						}catch (Exception e) {	
+							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+						}
+
+						EmployeeDepartment employeeDepartment = employeeDepartmentRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+						try {
+							Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
+							if(department == null) throw new Exception("Cannot find department id for Employee Department");
+							employeeDepartment.setEmployee(employee);
+							employeeDepartment.setDepartment(department);
+							employeeDepartment.setEmpFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
+							Date empDeptToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
+							employeeDepartment.setEmpToDate(empDeptToDate);
+
+							employeeDepartmentRepository.save(employeeDepartment);
+						}catch (Exception e) {	
+							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+						}
+
+						//set EmpId and DesignationId to empDesg
+						EmployeeDesignation employeeDesignation = employeeDesignationRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+						try {
+							Designation designation = designationRepository.findDesignationByDesignationId(custEmployeeDto.getDesignationId());
+							if(designation == null) throw new Exception("Cannot find designation id for Employee Designation");
+							employeeDesignation.setEmployee(employee);
+							employeeDesignation.setDesignation(designation);
+							employeeDesignation.setEmpFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
+							Date empDesgToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
+							employeeDesignation.setEmpToDate(empDesgToDate);
+
+							employeeDesignationRepository.save(employeeDesignation);
+
+						}catch (Exception e) {	
+							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+						}
+
+						//set EmpId and ShiftId to empShift
+						EmployeeShift employeeShift = employeeShiftRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+						try {
+							Shift shift1 = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
+							if(shift1 == null) throw new Exception("Cannot find shift id for Employee Shift");
+							employeeShift.setEmployee(employee);
+							employeeShift.setShift(shift1);
+							employeeShift.setShiftFromDate(custEmployeeDto.getEmployeeShiftFromDate());
+							Date empShiftToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeShiftFromDate());
+							employeeShift.setShiftToDate(empShiftToDate);
+
+							employeeShiftRepository.save(employeeShift);
+
+						}catch (Exception e) {	
+							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+						}
+
+
+						//set EmpId and WeekoffDay to empShift
+						EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpId(custEmployeeDto.getEmpId());
+						try {
+							empWeeklyOffDay.setEmployee(employee);
+							empWeeklyOffDay.setYearMonth(new Date());
+							empWeeklyOffDay.setDayOfWeek(custEmployeeDto.getDayOfWeek());
+							empWeeklyOffDay.setFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
+							Date empweeklyOffToDate = subtractDaysFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
+							empWeeklyOffDay.setToDate(empweeklyOffToDate);
+
+							empWeeklyOffDayRepository.save(empWeeklyOffDay);
+
+						}catch (Exception e) {
+							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+						}
+
+
+						//set EmpId and MonthlyNoOfDays to empShift
+						EmpMonthlyNoOfDays empMonthlyNoOfDays = empMonthlyNoOfDaysRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
+						try {
+							empMonthlyNoOfDays.setEmployee(employee);
+							empMonthlyNoOfDays.setYearMonth(new Date());
+							Integer NoOfDays = empMonthlyNoOfDaysRepository.findNoOfDaysByYearMonth(empMonthlyNoOfDays.getYearMonth());
+							empMonthlyNoOfDays.setNoOfDays(NoOfDays);
+
+							empMonthlyNoOfDaysRepository.save(empMonthlyNoOfDays);
+
+						}catch (Exception e) {
+							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+						}
+
 					}
 
-
-					EmployeeBranch employeeBranch = employeeBranchRepositories.findByEmployee_EmpId(custEmployeeDto.getEmpId());
-					try {
-						Branch branch1 = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
-						if(branch1 == null) throw new Exception("Cannot find branch id for Employee Department");
-						employeeBranch.setEmployee(employee);
-						employeeBranch.setBranch(branch1);
-						employeeBranch.setBranchFromDate(custEmployeeDto.getEmployeeBranchFromDate());
-						Date empBranchToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeBranchFromDate());
-						employeeBranch.setBranchToDate(empBranchToDate);
-
-						employeeBranchRepositories.save(employeeBranch);
-					}catch (Exception e) {	
-						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
-					}
-					
-					EmployeeDepartment employeeDepartment = employeeDepartmentRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
-					try {
-						Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
-						if(department == null) throw new Exception("Cannot find department id for Employee Department");
-						employeeDepartment.setEmployee(employee);
-						employeeDepartment.setDepartment(department);
-						employeeDepartment.setEmpFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
-						Date empDeptToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
-						employeeDepartment.setEmpToDate(empDeptToDate);
-
-						employeeDepartmentRepository.save(employeeDepartment);
-					}catch (Exception e) {	
-						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
-					}
-
-					//set EmpId and DesignationId to empDesg
-					EmployeeDesignation employeeDesignation = employeeDesignationRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
-					try {
-						Designation designation = designationRepository.findDesignationByDesignationId(custEmployeeDto.getDesignationId());
-						if(designation == null) throw new Exception("Cannot find designation id for Employee Designation");
-						employeeDesignation.setEmployee(employee);
-						employeeDesignation.setDesignation(designation);
-						employeeDesignation.setEmpFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
-						Date empDesgToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
-						employeeDesignation.setEmpToDate(empDesgToDate);
-
-						employeeDesignationRepository.save(employeeDesignation);
-
-					}catch (Exception e) {	
-						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
-					}
-
-					//set EmpId and ShiftId to empShift
-					EmployeeShift employeeShift = employeeShiftRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
-					try {
-						Shift shift1 = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
-						if(shift1 == null) throw new Exception("Cannot find shift id for Employee Shift");
-						employeeShift.setEmployee(employee);
-						employeeShift.setShift(shift1);
-						employeeShift.setShiftFromDate(custEmployeeDto.getEmployeeShiftFromDate());
-						Date empShiftToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeShiftFromDate());
-						employeeShift.setShiftToDate(empShiftToDate);
-
-						employeeShiftRepository.save(employeeShift);
-
-					}catch (Exception e) {	
-						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
-					}
-
-
-					//set EmpId and WeekoffDay to empShift
-					EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpId(custEmployeeDto.getEmpId());
-					try {
-						empWeeklyOffDay.setEmployee(employee);
-						empWeeklyOffDay.setYearMonth(new Date());
-						empWeeklyOffDay.setDayOfWeek(custEmployeeDto.getDayOfWeek());
-						empWeeklyOffDay.setFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
-						Date empweeklyOffToDate = subtractDaysFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
-						empWeeklyOffDay.setToDate(empweeklyOffToDate);
-
-						empWeeklyOffDayRepository.save(empWeeklyOffDay);
-
-					}catch (Exception e) {
-						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
-					}
-
-
-					//set EmpId and MonthlyNoOfDays to empShift
-					EmpMonthlyNoOfDays empMonthlyNoOfDays = empMonthlyNoOfDaysRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
-					try {
-						empMonthlyNoOfDays.setEmployee(employee);
-						empMonthlyNoOfDays.setYearMonth(new Date());
-						Integer NoOfDays = empMonthlyNoOfDaysRepository.findNoOfDaysByYearMonth(empMonthlyNoOfDays.getYearMonth());
-						empMonthlyNoOfDays.setNoOfDays(NoOfDays);
-
-						empMonthlyNoOfDaysRepository.save(empMonthlyNoOfDays);
-
-					}catch (Exception e) {
-						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
-					}
-
+					custEmployeeStatus.status = new Status(false, 200, "Successfully Updated");
+				} else {
+					custEmployeeStatus.status = new Status(true, 400, "Employee Not Found or Employee Not In Service");
 				}
-
-				custEmployeeStatus.status = new Status(false, 200, "Successfully Updated");
-			} else {
-				custEmployeeStatus.status = new Status(true, 400, "Employee Not Found or Employee Not In Service");
+			}else {
+				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number aleady exist");
 			}
+
 		} catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 500, "Opps...! Something Went Wrong");
 		}
@@ -812,11 +843,11 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		//custEmployeeDto.setContractorId(employee.getContractor().getContractorId());		
 		return custEmployeeDto;
 	}
-	
+
 	public EmpBlockMapDto convertToEmpBlockMapDto(EmployeeBlock employeeBlock) {
 		EmpBlockMapDto empBlockMapDto = modelMapper.map(employeeBlock, EmpBlockMapDto.class);
 		empBlockMapDto.setBlkId(employeeBlock.getBlock().getBlkId());
-		empBlockMapDto.setBlockName(employeeBlock.getBlock().getBlkLogicalName());
+		empBlockMapDto.setBlkLogicalName(employeeBlock.getBlock().getBlkLogicalName());
 		empBlockMapDto.setRefEmpId(employeeBlock.getEmployee().getEmpId());
 		return empBlockMapDto;
 	}

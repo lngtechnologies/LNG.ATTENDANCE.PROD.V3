@@ -6,7 +6,7 @@ public class EmpBlockMapDto {
 	
 	private Integer refEmpId;
 	
-	private String blockName;
+	private String blkLogicalName;
 	
 	private Integer blkId;
 
@@ -35,12 +35,14 @@ public class EmpBlockMapDto {
 		this.empBlkId = empBlkId;
 	}
 
-	public String getBlockName() {
-		return blockName;
+	public String getBlkLogicalName() {
+		return blkLogicalName;
 	}
 
-	public void setBlockName(String blockName) {
-		this.blockName = blockName;
+	public void setBlkLogicalName(String blkLogicalName) {
+		this.blkLogicalName = blkLogicalName;
 	}
+
+	
 
 }

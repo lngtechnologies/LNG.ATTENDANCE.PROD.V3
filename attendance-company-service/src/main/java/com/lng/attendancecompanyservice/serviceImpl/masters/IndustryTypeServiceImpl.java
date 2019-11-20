@@ -40,6 +40,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 			if(industryType == null) {
 
 				industryType = modelMapper.map(industryTypeDto, IndustryType.class);
+				industryType.setIndustryIsActive(true);
 				industryTypeRepository.save(industryType);
 				statusDto.setCode(200);
 				statusDto.setError(false);
@@ -156,7 +157,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 					industryTypeRepository.save(industryType);
 					statusDto.setCode(200);
 					statusDto.setError(false);
-					statusDto.setMessage("The record has been just disabled as it has been used in another transaction");
+					statusDto.setMessage("The record has been disabled, since it has been used in another transactions");
 				}
 				
 			}else {

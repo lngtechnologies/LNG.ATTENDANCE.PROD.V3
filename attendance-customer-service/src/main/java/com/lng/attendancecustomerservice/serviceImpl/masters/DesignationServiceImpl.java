@@ -144,7 +144,7 @@ public class DesignationServiceImpl implements DesignationService{
 				}else {
 					designation.setDesigIsActive(false);
 					designationRepository.save(designation);
-					designationResponse.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
+					designationResponse.status = new Status(false,200, "The record has been disabled, since it has been used in another transactions");
 				}
 
 			} else {

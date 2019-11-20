@@ -40,7 +40,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ResponseDto getByCustCodeAndEmpMobile(String custCode, String empMobile) {
 		ResponseDto response = new ResponseDto();
 		Employee employee = new Employee();
-
 		try {
 			Customer customer = customerRepository.getByCustCode(custCode);
 
@@ -57,12 +56,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 				// Employee not exist
 				if(employee == null) throw new Exception("Employee doesn't exist or Invalid Data");
 				if(employee != null)  {
+					if(employee.getEmpPresistedFaceId() == null) {
+						
+						byte[] custLogo = employee.getCustomer().getCustLogoFile();
+						String base64CustLogo = byteTobase64(custLogo);
+						String brCode = employee.getBranch().getBrCode().toLowerCase();
+						response.status = new Status(false,200,"success");
+						response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, false, employee.getEmpPresistedFaceId());	
 					
-					byte[] custLogo = employee.getCustomer().getCustLogoFile();
-					String base64CustLogo = byteTobase64(custLogo);
-					String brCode = employee.getBranch().getBrCode().toLowerCase();
-					response.status = new Status(false,200,"success");
-					response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo);					
+					}else {
+						
+						byte[] custLogo = employee.getCustomer().getCustLogoFile();
+						String base64CustLogo = byteTobase64(custLogo);
+						String brCode = employee.getBranch().getBrCode().toLowerCase();
+						response.status = new Status(false,200,"success");
+						response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId());	
+					}
+									
 				}
 			} else {
 				throw new Exception("Invalid Data");

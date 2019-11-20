@@ -13,5 +13,9 @@ public interface BranchService {
 	BranchResponse deleteByBrId(Integer brId);
 	BranchResponse getBranchByBrId(int brId);
 	BranchResponse getAllByCustId(Integer custId);
+	
+	void createBranchFaceListId(String branchCode) throws Exception;
+	
+	//void trainBranchFaceListId(String branchCode) throws Exception;
 
 }

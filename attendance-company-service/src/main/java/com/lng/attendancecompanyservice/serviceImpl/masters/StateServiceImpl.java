@@ -147,7 +147,7 @@ public class StateServiceImpl implements StateService {
 				}else {
 					state.setStateIsActive(false);
 					stateRepository.save(state);
-					stateResponse.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
+					stateResponse.status = new Status(false,200, "The record has been disabled, since it has been used in another transactions");
 				}
 
 			} else  {

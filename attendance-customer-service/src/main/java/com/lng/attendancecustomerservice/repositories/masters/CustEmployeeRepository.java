@@ -34,5 +34,6 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	@Query(value = "CALL subtractDaysFromDate(?1)", nativeQuery = true)
 	Date subtractDaysFromDate(Date date);
 	
+	Employee findByEmpMobile(String empMobile);
 	// Employee findEmployeeByReportionToId(Integer );
 }
