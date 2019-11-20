@@ -1,6 +1,6 @@
 package com.lng.dto.empAttendance;
 
-import java.math.BigDecimal;
+import java.sql.Time;
 import java.util.Date;
 
 public class EmpAttendanceParamDto {
@@ -9,11 +9,11 @@ public class EmpAttendanceParamDto {
 	private  Integer refEmpId;
 
 	private  String  empName;
-	
+
 	private String   shiftStart; 
-	
+
 	private  Integer  deptId;
-	
+
 	private Date empAttendanceDatetime;
 
 	public Integer getRefEmpId() {
@@ -57,7 +57,11 @@ public class EmpAttendanceParamDto {
 	}
 
 
-	
-	
+
+
+
+
+
+
 
 }

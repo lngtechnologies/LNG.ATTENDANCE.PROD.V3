@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.serviceImpl.empManualAttendance;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,6 +16,7 @@ import com.lng.attendancecustomerservice.repositories.empManualAttendance.EmpMan
 import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
 import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
+import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
 
 import status.Status;
@@ -65,7 +67,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	@Override
 	public EmpAttendanceResponse saveEmpAttendance(List<EmpAttendanceDto> empAttendanceDtos) {
 		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
-		
+
 		//List<EmpAttendanceDto> empAttendanceDto1 = new ArrayList<>();
 		/*
 		 * String msg = "Successsfully Saved And Already Marked Employee Id:"; String
@@ -110,7 +112,79 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 		EmpAttendanceDto empAttendanceDto = modelMapper.map(empAttendance,EmpAttendanceDto.class);
 		empAttendanceDto.setRefEmpId(empAttendance.getEmployee().getEmpId());
 		return empAttendanceDto;
+	}
+
+	@Override
+	public EmpAttendanceResponse getEmpAttendanceDetailsByCustomer_custIdAndEmpAttendanceDatetimeAndEmployee_EmpName(
+			Integer custId, Date empAttendanceDatetime, String empName) {
+
+		return null;
+	}
+
+	@Override
+	public EmpAttendanceResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetime(String emp,
+			Integer refCustId, Date empAttendanceDatetime) {
+		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
+		List<EmpAttendanceParamDto2> empAttendanceDtoList = new ArrayList<>();
+
+		try {
+			if(emp.length() <= 3) {
+				List<Object[]> empAttendance = empAttendanceRepository.SearchEmployeeByNameAndDate(emp, refCustId, empAttendanceDatetime);
+				if (empAttendance.isEmpty()) {
+					empAttendanceResponse.status = new Status(true, 400, "Emp Attendance Not Found");
+				} else {
+					for (Object[] p : empAttendance) {
+
+						EmpAttendanceParamDto2 EmpAttendanceDto1 = new EmpAttendanceParamDto2();
+						EmpAttendanceDto1.setRefEmpId(Integer.valueOf(p[0].toString()));
+						EmpAttendanceDto1.setEmpName((p[1].toString()));
+						EmpAttendanceDto1.setTimes(Time.valueOf(p[2].toString()));
+						EmpAttendanceDto1.setShiftStart((p[3].toString()));
+						empAttendanceDtoList.add(EmpAttendanceDto1);
+						empAttendanceResponse.status = new Status(false, 200, "success");
+					}
+
+				}
+			}
+			else {
+				empAttendanceResponse.status = new Status(true, 4000, "Data too long ");
+
+			}
+
+		} catch (Exception e) {
+			empAttendanceResponse.status = new Status(true, 400, e.getMessage());
+
 		}
+		empAttendanceResponse.setData2(empAttendanceDtoList);
+		return empAttendanceResponse;
+	}
+
+	@Override
+	public EmpAttendanceResponse updateEmpOverRideAttendance(EmpAttendanceParamDto2 empAttendanceParamDto2)  {
+		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
+
+		try {
+			int a = empAttendanceRepository.checkEmpOverRideManualAttnd(empAttendanceParamDto2.getRefEmpId(),empAttendanceParamDto2.getEmpAttendanceConsiderDatetime());
+			if(a != 0) {
+				EmpManualAttendance empManualAttendance1  = empAttendanceRepository.findEmpManualAttendanceByRefEmpIdAndRefCustIdAndEmpAttendanceConsiderDatetime(empAttendanceParamDto2.getRefEmpId(), empAttendanceParamDto2.getRefCustId(), empAttendanceParamDto2.getEmpAttendanceConsiderDatetime());
+				if(empManualAttendance1 != null) {
+					empManualAttendance1.setEmpAttendanceConsiderDatetime(empAttendanceParamDto2.getEmpAttendanceConsiderDatetime());
+					empAttendanceRepository.save(empManualAttendance1);
+
+					empAttendanceResponse.status = new Status(false, 200, "Attendance Remarked");
+				}
+				else {
+					empAttendanceResponse.status = new Status(true, 4000, "Not Found ");
+				}
+			}
+			else {
+				empAttendanceResponse.status = new Status(true, 4000, "Not Found ");
+			}
+		}catch(Exception e){
+			empAttendanceResponse.status = new Status(true, 400, e.getMessage());
+		}
+		return empAttendanceResponse;
+	}
 
 
 }

@@ -11,6 +11,7 @@ public class EmpAttendanceResponse {
 	public Status status; 
 	public EmpAttendanceParamDto data;
 	public List<EmpAttendanceParamDto> data1;
+	public List<EmpAttendanceParamDto2> data2;
 
 	public Status getStatus() {
 		return status;
@@ -29,6 +30,12 @@ public class EmpAttendanceResponse {
 	}
 	public void setData1(List<EmpAttendanceParamDto> data1) {
 		this.data1 = data1;
+	}
+	public List<EmpAttendanceParamDto2> getData2() {
+		return data2;
+	}
+	public void setData2(List<EmpAttendanceParamDto2> data2) {
+		this.data2 = data2;
 	}
 
 	
