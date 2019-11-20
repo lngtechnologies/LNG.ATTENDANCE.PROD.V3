@@ -139,7 +139,7 @@ public class ShiftServiceImpl implements ShiftService {
 				} else {
 					shift.setShiftIsActive(false);
 					shiftRepository.save(shift);
-					shiftResponse.status = new Status(false,200, "The record has been just disabled as it has been used in another transaction");
+					shiftResponse.status = new Status(false,200, "The record has been disabled, since it has been used in another transactions");
 				}
 
 			} else {

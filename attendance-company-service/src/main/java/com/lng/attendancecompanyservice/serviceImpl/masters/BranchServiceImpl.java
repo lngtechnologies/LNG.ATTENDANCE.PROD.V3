@@ -1,9 +1,20 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,6 +73,8 @@ public class BranchServiceImpl implements BranchService {
 	@Autowired
 	EmployeeBranchRepositories employeeBranchRepositories;
 
+	
+	
 	@Override
 	public BranchResponse saveBranch(BranchDto branchDto) {
 		BranchResponse response = new BranchResponse();
@@ -112,6 +125,14 @@ public class BranchServiceImpl implements BranchService {
 								branch.setBrValidityEnd(branchDto.getBrValidityEnd());
 								branch.setBrValidityStart(branchDto.getBrValidityStart());
 								branchRepository.save(branch);
+								
+								try {
+									// Create faceList in Azure
+									createBranchFaceListId(branch.getBrCode());
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
+								
 								// Save to login data right table
 								try {
 									Login login = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
@@ -194,9 +215,10 @@ public class BranchServiceImpl implements BranchService {
 
 					State state = stateRepository.findStateByStateId(branchDto.getRefStateId());
 					if(state != null) {
+						Branch branch1 = branchRepository.findBranchByBrId(branchDto.getBrId());
 						// int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
 						Branch br = branchRepository.findBranchBybrNameAndCustomer_custId(branchDto.getBrName(), branchDto.getRefCustomerId());
-						if(br == null) {
+						if(br == null || (branch1.getBrId() == branchDto.getBrId() && branch1.getBrName().equals(branchDto.getBrName()))) {
 							branch = modelMapper.map(branchDto,Branch.class);
 							branch.setCustomer(customer);
 							branch.setCountry(country);
@@ -206,16 +228,7 @@ public class BranchServiceImpl implements BranchService {
 							branch.setBrCreatedDate(new Date());
 							branchRepository.save(branch);
 							status = new Status(false, 200, "Updated successfully");
-						} else if (br.getBrId() == branchDto.getBrId()) { 
-							branch = modelMapper.map(branchDto,Branch.class);
-							branch.setCustomer(customer);
-							branch.setCountry(country);
-							branch.setState(state);
-							branch.setBrIsActive(true);
-							branch.setBrIsBillable(true);
-							branch.setBrCreatedDate(new Date());
-							branchRepository.save(branch);
-							status = new Status(false, 200, "Updated successfully");
+						
 						} else {
 							status = new Status(true,400,"Branch Name already exist"); 
 						}
@@ -282,7 +295,7 @@ public class BranchServiceImpl implements BranchService {
 				}else {
 					branch.setBrIsActive(false);
 					branchRepository.save(branch);
-					response.status = new Status(false, 200, "The record has been just disabled as it has been used in another transaction");
+					response.status = new Status(false, 200, "The record has been disabled, since it has been used in another transactions");
 				}
 			}else {
 
@@ -329,4 +342,78 @@ public class BranchServiceImpl implements BranchService {
 		}
 		return response;
 	}
+	
+	@Override
+	public void createBranchFaceListId(String branchCode) throws Exception {
+
+		HttpClient httpclient = HttpClients.createDefault();
+
+		try
+		{
+			String brCode = branchCode.toLowerCase();
+
+			URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/largefacelists/"+brCode);
+
+
+			URI uri = builder.build();
+			HttpPut request = new HttpPut(uri);
+			request.setHeader("Content-Type", "application/json");
+			request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
+
+			// Creating API Body
+			JSONObject json = new JSONObject();
+			json.put("name", brCode);
+			json.put("userData", "User-provided data attached to the face list.");
+			json.put("recognitionModel", "recognition_02");
+			// Request body
+			StringEntity reqEntity = new StringEntity(json.toJSONString());
+			request.setEntity(reqEntity);
+
+			HttpResponse response = httpclient.execute(request);
+			HttpEntity entity = response.getEntity();
+
+			if (entity != null) 
+			{
+				System.out.println(EntityUtils.toString(entity));
+			}
+		}
+		catch (Exception e)
+		{
+			throw e;
+			// System.out.println(e.getMessage());
+		}
+	}
+	
+	/*@Override
+	public void trainBranchFaceListId(String branchCode) throws Exception {
+		HttpClient httpclient = HttpClients.createDefault();
+		try {
+			String brCode = branchCode.toLowerCase();
+
+			URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/largefacelists/"+brCode+"/train");
+
+
+	            URI uri = builder.build();
+	            HttpPost request = new HttpPost(uri);
+	          //  request.setHeader("Content-Type", "application/json");
+				request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
+
+
+	            // Request body
+	           // StringEntity reqEntity = new StringEntity("{body}");
+	           // request.setEntity(reqEntity);
+
+	            HttpResponse response = httpclient.execute(request);
+	            HttpEntity entity = response.getEntity();
+
+	            if (entity != null) 
+	            {
+	                System.out.println(EntityUtils.toString(entity));
+	            }
+		
+		} catch (Exception e) {
+			
+		}
+		
+	}*/
 }

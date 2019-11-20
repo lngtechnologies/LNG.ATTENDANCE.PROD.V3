@@ -22,5 +22,7 @@ public interface CustomerService {
 	CustomerListResponse searchCustByNameOrCode(String cust);
 	
 	void createBranchFaceListId(String branchCode) throws Exception;
+	
+	//void trainBranchFaceListId(String branchCode) throws Exception;
 
 }

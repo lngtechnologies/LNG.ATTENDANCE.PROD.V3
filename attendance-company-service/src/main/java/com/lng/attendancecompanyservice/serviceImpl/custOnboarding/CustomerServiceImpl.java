@@ -11,6 +11,7 @@ import javax.transaction.Transactional;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
@@ -28,6 +29,7 @@ import com.lng.attendancecompanyservice.entity.masters.Country;
 import com.lng.attendancecompanyservice.entity.masters.CustLeave;
 import com.lng.attendancecompanyservice.entity.masters.IndustryType;
 import com.lng.attendancecompanyservice.entity.masters.Login;
+import com.lng.attendancecompanyservice.entity.masters.LoginDataRight;
 import com.lng.attendancecompanyservice.entity.masters.State;
 import com.lng.attendancecompanyservice.entity.masters.UserRight;
 import com.lng.attendancecompanyservice.entity.masters.LeaveType;
@@ -37,6 +39,7 @@ import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CustLeaveRepository;
 import com.lng.attendancecompanyservice.repositories.masters.IndustryTypeRepository;
 import com.lng.attendancecompanyservice.repositories.masters.LeaveTypeRepository;
+import com.lng.attendancecompanyservice.repositories.masters.LoginDataRightRepository;
 import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.repositories.masters.UserRightRepository;
@@ -81,6 +84,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	LeaveTypeRepository leaveTypeRepository;
+	
+	@Autowired
+	LoginDataRightRepository loginDataRightRepository;
 
 	@Autowired
 	MailProperties mailProperties;
@@ -114,6 +120,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 			List<Customer> customerList1 = customerRepository.findCustomerByCustEmail(customerDto.getCustEmail());
 			List<Customer> customerList2 = customerRepository.findCustomerByCustMobile(customerDto.getCustMobile());
+			List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
 
 			if(customerList1.isEmpty() && customerList2.isEmpty()) {
 
@@ -138,6 +145,7 @@ public class CustomerServiceImpl implements CustomerService {
 					if(branch != null) {
 						int custId = saveBranch(branch);
 						
+						
 						// Create faceList in Azure
 						createBranchFaceListId(branch.getBrCode());
 						
@@ -148,6 +156,20 @@ public class CustomerServiceImpl implements CustomerService {
 							if(loginId != 0) {
 								List<UserRight> userRights = userRightRepository.assignDefaultModulesToDefaultCustomerAdmin(loginId);
 							}
+						}
+						
+						// saves to LoginDataRight table
+						try {
+							if(login != null) {
+								Login login1 = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
+								LoginDataRight loginDataRight = new LoginDataRight();
+								loginDataRight.setBranch(branch);
+								loginDataRight.setLogin(login1);
+								loginDataRightRepository.save(loginDataRight);
+							}
+							
+						}catch (Exception e) {
+							e.printStackTrace();
 						}
 
 					}
@@ -512,9 +534,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 		try {
 			branchRepository.save(branch);
+		
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return branch.getCustomer().getCustId();
 	}
 
@@ -530,7 +555,7 @@ public class CustomerServiceImpl implements CustomerService {
 			login.setLoginCreatedDate(new Date());
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}		
 
 		return login;
 	}
@@ -722,7 +747,7 @@ public class CustomerServiceImpl implements CustomerService {
 		{
 			String brCode = branchCode.toLowerCase();
 
-			URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/facelists/"+brCode);
+			URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/largefacelists/"+brCode);
 
 
 			URI uri = builder.build();
@@ -753,6 +778,43 @@ public class CustomerServiceImpl implements CustomerService {
 			// System.out.println(e.getMessage());
 		}
 	}
+
+	/*@Override
+	public void trainBranchFaceListId(String branchCode) throws Exception {
+		
+		HttpClient httpclient = HttpClients.createDefault();
+		try {
+			String brCode = branchCode.toLowerCase();
+
+			URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/largefacelists/"+brCode+"/train");
+
+
+	            URI uri = builder.build();
+	            HttpPost request = new HttpPost(uri);
+	          //  request.setHeader("Content-Type", "application/json");
+				request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
+
+
+	            // Request body
+	            StringEntity reqEntity = new StringEntity("{}");
+	            request.setEntity(reqEntity);
+
+	            HttpResponse response = httpclient.execute(request);
+	            HttpResponse response1 = httpclient.execute(request);
+	            HttpEntity entity = response.getEntity();
+	            HttpEntity entity1 = response1.getEntity();
+
+	            if (entity != null) 
+	            {
+	                System.out.println(EntityUtils.toString(entity));
+	            }
+	        
+		
+		} catch (Exception e) {
+			
+		}
+		
+	}*/
 }
 
 

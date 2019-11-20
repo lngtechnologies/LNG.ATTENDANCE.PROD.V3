@@ -134,7 +134,7 @@ public class BeaconServiceImpl implements BeaconService {
 				beaconRepository.delete(beacon);
 				status = new Status(false, 200, "Successfully deleted");
 			}else {
-				status = new Status(true, 400, "The record cannot delete as it has been used in another transaction");
+				status = new Status(true, 400, "The record has been disabled, since it has been used in another transactions");
 			}
 		}else {
 			status = new Status(true, 400, "Beacon not found");

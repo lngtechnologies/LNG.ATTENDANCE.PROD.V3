@@ -17,12 +17,17 @@ public class EmployeeDataDto {
 	private String employeeName;
 
 	// private Integer otp;
+	private Boolean appStatus;
+	
+	private String empPresistedFaceId;
 
 	private String custLogo;
+	
+	
 
 	//private Boolean empAppSetupStatus;
 
-	public EmployeeDataDto(Integer custId, String custName, Integer brId, String brName, String brCode, Integer empid, String empName, String custLogo) {
+	public EmployeeDataDto(Integer custId, String custName, Integer brId, String brName, String brCode, Integer empid, String empName, String custLogo, Boolean appStatus, String empPresistedFaceId) {
 		this.custId = custId;
 		this.custName = custName;
 		this.brId = brId;
@@ -31,6 +36,8 @@ public class EmployeeDataDto {
 		this.empId = empid;
 		this.employeeName = empName;
 		this.custLogo = custLogo;
+		this.appStatus = appStatus;
+		this.empPresistedFaceId = empPresistedFaceId;
 	}
 
 	public Integer getCustId() {
@@ -95,5 +102,21 @@ public class EmployeeDataDto {
 	public void setBrName(String brName) {
 		this.brName = brName;
 	}
-	
+
+	public Boolean getAppStatus() {
+		return appStatus;
+	}
+
+	public void setAppStatus(Boolean appStatus) {
+		this.appStatus = appStatus;
+	}
+
+	public String getEmpPresistedFaceId() {
+		return empPresistedFaceId;
+	}
+
+	public void setEmpPresistedFaceId(String empPresistedFaceId) {
+		this.empPresistedFaceId = empPresistedFaceId;
+	}
+
 }

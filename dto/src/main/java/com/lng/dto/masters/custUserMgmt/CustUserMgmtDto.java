@@ -3,6 +3,8 @@ package com.lng.dto.masters.custUserMgmt;
 public class CustUserMgmtDto {
 	
 	private Integer customerId;
+	
+	private Integer loginId;
 
 	private String userName;
 	
@@ -31,6 +33,14 @@ public class CustUserMgmtDto {
 
 	public void setuMobileNumber(String uMobileNumber) {
 		this.uMobileNumber = uMobileNumber;
+	}
+
+	public Integer getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(Integer loginId) {
+		this.loginId = loginId;
 	}
 
 }
