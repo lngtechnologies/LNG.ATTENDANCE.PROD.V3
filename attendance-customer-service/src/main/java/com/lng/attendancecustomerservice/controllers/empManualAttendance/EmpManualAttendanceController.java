@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.controllers.empManualAttendance;
 
+import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
 import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
+import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
 
 @RestController
@@ -41,7 +43,24 @@ public class EmpManualAttendanceController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
+	@PostMapping(value = "/getEmployeeByNameAndDateAndCustomer")
+	public ResponseEntity<EmpAttendanceResponse> edit1(@RequestBody EmpAttendanceParamDto2 empAttendanceDto) {
+		EmpAttendanceResponse empAttendanceResponse = empAttendanceService.searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetime(empAttendanceDto.getEmp(), empAttendanceDto.getRefCustId(), empAttendanceDto.getEmpAttendanceDatetime());
+		if(empAttendanceResponse !=null){
+			return new ResponseEntity<EmpAttendanceResponse>(empAttendanceResponse, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 	
 	
+	
+	@PostMapping(value = "/UpdateEmpOverrideAttendanceByCustIdAndEmpIdAndDateAndTime")
+	public ResponseEntity<EmpAttendanceResponse> getEmpOverride(@RequestBody EmpAttendanceParamDto2 empAttendanceParamDto2) {
+		EmpAttendanceResponse empAttendanceResponse = empAttendanceService.updateEmpOverRideAttendance(empAttendanceParamDto2);
+		if(empAttendanceResponse !=null){
+			return new ResponseEntity<EmpAttendanceResponse>(empAttendanceResponse, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 
 }

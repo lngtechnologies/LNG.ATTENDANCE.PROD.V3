@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.repositories.empManualAttendance;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -16,5 +17,15 @@ public interface EmpManualAttendanceRepository extends PagingAndSortingRepositor
 	
 	@Query(value = "CALL CheckEmpAttendance(?1,?2,?3)",nativeQuery = true)
 	int  checkEmpManualAttnd(Integer refEmpId,String shiftStart,Date empAttendanceDatetime);
-
+	
+	@Query(value = "CALL SearchEmployeeByNameAndDate(?1,?2,?3)",nativeQuery = true)
+	List<Object[]>  SearchEmployeeByNameAndDate(String emp,Integer  refCustId,Date empAttendanceDatetime);
+	
+	@Query(value = "CALL GetCountOfEmpAttendance(?1,?2)",nativeQuery = true)
+	int  checkEmpOverRideManualAttnd(Integer refEmpId, Date empAttendanceConsiderDatetime);
+	
+	@Query(value = "CALL getEmployeeOverrideAttendance(?1,?2,?3)",nativeQuery = true)
+	EmpManualAttendance findEmpManualAttendanceByRefEmpIdAndRefCustIdAndEmpAttendanceConsiderDatetime(Integer refEmpId,Integer refCustId,Date empAttendanceConsiderDatetime);
+	
+	
 }

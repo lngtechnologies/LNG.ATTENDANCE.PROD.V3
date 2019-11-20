@@ -1,6 +1,7 @@
 package com.lng.attendancecustomerservice.entity.empManualAttendance;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -81,8 +82,8 @@ public class EmpManualAttendance {
 		return empAttendanceConsiderDatetime;
 	}
 
-	public void setEmpAttendanceConsiderDatetime(Date empAttendanceConsiderDatetime) {
-		this.empAttendanceConsiderDatetime = empAttendanceConsiderDatetime;
+	public void setEmpAttendanceConsiderDatetime(Date date1) {
+		this.empAttendanceConsiderDatetime = date1;
 	}
 
 	public BigDecimal getEmpAttendanceConfidence() {
