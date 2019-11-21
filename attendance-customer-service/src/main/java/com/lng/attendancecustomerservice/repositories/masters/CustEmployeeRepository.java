@@ -14,6 +14,8 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 
 	List<Employee> findAllEmployeeByEmpMobile(String empMobile);
 	
+	List<Employee> findAllEmployeeByEmpMobileAndCustomer_CustId(String empMobile, Integer custId);
+	
 	Employee findEmployeeByEmpIdAndEmpInService(Integer empId, Boolean empInService);
 	
 	@Query(value = "SELECT * FROM tmemployee WHERE empId = (SELECT empReportingTo FROM tmemployee WHERE empId = ?1)",nativeQuery = true)
@@ -34,6 +36,6 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	@Query(value = "CALL subtractDaysFromDate(?1)", nativeQuery = true)
 	Date subtractDaysFromDate(Date date);
 	
-	Employee findByEmpMobile(String empMobile);
+	Employee findByEmpMobileAndCustomer_CustId(String empMobile, Integer custId);
 	// Employee findEmployeeByReportionToId(Integer );
 }

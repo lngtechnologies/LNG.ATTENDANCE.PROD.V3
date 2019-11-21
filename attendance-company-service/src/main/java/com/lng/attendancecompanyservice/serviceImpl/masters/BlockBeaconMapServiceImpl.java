@@ -1,6 +1,5 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,7 +87,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 		}
 		return statusDto;
 	}
-
+	
 	@Override
 	public BlockBeaconMapListResponse findAll() {
 		BlockBeaconMapListResponse blockBeaconMapListResponse = new BlockBeaconMapListResponse();
@@ -110,6 +109,60 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 		}
 		return blockBeaconMapListResponse;
 	}
+
+	/*@Override
+	public BlockAndBeaconCodeMapDto findAll() {
+	
+		BlockAndBeaconCodeMapDto blockAndBeaconCodeMapDto = new BlockAndBeaconCodeMapDto();
+		
+		List<BlockBeaconMapResponseDto> blockBeaconMapLists = new ArrayList<>();
+		
+		try {
+			List<Object[]> blockBeaconMapList =  blockBeaconMapRepository.findAllByBlkBeaconMapIsActive();
+			
+			for(Object[] p: blockBeaconMapList) {
+				BlockBeaconMapResponseDto beaconMapResponse = new BlockBeaconMapResponseDto();
+			
+				List<BlockBeaconCodeDto> beaconCodeDtos = new ArrayList<>();
+				
+				beaconMapResponse.setBlkBeaconMapId(Integer.valueOf(p[0].toString()));
+				beaconMapResponse.setRefBlkId(Integer.valueOf(p[1].toString()));
+				beaconMapResponse.setBlkLogicalName(p[2].toString());
+				beaconMapResponse.setBrId(Integer.valueOf(p[3].toString()));
+				beaconMapResponse.setBlkLogicalName(p[4].toString());
+				beaconMapResponse.setCustId(Integer.valueOf(p[5].toString()));
+				
+				blockBeaconMapLists.add(beaconMapResponse);
+				blockAndBeaconCodeMapDto.setBeaconMapResponseDtoList(blockBeaconMapLists);
+				
+				List<Object[]> beaconCodes =  blockBeaconMapRepository.findBeaconCodeByBlkId(beaconMapResponse.getRefBlkId());
+				
+				for(Object[] b: beaconCodes) {
+					
+					if(Integer.valueOf(b[0].toString()) == beaconMapResponse.getRefBlkId()) {
+						BlockBeaconCodeDto beaconCodeDto = new BlockBeaconCodeDto();
+						beaconCodeDto.setRefBlkId(Integer.valueOf(b[0].toString()));
+						beaconCodeDto.setBeaconCode(b[1].toString());
+						beaconCodeDto.setBeaconType(Integer.valueOf(b[2].toString()));
+						
+						beaconCodeDtos.add(beaconCodeDto);
+					}
+				}
+				beaconMapResponse.setBeaconCodeDtoList(beaconCodeDtos);
+			}
+			
+			if(!blockBeaconMapList.isEmpty()) {
+				blockAndBeaconCodeMapDto.status = new Status(false, 200, "Success");
+			}else {
+				blockAndBeaconCodeMapDto.status = new Status(true, 400, "Not found");
+			}
+		}
+		catch (Exception e) {
+			
+			blockAndBeaconCodeMapDto.status = new Status(true, 5000, "Oops...! Something went wrong!");
+		}
+		return blockAndBeaconCodeMapDto;
+	}*/
 
 	@Override
 	public StatusDto update(BlockBeaconMapList blockBeaconMapList) {

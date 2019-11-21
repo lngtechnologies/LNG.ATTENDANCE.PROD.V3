@@ -115,7 +115,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		Employee employee = new Employee();
 
 		try {
-			List<Employee> employee1 = custEmployeeRepository.findAllEmployeeByEmpMobile(custEmployeeDto.getEmpMobile());
+			List<Employee> employee1 = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
 
 			if(employee1.isEmpty()) {
 
@@ -498,7 +498,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			EmployeeType employeeType = employeeTypeRepository.findEmployeeTypeByEmpTypeId(custEmployeeDto.getEmpTypeId());
 			Shift shift = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
 			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
-			Employee employee1 = custEmployeeRepository.findByEmpMobile(custEmployeeDto.getEmpMobile());
+			Employee employee1 = custEmployeeRepository.findByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
 
 			// Contractor contractor = contractorRepository.findContractorByContractorId(custEmployeeDto.getContractorId());
 			if(employee1 == null || (employee.getEmpId() == custEmployeeDto.getEmpId() && employee.getEmpMobile().equals(custEmployeeDto.getEmpMobile())))
