@@ -23,8 +23,8 @@ public interface CustBrHolidayRepository extends PagingAndSortingRepository<Cust
 	
 	//List<CustBrHoliday>  findCustBrHolidayByBranch_BrIdAndHolidayCalendar_HolidayId(Integer brId,Integer holidayId);
 	
-	@Query(value = "CALL getCountByBranchAndHolidayCalendar(?1,?2,?3)",nativeQuery = true)
-	CustBrHoliday     findCustBrHolidayByRefbrIdAndHolidayCalendar_RefcustIdAndHolidayCalendar_HolidayId(Integer rfebrId,Integer refCustId,Integer holidayId);
+	//@Query(value = "CALL getCountByBranchAndHolidayCalendar(?1,?2,?3)",nativeQuery = true)
+	//CustBrHoliday     findCustBrHolidayByRefbrIdAndHolidayCalendar_RefcustIdAndHolidayCalendar_HolidayId(Integer rfebrId,Integer refCustId,Integer holidayId);
 	
 	@Query(value = "CALL getCountByBranch(?1)",nativeQuery = true)
 	int     findCustBrHolidayByRefbrId(Integer refbrId);

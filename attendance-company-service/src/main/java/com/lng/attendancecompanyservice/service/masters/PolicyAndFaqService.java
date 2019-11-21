@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.service.policyAndFaq;
+package com.lng.attendancecompanyservice.service.masters;
 
 import com.lng.dto.policyAndFaq.PolicyAndFaqDto;
 import com.lng.dto.policyAndFaq.PolicyAndFaqResponse;
@@ -10,7 +10,7 @@ public interface PolicyAndFaqService {
 	
 	PolicyAndFaqResponse  getAll();
 	
-	
+	//PolicyAndFaqResponse   update(PolicyAndFaqDto policyAndFaqDto);
 	
 
 }
