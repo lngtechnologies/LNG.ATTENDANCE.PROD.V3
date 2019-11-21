@@ -1,4 +1,4 @@
-package com.lng.attendancecompanyservice.entity.policyAndFaq;
+package com.lng.attendancecompanyservice.entity.masters;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

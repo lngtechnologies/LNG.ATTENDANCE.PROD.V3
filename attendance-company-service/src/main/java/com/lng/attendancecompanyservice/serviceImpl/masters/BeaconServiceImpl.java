@@ -15,7 +15,6 @@ import com.lng.attendancecompanyservice.repositories.masters.BlockBeaconMapRepos
 import com.lng.attendancecompanyservice.service.masters.BeaconService;
 import com.lng.dto.masters.beacon.BeaconDto;
 import com.lng.dto.masters.beacon.BeaconListResponseDto;
-import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
 
 import status.Status;
 import status.StatusDto;
