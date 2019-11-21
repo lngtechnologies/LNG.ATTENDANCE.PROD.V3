@@ -2,12 +2,10 @@ package com.lng.attendancecompanyservice.repositories.masters;
 
 import java.util.List;
 
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import com.lng.attendancecompanyservice.entity.masters.Block;
-import com.lng.attendancecompanyservice.entity.masters.PolicyAndFaq;
 
 public interface BlockRepository extends PagingAndSortingRepository<Block, Integer> {
 
