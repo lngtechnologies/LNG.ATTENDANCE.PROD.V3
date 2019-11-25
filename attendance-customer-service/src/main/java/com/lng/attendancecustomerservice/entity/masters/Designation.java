@@ -12,13 +12,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name="tmdesignation")
 public class Designation {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="designationId")
 	private Integer designationId;
+	
+	
 	@ManyToOne
 	@JoinColumn(name = "refCustId")
 	private Customer customer;
+	
 	@Column(name="designationName")
 	private String designationName;
 	
