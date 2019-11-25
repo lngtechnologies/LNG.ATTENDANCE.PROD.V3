@@ -38,4 +38,7 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	Employee findByEmpMobileAndCustomer_CustId(String empMobile, Integer custId);
 	// Employee findEmployeeByReportionToId(Integer );
+	
+	@Query(value = "SELECT ed.refDeptId, d.deptName FROM ttempdept ed LEFT JOIN tmdepartment d ON d.deptId = ed.refDeptId WHERE ed.refEmpId = ?1", nativeQuery = true)
+	List<Object[]> getReportingToDepartment(Integer reportingToId);
 }

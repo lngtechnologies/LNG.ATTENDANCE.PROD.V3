@@ -1,6 +1,10 @@
 package com.lng.attendancecustomerservice.serviceImpl.empAppSetup;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	EmployeePicRepository employeePicRepository;
 
@@ -46,7 +50,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 			// Check customer exist else throw exception	
 			if(customer == null || !customer.getCustIsActive()) throw new Exception("Validity Expired or Invalid Data");
 
-
 			// Check customer validity
 			if(customer.getCustIsActive() == true) {
 
@@ -55,24 +58,62 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 				// Employee not exist
 				if(employee == null) throw new Exception("Employee doesn't exist or Invalid Data");
+
+
 				if(employee != null)  {
-					if(employee.getEmpPresistedFaceId() == null) {
-						
-						byte[] custLogo = employee.getCustomer().getCustLogoFile();
-						String base64CustLogo = byteTobase64(custLogo);
-						String brCode = employee.getBranch().getBrCode().toLowerCase();
-						response.status = new Status(false,200,"success");
-						response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, false, employee.getEmpPresistedFaceId());	
 					
-					}else {
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
+				    String strDate = formatter.format(new Date());
+				
+				   
+				    
+				    Date empAttndDate = employeeRepository.getRecentDateByAttndDateAndEmpId(strDate, employee.getEmpId());
+				    
+					
+				   // Date date = new Date();
+				    
+					
+					if(empAttndDate != null) {
 						
-						byte[] custLogo = employee.getCustomer().getCustLogoFile();
-						String base64CustLogo = byteTobase64(custLogo);
-						String brCode = employee.getBranch().getBrCode().toLowerCase();
-						response.status = new Status(false,200,"success");
-						response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId());	
+						String pattern = "dd/MM/yyyy h:mm a";
+						SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+						dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+						String date = dateFormat.format(empAttndDate);
+						
+						if(employee.getEmpPresistedFaceId() == null) {
+
+							byte[] custLogo = employee.getCustomer().getCustLogoFile();
+							String base64CustLogo = byteTobase64(custLogo);
+							String brCode = employee.getBranch().getBrCode().toLowerCase();
+							response.status = new Status(false,200,"success");
+							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, false, employee.getEmpPresistedFaceId(), true, date);	
+
+						}else {
+
+							byte[] custLogo = employee.getCustomer().getCustLogoFile();
+							String base64CustLogo = byteTobase64(custLogo);
+							String brCode = employee.getBranch().getBrCode().toLowerCase();
+							response.status = new Status(false,200,"success");
+							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId(), true, date);	
+						}
+					}else {
+						if(employee.getEmpPresistedFaceId() == null) {
+
+							byte[] custLogo = employee.getCustomer().getCustLogoFile();
+							String base64CustLogo = byteTobase64(custLogo);
+							String brCode = employee.getBranch().getBrCode().toLowerCase();
+							response.status = new Status(false,200,"success");
+							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, false, employee.getEmpPresistedFaceId(), false, "");	
+
+						}else {
+
+							byte[] custLogo = employee.getCustomer().getCustLogoFile();
+							String base64CustLogo = byteTobase64(custLogo);
+							String brCode = employee.getBranch().getBrCode().toLowerCase();
+							response.status = new Status(false,200,"success");
+							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId(), false, "");	
+						}
 					}
-									
 				}
 			} else {
 				throw new Exception("Invalid Data");
@@ -138,13 +179,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 				employeeRepository.save(employee);
 				try {
 					employeePic = employeePicRepository.findByEmployee_EmpId(employee.getEmpId());
-					
+
 					if(employeePic == null) {
 						EmployeePic employeePic1 = new EmployeePic();
 						employeePic1.setEmployee(employee);
 						employeePic1.setEmployeePic(base64ToByte(employeeDto.getEmployeePic()));
 						employeePicRepository.save(employeePic1);
-							
+
 					} else {
 						employeePic.setEmployeePic(base64ToByte(employeeDto.getEmployeePic()));
 						employeePicRepository.save(employeePic);
@@ -152,8 +193,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				
+
+
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("Succesfully Updated");
@@ -169,12 +210,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		return statusDto;
 	}
-	
+
 	// Convert base64 to byte
-		public  byte[] base64ToByte(String base64) {
-			byte[] decodedByte = Base64.getDecoder().decode(base64);
-			return decodedByte;
-		}
+	public  byte[] base64ToByte(String base64) {
+		byte[] decodedByte = Base64.getDecoder().decode(base64);
+		return decodedByte;
+	}
 
 
 
@@ -204,6 +245,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		return empAppStatusResponseDto;
 	}*/
+
+	public static Date getDateWithoutTime(Date empAttndDate) throws ParseException {
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		System.out.println(formatter.format(empAttndDate));
+		return formatter.parse(formatter.format(empAttndDate));
+		
+	}
+
 } 
 
 

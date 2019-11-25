@@ -1,9 +1,13 @@
 package com.lng.attendancecustomerservice.repositories.empAppSetup;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import com.lng.attendancecustomerservice.entity.employeeAttendance.EmployeeAttendance;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 
 @Repository
@@ -22,6 +26,10 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	
 	Employee getEmployeeByEmpId(Integer empId);
 	
+	// List<EmployeeAttendance> getByEmpAttendanceDatetimeAndrefEmpId(Date attndDate, Integer empId);
+	
+	@Query(value = "SELECT 	MIN(empAttendanceDatetime) AS DATE FROM	ttempattendance WHERE empAttendanceDatetime LIKE %?1% AND refEmpId = ?2", nativeQuery = true)
+	Date getRecentDateByAttndDateAndEmpId(String attndDate, Integer empId);
 	
 	/*
 	 * @Query(value =

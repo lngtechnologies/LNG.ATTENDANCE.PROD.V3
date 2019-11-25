@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.BlockBeaconMapService;
 import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
+import com.lng.dto.masters.beaconBlockMap.BlockAndBeaconCodeMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapList;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
-import com.lng.dto.masters.block.BlockDto;
 
 import status.StatusDto;
 
@@ -36,13 +36,19 @@ public class BlockBeaconMapController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping(value = "/findAll")
+	/*@GetMapping(value = "/findAll")
 	public ResponseEntity<BlockBeaconMapListResponse> findAll() {
 		BlockBeaconMapListResponse blockBeaconMapListResponse = blockBeaconMapService.findAll(); 
 		if(blockBeaconMapListResponse.getBeaconMapDtolist().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<BlockBeaconMapListResponse>(blockBeaconMapListResponse, HttpStatus.OK);
+	}*/
+	
+	@GetMapping(value = "/findAll")
+	public ResponseEntity<BlockAndBeaconCodeMapDto> findAll() {
+		BlockAndBeaconCodeMapDto blockBeaconMapListResponse = blockBeaconMapService.findAll(); 
+		return new ResponseEntity<BlockAndBeaconCodeMapDto>(blockBeaconMapListResponse, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/update")
@@ -54,11 +60,20 @@ public class BlockBeaconMapController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 
-	@PostMapping(value = "/getAllByCustId")
+	/*@PostMapping(value = "/getAllByCustId")
 	public ResponseEntity<BlockBeaconMapListResponse> edit2(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
 		BlockBeaconMapListResponse blockResponse = blockBeaconMapService.findByCustId(blockBeaconMapDto.getCustId());
 		if (blockResponse != null) {
 			return new ResponseEntity<BlockBeaconMapListResponse>(blockResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}*/
+	
+	@PostMapping(value = "/getAllByCustId")
+	public ResponseEntity<BlockAndBeaconCodeMapDto> edit2(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
+		BlockAndBeaconCodeMapDto blockResponse = blockBeaconMapService.findByCustId(blockBeaconMapDto.getCustId());
+		if (blockResponse != null) {
+			return new ResponseEntity<BlockAndBeaconCodeMapDto>(blockResponse, HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}

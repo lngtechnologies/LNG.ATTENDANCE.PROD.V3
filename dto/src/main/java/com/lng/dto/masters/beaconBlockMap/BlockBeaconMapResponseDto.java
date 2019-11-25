@@ -9,15 +9,13 @@ public class BlockBeaconMapResponseDto {
 	
 	private Integer refBlkId;
 	
+	private String blkLogicalName;
+	
 	private Integer custId;
 	
 	private Integer brId;
 	
-	private Boolean blkBeaconMapIsActive;
-	
-	private Date blkBeaconMapCreatedDate;
-	
-	private String blkLogicalName;
+	private String brName;
 	
 	private List<BlockBeaconCodeDto> beaconCodeDtoList;
 
@@ -53,22 +51,6 @@ public class BlockBeaconMapResponseDto {
 		this.brId = brId;
 	}
 
-	public Boolean getBlkBeaconMapIsActive() {
-		return blkBeaconMapIsActive;
-	}
-
-	public void setBlkBeaconMapIsActive(Boolean blkBeaconMapIsActive) {
-		this.blkBeaconMapIsActive = blkBeaconMapIsActive;
-	}
-
-	public Date getBlkBeaconMapCreatedDate() {
-		return blkBeaconMapCreatedDate;
-	}
-
-	public void setBlkBeaconMapCreatedDate(Date blkBeaconMapCreatedDate) {
-		this.blkBeaconMapCreatedDate = blkBeaconMapCreatedDate;
-	}
-
 	public String getBlkLogicalName() {
 		return blkLogicalName;
 	}
@@ -83,6 +65,14 @@ public class BlockBeaconMapResponseDto {
 
 	public void setBeaconCodeDtoList(List<BlockBeaconCodeDto> beaconCodeDtoList) {
 		this.beaconCodeDtoList = beaconCodeDtoList;
+	}
+
+	public String getBrName() {
+		return brName;
+	}
+
+	public void setBrName(String brName) {
+		this.brName = brName;
 	}
 
 }

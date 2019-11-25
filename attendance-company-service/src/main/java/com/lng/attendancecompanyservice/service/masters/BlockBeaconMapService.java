@@ -1,6 +1,7 @@
 package com.lng.attendancecompanyservice.service.masters;
 
 import com.lng.dto.masters.beacon.BlockBeaconMapResponse;
+import com.lng.dto.masters.beaconBlockMap.BlockAndBeaconCodeMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapList;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
@@ -11,13 +12,14 @@ public interface BlockBeaconMapService {
 	
 	StatusDto saveBlkBeaconMap(BlockBeaconMapList blockBeaconMapList);
 	
-	BlockBeaconMapListResponse findAll();
+	//BlockBeaconMapListResponse findAll();
 	
-	// BlockAndBeaconCodeMapDto findAll();
+	BlockAndBeaconCodeMapDto findAll();
 	
 	StatusDto update(BlockBeaconMapList blockBeaconMapList);
 	
-	BlockBeaconMapListResponse findByCustId(Integer custId);
+	// BlockBeaconMapListResponse findByCustId(Integer custId);
+	BlockAndBeaconCodeMapDto findByCustId(Integer custId);
 	
 	BlockBeaconMapResponse mapBeacons(BlockBeaconMapDto blockBeaconMapDto);
 	

@@ -454,7 +454,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					if(employee != null) {
 						custEmployeeDto.setEmpReportingTo(employee.getEmpName());
 					}else {
-						custEmployeeDto.setEmpReportingTo("He is not reporting to anyone");
+						custEmployeeDto.setEmpReportingTo("NA");
 					}
 					custEmployeeDto.setEmployeeBranchFromDate((Date)p[21]);
 					custEmployeeDto.setEmployeeShiftFromDate((Date)p[22]);
@@ -462,9 +462,17 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					custEmployeeDto.setEmployeeDesignationFromDate((Date)p[24]);
 					custEmployeeDto.setEmpWeeklyOffDayFromDate((Date)p[25]);
 					custEmployeeDto.setDayOfWeek(p[26].toString());
-
+					
+					if(custEmployeeDto.getEmpReportingToId() != 0) {
+						List<Object[]> reportingToList = custEmployeeRepository.getReportingToDepartment(custEmployeeDto.getEmpReportingToId());
+						for(Object[] r: reportingToList) {
+							custEmployeeDto.setReportingToDeptId(Integer.valueOf(r[0].toString()));
+							custEmployeeDto.setReportingToDeptName(r[1].toString());
+						}
+					}
+				
 					List<EmployeeBlock> empBlockMapDtoList = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
-
+					
 					if(!empBlockMapDtoList.isEmpty()) {
 
 						custEmployeeDto.setEmpBlockMapDtoList(empBlockMapDtoList.stream().map(employeeBlock -> convertToEmpBlockMapDto(employeeBlock)).collect(Collectors.toList()));

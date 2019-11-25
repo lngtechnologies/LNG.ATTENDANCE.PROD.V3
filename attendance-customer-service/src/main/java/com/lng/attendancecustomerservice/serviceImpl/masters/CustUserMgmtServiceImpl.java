@@ -140,7 +140,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
 				Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
 				if(login != null) {
-					if(login1 == null ||(login.getLoginId() == custUserMgmtDto.getLoginId() && login.getLoginName().equals(custUserMgmtDto.getUserName()))) {
+					if(login1 == null ||(login.getLoginId() == custUserMgmtDto.getLoginId() && login.getLoginName().equals(loginUserName))) {
 						if(login2 == null || (login.getLoginId() == custUserMgmtDto.getLoginId() && login.getLoginMobile().equals(custUserMgmtDto.getuMobileNumber()))) {
 
 							String newPassword = iLoginRepository.generatePassword();
