@@ -75,8 +75,11 @@ public class Branch {
 	@Column(name = "brEmail")
 	private String brEmail;
 
-	@Column(name = "brLatLong")
-	private String brLatLong;
+	@Column(name = "brLatitude")
+	private Double brLatitude;
+	
+	@Column(name = "brLongitude")
+	private Double brLongitude;
 
 	@Column(name = "brIsBillable")
 	@NotNull(message = "This field should not be an empty")
@@ -194,14 +197,6 @@ public class Branch {
 		this.brEmail = brEmail;
 	}
 
-	public String getBrLatLong() {
-		return brLatLong;
-	}
-
-	public void setBrLatLong(String brLatLong) {
-		this.brLatLong = brLatLong;
-	}
-
 	public Boolean getBrIsBillable() {
 		return brIsBillable;
 	}
@@ -240,6 +235,22 @@ public class Branch {
 
 	public void setBrCreatedDate(Date brCreatedDate) {
 		this.brCreatedDate = brCreatedDate;
+	}
+
+	public Double getBrLatitude() {
+		return brLatitude;
+	}
+
+	public void setBrLatitude(Double brLatitude) {
+		this.brLatitude = brLatitude;
+	}
+
+	public Double getBrLongitude() {
+		return brLongitude;
+	}
+
+	public void setBrLongitude(Double brLongitude) {
+		this.brLongitude = brLongitude;
 	}
 	
 }

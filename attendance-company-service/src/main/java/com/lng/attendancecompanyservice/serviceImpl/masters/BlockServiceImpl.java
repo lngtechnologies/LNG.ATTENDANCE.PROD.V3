@@ -49,7 +49,8 @@ public class BlockServiceImpl implements BlockService {
 					block.setBranch(branch);
 					block.setBlkGPSRadius(blockDto.getBlkGPSRadius());
 					block.setBlkLogicalName(blockDto.getBlkLogicalName());
-					block.setBlkLatLong(blockDto.getBlkLatLong());
+					block.setBlkLatitude(blockDto.getBlkLatitude());
+					block.setBlkLongitude(blockDto.getBlkLongitude());
 					block.setBlkCreatedDate(new Date());
 					block.setBlkIsActive(true);
 					blockRepository.save(block);
@@ -77,7 +78,7 @@ public class BlockServiceImpl implements BlockService {
 			List<Block> blockList=blockRepository.findAll();
 			response.setData1(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(true,4000, "Not found"); 
+				response.status = new Status(false,4000, "Not found"); 
 			}else {
 				response.status = new Status(false,200, "success");
 			}
@@ -209,8 +210,9 @@ public class BlockServiceImpl implements BlockService {
 				blockDto1.setBlkId(Integer.valueOf(p[0].toString()));
 				blockDto1.setBlkLogicalName(p[1].toString());
 				blockDto1.setBlkGPSRadius(Integer.valueOf(p[2].toString()));
-				blockDto1.setBlkLatLong(p[3].toString());
-				blockDto1.setCustId(Integer.valueOf(p[4].toString()));
+				blockDto1.setBlkLatitude((Double)p[3]);
+				blockDto1.setBlkLongitude((Double)p[4]);
+				blockDto1.setCustId(Integer.valueOf(p[5].toString()));
 				blockDtoList.add(blockDto1);
 				response.status = new Status(false,200, "success");
 
@@ -285,7 +287,7 @@ public class BlockServiceImpl implements BlockService {
 				response.setData1(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
 				
 				if(response.getData1().isEmpty()) {
-					response.status = new Status(true,400, "Not found"); 
+					response.status = new Status(false,400, "Not found"); 
 				}else {
 					response.status = new Status(false,200, "Success");
 					

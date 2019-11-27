@@ -30,8 +30,7 @@ public interface BlockRepository extends PagingAndSortingRepository<Block, Integ
 	@Query(value = "CALL CheckBlockExistForBranch(?1, ?2)",nativeQuery = true)
 	int  findByRefBranchIdAndBlkLogicalName(Integer refBranchId,String blkLogicalName);
 
-	@Query(value = "SELECT tb.blkId,tb.blkLogicalName,tb.blkGPSRadius,tb.blkLatLong,tmc.custId FROM  tmblock tb LEFT JOIN tmbranch  tbr ON tbr.brId = tb.refBranchId LEFT JOIN  tmcustomer tmc ON tmc.custId = tbr.refCustomerId WHERE  tmc.custId=?1 AND tb.refBranchId=?2" ,nativeQuery = true) 
-
+	@Query(value = "SELECT tb.blkId,tb.blkLogicalName,tb.blkGPSRadius,tb.blkLatitude, tb.blkLongitude, tmc.custId FROM  tmblock tb LEFT JOIN tmbranch  tbr ON tbr.brId = tb.refBranchId LEFT JOIN  tmcustomer tmc ON tmc.custId = tbr.refCustomerId WHERE  tmc.custId=?1 AND tb.refBranchId=?2" ,nativeQuery = true) 
 	List<Object[]> findBlockDetailsByCustomer_CustIdAndBranch_RefBranchId(int custId, int refBranchId);
 
 

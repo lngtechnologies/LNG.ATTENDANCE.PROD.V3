@@ -188,7 +188,7 @@ public class ContractorServiceImpl implements ContractorService {
 			response.setData1(contractorList.stream().map(contractor -> convertToContractorDto(contractor)).collect(Collectors.toList()));
 			
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(true,400, "Contractor Not found"); 
+				response.status = new Status(false,400, "Contractor Not found"); 
 			}else {
 				response.status = new Status(false,200, "Success");
 			}

@@ -28,11 +28,14 @@ public interface BlockBeaconMapRepository extends PagingAndSortingRepository<Blo
 	
 	List<BlockBeaconMap> findAllByBlkBeaconMapIsActive(Boolean blkBeaconMapIsActive);
 	
-	/*@Query(value = "CALL getBlockBeaconMapDetails();", nativeQuery = true)
+	@Query(value = "CALL getBlockBeaconMapDetails();", nativeQuery = true)
 	List<Object[]> findAllByBlkBeaconMapIsActive();
 	
+	@Query(value = "CALL getBlockBeaconMapDetailsByCustId(?1);", nativeQuery = true)
+	List<Object[]> findAllByBlkBeaconMapIsActiveAndCustId(Integer custId);
+	
 	@Query(value = "call getBeaconCodeByBlkId(?1);", nativeQuery = true)
-	List<Object[]> findBeaconCodeByBlkId(Integer blkId);*/
+	List<Object[]> findBeaconCodeByBlkId(Integer blkId);
 	
 	@Query(value = "CALL getBlockBeaconMapByCustId(?1)", nativeQuery = true)
 	List<BlockBeaconMap> findByCustomer_CustId(Integer custId);

@@ -52,7 +52,7 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 			List<PolicyAndFaq> policyAndFaqList=policyAndFaqRepository.findAll();
 			policyAndFaqResponse.setData(policyAndFaqList.stream().map(policyAndFaq -> convertToPolicyAndFaqDto(policyAndFaq)).collect(Collectors.toList()));
 			if(policyAndFaqResponse.getData().isEmpty()) {
-				policyAndFaqResponse.status = new Status(true,4000, "Not found"); 
+				policyAndFaqResponse.status = new Status(false,4000, "Not found"); 
 			}else {
 				policyAndFaqResponse.status = new Status(false,200, "success");
 			}

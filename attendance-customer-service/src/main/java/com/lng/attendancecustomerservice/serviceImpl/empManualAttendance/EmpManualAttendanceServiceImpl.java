@@ -89,7 +89,8 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						empAttendance.setEmpAttendanceDatetime(empAttendanceDto.getEmpAttendanceDatetime());
 						empAttendance.setEmpAttendanceConsiderDatetime(empAttendanceDto.getEmpAttendanceConsiderDatetime());
 						empAttendance.setEmpAttendanceConfidence(empAttendanceDto. getEmpAttendanceConfidence());
-						empAttendance.setEmpAttendanceLatLong(empAttendanceDto.getEmpAttendanceLatLong());
+						empAttendance.setEmpAttendanceLatitude(empAttendanceDto.getEmpAttendanceLatitude());
+						empAttendance.setEmpAttendanceLongitude(empAttendanceDto.getEmpAttendanceLongitude());
 						empAttendance.setEmpAttendanceWithinBeacon(true);
 						empAttendanceRepository.save(empAttendance);
 						empAttendanceResponse.status = new Status(false,200, "successfully attendance Marked");
@@ -122,8 +123,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	}
 
 	@Override
-	public EmpAttendanceResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetime(String emp,
-			Integer refCustId, Date empAttendanceDatetime) {
+	public EmpAttendanceResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetime(String emp, Integer refCustId, Date empAttendanceDatetime) {
 		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
 		List<EmpAttendanceParamDto2> empAttendanceDtoList = new ArrayList<>();
 

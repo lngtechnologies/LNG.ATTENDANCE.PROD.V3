@@ -69,7 +69,7 @@ public class BeaconServiceImpl implements BeaconService {
 
 				beaconListResponseDto.status = new Status(false, 2000, "Success");
 			}else {
-				beaconListResponseDto.status = new Status(true, 4000, "Not Found");
+				beaconListResponseDto.status = new Status(false, 4000, "Not Found");
 			}
 		}
 		catch (Exception e) {

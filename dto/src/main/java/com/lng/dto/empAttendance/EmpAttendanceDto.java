@@ -17,15 +17,17 @@ public class EmpAttendanceDto {
 
 	private BigDecimal  empAttendanceConfidence;
 
-	private String  empAttendanceLatLong;
+	private Double empAttendanceLatitude;
+
+	private Double empAttendanceLongitude;
 
 	private Boolean  empAttendanceWithinBeacon;
-	
+
 	private  String  empName;
-	
+
 	private String   shiftStart; 
-	
-	
+
+
 
 	public Integer getEmpAttendanceId() {
 		return empAttendanceId;
@@ -75,12 +77,20 @@ public class EmpAttendanceDto {
 		this.empAttendanceConfidence = empAttendanceConfidence;
 	}
 
-	public String getEmpAttendanceLatLong() {
-		return empAttendanceLatLong;
+	public Double getEmpAttendanceLatitude() {
+		return empAttendanceLatitude;
 	}
 
-	public void setEmpAttendanceLatLong(String empAttendanceLatLong) {
-		this.empAttendanceLatLong = empAttendanceLatLong;
+	public void setEmpAttendanceLatitude(Double empAttendanceLatitude) {
+		this.empAttendanceLatitude = empAttendanceLatitude;
+	}
+
+	public Double getEmpAttendanceLongitude() {
+		return empAttendanceLongitude;
+	}
+
+	public void setEmpAttendanceLongitude(Double empAttendanceLongitude) {
+		this.empAttendanceLongitude = empAttendanceLongitude;
 	}
 
 	public Boolean getEmpAttendanceWithinBeacon() {
@@ -112,7 +122,7 @@ public class EmpAttendanceDto {
 
 
 
-  
+
 
 
 }

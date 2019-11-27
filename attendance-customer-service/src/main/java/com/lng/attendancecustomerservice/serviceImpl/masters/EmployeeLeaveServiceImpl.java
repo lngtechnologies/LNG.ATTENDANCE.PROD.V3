@@ -50,7 +50,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		BranchListDto branchListDto = new BranchListDto();
 
 		try {
-			List<Branch> branchList = branchRepository.getBranchByCustomer_custId(custId);
+			List<Branch> branchList = branchRepository.getBranchByCustomer_custIdAndBrIsActive(custId, true);
 
 
 			if(!branchList.isEmpty()) {
@@ -115,7 +115,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 			}
 
 		} catch (Exception e) {
-			employeeDtatListDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+			employeeDtatListDto.status = new Status(false, 500, "Oops..! Something went wrong..");
 		}
 
 		return employeeDtatListDto;
@@ -143,7 +143,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 					status = new Status(false, 200, "Leave Applied for "+employee.getEmpName());
 				
 				}else {
-					status = new Status(true, 400, "Employee not found");
+					status = new Status(true, 400, "Cust Leave not found");
 				}
 			} else {
 				status = new Status(true, 400, "Employee not found");

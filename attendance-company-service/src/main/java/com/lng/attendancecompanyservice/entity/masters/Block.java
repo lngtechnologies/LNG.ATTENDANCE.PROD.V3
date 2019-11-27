@@ -30,8 +30,11 @@ public class Block {
 	@Column(name = "blkGPSRadius")
 	private Integer blkGPSRadius;
 	
-	@Column(name = "blkLatLong")
-	private String blkLatLong;
+	@Column(name = "blkLatitude")
+	private Double blkLatitude;
+	
+	@Column(name = "blkLongitude")
+	private Double blkLongitude;
 	
 	@Column(name = "blkCreatedDate")
 	private Date blkCreatedDate;
@@ -70,14 +73,20 @@ public class Block {
 	public void setBlkGPSRadius(Integer blkGPSRadius) {
 		this.blkGPSRadius = blkGPSRadius;
 	}
-
-	
-	public String getBlkLatLong() {
-		return blkLatLong;
+	public Double getBlkLatitude() {
+		return blkLatitude;
 	}
 
-	public void setBlkLatLong(String blkLatLong) {
-		this.blkLatLong = blkLatLong;
+	public void setBlkLatitude(Double blkLatitude) {
+		this.blkLatitude = blkLatitude;
+	}
+
+	public Double getBlkLongitude() {
+		return blkLongitude;
+	}
+
+	public void setBlkLongitude(Double blkLongitude) {
+		this.blkLongitude = blkLongitude;
 	}
 
 	public Date getBlkCreatedDate() {

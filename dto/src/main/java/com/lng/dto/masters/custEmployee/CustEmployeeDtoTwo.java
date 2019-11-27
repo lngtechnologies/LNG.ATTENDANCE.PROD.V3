@@ -62,6 +62,10 @@ public class CustEmployeeDtoTwo {
 
 	private Date empWeeklyOffDayFromDate;
 	
+	private Integer reportingToDeptId;
+	
+	private String reportingToDeptName;
+	
 	private List<EmpBlockMapDto> empBlockMapDtoList;
 
 	public Integer getEmpId() {
@@ -298,5 +302,22 @@ public class CustEmployeeDtoTwo {
 	public void setEmpBlockMapDtoList(List<EmpBlockMapDto> empBlockMapDtoList) {
 		this.empBlockMapDtoList = empBlockMapDtoList;
 	}
+
+	public Integer getReportingToDeptId() {
+		return reportingToDeptId;
+	}
+
+	public void setReportingToDeptId(Integer reportingToDeptId) {
+		this.reportingToDeptId = reportingToDeptId;
+	}
+
+	public String getReportingToDeptName() {
+		return reportingToDeptName;
+	}
+
+	public void setReportingToDeptName(String reportingToDeptName) {
+		this.reportingToDeptName = reportingToDeptName;
+	}
+
 
 }

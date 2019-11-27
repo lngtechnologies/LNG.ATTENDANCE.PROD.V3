@@ -36,7 +36,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			List<HolidayCalendar> holidayCalendars = holidayCalendarRepository.findAllByRefCustId(refCustId);
 			holidayCalendarResponse.setData1(holidayCalendars.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 			if(holidayCalendarResponse.getData1().isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, "Holiday Calendar Not Found");
+				holidayCalendarResponse.status = new Status(false,400, "Not Found");
 			}else {
 				holidayCalendarResponse.status = new Status(false,200, "success");
 
@@ -166,7 +166,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 			holidayCalendarResponse.setData1(holidayCalendarList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 			if(holidayCalendarResponse.getData1().isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, "Not found");
+				holidayCalendarResponse.status = new Status(false,400, "Not found");
 
 			}else {
 				holidayCalendarResponse.status = new Status(false,200, "Success");
@@ -221,6 +221,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 	public HolidayCalendarResponse getHolidayCalendarByRefBrIdAndRefCustId(Integer refbrId,Integer refCustId) {
 		HolidayCalendarResponse  holidayCalendarResponse  =  new  HolidayCalendarResponse();
 		try {
+<<<<<<< HEAD
 			List<HolidayCalendar> holidayCalendars = holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
 			if(holidayCalendars.isEmpty()) {
 				List<HolidayCalendar> holidayList = holidayCalendarRepository.findHolidayCalendarByrefCustId(refCustId);
@@ -230,6 +231,12 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 					holidayCalendarResponse.status = new Status(false,200, "success");
 				}
+=======
+			List<HolidayCalendar> holidayCalendars = holidayCalendarRepository.findHolidayCalendarBybrId(brId);
+			holidayCalendarResponse.setData1(holidayCalendars.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
+			if(holidayCalendarResponse.getData1().isEmpty()) {
+				holidayCalendarResponse.status = new Status(true,400, "Not Found");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			}else {
 				holidayCalendarResponse.setData1(holidayCalendars.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 				holidayCalendarResponse.status = new Status(false,200, "success");

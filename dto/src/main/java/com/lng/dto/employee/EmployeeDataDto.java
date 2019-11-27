@@ -1,5 +1,7 @@
 package com.lng.dto.employee;
 
+import java.util.Date;
+
 public class EmployeeDataDto {
 
 	private Integer custId;
@@ -20,14 +22,19 @@ public class EmployeeDataDto {
 	private Boolean appStatus;
 	
 	private String empPresistedFaceId;
+	
+	private Boolean empAttndStatus;
 
+	private String empAttndDateTime;
+	
 	private String custLogo;
 	
 	
 
 	//private Boolean empAppSetupStatus;
 
-	public EmployeeDataDto(Integer custId, String custName, Integer brId, String brName, String brCode, Integer empid, String empName, String custLogo, Boolean appStatus, String empPresistedFaceId) {
+	public EmployeeDataDto(Integer custId, String custName, Integer brId, String brName, String brCode, Integer empid, String empName, 
+						   String custLogo, Boolean appStatus, String empPresistedFaceId, Boolean empAttndStatus, String empAttndDateTime) {
 		this.custId = custId;
 		this.custName = custName;
 		this.brId = brId;
@@ -38,6 +45,8 @@ public class EmployeeDataDto {
 		this.custLogo = custLogo;
 		this.appStatus = appStatus;
 		this.empPresistedFaceId = empPresistedFaceId;
+		this.empAttndStatus = empAttndStatus;
+		this.empAttndDateTime = empAttndDateTime;
 	}
 
 	public Integer getCustId() {
@@ -117,6 +126,22 @@ public class EmployeeDataDto {
 
 	public void setEmpPresistedFaceId(String empPresistedFaceId) {
 		this.empPresistedFaceId = empPresistedFaceId;
+	}
+
+	public Boolean getEmpAttndStatus() {
+		return empAttndStatus;
+	}
+
+	public void setEmpAttndStatus(Boolean empAttndStatus) {
+		this.empAttndStatus = empAttndStatus;
+	}
+
+	public String getEmpAttndDateTime() {
+		return empAttndDateTime;
+	}
+
+	public void setEmpAttndDateTime(String empAttndDateTime) {
+		this.empAttndDateTime = empAttndDateTime;
 	}
 
 }

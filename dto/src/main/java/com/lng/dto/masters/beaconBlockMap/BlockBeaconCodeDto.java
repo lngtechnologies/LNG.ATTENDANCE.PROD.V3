@@ -1,6 +1,8 @@
 package com.lng.dto.masters.beaconBlockMap;
 
 public class BlockBeaconCodeDto {
+	
+	private Integer blkBeaconMapId;
 
 	private Integer refBlkId;
 	
@@ -30,6 +32,14 @@ public class BlockBeaconCodeDto {
 
 	public void setBeaconType(Integer beaconType) {
 		this.beaconType = beaconType;
+	}
+
+	public Integer getBlkBeaconMapId() {
+		return blkBeaconMapId;
+	}
+
+	public void setBlkBeaconMapId(Integer blkBeaconMapId) {
+		this.blkBeaconMapId = blkBeaconMapId;
 	}
 
 }

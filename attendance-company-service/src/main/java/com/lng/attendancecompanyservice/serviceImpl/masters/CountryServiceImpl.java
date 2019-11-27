@@ -85,7 +85,7 @@ public class CountryServiceImpl implements CountryService {
 			response.status = new Status(false,200, "Success");
 
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(false,4000, e.getMessage()); 
 		}
 		return response;
 	}

@@ -28,7 +28,9 @@ public class BranchDto {
 	
 	private String brEmail;
 	
-	private String brLatLong;
+	private Double brLatitude;
+	
+	private Double brLongitude;
 	
 	private Boolean brIsBillable;
 	
@@ -145,12 +147,20 @@ public class BranchDto {
 		this.brEmail = brEmail;
 	}
 
-	public String getBrLatLong() {
-		return brLatLong;
+	public Double getBrLatitude() {
+		return brLatitude;
 	}
 
-	public void setBrLatLong(String brLatLong) {
-		this.brLatLong = brLatLong;
+	public void setBrLatitude(Double brLatitude) {
+		this.brLatitude = brLatitude;
+	}
+
+	public Double getBrLongitude() {
+		return brLongitude;
+	}
+
+	public void setBrLongitude(Double brLongitude) {
+		this.brLongitude = brLongitude;
 	}
 
 	public Boolean getBrIsBillable() {
