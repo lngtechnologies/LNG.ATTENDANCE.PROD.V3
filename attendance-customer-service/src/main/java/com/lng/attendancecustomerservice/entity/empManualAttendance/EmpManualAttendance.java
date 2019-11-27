@@ -18,31 +18,34 @@ import com.lng.attendancecustomerservice.entity.masters.Employee;
 @Entity
 @Table(name = "ttempattendance")
 public class EmpManualAttendance {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "empAttendanceId")
 	private Integer empAttendanceId;
-	
+
 	@ManyToOne
-    @JoinColumn(name = "refEmpId")
+	@JoinColumn(name = "refEmpId")
 	private  Employee employee;
-	
+
 	@Column(name = "empAttendanceMode")
 	private  String empAttendanceMode;
-	
+
 	@Column(name = "empAttendanceDatetime")
 	private Date empAttendanceDatetime;
-	
+
 	@Column(name = "empAttendanceConsiderDatetime")
 	private Date  empAttendanceConsiderDatetime;
-	
+
 	@Column(name = "empAttendanceConfidence")
 	private BigDecimal  empAttendanceConfidence;
-	
-	@Column(name = "empAttendanceLatLong")
-	private String  empAttendanceLatLong;
-	
+
+	@Column(name = "empAttendanceLatitude")
+	private Double empAttendanceLatitude;
+
+	@Column(name = "empAttendanceLongitude")
+	private Double empAttendanceLongitude;
+
 	@Column(name = "empAttendanceWithinBeacon")
 	private Boolean  empAttendanceWithinBeacon;
 
@@ -94,12 +97,20 @@ public class EmpManualAttendance {
 		this.empAttendanceConfidence = empAttendanceConfidence;
 	}
 
-	public String getEmpAttendanceLatLong() {
-		return empAttendanceLatLong;
+	public Double getEmpAttendanceLatitude() {
+		return empAttendanceLatitude;
 	}
 
-	public void setEmpAttendanceLatLong(String empAttendanceLatLong) {
-		this.empAttendanceLatLong = empAttendanceLatLong;
+	public void setEmpAttendanceLatitude(Double empAttendanceLatitude) {
+		this.empAttendanceLatitude = empAttendanceLatitude;
+	}
+
+	public Double getEmpAttendanceLongitude() {
+		return empAttendanceLongitude;
+	}
+
+	public void setEmpAttendanceLongitude(Double empAttendanceLongitude) {
+		this.empAttendanceLongitude = empAttendanceLongitude;
 	}
 
 	public Boolean getEmpAttendanceWithinBeacon() {
@@ -110,5 +121,5 @@ public class EmpManualAttendance {
 		this.empAttendanceWithinBeacon = empAttendanceWithinBeacon;
 	}
 
-   
+
 }

@@ -68,7 +68,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 			custLeaveResponse.setData1(custLeaveList.stream().map(custLeave -> convertTocustLeaveDto(custLeave)).collect(Collectors.toList()));
 
 			if(custLeaveResponse.getData1().isEmpty()) {
-				custLeaveResponse.status = new Status(true,400, "CustLeave Not Found"); 
+				custLeaveResponse.status = new Status(false,400, "Not Found"); 
 
 			}else {
 				custLeaveResponse.status = new Status(false,200, "success");
@@ -131,7 +131,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeaveRepository.delete(custLeave);
 					custLeaveResponse.status = new Status(false, 200, "Deleted successfully");
 				}else {
-					custLeaveResponse.status = new Status(false, 200, "The record cannot be deleted as it is already used");
+					custLeaveResponse.status = new Status(false, 200, "The record has been disabled, since it has been used in another transactions");
 				}
 			}else {
 				custLeaveResponse.status = new Status(true, 400, "CustLeave  not found");
@@ -173,7 +173,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 			custLeaveResponse.setData1(custLeaveList.stream().map(custLeave -> convertTocustLeaveDto(custLeave)).collect(Collectors.toList()));
 
 			if(custLeaveResponse.getData1().isEmpty()) {
-				custLeaveResponse.status = new Status(true,400, "CustLeave Not Found"); 
+				custLeaveResponse.status = new Status(false,400, "Not Found"); 
 
 			}else {
 				custLeaveResponse.status = new Status(false,200, "success");

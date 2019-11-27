@@ -224,7 +224,7 @@ public class ShiftServiceImpl implements ShiftService {
 			List<Shift> shiftList=shiftRepository.findByCustomer_CustIdAndShiftIsActive(custId);
 			response.setData1(shiftList.stream().map(shift -> convertToShiftDto(shift)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(true,400, "Shift Not Found"); 
+				response.status = new Status(false,400, "Not Found"); 
 			}else {
 				response.status = new Status(false,200, "success");
 			}

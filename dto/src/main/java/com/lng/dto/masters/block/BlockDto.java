@@ -7,7 +7,8 @@ public class BlockDto {
 	private Integer refBranchId;
 	private String blkLogicalName;
 	private Integer blkGPSRadius;
-	private String blkLatLong;
+	private Double blkLatitude;
+	private Double blkLongitude;
 	private Boolean blkIsActive;
 	private Date blkCreatedDate;
 	private Integer custId;
@@ -41,12 +42,17 @@ public class BlockDto {
 		this.blkGPSRadius = blkGPSRadius;
 	}
 	
-    
-	public String getBlkLatLong() {
-		return blkLatLong;
+	public Double getBlkLatitude() {
+		return blkLatitude;
 	}
-	public void setBlkLatLong(String blkLatLong) {
-		this.blkLatLong = blkLatLong;
+	public void setBlkLatitude(Double blkLatitude) {
+		this.blkLatitude = blkLatitude;
+	}
+	public Double getBlkLongitude() {
+		return blkLongitude;
+	}
+	public void setBlkLongitude(Double blkLongitude) {
+		this.blkLongitude = blkLongitude;
 	}
 	public Boolean getBlkIsActive() {
 		return blkIsActive;

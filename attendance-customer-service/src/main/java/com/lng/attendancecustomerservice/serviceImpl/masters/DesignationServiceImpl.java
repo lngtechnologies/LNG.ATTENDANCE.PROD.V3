@@ -186,7 +186,7 @@ public class DesignationServiceImpl implements DesignationService{
 			response.setData1(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
 			
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(true,400, "Designation Not Found"); 
+				response.status = new Status(false,400, "Not Found"); 
 				
 			}else {
 				response.status = new Status(false,200, "Success");

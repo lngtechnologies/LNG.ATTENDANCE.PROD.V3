@@ -39,8 +39,11 @@ public class EmployeeAttendance {
 	@Column(name = "empAttendanceConfidence")
 	private BigDecimal empAttendanceConfidence;
 
-	@Column(name = "empAttendanceLatLong")
-	private String empAttendanceLatLong;
+	@Column(name = "empAttendanceLatitude")
+	private Double empAttendanceLatitude;
+
+	@Column(name = "empAttendanceLongitude")
+	private Double empAttendanceLongitude;
 
 
 	public Integer getEmpAttendanceId() {
@@ -91,13 +94,20 @@ public class EmployeeAttendance {
 		this.empAttendanceConfidence = empAttendanceConfidence;
 	}
 
-	public String getEmpAttendanceLatLong() {
-		return empAttendanceLatLong;
+	public Double getEmpAttendanceLatitude() {
+		return empAttendanceLatitude;
 	}
 
-	public void setEmpAttendanceLatLong(String empAttendanceLatLong) {
-		this.empAttendanceLatLong = empAttendanceLatLong;
+	public void setEmpAttendanceLatitude(Double empAttendanceLatitude) {
+		this.empAttendanceLatitude = empAttendanceLatitude;
 	}
 
+	public Double getEmpAttendanceLongitude() {
+		return empAttendanceLongitude;
+	}
+
+	public void setEmpAttendanceLongitude(Double empAttendanceLongitude) {
+		this.empAttendanceLongitude = empAttendanceLongitude;
+	}
 
 }

@@ -72,7 +72,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 
 				industryTypeListResponse.status = new Status(false, 2000, "Success");
 			}else {
-				industryTypeListResponse.status = new Status(true, 4000, "Not Found");
+				industryTypeListResponse.status = new Status(false, 4000, "Not Found");
 			}
 		}
 		catch (Exception e) {
@@ -92,7 +92,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				industryTypeResponse.data = industryTypeDto;
 				industryTypeResponse.status = new Status(false, 200, "Success");
 			}else {
-				industryTypeResponse.status = new Status(true, 400, "Not Found");
+				industryTypeResponse.status = new Status(false, 400, "Not Found");
 			}
 		}catch (Exception e) {
 			industryTypeResponse.status = new Status(true, 500, "Opps...! Something Went Wrong!");

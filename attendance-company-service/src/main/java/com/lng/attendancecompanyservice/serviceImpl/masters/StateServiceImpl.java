@@ -77,7 +77,7 @@ public class StateServiceImpl implements StateService {
 
 			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(true,400, "Not found");
+				response.status = new Status(false,400, "Not found");
 				
 			}else {
 				response.status = new Status(false,200, "Success");

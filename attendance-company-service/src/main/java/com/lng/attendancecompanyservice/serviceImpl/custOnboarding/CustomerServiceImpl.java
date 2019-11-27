@@ -11,7 +11,6 @@ import javax.transaction.Transactional;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
@@ -28,11 +27,11 @@ import com.lng.attendancecompanyservice.entity.masters.Branch;
 import com.lng.attendancecompanyservice.entity.masters.Country;
 import com.lng.attendancecompanyservice.entity.masters.CustLeave;
 import com.lng.attendancecompanyservice.entity.masters.IndustryType;
+import com.lng.attendancecompanyservice.entity.masters.LeaveType;
 import com.lng.attendancecompanyservice.entity.masters.Login;
 import com.lng.attendancecompanyservice.entity.masters.LoginDataRight;
 import com.lng.attendancecompanyservice.entity.masters.State;
 import com.lng.attendancecompanyservice.entity.masters.UserRight;
-import com.lng.attendancecompanyservice.entity.masters.LeaveType;
 import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
@@ -589,7 +588,7 @@ public class CustomerServiceImpl implements CustomerService {
 			if(customerListResponse != null && customerListResponse.getDataList() != null) {
 				customerListResponse.status = new Status(false, 2000, "Success");
 			}else {
-				customerListResponse.status = new Status(true, 4000, "Not Found");
+				customerListResponse.status = new Status(false, 4000, "Not Found");
 			}
 		}
 		catch (Exception e) {
@@ -815,6 +814,9 @@ public class CustomerServiceImpl implements CustomerService {
 		}
 		
 	}*/
+	
+	
+	//http://52.183.137.54/lngattendancesystem
 }
 
 

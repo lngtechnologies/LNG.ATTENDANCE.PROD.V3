@@ -34,7 +34,7 @@ public class EmployeeTypeServiceImpl implements EmployeeTypeService {
 			if(employeeTypeListResponseDto != null && employeeTypeListResponseDto.getEmployeeTypeDtoList() != null) {
 				employeeTypeListResponseDto.status = new Status(false, 200, "Success");
 			}else {
-				employeeTypeListResponseDto.status = new Status(true, 400, "Not Found");
+				employeeTypeListResponseDto.status = new Status(false, 400, "Not Found");
 			}
 		} catch (Exception e) {
 			employeeTypeListResponseDto.status = new Status(true, 500, "Opps...! Something Went Wrong");

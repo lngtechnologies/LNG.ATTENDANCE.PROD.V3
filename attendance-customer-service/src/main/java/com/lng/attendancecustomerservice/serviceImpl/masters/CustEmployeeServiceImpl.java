@@ -701,7 +701,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			List<Object[]> employeeList = custEmployeeRepository.findAllEmployeeByEmpInService();
 
 			if(employeeList.isEmpty()) {
-				custEmployeeListResponse.status = new Status(true, 4000, "Not Found");
+				custEmployeeListResponse.status = new Status(false, 4000, "Not Found");
 			}else {
 				for(Object[] p : employeeList) {
 
@@ -802,7 +802,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 				List<Object[]> employeeList = custEmployeeRepository.findByCustomer_CustIdAndEmpInService(custId);
 
 				if(employeeList.isEmpty()) {
-					custEmployeeListResponse.status = new Status(true, 4000, "Not Found");
+					custEmployeeListResponse.status = new Status(false, 4000, "Not Found");
 				} else {
 					for(Object[] p : employeeList) {
 

@@ -11,8 +11,8 @@ import com.lng.attendancecustomerservice.entity.employeeAttendance.EmployeeAtten
 @Repository
 public interface EmployeeAttendanceRepository extends PagingAndSortingRepository<EmployeeAttendance, Integer> {
 
-	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceModeAndEmpAttendanceDatetimeAndEmpAttendanceLatLong
-							(Integer refEmpId, String empAttendanceMode, Date empAttendanceDatetime, String empAttendanceLatLong);
+	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceModeAndEmpAttendanceDatetimeAndEmpAttendanceLatitudeAndEmpAttendanceLongitude
+							(Integer refEmpId, String empAttendanceMode, Date empAttendanceDatetime, Double empAttendanceLatitude, Double empAttendanceLongitude);
 	
 	
 }

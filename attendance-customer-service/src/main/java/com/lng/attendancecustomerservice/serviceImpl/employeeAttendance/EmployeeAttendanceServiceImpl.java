@@ -37,8 +37,8 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 
 			for(EmployeeAttendanceDto employeeAttendanceDto : employeeAttendanceDtos) {
 
-				EmployeeAttendance employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceModeAndEmpAttendanceDatetimeAndEmpAttendanceLatLong(employeeAttendanceDto.getRefEmpId(), 
-						employeeAttendanceDto.getEmpAttendanceMode(), employeeAttendanceDto.getEmpAttendanceDatetime(), employeeAttendanceDto.getEmpAttendanceLatLong());
+				EmployeeAttendance employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceModeAndEmpAttendanceDatetimeAndEmpAttendanceLatitudeAndEmpAttendanceLongitude(employeeAttendanceDto.getRefEmpId(), 
+						employeeAttendanceDto.getEmpAttendanceMode(), employeeAttendanceDto.getEmpAttendanceDatetime(), employeeAttendanceDto.getEmpAttendanceLatitude(), employeeAttendanceDto.getEmpAttendanceLongitude());
 
 				Employee employee = employeeRepository.getByEmpId(employeeAttendanceDto.getRefEmpId());
 				if(employee != null) {
@@ -51,8 +51,9 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 						employeeAttendance1.setEmpAttendanceDatetime(date);
 						employeeAttendance1.setEmpAttendanceConsiderDatetime(employeeAttendanceDto.getEmpAttendanceConsiderDatetime());
 						employeeAttendance1.setEmpAttendanceConfidence(employeeAttendanceDto.getEmpAttendanceConfidence());
-						employeeAttendance1.setEmpAttendanceLatLong(employeeAttendanceDto.getEmpAttendanceLatLong());
-					
+						employeeAttendance1.setEmpAttendanceLatitude(employeeAttendanceDto.getEmpAttendanceLatitude());
+						employeeAttendance1.setEmpAttendanceLongitude(employeeAttendanceDto.getEmpAttendanceLongitude());
+						
 						employeeAttendanceRepository.save(employeeAttendance1);
 						status = new Status(false, 200, "Successfully attendance marked");
 						
@@ -61,7 +62,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 					} 
 
 				}else {
-					status = new Status(true, 400, "Employye not found");
+					status = new Status(false, 400, "Employye not found");
 				}
 			}
 			

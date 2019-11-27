@@ -75,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					
 					if(empAttndDate != null) {
 						
-						String pattern = "dd/MM/yyyy h:mm a";
+						String pattern = "dd / MM / yyyy h:mm a";
 						SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 						dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 						String date = dateFormat.format(empAttndDate);
