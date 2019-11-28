@@ -33,7 +33,7 @@ public class DesignationServiceImpl implements DesignationService{
 			//if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation Name already exists");
 			int a = designationRepository.findByRefCustIdAndDesignationName(designationDto.getRefCustId(), designationDto.getDesignationName());
 
-			Designation designation1 = designationRepository.findByRefCustIdAndDesignationNameAndDesigIsActive(designationDto.getRefCustId(), designationDto.getDesignationName(), false);
+			Designation designation1 = designationRepository.findByCustomer_CustIdAndDesignationNameAndDesigIsActive(designationDto.getRefCustId(), designationDto.getDesignationName(), false);
 
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());

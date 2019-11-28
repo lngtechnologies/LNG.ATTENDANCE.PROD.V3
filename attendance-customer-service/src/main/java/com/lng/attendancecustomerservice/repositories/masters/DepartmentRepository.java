@@ -30,5 +30,5 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 	
 	List<Department> findAllByCustomer_CustIdAndDeptIsActive(int custId, Boolean deptIsActive);
 	
-	Department findByRefCustIdAndDeptNameAndDeptIsActive(Integer refCustId,String deptName,Boolean deptIsActive);
+	Department findByCustomer_CustIdAndDeptNameAndDeptIsActive(Integer refCustId,String deptName,Boolean deptIsActive);
 }

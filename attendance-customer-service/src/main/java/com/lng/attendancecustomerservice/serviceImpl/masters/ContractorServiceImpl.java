@@ -36,7 +36,7 @@ public class ContractorServiceImpl implements ContractorService {
 
 
 			int a = contractorRepository.findByRefCustIdAndContractorName(contractorDto.getRefCustId(), contractorDto.getContractorName());
-			Contractor contractor1 = contractorRepository.findByRefCustIdAndContractorNameAndContractorIsActive(contractorDto.getRefCustId(), contractorDto.getContractorName(), false);
+			Contractor contractor1 = contractorRepository.findByCustomer_CustIdAndContractorNameAndContractorIsActive(contractorDto.getRefCustId(), contractorDto.getContractorName(), false);
 
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());

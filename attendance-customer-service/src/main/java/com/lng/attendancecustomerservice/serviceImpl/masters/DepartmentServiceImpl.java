@@ -34,7 +34,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 			int a = departmentRepository.findByRefCustIdAndDeptName(departmentDto.getRefCustId(), departmentDto.getDeptName());
 			
-			Department department1 = departmentRepository.findByRefCustIdAndDeptNameAndDeptIsActive(departmentDto.getRefCustId(), departmentDto.getDeptName(), false);
+			Department department1 = departmentRepository.findByCustomer_CustIdAndDeptNameAndDeptIsActive(departmentDto.getRefCustId(), departmentDto.getDeptName(), false);
 			
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());

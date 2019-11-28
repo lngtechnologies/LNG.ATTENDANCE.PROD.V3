@@ -38,6 +38,8 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 		try {
 			if(custLeaveDto.getCustLeaveName() == null || custLeaveDto.getCustLeaveName().isEmpty()) throw new Exception("Please enter CustLeave name");
 			int a =  custLeaveRepository.findByRefCustIdAndCustLeaveName(custLeaveDto.getRefCustId(), custLeaveDto.getCustLeaveName());
+			
+			
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(custLeaveDto.getRefCustId());
 				if(customer != null) {

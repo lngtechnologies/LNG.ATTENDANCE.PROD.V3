@@ -21,5 +21,7 @@ public interface CustLeaveRepository extends PagingAndSortingRepository<CustLeav
 	int findByRefCustIdAndCustLeaveName(Integer refCustId,String custLeaveName);
 	
 	CustLeave findCustLeaveBycustLeaveNameAndCustomer_custId(String custLeaveName, int custId);
+	
+	// CustLeave findByRefCustIdAndCustLeaveNameAnd(Integer refCustId,String custLeaveName);
      
 }
