@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.CustBrHoliday;
+import com.lng.attendancecustomerservice.entity.masters.Department;
 import com.lng.attendancecustomerservice.entity.masters.HolidayCalendar;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustBrHolidayRepository;
@@ -15,6 +16,7 @@ import com.lng.attendancecustomerservice.repositories.masters.HolidayCalendarRep
 import com.lng.attendancecustomerservice.service.masters.CustBrHolidayService;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayDto;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayResponse;
+import com.lng.dto.masters.department.DepartmentDto;
 
 import status.Status;
 @Service
@@ -73,8 +75,8 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 
 		return custBrHolidayResponse;
 	}
-	/*@Override
-	public CustBrHolidayResponse saveCustBrHoliday(List<CustBrHolidayDto> custBrHolidayDtos) {
+	@Override
+	public CustBrHolidayResponse save(List<CustBrHolidayDto> custBrHolidayDtos) {
 		CustBrHolidayResponse  custBrHolidayResponse  =  new  CustBrHolidayResponse();
 		//CustBrHoliday  custBrHoliday = new CustBrHoliday();
 		try {
@@ -91,7 +93,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHoliday1.setBranch(branch1);
 						custBrHoliday1.setHolidayCalendar(holidayCalendar);
 						custBrHolidayRepository.save(custBrHoliday1);
-						custBrHolidayResponse.status = new Status(false,200, "success");
+						custBrHolidayResponse.status = new Status(false,200, "success"); 
 					}else if(cust == 1) {
 						custBrHolidayResponse.status = new Status(false,200, "success"); 
 					}
@@ -124,7 +126,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 		}
 
 		return custBrHolidayResponse;
-	}*/
+	}
 
 	@Override
 	public Status updateCustBrHoliday(CustBrHolidayDto custBrHolidayDto) {
@@ -160,4 +162,31 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 		return status;
 	}
 
+	@Override
+	public CustBrHolidayResponse getCustBrHolidayByCustBrHolidayId(Integer custBrHolidayId) {
+		CustBrHolidayResponse  custBrHolidayResponse  =  new  CustBrHolidayResponse();
+		try {
+			CustBrHoliday  custBrHoliday  =  custBrHolidayRepository.findCustBrHolidayByCustBrHolidayId(custBrHolidayId);
+			if(custBrHoliday != null) {
+				CustBrHolidayDto  custBrHolidayDto = convertToCustBrHolidayDtoDto(custBrHoliday);
+				custBrHolidayResponse.data = custBrHolidayDto;
+				custBrHolidayResponse.status = new Status(false,200, "Success");
+			}
+			else {
+				custBrHolidayResponse.status = new Status(true, 4000, "Not found");
+			}
+		}catch(Exception e) {
+			custBrHolidayResponse.status = new Status(true,3000, e.getMessage()); 
+
+		}
+		return custBrHolidayResponse;
+	}
+	public CustBrHolidayDto convertToCustBrHolidayDtoDto(CustBrHoliday custBrHoliday) {
+		CustBrHolidayDto custBrHolidayDto = modelMapper.map(custBrHoliday,CustBrHolidayDto.class);
+		custBrHolidayDto.setRefbrId(custBrHoliday.getBranch().getBrId());
+		custBrHolidayDto.setBrName(custBrHoliday.getBranch().getBrName());
+		custBrHolidayDto.setRefHolidayId(custBrHoliday.getHolidayCalendar().getHolidayId());
+		custBrHolidayDto.setHolidayName(custBrHoliday.getHolidayCalendar().getHolidayName());
+		return custBrHolidayDto;
+	}
 }

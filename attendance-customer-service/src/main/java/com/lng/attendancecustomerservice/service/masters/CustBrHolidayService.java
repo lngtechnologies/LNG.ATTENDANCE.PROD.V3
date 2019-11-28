@@ -9,8 +9,10 @@ import status.Status;
 
 public interface CustBrHolidayService {
 	
-	//CustBrHolidayResponse   save(CustBrHolidayDto custBrHolidayDto);
+	CustBrHolidayResponse   save(List<CustBrHolidayDto> custBrHolidayDto);
 	CustBrHolidayResponse  saveCustBrHoliday(List<CustBrHolidayDto> custBrHolidayDto);
 	CustBrHolidayResponse    delete(Integer custBrHolidayId);
 	Status updateCustBrHoliday(CustBrHolidayDto custBrHolidayDto);
+	CustBrHolidayResponse    getCustBrHolidayByCustBrHolidayId(Integer custBrHolidayId);
+	
 }

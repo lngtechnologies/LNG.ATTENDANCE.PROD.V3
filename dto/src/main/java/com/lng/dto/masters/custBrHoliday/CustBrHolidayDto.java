@@ -11,6 +11,8 @@ public class CustBrHolidayDto {
 	private Integer  refCustId;
 	
 	private String  holidayName;
+	
+	private String  brName;
 
 	public Integer getCustBrHolidayId() {
 		return custBrHolidayId;
@@ -50,6 +52,14 @@ public class CustBrHolidayDto {
 
 	public void setHolidayName(String holidayName) {
 		this.holidayName = holidayName;
+	}
+
+	public String getBrName() {
+		return brName;
+	}
+
+	public void setBrName(String brName) {
+		this.brName = brName;
 	}
 	
 	
