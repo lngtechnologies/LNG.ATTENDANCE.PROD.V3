@@ -11,7 +11,7 @@ import com.lng.attendancecustomerservice.entity.masters.CustBrHoliday;
 public interface CustBrHolidayRepository extends PagingAndSortingRepository<CustBrHoliday, Integer> {
 	
 	List<CustBrHoliday> findByHolidayCalendar_HolidayId(Integer holidayId);
-	
+	CustBrHoliday     findCustBrHolidayByCustBrHolidayId(Integer custBrHolidayId);
 	//@Query(value = "CALL getCountOfBranchHolidayCalendar(?1,?2,?3)",nativeQuery = true)
 	//int     saveCustBrHolidayByRefbrIdAndHolidayCalendar_RefcustIdAndHolidayCalendar_HolidayName(Integer rfebrId,Integer refCustId,String holidayName);
 	
@@ -21,14 +21,12 @@ public interface CustBrHolidayRepository extends PagingAndSortingRepository<Cust
 	@Query(value = "SELECT tbhc.* FROM tmcustbrholiday tbhc WHERE refbrId = ?1", nativeQuery = true)
 	List<CustBrHoliday> getCustBrHolidayByRefbrId(Integer refbrId);
 	
-	//List<CustBrHoliday>  findCustBrHolidayByBranch_BrIdAndHolidayCalendar_HolidayId(Integer brId,Integer holidayId);
-	
-	//@Query(value = "CALL getCountByBranchAndHolidayCalendar(?1,?2,?3)",nativeQuery = true)
-	//CustBrHoliday     findCustBrHolidayByRefbrIdAndHolidayCalendar_RefcustIdAndHolidayCalendar_HolidayId(Integer rfebrId,Integer refCustId,Integer holidayId);
 	
 	@Query(value = "CALL getCountByBranch(?1)",nativeQuery = true)
 	int     findCustBrHolidayByRefbrId(Integer refbrId);
 	
 	@Query(value = "CALL CountByBranchAndHoliday(?1,?2)",nativeQuery = true)
 	int  findCustBrHolidayByBranch_BrIdAndHolidayCalendar_HolidayId(Integer brId,Integer holidayId);
+	
+	CustBrHoliday findCustBrHolidayByBranch_brIdAndHolidayCalendar_HolidayId(Integer refbrId, Integer refHolidayId);
 }

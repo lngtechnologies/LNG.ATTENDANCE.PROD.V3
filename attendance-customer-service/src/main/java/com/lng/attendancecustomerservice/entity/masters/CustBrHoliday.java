@@ -48,9 +48,4 @@ public class CustBrHoliday {
 	public void setHolidayCalendar(HolidayCalendar holidayCalendar) {
 		this.holidayCalendar = holidayCalendar;
 	}
-	
-	
-	
-	
-
 }

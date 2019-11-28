@@ -16,7 +16,7 @@ public class HolidayCalendarDto {
 	
 	//private String  custName;
 	
-	private Integer  brId;
+	private Integer  refbrId;
 	
 	private String brName;
 
@@ -60,12 +60,14 @@ public class HolidayCalendarDto {
 		this.holidayName = holidayName;
 	}
 
-	public Integer getBrId() {
-		return brId;
+
+
+	public Integer getRefbrId() {
+		return refbrId;
 	}
 
-	public void setBrId(Integer brId) {
-		this.brId = brId;
+	public void setRefbrId(Integer refbrId) {
+		this.refbrId = refbrId;
 	}
 
 	public String getBrName() {

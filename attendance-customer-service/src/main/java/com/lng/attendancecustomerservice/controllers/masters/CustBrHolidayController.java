@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecustomerservice.service.masters.CustBrHolidayService;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayDto;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayResponse;
+import com.lng.dto.masters.department.DepartmentDto;
+import com.lng.dto.masters.department.DepartmentResponse;
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
 @RequestMapping(value="/cust/brholiday")
@@ -29,5 +31,36 @@ public class CustBrHolidayController {
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
-
+	@PostMapping(value = "/SaveBranchCalendarByBranchIdAndHolidayName")
+	public ResponseEntity<CustBrHolidayResponse> save(@RequestBody List<CustBrHolidayDto> custBrHolidayDto) {
+		CustBrHolidayResponse custBrHolidayResponse = custBrHolidayService.saveCustBrHoliday(custBrHolidayDto);
+		if (custBrHolidayResponse !=null){
+			return new ResponseEntity<CustBrHolidayResponse>(custBrHolidayResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+	@PostMapping(value = "/deleteByCustBrHolidayId")
+	public ResponseEntity<CustBrHolidayResponse> delete(@RequestBody CustBrHolidayDto custBrHolidayDto) {
+		CustBrHolidayResponse custBrHolidayResponse = custBrHolidayService.delete(custBrHolidayDto.getCustBrHolidayId());
+		if(custBrHolidayDto!=null){
+			return new ResponseEntity<CustBrHolidayResponse>(custBrHolidayResponse,HttpStatus.OK);
+		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
+	}
+	@PostMapping(value="/updateByCustBrHolidayId")
+	public ResponseEntity<status.Status> update(@RequestBody CustBrHolidayDto custBrHolidayDto){
+		status.Status status = custBrHolidayService.updateCustBrHoliday(custBrHolidayDto);
+		if(custBrHolidayDto != null){
+			return new ResponseEntity<status.Status>(status, HttpStatus.OK);
+		}
+		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(value = "/getCustBrHolidayDetailsByCustBrHolidayId")
+	public ResponseEntity<CustBrHolidayResponse> findByCustBrHolidayId(@RequestBody CustBrHolidayDto custBrHolidayDto) {
+		CustBrHolidayResponse custBrHolidayResponse = custBrHolidayService.getCustBrHolidayByCustBrHolidayId(custBrHolidayDto.getCustBrHolidayId());
+		if (custBrHolidayResponse !=null){
+			return new ResponseEntity<CustBrHolidayResponse>(custBrHolidayResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
 }
