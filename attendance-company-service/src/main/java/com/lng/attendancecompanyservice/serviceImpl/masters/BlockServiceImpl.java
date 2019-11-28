@@ -61,11 +61,11 @@ public class BlockServiceImpl implements BlockService {
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"BlockName already exist");
+				response.status = new Status(true,400,"Block Name already exist");
 			}
 
 		}catch(Exception ex){
-			response.status = new Status(true,3000, ex.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 
 		return response;

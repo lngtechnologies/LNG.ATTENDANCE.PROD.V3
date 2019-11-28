@@ -35,11 +35,20 @@ public class BeaconServiceImpl implements BeaconService {
 		StatusDto statusDto = new StatusDto();
 		
 		Beacon beacon = beaconRepository.findBeaconByBeaconCode(beaconDto.getBeaconCode());
+		Beacon beacon1 = beaconRepository.findBeaconByBeaconCodeAndBeaconIsActive(beaconDto.getBeaconCode(), false);
 		try {
 			if(beacon == null) {
 				beacon = modelMapper.map(beaconDto, Beacon.class);
 				beacon.setBeaconCreatedDate(new Date());
+				beacon.setBeaconIsActive(true);
 				beaconRepository.save(beacon);
+				statusDto.setCode(200);
+				statusDto.setError(false);
+				statusDto.setMessage("Successfully Saved");
+			}else if (beacon1!= null){
+				beacon1.setBeaconIsActive(true);
+				beacon1.setBeaconCreatedDate(new Date());
+				beaconRepository.save(beacon1);
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("Successfully Saved");
@@ -79,6 +88,7 @@ public class BeaconServiceImpl implements BeaconService {
 		return beaconListResponseDto;
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	public StatusDto updateBeacon(BeaconDto beaconDto) {
 		

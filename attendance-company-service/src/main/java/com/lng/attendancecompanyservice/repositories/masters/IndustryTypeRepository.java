@@ -16,4 +16,6 @@ public interface IndustryTypeRepository extends PagingAndSortingRepository<Indus
 	
 	List<IndustryType> findAllByIndustryIsActive(Boolean industryIsActive);
 	
+	IndustryType findIndustryTypeByIndustryNameAndIndustryIsActive(String industryName, Boolean industryIsActive);
+	
 }

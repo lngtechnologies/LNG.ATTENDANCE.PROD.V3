@@ -29,4 +29,6 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 	Department findDepartmentByEmployee_EmpId(Integer empId);
 	
 	List<Department> findAllByCustomer_CustIdAndDeptIsActive(int custId, Boolean deptIsActive);
+	
+	Department findByRefCustIdAndDeptNameAndDeptIsActive(Integer refCustId,String deptName,Boolean deptIsActive);
 }

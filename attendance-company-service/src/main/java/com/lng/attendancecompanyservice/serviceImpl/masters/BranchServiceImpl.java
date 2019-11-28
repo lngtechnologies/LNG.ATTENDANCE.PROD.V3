@@ -95,7 +95,7 @@ public class BranchServiceImpl implements BranchService {
 
 			int chechNoOfBranches = branchRepository.chechNoOfBranchesCreatedByCustomer(branchDto.getRefCustomerId());
 			if(chechNoOfBranches == 0) {
-
+				
 				int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
 				if(b == 0) {
 					Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());

@@ -13,11 +13,11 @@ import com.lng.attendancecustomerservice.entity.masters.Shift;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.masters.ShiftService;
-import com.lng.dto.customer.BranchDto;
 import com.lng.dto.masters.shift.ShiftDto;
 import com.lng.dto.masters.shift.ShiftResponse;
 
 import status.Status;
+
 @Service
 public class ShiftServiceImpl implements ShiftService {
 
@@ -71,15 +71,21 @@ public class ShiftServiceImpl implements ShiftService {
 	public ShiftResponse getAll() {
 		ShiftResponse response = new ShiftResponse();
 		try {
-			List<Shift> shiftList=shiftRepository.findAllByShiftIsActive(true);
-			response.setData1(shiftList.stream().map(shift -> convertToShiftDto(shift)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully GetAll");
+			List<Shift> shiftList = shiftRepository.findAllByShiftIsActive(true);
+			if(!shiftList.isEmpty()) {
+				response.setData1(shiftList.stream().map(shift -> convertToShiftDto(shift)).collect(Collectors.toList()));
+				response.status = new Status(false,200, "success");
+			} else {
+				response.status = new Status(false,400, "Not found");
+			}
+			
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
 	}
+	
 	@Override
 	public Status updateShiftByShiftId(ShiftDto shiftDto) {
 		Status status = null;
@@ -116,7 +122,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 			else {
 				status = new Status(false, 200, "Branch Not Found");
-
 			}
 		}
 		catch(Exception e) {
@@ -152,15 +157,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 		return shiftResponse;
 	}
-
-	public ShiftDto convertToShiftDto(Shift shift) {
-		ShiftDto shiftDto = modelMapper.map(shift,ShiftDto.class);
-		shiftDto.setRefBrId(shift.getBranch().getBrId());
-		shiftDto.setBrName(shift.getBranch().getBrName());
-		BranchDto branchDto = modelMapper.map(shift.getBranch(),BranchDto.class);
-		return shiftDto;
-	}
-
 
 	@Override
 	public ShiftResponse getShiftDetailsByRefBrId(Integer refBrId) {
@@ -234,4 +230,20 @@ public class ShiftServiceImpl implements ShiftService {
 		}
 		return response;
 	}
+	
+	public ShiftDto convertToShiftDto(Shift shift) {
+		ShiftDto shiftDto = modelMapper.map(shift,ShiftDto.class);
+		shiftDto.setRefBrId(shift.getBranch().getBrId());
+		shiftDto.setBrName(shift.getBranch().getBrName());
+		return shiftDto;
+	}
+	
+	// Convert 24 hours time to 12 hours
+	/*public String TimeHourConvert(String time) {
+		String pattern = "h:mm:ss a";
+		SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+		//dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String date = dateFormat.format(time);
+		return date;
+	}*/
 }

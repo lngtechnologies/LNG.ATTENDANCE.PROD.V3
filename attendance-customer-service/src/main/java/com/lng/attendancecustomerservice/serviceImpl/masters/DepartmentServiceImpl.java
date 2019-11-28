@@ -33,6 +33,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 			if(departmentDto.getDeptName() == null || departmentDto.getDeptName().isEmpty()) throw new Exception("Please enter Department name");
 
 			int a = departmentRepository.findByRefCustIdAndDeptName(departmentDto.getRefCustId(), departmentDto.getDeptName());
+			
+			Department department1 = departmentRepository.findByRefCustIdAndDeptNameAndDeptIsActive(departmentDto.getRefCustId(), departmentDto.getDeptName(), false);
+			
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
 				if(customer != null) {
@@ -48,8 +51,22 @@ public class DepartmentServiceImpl implements DepartmentService {
 				else{ 
 					response.status = new Status(true,400, "Customer Not Found");
 				}
-			}
-			else{ 
+			}else if(department1 != null){
+				Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
+				if(customer != null) {
+
+					department1.setCustomer(customer);
+					department1.setDeptName(departmentDto.getDeptName());
+					department1.setDeptIsActive(true);
+					departmentRepository.save(department1);
+					response.status = new Status(false,200, "Successfully created");
+
+				}
+				else{ 
+					response.status = new Status(true,400, "Customer Not Found");
+				}
+			}else {
+				
 				response.status = new Status(true,400,"DepartmentName already exists");
 			}
 
@@ -59,6 +76,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 		return response;
 	}
+	
+	
 	@Override
 	public DepartmentResponse getAll() {
 		DepartmentResponse response = new DepartmentResponse();
