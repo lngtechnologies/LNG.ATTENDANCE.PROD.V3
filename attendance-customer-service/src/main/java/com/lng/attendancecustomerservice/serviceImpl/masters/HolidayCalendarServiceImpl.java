@@ -250,7 +250,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			List<HolidayCalendar> holidayList = holidayCalendarRepository.findHolidayCalendarByrefCustId(refCustId);
 			if(holidayList.isEmpty()) {
 				holidayCalendarResponse.status = new Status(true,400, " Not Found");
-			}else {
+			}else { 
 				holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 				holidayCalendarResponse.status = new Status(false,200, "success");
 			}
@@ -278,6 +278,24 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			holidayCalendarResponse.status = new Status(true,500, "Something went wrong"); 
 		}
 
+		return holidayCalendarResponse;
+	}
+
+	@Override
+	public HolidayCalendarResponse getHolidayCalendarByRefBrId(Integer refbrId) {
+		HolidayCalendarResponse  holidayCalendarResponse  =  new  HolidayCalendarResponse();
+		try {
+			List<HolidayCalendar> holidayList =  holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
+			if(holidayList.isEmpty()) {
+				holidayCalendarResponse.status = new Status(true,400, " Not Found");
+			}else { 
+				holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
+				holidayCalendarResponse.status = new Status(false,200, "success");
+			}
+		}catch(Exception e) {
+			holidayCalendarResponse.status = new Status(true,500, "Something went wrong"); 
+
+		}
 		return holidayCalendarResponse;
 	}
 

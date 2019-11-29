@@ -104,4 +104,13 @@ public class HolidayCalendarController {
 			return new ResponseEntity<HolidayCalendarResponse>(holidayCalendarResponse,HttpStatus.OK);
 		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
+	
+	@PostMapping(value = "/getByBrId")
+	public ResponseEntity<HolidayCalendarResponse> findByBrId(@RequestBody HolidayCalendarDto holidayCalendarDto) {
+		HolidayCalendarResponse holidayCalendarResponse = holidayCalendarService.getHolidayCalendarByRefBrId(holidayCalendarDto.getRefbrId());
+		if (holidayCalendarResponse !=null){
+			return new ResponseEntity<HolidayCalendarResponse>(holidayCalendarResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
 }
