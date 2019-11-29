@@ -1,6 +1,7 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -217,31 +218,31 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 		return holidayCalendarResponse;
 	}
 
-	@Override
-	public HolidayCalendarResponse getHolidayCalendarByRefBrIdAndRefCustId(Integer refbrId,Integer refCustId) {
-		HolidayCalendarResponse  holidayCalendarResponse  =  new  HolidayCalendarResponse();
-		try {
-
-			List<HolidayCalendar> holidayCalendars = holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
-			if(holidayCalendars.isEmpty()) {
-				List<HolidayCalendar> holidayList = holidayCalendarRepository.findHolidayCalendarByrefCustId(refCustId);
-				if(holidayList.isEmpty()) {
-					holidayCalendarResponse.status = new Status(true,400, " Not Found");
-				}else {
-					holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
-					holidayCalendarResponse.status = new Status(false,200, "success");
-				}
-			}else {
-				holidayCalendarResponse.setData1(holidayCalendars.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
-				holidayCalendarResponse.status = new Status(false,200, "success");
-
-			}
-		}catch(Exception e) {
-			holidayCalendarResponse.status = new Status(true,500, "Something went wrong"); 
-
-		}
-		return holidayCalendarResponse;
-	}
+	/*
+	 * @Override public HolidayCalendarResponse
+	 * getHolidayCalendarByRefBrIdAndRefCustId(Integer refbrId,Integer refCustId) {
+	 * HolidayCalendarResponse holidayCalendarResponse = new
+	 * HolidayCalendarResponse(); try {
+	 * 
+	 * List<HolidayCalendar> holidayCalendars =
+	 * holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
+	 * if(holidayCalendars.isEmpty()) { List<HolidayCalendar> holidayList =
+	 * holidayCalendarRepository.findHolidayCalendarByrefCustId(refCustId);
+	 * if(holidayList.isEmpty()) { holidayCalendarResponse.status = new
+	 * Status(true,400, " Not Found"); }else {
+	 * holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar ->
+	 * convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
+	 * holidayCalendarResponse.status = new Status(false,200, "success"); } }else {
+	 * holidayCalendarResponse.setData1(holidayCalendars.stream().map(
+	 * holidayCalendar ->
+	 * convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
+	 * holidayCalendarResponse.status = new Status(false,200, "success");
+	 * 
+	 * } }catch(Exception e) { holidayCalendarResponse.status = new Status(true,500,
+	 * "Something went wrong");
+	 * 
+	 * } return holidayCalendarResponse; }
+	 */
 
 	@Override
 	public HolidayCalendarResponse getHolidayCalendarByRefCustId(Integer refCustId) {
@@ -284,18 +285,34 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 	@Override
 	public HolidayCalendarResponse getHolidayCalendarByRefBrId(Integer refbrId) {
 		HolidayCalendarResponse  holidayCalendarResponse  =  new  HolidayCalendarResponse();
+		List<HolidayCalendarDto> HolidayCalendarDtoList = new ArrayList<>();
 		try {
-			List<HolidayCalendar> holidayList =  holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
+			List<Object[]> holidayList =  holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
+			
 			if(holidayList.isEmpty()) {
 				holidayCalendarResponse.status = new Status(true,400, " Not Found");
-			}else { 
-				holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
-				holidayCalendarResponse.status = new Status(false,200, "success");
+			}else {
+				for (Object[] p : holidayList) {	
+
+					HolidayCalendarDto holidayCalendarDto1 = new HolidayCalendarDto();
+					holidayCalendarDto1.setHolidayId(Integer.valueOf(p[0].toString()));
+					holidayCalendarDto1.setRefCustId(Integer.valueOf(p[1].toString()));
+					holidayCalendarDto1.setHolidayCalendarYear((p[2].toString()));
+					holidayCalendarDto1.setHolidayDate((Date)p[3]);
+					holidayCalendarDto1.setHolidayName((p[4].toString()));
+					holidayCalendarDto1.setCustBrHolidayId(Integer.valueOf(p[5].toString()));
+					HolidayCalendarDtoList.add(holidayCalendarDto1);
+					holidayCalendarResponse.status = new Status(false,200, "success");
+				}
+
 			}
-		}catch(Exception e) {
-			holidayCalendarResponse.status = new Status(true,500, "Something went wrong"); 
+
+		}catch (Exception e){
+			holidayCalendarResponse.status = new Status(true,500, e.getMessage());
+
 
 		}
+		holidayCalendarResponse.setData1(HolidayCalendarDtoList);
 		return holidayCalendarResponse;
 	}
 

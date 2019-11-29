@@ -39,13 +39,13 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 
 				Branch branch1 =branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
-				HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
+				HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getHolidayId());
 				if(branch1 != null &&  holidayCalendar != null) {
 					CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
 					custBrHoliday1.setBranch(branch1);
 					custBrHoliday1.setHolidayCalendar(holidayCalendar);
 					custBrHolidayRepository.save(custBrHoliday1);
-					custBrHolidayResponse.status = new Status(false,200, "success");
+					custBrHolidayResponse.status = new Status(false,200, "Successfully created");
 				}else {
 					custBrHolidayResponse.status = new Status(false,400, "Not Found");
 				}
@@ -83,11 +83,11 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 				int  b = custBrHolidayRepository.findCustBrHolidayByRefbrId(custBrHolidayDto.getRefbrId());
 				//if(b == 0 || b == 1) {
-				int cust =	custBrHolidayRepository.findCustBrHolidayByBranch_BrIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getRefHolidayId());
+				int cust =	custBrHolidayRepository.findCustBrHolidayByBranch_BrIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getHolidayId());
 				if (cust == 0) {
 
 					Branch branch1 =branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
-					HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
+					HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getHolidayId());
 					if(branch1 != null &&  holidayCalendar != null) {
 						CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
 						custBrHoliday1.setBranch(branch1);
@@ -109,7 +109,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHolidayRepository.deleteAll(cust1);
 
 						Branch branch1 =branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
-						HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
+						HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getHolidayId());
 						if(branch1 != null &&  holidayCalendar != null) {
 							CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
 							custBrHoliday1.setBranch(branch1);
@@ -136,9 +136,9 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 
 			CustBrHoliday CustBrHoliday = custBrHolidayRepository.findCustBrHolidayByCustBrHolidayId(custBrHolidayDto.getCustBrHolidayId());
 			Branch branch = branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
-			HolidayCalendar holidayCalendar  =  holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
+			HolidayCalendar holidayCalendar  =  holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getHolidayId());
 			if(branch != null && holidayCalendar != null ) {
-				CustBrHoliday cH = custBrHolidayRepository.findCustBrHolidayByBranch_brIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getRefHolidayId());
+				CustBrHoliday cH = custBrHolidayRepository.findCustBrHolidayByBranch_brIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getHolidayId());
 				if(cH == null) {
 					CustBrHoliday = modelMapper.map(custBrHolidayDto,CustBrHoliday.class);
 					CustBrHoliday.setBranch(branch);
@@ -185,7 +185,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 		CustBrHolidayDto custBrHolidayDto = modelMapper.map(custBrHoliday,CustBrHolidayDto.class);
 		custBrHolidayDto.setRefbrId(custBrHoliday.getBranch().getBrId());
 		custBrHolidayDto.setBrName(custBrHoliday.getBranch().getBrName());
-		custBrHolidayDto.setRefHolidayId(custBrHoliday.getHolidayCalendar().getHolidayId());
+		custBrHolidayDto.setHolidayId(custBrHoliday.getHolidayCalendar().getHolidayId());
 		custBrHolidayDto.setHolidayName(custBrHoliday.getHolidayCalendar().getHolidayName());
 		return custBrHolidayDto;
 	}

@@ -14,7 +14,7 @@ public interface HolidayCalendarService {
 	HolidayCalendarResponse getHolidayCalendarByHolidayId(Integer holidayId);
 	HolidayCalendarResponse  getAll();
 	HolidayCalendarResponse findBranchList(Integer refCustId);
-	HolidayCalendarResponse getHolidayCalendarByRefBrIdAndRefCustId(Integer refbrId,Integer refCustId);
+	//HolidayCalendarResponse getHolidayCalendarByRefBrIdAndRefCustId(Integer refbrId,Integer refCustId);
 	HolidayCalendarResponse getHolidayCalendarByRefCustId(Integer refCustId);
 	HolidayCalendarResponse     getRemaingHoliday(Integer refCustId);
 	HolidayCalendarResponse getHolidayCalendarByRefBrId(Integer refbrId);

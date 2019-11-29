@@ -80,15 +80,17 @@ public class HolidayCalendarController {
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 	
-	@PostMapping(value = "/getHolidayCalendarByBranchId")
-	public ResponseEntity<HolidayCalendarResponse> findHolidayCalendarByBrId(@RequestBody HolidayCalendarDto holidayCalendarDto) {
-		HolidayCalendarResponse holidayCalendarResponse = holidayCalendarService.getHolidayCalendarByRefBrIdAndRefCustId(holidayCalendarDto.getRefbrId(),holidayCalendarDto.getRefCustId());
-		if (holidayCalendarResponse !=null){
-			return new ResponseEntity<HolidayCalendarResponse>(holidayCalendarResponse, HttpStatus.OK);
-		}
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
-	}
-	
+	/*
+	 * @PostMapping(value = "/getHolidayCalendarByBranchId") public
+	 * ResponseEntity<HolidayCalendarResponse>
+	 * findHolidayCalendarByBrId(@RequestBody HolidayCalendarDto holidayCalendarDto)
+	 * { HolidayCalendarResponse holidayCalendarResponse =
+	 * holidayCalendarService.getHolidayCalendarByRefBrIdAndRefCustId(
+	 * holidayCalendarDto.getRefbrId(),holidayCalendarDto.getRefCustId()); if
+	 * (holidayCalendarResponse !=null){ return new
+	 * ResponseEntity<HolidayCalendarResponse>(holidayCalendarResponse,
+	 * HttpStatus.OK); } return new ResponseEntity(HttpStatus.NOT_FOUND); }
+	 */
 	@PostMapping(value = "/getHolidayCalendarByCustId")
 	public ResponseEntity<HolidayCalendarResponse> findHolidayCalendarByCustId(@RequestBody HolidayCalendarDto holidayCalendarDto) {
 		HolidayCalendarResponse holidayCalendarResponse = holidayCalendarService.getHolidayCalendarByRefCustId(holidayCalendarDto.getRefCustId());
