@@ -105,7 +105,7 @@ public class HolidayCalendarController {
 		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
 	
-	@PostMapping(value = "/getByBrId")
+	@PostMapping(value = "/getByBrId") 
 	public ResponseEntity<HolidayCalendarResponse> findByBrId(@RequestBody HolidayCalendarDto holidayCalendarDto) {
 		HolidayCalendarResponse holidayCalendarResponse = holidayCalendarService.getHolidayCalendarByRefBrId(holidayCalendarDto.getRefbrId());
 		if (holidayCalendarResponse !=null){
