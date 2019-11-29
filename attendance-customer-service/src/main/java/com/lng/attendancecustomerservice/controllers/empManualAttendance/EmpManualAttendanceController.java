@@ -1,6 +1,5 @@
 package com.lng.attendancecustomerservice.controllers.empManualAttendance;
 
-import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;

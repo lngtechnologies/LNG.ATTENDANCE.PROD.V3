@@ -61,25 +61,25 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
 				if(employee != null)  {
-					
+
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
-				    String strDate = formatter.format(new Date());
-				
-				   
-				    
-				    Date empAttndDate = employeeRepository.getRecentDateByAttndDateAndEmpId(strDate, employee.getEmpId());
-				    
-					
-				   // Date date = new Date();
-				    
-					
+					String strDate = formatter.format(new Date());
+
+
+
+					Date empAttndDate = employeeRepository.getRecentDateByAttndDateAndEmpId(strDate, employee.getEmpId());
+
+
+					// Date date = new Date();
+
+
 					if(empAttndDate != null) {
-						
+
 						String pattern = "dd / MM / yyyy h:mm a";
 						SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 						dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 						String date = dateFormat.format(empAttndDate);
-						
+
 						if(employee.getEmpPresistedFaceId() == null) {
 
 							byte[] custLogo = employee.getCustomer().getCustLogoFile();
@@ -118,12 +118,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 			} else {
 				throw new Exception("Invalid Data");
 			}
-
+ 
 		} catch(Exception ex) {
 			response.status = new Status(true,400,ex.getMessage());
 		}
 		return response;
-	}
+	} 
 
 	// convert byte to base64
 	public  String byteTobase64(byte[] custLogoFile) {
@@ -250,7 +250,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		System.out.println(formatter.format(empAttndDate));
 		return formatter.parse(formatter.format(empAttndDate));
-		
+
 	}
 
 } 
