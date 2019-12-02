@@ -8,6 +8,8 @@ public interface PolicyAndFaqService {
 	PolicyAndFaqResponse   save(PolicyAndFaqDto policyAndFaqDto);
 	
 	
+	PolicyAndFaqResponse  getPolicyAndFaqByKey(String key);
+	
 	PolicyAndFaqResponse  getAll();
 	
 	//PolicyAndFaqResponse   update(PolicyAndFaqDto policyAndFaqDto);

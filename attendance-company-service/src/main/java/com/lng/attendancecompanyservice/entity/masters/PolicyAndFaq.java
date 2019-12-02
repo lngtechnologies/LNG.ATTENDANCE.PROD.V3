@@ -2,35 +2,55 @@ package com.lng.attendancecompanyservice.entity.masters;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "tmstaticpage")
 public class PolicyAndFaq {
+	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "pageId")
+	private Integer pageId;
 	
-	@Column(name = "faqText")
-	private String faqText;
+	@Column(name = "Key")
+	private String key;
 	
-	@Column(name = "policyText")
-	private  String policyText;
+	@Column(name = "Value")
+	private  String value;
 
-	public String getFaqText() {
-		return faqText;
+	public Integer getPageId() {
+		return pageId;
 	}
 
-	public void setFaqText(String faqText) {
-		this.faqText = faqText;
+	public void setPageId(Integer pageId) {
+		this.pageId = pageId;
 	}
 
-	public String getPolicyText() {
-		return policyText;
+	public String getKey() {
+		return key;
 	}
 
-	public void setPolicyText(String policyText) {
-		this.policyText = policyText;
+	public void setKey(String key) {
+		this.key = key;
 	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
+	}
+
+
+	
+	
+
+
 	
 
 }

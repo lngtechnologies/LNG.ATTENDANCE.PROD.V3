@@ -31,9 +31,9 @@ public class PolicyAndFaqController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping(value = "/getAll")
-	public ResponseEntity<PolicyAndFaqResponse> getAll() {
-		PolicyAndFaqResponse policyAndFaqResponse =  policyAndFaqService.getAll();
+	@PostMapping(value = "/getAllBykey")
+	public ResponseEntity<PolicyAndFaqResponse> getAll(@RequestBody PolicyAndFaqDto policyAndFaqDto){
+		PolicyAndFaqResponse policyAndFaqResponse =  policyAndFaqService.getPolicyAndFaqByKey(policyAndFaqDto.getKey());
 		if(policyAndFaqResponse.getData().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.CustBrHoliday;
-import com.lng.attendancecustomerservice.entity.masters.Department;
 import com.lng.attendancecustomerservice.entity.masters.HolidayCalendar;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustBrHolidayRepository;
@@ -16,9 +15,9 @@ import com.lng.attendancecustomerservice.repositories.masters.HolidayCalendarRep
 import com.lng.attendancecustomerservice.service.masters.CustBrHolidayService;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayDto;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayResponse;
-import com.lng.dto.masters.department.DepartmentDto;
 
 import status.Status;
+import status.StatusDto;
 @Service
 public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 
@@ -35,21 +34,30 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 	@Override
 	public CustBrHolidayResponse saveCustBrHoliday(List<CustBrHolidayDto> custBrHolidayDtos) {
 		CustBrHolidayResponse  custBrHolidayResponse  =  new  CustBrHolidayResponse();
+		String msg = "Branch already maped for:";
+		String Holiday ="";
 		try {
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 
 				Branch branch1 =branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
-				HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getHolidayId());
+				HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
 				if(branch1 != null &&  holidayCalendar != null) {
+					CustBrHoliday cH = custBrHolidayRepository.findCustBrHolidayByBranch_brIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getRefHolidayId());
+					if(cH == null) {
 					CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
 					custBrHoliday1.setBranch(branch1);
 					custBrHoliday1.setHolidayCalendar(holidayCalendar);
 					custBrHolidayRepository.save(custBrHoliday1);
-					custBrHolidayResponse.status = new Status(false,200, "Successfully created");
+					custBrHolidayResponse.status = new Status(true,400, "Successfully Created");
+					}else {
+						custBrHolidayResponse.status = new Status(true,400, "Haliday Name Already Exists");
+
+					}
 				}else {
-					custBrHolidayResponse.status = new Status(false,400, "Not Found");
+					custBrHolidayResponse.status = new Status(true,400, "Not Found");
 				}
 			}
+
 		}catch(Exception ex){
 			custBrHolidayResponse.status = new Status(true,500, "Something went wrong"); 
 		}
@@ -83,11 +91,11 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 				int  b = custBrHolidayRepository.findCustBrHolidayByRefbrId(custBrHolidayDto.getRefbrId());
 				//if(b == 0 || b == 1) {
-				int cust =	custBrHolidayRepository.findCustBrHolidayByBranch_BrIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getHolidayId());
+				int cust =	custBrHolidayRepository.findCustBrHolidayByBranch_BrIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getRefHolidayId());
 				if (cust == 0) {
 
 					Branch branch1 =branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
-					HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getHolidayId());
+					HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
 					if(branch1 != null &&  holidayCalendar != null) {
 						CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
 						custBrHoliday1.setBranch(branch1);
@@ -109,7 +117,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHolidayRepository.deleteAll(cust1);
 
 						Branch branch1 =branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
-						HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getHolidayId());
+						HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
 						if(branch1 != null &&  holidayCalendar != null) {
 							CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
 							custBrHoliday1.setBranch(branch1);
@@ -136,9 +144,9 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 
 			CustBrHoliday CustBrHoliday = custBrHolidayRepository.findCustBrHolidayByCustBrHolidayId(custBrHolidayDto.getCustBrHolidayId());
 			Branch branch = branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
-			HolidayCalendar holidayCalendar  =  holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getHolidayId());
+			HolidayCalendar holidayCalendar  =  holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
 			if(branch != null && holidayCalendar != null ) {
-				CustBrHoliday cH = custBrHolidayRepository.findCustBrHolidayByBranch_brIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getHolidayId());
+				CustBrHoliday cH = custBrHolidayRepository.findCustBrHolidayByBranch_brIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getRefHolidayId());
 				if(cH == null) {
 					CustBrHoliday = modelMapper.map(custBrHolidayDto,CustBrHoliday.class);
 					CustBrHoliday.setBranch(branch);
@@ -185,7 +193,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 		CustBrHolidayDto custBrHolidayDto = modelMapper.map(custBrHoliday,CustBrHolidayDto.class);
 		custBrHolidayDto.setRefbrId(custBrHoliday.getBranch().getBrId());
 		custBrHolidayDto.setBrName(custBrHoliday.getBranch().getBrName());
-		custBrHolidayDto.setHolidayId(custBrHoliday.getHolidayCalendar().getHolidayId());
+		custBrHolidayDto.setRefHolidayId(custBrHoliday.getHolidayCalendar().getHolidayId());
 		custBrHolidayDto.setHolidayName(custBrHoliday.getHolidayCalendar().getHolidayName());
 		return custBrHolidayDto;
 	}

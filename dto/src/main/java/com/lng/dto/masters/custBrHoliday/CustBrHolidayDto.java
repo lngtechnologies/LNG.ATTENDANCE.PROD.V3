@@ -6,7 +6,7 @@ public class CustBrHolidayDto {
 
 	private Integer  refbrId;
 
-	private  Integer holidayId;
+	private  Integer refHolidayId;
 	
 	private Integer  refCustId;
 	
@@ -31,12 +31,14 @@ public class CustBrHolidayDto {
 	}
 
 
-	public Integer getHolidayId() {
-		return holidayId;
+
+
+	public Integer getRefHolidayId() {
+		return refHolidayId;
 	}
 
-	public void setHolidayId(Integer holidayId) {
-		this.holidayId = holidayId;
+	public void setRefHolidayId(Integer refHolidayId) {
+		this.refHolidayId = refHolidayId;
 	}
 
 	public Integer getRefCustId() {
