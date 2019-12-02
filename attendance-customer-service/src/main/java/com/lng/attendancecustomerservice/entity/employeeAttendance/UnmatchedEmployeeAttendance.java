@@ -1,50 +1,80 @@
-package com.lng.dto.employeeAttendance;
+package com.lng.attendancecustomerservice.entity.employeeAttendance;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class EmployeeAttendanceDto {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-	private Integer empAttendanceId;
-	
-	private Integer refEmpId;
-	
+import com.lng.attendancecustomerservice.entity.masters.Employee;
+
+@Entity
+@Table(name = "ttunmatchedempattendance")
+public class UnmatchedEmployeeAttendance {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "empUnmatchedAttendanceId")
+	private Integer empUnmatchedAttendanceId;
+
+	@ManyToOne
+	@JoinColumn(name = "refEmpId")
+	private Employee employee;
+
+	@Column(name = "empAttendanceDate")
 	private Date empAttendanceDate;
-	
+
+	@Column(name = "empAttendanceInMode")
 	private String empAttendanceInMode;
-	
+
+	@Column(name = "empAttendanceOutMode")
 	private String empAttendanceOutMode;
-	
+
+	@Column(name = "empAttendanceInDatetime")
 	private Date empAttendanceInDatetime;
-	
+
+	@Column(name = "empAttendanceOutDatetime")
 	private Date empAttendanceOutDatetime;
-	
+
+	@Column(name = "empAttendanceConsiderInDatetime")
 	private Date empAttendanceConsiderInDatetime;
-	
+
+	@Column(name = "empAttendanceConsiderOutDatetime")
 	private Date empAttendanceConsiderOutDatetime;
-	
+
+	@Column(name = "empAttendanceInConfidence")
 	private BigDecimal empAttendanceInConfidence;
-	
+
+	@Column(name = "empAttendanceOutConfidence")
 	private BigDecimal empAttendanceOutConfidence;
-	
+
+	@Column(name = "empAttendanceInLatLong")
 	private String empAttendanceInLatLong;
-	
+
+	@Column(name = "empAttendanceOutLatLong")
 	private String empAttendanceOutLatLong;
 
-	public Integer getEmpAttendanceId() {
-		return empAttendanceId;
+
+	public Integer getEmpUnmatchedAttendanceId() {
+		return empUnmatchedAttendanceId;
 	}
 
-	public void setEmpAttendanceId(Integer empAttendanceId) {
-		this.empAttendanceId = empAttendanceId;
+	public void setEmpUnmatchedAttendanceId(Integer empUnmatchedAttendanceId) {
+		this.empUnmatchedAttendanceId = empUnmatchedAttendanceId;
 	}
 
-	public Integer getRefEmpId() {
-		return refEmpId;
+	public Employee getEmployee() {
+		return employee;
 	}
 
-	public void setRefEmpId(Integer refEmpId) {
-		this.refEmpId = refEmpId;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
 	public Date getEmpAttendanceDate() {
