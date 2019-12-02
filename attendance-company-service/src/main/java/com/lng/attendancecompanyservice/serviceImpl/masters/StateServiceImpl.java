@@ -43,6 +43,9 @@ public class StateServiceImpl implements StateService {
 			if(stateDto.getStateName() == null || stateDto.getStateName().isEmpty()) throw new Exception("Please enter State name");
 
 			int a = stateRepository.findByRefCountryIdAndStateName(stateDto.getRefCountryId(), stateDto.getStateName());
+			
+			State state1 = stateRepository.findByCountry_CountryIdAndStateNameAndStateIsActive(stateDto.getRefCountryId(), stateDto.getStateName(), false);
+			
 			if(a == 0) {
 				Country country = countryRepository.findCountryByCountryId(stateDto.getRefCountryId());
 				if(country != null) {
@@ -56,8 +59,20 @@ public class StateServiceImpl implements StateService {
 				else{ 
 					response.status = new Status(true,400, "Country Not Found");
 				}
-			}
-			else{ 
+			} else if(state1 != null){
+				Country country = countryRepository.findCountryByCountryId(stateDto.getRefCountryId());
+				if(country != null) {
+					state1.setCountry(country);
+					state1.setStateName(stateDto.getStateName());
+					state1.setStateIsActive(true);
+					stateRepository.save(state1);
+					response.status = new Status(false,200, "Successfully created");
+
+				}
+				else{ 
+					response.status = new Status(true,400, "Country Not Found");
+				}
+			}else {
 				response.status = new Status(true,400,"State name already exists");
 
 			}

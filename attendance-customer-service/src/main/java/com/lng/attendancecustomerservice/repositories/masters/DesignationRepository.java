@@ -28,5 +28,7 @@ public interface DesignationRepository extends CrudRepository<Designation,Intege
 	Designation findDesignationByEmployee_EmpId(Integer empId);
 	
 	List<Designation> findAllByCustomer_CustIdAndDesigIsActive(int custId, Boolean desigIsActive);
+	
+	Designation findByCustomer_CustIdAndDesignationNameAndDesigIsActive(Integer refCustId,String designationName, Boolean desigIsActive);
 
 }

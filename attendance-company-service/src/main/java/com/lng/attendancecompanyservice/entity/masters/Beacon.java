@@ -23,6 +23,9 @@ public class Beacon {
 
 	@Column(name = "beaconCreatedDate")
 	private Date beaconCreatedDate;
+	
+	@Column(name = "beaconIsActive")
+	private Boolean beaconIsActive;
 
 	public Integer getBeaconId() {
 		return beaconId;
@@ -46,6 +49,14 @@ public class Beacon {
 
 	public void setBeaconCreatedDate(Date beaconCreatedDate) {
 		this.beaconCreatedDate = beaconCreatedDate;
+	}
+
+	public Boolean getBeaconIsActive() {
+		return beaconIsActive;
+	}
+
+	public void setBeaconIsActive(Boolean beaconIsActive) {
+		this.beaconIsActive = beaconIsActive;
 	}
 	
 }

@@ -30,6 +30,8 @@ public interface StateRepository extends CrudRepository<State,Integer> {
 
 	@Query(value = "CALL CheckStateExistsForCountry(?1, ?2);",nativeQuery = true)
 	int  findByRefCountryIdAndStateName(Integer refCountryId,String stateName);
+	
+	State findByCountry_CountryIdAndStateNameAndStateIsActive(Integer refCountryId,String stateName, Boolean stateIsActive);
 
 
 }

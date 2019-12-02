@@ -36,12 +36,23 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 		StatusDto statusDto = new StatusDto();
 		// Check if industry type already exist or not
 		IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryName(industryTypeDto.getIndustryName());
+		
+		IndustryType industryType1 = industryTypeRepository.findIndustryTypeByIndustryNameAndIndustryIsActive(industryTypeDto.getIndustryName(), false);
+		
 		try {
 			if(industryType == null) {
 
 				industryType = modelMapper.map(industryTypeDto, IndustryType.class);
 				industryType.setIndustryIsActive(true);
 				industryTypeRepository.save(industryType);
+				statusDto.setCode(200);
+				statusDto.setError(false);
+				statusDto.setMessage("Successfully Saved");
+			}else if(industryType1 != null){
+				
+				industryType1 = modelMapper.map(industryTypeDto, IndustryType.class);
+				industryType1.setIndustryIsActive(true);
+				industryTypeRepository.save(industryType1);
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("Successfully Saved");

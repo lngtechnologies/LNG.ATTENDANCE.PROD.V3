@@ -36,6 +36,7 @@ public class ContractorServiceImpl implements ContractorService {
 
 
 			int a = contractorRepository.findByRefCustIdAndContractorName(contractorDto.getRefCustId(), contractorDto.getContractorName());
+			Contractor contractor1 = contractorRepository.findByCustomer_CustIdAndContractorNameAndContractorIsActive(contractorDto.getRefCustId(), contractorDto.getContractorName(), false);
 
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());
@@ -52,11 +53,23 @@ public class ContractorServiceImpl implements ContractorService {
 				else{ 
 					response.status = new Status(true,400, "Customer Not Found");
 				}
-			}
-			else{ 
+			} else if(contractor1 != null){
+				Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());
+				if(customer != null) {
+					
+					contractor1.setCustomer(customer);
+					contractor1.setContractorName(contractorDto.getContractorName());
+					contractor1.setContractorIsActive(true);
+					contractorRepository.save(contractor1);
+					response.status = new Status(false,200, "Successfully created");
 
+				}
+				else{ 
+					response.status = new Status(true,400, "Customer Not Found");
+				}
+
+			} else {
 				response.status = new Status(true,400,"ContractorName already exist for Customer");
-
 			}
 
 		}catch(Exception ex){
@@ -186,7 +199,7 @@ public class ContractorServiceImpl implements ContractorService {
 		try {
 			List<Contractor> contractorList = contractorRepository.findAllByCustomer_CustIdAndContractorIsActive(custId, true);
 			response.setData1(contractorList.stream().map(contractor -> convertToContractorDto(contractor)).collect(Collectors.toList()));
-			
+
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Contractor Not found"); 
 			}else {

@@ -49,5 +49,5 @@ public interface BlockRepository extends PagingAndSortingRepository<Block, Integ
 	@Query(value = "CALL getBlockByCustId(?1)",nativeQuery = true)
 	List<Block> findByCustomer_CustId(Integer custId);
 
-	
+	Block findByBlkLogicalNameAndBlkIsActive(String blkLogicalName, Boolean blkIsActive);
 }

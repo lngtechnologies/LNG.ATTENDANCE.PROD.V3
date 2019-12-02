@@ -19,4 +19,6 @@ public interface BeaconRepository extends PagingAndSortingRepository<Beacon, Int
 	
 	@Query(value = "CALL getAvailableBeaconCode()", nativeQuery = true)
 	List<Beacon> findAllAvailableBeacons();
+	
+	Beacon findBeaconByBeaconCodeAndBeaconIsActive(String beaconCode, Boolean beaconIsActive);
 }

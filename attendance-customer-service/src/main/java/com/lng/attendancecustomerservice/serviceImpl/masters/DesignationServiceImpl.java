@@ -32,6 +32,9 @@ public class DesignationServiceImpl implements DesignationService{
 
 			//if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation Name already exists");
 			int a = designationRepository.findByRefCustIdAndDesignationName(designationDto.getRefCustId(), designationDto.getDesignationName());
+
+			Designation designation1 = designationRepository.findByCustomer_CustIdAndDesignationNameAndDesigIsActive(designationDto.getRefCustId(), designationDto.getDesignationName(), false);
+
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
 				if(customer != null) {
@@ -46,8 +49,21 @@ public class DesignationServiceImpl implements DesignationService{
 				else{ 
 					response.status = new Status(true,400, "Customer Not Found");
 				}
-			}
-			else{ 
+			} else if(designation1 != null){
+
+				Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
+				if(customer != null) {
+
+					designation1.setCustomer(customer);
+					designation1.setDesignationName(designationDto.getDesignationName());
+					designation1.setDesigIsActive(true);
+					designationRepository.save(designation1);
+					response.status = new Status(false,200, "Successfully created");
+				}
+				else{ 
+					response.status = new Status(true,400, "Customer Not Found");
+				}
+			}else {
 				response.status = new Status(true,400,"DesignationName already exist for Customer");
 
 			}
@@ -137,8 +153,8 @@ public class DesignationServiceImpl implements DesignationService{
 			Designation designation = designationRepository.findDesignationByDesignationId(designationId);
 			int a = designationRepository.findEmployeeDesignationByDesignationDesignationId(designationId);
 			if(designation!= null) {
-			if(a == 0) {
-			
+				if(a == 0) {
+
 					designationRepository.delete(designation);	
 					designationResponse.status = new Status(false,200, "Successfully deleted");
 				}else {
@@ -184,10 +200,10 @@ public class DesignationServiceImpl implements DesignationService{
 		try {
 			List<Designation> designationList=designationRepository.findAllByCustomer_CustIdAndDesigIsActive(custId, true);
 			response.setData1(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
-			
+
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not Found"); 
-				
+
 			}else {
 				response.status = new Status(false,200, "Success");
 			}			

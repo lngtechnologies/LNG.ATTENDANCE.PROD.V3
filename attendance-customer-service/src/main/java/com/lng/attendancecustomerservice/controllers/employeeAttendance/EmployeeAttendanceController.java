@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.employeeAttendance.EmployeeAttendanceService;
+import com.lng.dto.employeeAttendance.EmpSignOutDto;
+import com.lng.dto.employeeAttendance.EmpSignOutResponse;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
+import com.lng.dto.employeeAttendance.ShiftDetailsDto;
+import com.lng.dto.employeeAttendance.ShiftResponseDto;
 
 import status.Status;
 
@@ -23,14 +27,49 @@ public class EmployeeAttendanceController {
 
 	@Autowired
 	EmployeeAttendanceService employeeAttendanceService;
-	
-	@PostMapping(value = "/save")
+
+	/* @PostMapping(value = "/save")
 	public ResponseEntity<Status> save(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
 		Status status = employeeAttendanceService.save(employeeAttendanceDto);
 		if (status !=null){
 			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}*/
+
+	@PostMapping(value = "/getShiftDetails")
+	public ResponseEntity<ShiftResponseDto> getShiftDetails(@RequestBody ShiftDetailsDto shiftDetailsDto) {
+		ShiftResponseDto status = employeeAttendanceService.getShiftDetailsByEmpId(shiftDetailsDto.getEmpId());
+		if (status !=null){
+			return new ResponseEntity<ShiftResponseDto>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
+	@PostMapping(value = "/getOfficeSignOutDetailsByEmpId")
+	public ResponseEntity<EmpSignOutResponse> getOfficeSignOutDetailsByEmpId(@RequestBody EmpSignOutDto empSignOutDto) {
+		EmpSignOutResponse status = employeeAttendanceService.getOfficeSignOutDetailsByEmpId(empSignOutDto.getEmpId());
+		if (status !=null){
+			return new ResponseEntity<EmpSignOutResponse>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	 @PostMapping(value = "/signIn")
+		public ResponseEntity<Status> saveSignIn(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
+			Status status = employeeAttendanceService.saveSignIn(employeeAttendanceDto);
+			if (status !=null){
+				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	 
+	 @PostMapping(value = "/signOut")
+		public ResponseEntity<Status> saveSignOut(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
+			Status status = employeeAttendanceService.saveSignOut(employeeAttendanceDto);
+			if (status !=null){
+				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
 }

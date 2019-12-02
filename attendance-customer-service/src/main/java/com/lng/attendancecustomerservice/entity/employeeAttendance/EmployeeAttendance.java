@@ -27,23 +27,38 @@ public class EmployeeAttendance {
 	@JoinColumn(name = "refEmpId")
 	private Employee employee;
 
-	@Column(name = "empAttendanceMode")
-	private String empAttendanceMode;
+	@Column(name = "empAttendanceDate")
+	private Date empAttendanceDate;
 
-	@Column(name = "empAttendanceDatetime")
-	private Date empAttendanceDatetime;
+	@Column(name = "empAttendanceInMode")
+	private String empAttendanceInMode;
 
-	@Column(name = "empAttendanceConsiderDatetime")
-	private Date empAttendanceConsiderDatetime;
+	@Column(name = "empAttendanceOutMode")
+	private String empAttendanceOutMode;
 
-	@Column(name = "empAttendanceConfidence")
-	private BigDecimal empAttendanceConfidence;
+	@Column(name = "empAttendanceInDatetime")
+	private Date empAttendanceInDatetime;
 
-	@Column(name = "empAttendanceLatitude")
-	private Double empAttendanceLatitude;
+	@Column(name = "empAttendanceOutDatetime")
+	private Date empAttendanceOutDatetime;
 
-	@Column(name = "empAttendanceLongitude")
-	private Double empAttendanceLongitude;
+	@Column(name = "empAttendanceConsiderInDatetime")
+	private Date empAttendanceConsiderInDatetime;
+
+	@Column(name = "empAttendanceConsiderOutDatetime")
+	private Date empAttendanceConsiderOutDatetime;
+
+	@Column(name = "empAttendanceInConfidence")
+	private BigDecimal empAttendanceInConfidence;
+
+	@Column(name = "empAttendanceOutConfidence")
+	private BigDecimal empAttendanceOutConfidence;
+
+	@Column(name = "empAttendanceInLatLong")
+	private String empAttendanceInLatLong;
+
+	@Column(name = "empAttendanceOutLatLong")
+	private String empAttendanceOutLatLong;
 
 
 	public Integer getEmpAttendanceId() {
@@ -62,52 +77,92 @@ public class EmployeeAttendance {
 		this.employee = employee;
 	}
 
-	public String getEmpAttendanceMode() {
-		return empAttendanceMode;
+	public Date getEmpAttendanceDate() {
+		return empAttendanceDate;
 	}
 
-	public void setEmpAttendanceMode(String empAttendanceMode) {
-		this.empAttendanceMode = empAttendanceMode;
+	public void setEmpAttendanceDate(Date empAttendanceDate) {
+		this.empAttendanceDate = empAttendanceDate;
 	}
 
-	public Date getEmpAttendanceDatetime() {
-		return empAttendanceDatetime;
+	public String getEmpAttendanceInMode() {
+		return empAttendanceInMode;
 	}
 
-	public void setEmpAttendanceDatetime(Date empAttendanceDatetime) {
-		this.empAttendanceDatetime = empAttendanceDatetime;
+	public void setEmpAttendanceInMode(String empAttendanceInMode) {
+		this.empAttendanceInMode = empAttendanceInMode;
 	}
 
-	public Date getEmpAttendanceConsiderDatetime() {
-		return empAttendanceConsiderDatetime;
+	public String getEmpAttendanceOutMode() {
+		return empAttendanceOutMode;
 	}
 
-	public void setEmpAttendanceConsiderDatetime(Date empAttendanceConsiderDatetime) {
-		this.empAttendanceConsiderDatetime = empAttendanceConsiderDatetime;
+	public void setEmpAttendanceOutMode(String empAttendanceOutMode) {
+		this.empAttendanceOutMode = empAttendanceOutMode;
 	}
 
-	public BigDecimal getEmpAttendanceConfidence() {
-		return empAttendanceConfidence;
+	public Date getEmpAttendanceInDatetime() {
+		return empAttendanceInDatetime;
 	}
 
-	public void setEmpAttendanceConfidence(BigDecimal empAttendanceConfidence) {
-		this.empAttendanceConfidence = empAttendanceConfidence;
+	public void setEmpAttendanceInDatetime(Date empAttendanceInDatetime) {
+		this.empAttendanceInDatetime = empAttendanceInDatetime;
 	}
 
-	public Double getEmpAttendanceLatitude() {
-		return empAttendanceLatitude;
+	public Date getEmpAttendanceOutDatetime() {
+		return empAttendanceOutDatetime;
 	}
 
-	public void setEmpAttendanceLatitude(Double empAttendanceLatitude) {
-		this.empAttendanceLatitude = empAttendanceLatitude;
+	public void setEmpAttendanceOutDatetime(Date empAttendanceOutDatetime) {
+		this.empAttendanceOutDatetime = empAttendanceOutDatetime;
 	}
 
-	public Double getEmpAttendanceLongitude() {
-		return empAttendanceLongitude;
+	public Date getEmpAttendanceConsiderInDatetime() {
+		return empAttendanceConsiderInDatetime;
 	}
 
-	public void setEmpAttendanceLongitude(Double empAttendanceLongitude) {
-		this.empAttendanceLongitude = empAttendanceLongitude;
+	public void setEmpAttendanceConsiderInDatetime(Date empAttendanceConsiderInDatetime) {
+		this.empAttendanceConsiderInDatetime = empAttendanceConsiderInDatetime;
+	}
+
+	public Date getEmpAttendanceConsiderOutDatetime() {
+		return empAttendanceConsiderOutDatetime;
+	}
+
+	public void setEmpAttendanceConsiderOutDatetime(Date empAttendanceConsiderOutDatetime) {
+		this.empAttendanceConsiderOutDatetime = empAttendanceConsiderOutDatetime;
+	}
+
+	public BigDecimal getEmpAttendanceInConfidence() {
+		return empAttendanceInConfidence;
+	}
+
+	public void setEmpAttendanceInConfidence(BigDecimal empAttendanceInConfidence) {
+		this.empAttendanceInConfidence = empAttendanceInConfidence;
+	}
+
+	public BigDecimal getEmpAttendanceOutConfidence() {
+		return empAttendanceOutConfidence;
+	}
+
+	public void setEmpAttendanceOutConfidence(BigDecimal empAttendanceOutConfidence) {
+		this.empAttendanceOutConfidence = empAttendanceOutConfidence;
+	}
+
+	public String getEmpAttendanceInLatLong() {
+		return empAttendanceInLatLong;
+	}
+
+	public void setEmpAttendanceInLatLong(String empAttendanceInLatLong) {
+		this.empAttendanceInLatLong = empAttendanceInLatLong;
+	}
+
+	public String getEmpAttendanceOutLatLong() {
+		return empAttendanceOutLatLong;
+	}
+
+	public void setEmpAttendanceOutLatLong(String empAttendanceOutLatLong) {
+		this.empAttendanceOutLatLong = empAttendanceOutLatLong;
 	}
 
 }

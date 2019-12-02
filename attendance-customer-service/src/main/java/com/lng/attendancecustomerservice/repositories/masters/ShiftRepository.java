@@ -30,6 +30,8 @@ public interface ShiftRepository extends CrudRepository<Shift,Integer> {
 	
 	@Query(value = "CALL getAllShiftByCustId(?1)",nativeQuery = true)
 	List<Shift> findByCustomer_CustIdAndShiftIsActive(Integer custId);
-
+	
+	@Query(value = "select s.* from tmshift s left join ttempshift es on s.shiftId = es.refShiftId where es.refEmpId = ?1", nativeQuery = true)
+	Shift getByEmpId(Integer empId);
 	
 }

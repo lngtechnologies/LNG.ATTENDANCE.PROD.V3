@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
@@ -95,7 +94,7 @@ public class BranchServiceImpl implements BranchService {
 
 			int chechNoOfBranches = branchRepository.chechNoOfBranchesCreatedByCustomer(branchDto.getRefCustomerId());
 			if(chechNoOfBranches == 0) {
-
+				
 				int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
 				if(b == 0) {
 					Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
