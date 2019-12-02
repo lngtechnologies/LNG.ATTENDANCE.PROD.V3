@@ -34,8 +34,8 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 	@Override
 	public CustBrHolidayResponse saveCustBrHoliday(List<CustBrHolidayDto> custBrHolidayDtos) {
 		CustBrHolidayResponse  custBrHolidayResponse  =  new  CustBrHolidayResponse();
-		String msg = "Branch already maped for:";
-		String Holiday ="";
+		//String msg = "Branch already maped for:";
+		//String Holiday ="";
 		try {
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 
@@ -44,11 +44,11 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 				if(branch1 != null &&  holidayCalendar != null) {
 					CustBrHoliday cH = custBrHolidayRepository.findCustBrHolidayByBranch_brIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getRefHolidayId());
 					if(cH == null) {
-					CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
-					custBrHoliday1.setBranch(branch1);
-					custBrHoliday1.setHolidayCalendar(holidayCalendar);
-					custBrHolidayRepository.save(custBrHoliday1);
-					custBrHolidayResponse.status = new Status(true,400, "Successfully Created");
+						CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
+						custBrHoliday1.setBranch(branch1);
+						custBrHoliday1.setHolidayCalendar(holidayCalendar);
+						custBrHolidayRepository.save(custBrHoliday1);
+						custBrHolidayResponse.status = new Status(true,400, "Successfully Created");
 					}else {
 						custBrHolidayResponse.status = new Status(true,400, "Haliday Name Already Exists");
 

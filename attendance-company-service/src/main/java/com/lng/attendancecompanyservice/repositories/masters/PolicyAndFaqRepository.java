@@ -18,7 +18,7 @@ public interface PolicyAndFaqRepository extends PagingAndSortingRepository<Polic
 	
 	//PolicyAndFaq   findPolicyAndFaqKeyAndValue(String key,String value);
 	PolicyAndFaq   findPolicyAndFaqBykey(String key);
-	//PolicyAndFaq   findPolicyAndFaqByValue(String value);
+	PolicyAndFaq   findPolicyAndFaqByValue(String value);
 	PolicyAndFaq   findPolicyAndFaqByPageId(Integer pageId);
 	
 	@Transactional

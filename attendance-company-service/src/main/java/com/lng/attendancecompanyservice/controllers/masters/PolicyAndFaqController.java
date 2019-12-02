@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.PolicyAndFaqService;
+import com.lng.dto.masters.block.BlockDto;
 import com.lng.dto.policyAndFaq.PolicyAndFaqDto;
 import com.lng.dto.policyAndFaq.PolicyAndFaqResponse;
 
@@ -38,6 +39,14 @@ public class PolicyAndFaqController {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<PolicyAndFaqResponse>(policyAndFaqResponse, HttpStatus.OK);
+	}
+	@PostMapping(value="/updateByPageId")
+	public ResponseEntity<status.Status> update(@RequestBody PolicyAndFaqDto policyAndFaqDto){
+		status.Status status = policyAndFaqService.update(policyAndFaqDto);
+		if(policyAndFaqDto != null){
+			return  new ResponseEntity<status.Status>(status, HttpStatus.OK);
+		}
+		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
 
 }

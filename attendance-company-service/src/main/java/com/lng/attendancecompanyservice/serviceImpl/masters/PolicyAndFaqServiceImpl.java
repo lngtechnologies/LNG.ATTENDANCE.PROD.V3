@@ -28,34 +28,17 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 		try {
 			PolicyAndFaq policyAndFaq = policyAndFaqRepository.findPolicyAndFaqByPageId(policyAndFaqDto.getPageId());
 			if(policyAndFaq != null) {
-             policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
-			policyAndFaqResponse.status = new Status(false,200, "successfully created");
+				PolicyAndFaq policyAndFaq1  = policyAndFaqRepository.findPolicyAndFaqByValue(policyAndFaqDto.getValue());
+				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
+				policyAndFaqResponse.status = new Status(false,200, "successfully created");
 			}else {
 				policyAndFaqResponse.status = new Status(false,400, "Not Found");
-			}
-					}catch(Exception e) {
-			policyAndFaqResponse.status = new Status(true,3000, e.getMessage()); 
-
-		}
-
-		return policyAndFaqResponse;
-	}
-
-	@Override
-	public PolicyAndFaqResponse getAll() {
-		PolicyAndFaqResponse  policyAndFaqResponse = new PolicyAndFaqResponse();
-		try {
-			List<PolicyAndFaq> policyAndFaqList=policyAndFaqRepository.findAll();
-			policyAndFaqResponse.setData(policyAndFaqList.stream().map(policyAndFaq -> convertToPolicyAndFaqDto(policyAndFaq)).collect(Collectors.toList()));
-			if(policyAndFaqResponse.getData().isEmpty()) {
-				policyAndFaqResponse.status = new Status(false,400, "Not found"); 
-			}else {
-				policyAndFaqResponse.status = new Status(false,200, "success");
 			}
 		}catch(Exception e) {
 			policyAndFaqResponse.status = new Status(true,3000, e.getMessage()); 
 
 		}
+
 		return policyAndFaqResponse;
 	}
 
@@ -83,4 +66,24 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 		return policyAndFaqResponse;
 	}
 
+	@Override
+	public Status update(PolicyAndFaqDto policyAndFaqDto) {
+		//PolicyAndFaqResponse  policyAndFaqResponse = new PolicyAndFaqResponse();
+		Status status = null;
+		try {
+			PolicyAndFaq policyAndFaq = policyAndFaqRepository.findPolicyAndFaqByPageId(policyAndFaqDto.getPageId());
+			if(policyAndFaq != null) {
+				PolicyAndFaq policyAndFaq1  = policyAndFaqRepository.findPolicyAndFaqByValue(policyAndFaqDto.getValue());
+				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
+				status = new Status(false, 200, "Updated successfully");
+			}else {
+				status = new Status(false, 200, " Not Found");
+			}
+		}catch(Exception e) {
+			status = new Status(true, 500, e.getMessage());
+
+		}
+
+		return status;
+	}
 }

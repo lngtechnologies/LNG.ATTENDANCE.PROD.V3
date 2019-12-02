@@ -3,6 +3,8 @@ package com.lng.attendancecompanyservice.service.masters;
 import com.lng.dto.policyAndFaq.PolicyAndFaqDto;
 import com.lng.dto.policyAndFaq.PolicyAndFaqResponse;
 
+import status.Status;
+
 public interface PolicyAndFaqService {
 	
 	PolicyAndFaqResponse   save(PolicyAndFaqDto policyAndFaqDto);
@@ -10,7 +12,9 @@ public interface PolicyAndFaqService {
 	
 	PolicyAndFaqResponse  getPolicyAndFaqByKey(String key);
 	
-	PolicyAndFaqResponse  getAll();
+	//PolicyAndFaqResponse  getAll();
+	
+	Status  update(PolicyAndFaqDto policyAndFaqDto);
 	
 	//PolicyAndFaqResponse   update(PolicyAndFaqDto policyAndFaqDto);
 	
