@@ -218,32 +218,6 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 		return holidayCalendarResponse;
 	}
 
-	/*
-	 * @Override public HolidayCalendarResponse
-	 * getHolidayCalendarByRefBrIdAndRefCustId(Integer refbrId,Integer refCustId) {
-	 * HolidayCalendarResponse holidayCalendarResponse = new
-	 * HolidayCalendarResponse(); try {
-	 * 
-	 * List<HolidayCalendar> holidayCalendars =
-	 * holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
-	 * if(holidayCalendars.isEmpty()) { List<HolidayCalendar> holidayList =
-	 * holidayCalendarRepository.findHolidayCalendarByrefCustId(refCustId);
-	 * if(holidayList.isEmpty()) { holidayCalendarResponse.status = new
-	 * Status(true,400, " Not Found"); }else {
-	 * holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar ->
-	 * convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
-	 * holidayCalendarResponse.status = new Status(false,200, "success"); } }else {
-	 * holidayCalendarResponse.setData1(holidayCalendars.stream().map(
-	 * holidayCalendar ->
-	 * convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
-	 * holidayCalendarResponse.status = new Status(false,200, "success");
-	 * 
-	 * } }catch(Exception e) { holidayCalendarResponse.status = new Status(true,500,
-	 * "Something went wrong");
-	 * 
-	 * } return holidayCalendarResponse; }
-	 */
-
 	@Override
 	public HolidayCalendarResponse getHolidayCalendarByRefCustId(Integer refCustId) {
 		HolidayCalendarResponse  holidayCalendarResponse  =  new  HolidayCalendarResponse();
@@ -301,6 +275,8 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendarDto1.setHolidayDate((Date)p[3]);
 					holidayCalendarDto1.setHolidayName((p[4].toString()));
 					holidayCalendarDto1.setCustBrHolidayId(Integer.valueOf(p[5].toString()));
+					holidayCalendarDto1.setRefbrId(Integer.valueOf(p[6].toString()));
+					
 					HolidayCalendarDtoList.add(holidayCalendarDto1);
 					holidayCalendarResponse.status = new Status(false,200, "success");
 				}

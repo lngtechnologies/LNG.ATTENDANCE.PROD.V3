@@ -48,7 +48,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHoliday1.setBranch(branch1);
 						custBrHoliday1.setHolidayCalendar(holidayCalendar);
 						custBrHolidayRepository.save(custBrHoliday1);
-						custBrHolidayResponse.status = new Status(true,400, "Successfully Created");
+						custBrHolidayResponse.status = new Status(false,200, "Successfully Created");
 					}else {
 						custBrHolidayResponse.status = new Status(true,400, "Haliday Name Already Exists");
 
@@ -106,7 +106,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHolidayResponse.status = new Status(false,200, "success"); 
 					}
 					else {
-						custBrHolidayResponse.status = new Status(false,200, "Customer And Branch MisMatch");
+						custBrHolidayResponse.status = new Status(true,400, "Customer And Branch MisMatch");
 					}
 				}
 
@@ -181,7 +181,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 				custBrHolidayResponse.status = new Status(false,200, "Success");
 			}
 			else {
-				custBrHolidayResponse.status = new Status(true, 4000, "Not found");
+				custBrHolidayResponse.status = new Status(true, 400, "Not found");
 			}
 		}catch(Exception e) {
 			custBrHolidayResponse.status = new Status(true,3000, e.getMessage()); 
