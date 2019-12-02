@@ -7,7 +7,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lng.attendancecompanyservice.entity.masters.Block;
 import com.lng.attendancecompanyservice.entity.masters.PolicyAndFaq;
 import com.lng.attendancecompanyservice.repositories.masters.BlockRepository;
 import com.lng.attendancecompanyservice.repositories.masters.PolicyAndFaqRepository;
@@ -18,7 +17,6 @@ import com.lng.dto.policyAndFaq.PolicyAndFaqResponse;
 import status.Status;
 @Service
 public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
-
 	ModelMapper modelMapper=new ModelMapper();
 	@Autowired
 	BlockRepository blockRepository;
@@ -26,17 +24,16 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 	PolicyAndFaqRepository policyAndFaqRepository;
 	@Override
 	public PolicyAndFaqResponse save(PolicyAndFaqDto policyAndFaqDto) {
-
 		PolicyAndFaqResponse  policyAndFaqResponse = new PolicyAndFaqResponse();
 		try {
-			if(policyAndFaqDto.getFaqText() == null || policyAndFaqDto.getFaqText().isEmpty()) throw new Exception("Please enter Faq name");
-			if(policyAndFaqDto.getPolicyText() == null || policyAndFaqDto.getPolicyText().isEmpty()) throw new Exception("Please enter Policy name");
-			PolicyAndFaq policyAndFaq  =  new PolicyAndFaq();	
-			policyAndFaq.setFaqText(policyAndFaqDto.getFaqText());
-			policyAndFaq.setPolicyText(policyAndFaqDto.getPolicyText());
-			policyAndFaqRepository.save(policyAndFaq);
-			policyAndFaqResponse.status = new Status(false,200, "successfully created");
-
+			PolicyAndFaq policyAndFaq = policyAndFaqRepository.findPolicyAndFaqByPageId(policyAndFaqDto.getPageId());
+			if(policyAndFaq != null) {
+				PolicyAndFaq policyAndFaq1  = policyAndFaqRepository.findPolicyAndFaqByValue(policyAndFaqDto.getValue());
+				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
+				policyAndFaqResponse.status = new Status(false,200, "successfully created");
+			}else {
+				policyAndFaqResponse.status = new Status(false,400, "Not Found");
+			}
 		}catch(Exception e) {
 			policyAndFaqResponse.status = new Status(true,3000, e.getMessage()); 
 
@@ -45,12 +42,18 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 		return policyAndFaqResponse;
 	}
 
+	public PolicyAndFaqDto convertToPolicyAndFaqDto(PolicyAndFaq policyAndFaq) {
+		PolicyAndFaqDto policyAndFaqDto = modelMapper.map(policyAndFaq,PolicyAndFaqDto.class);
+		return policyAndFaqDto;
+	}
+
 	@Override
-	public PolicyAndFaqResponse getAll() {
+	public PolicyAndFaqResponse getPolicyAndFaqByKey(String key) {
 		PolicyAndFaqResponse  policyAndFaqResponse = new PolicyAndFaqResponse();
 		try {
-			List<PolicyAndFaq> policyAndFaqList=policyAndFaqRepository.findAll();
+			List<PolicyAndFaq> policyAndFaqList=policyAndFaqRepository.findAllByKey(key);
 			policyAndFaqResponse.setData(policyAndFaqList.stream().map(policyAndFaq -> convertToPolicyAndFaqDto(policyAndFaq)).collect(Collectors.toList()));
+
 			if(policyAndFaqResponse.getData().isEmpty()) {
 				policyAndFaqResponse.status = new Status(false,4000, "Not found"); 
 			}else {
@@ -63,30 +66,24 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 		return policyAndFaqResponse;
 	}
 
-	public PolicyAndFaqDto convertToPolicyAndFaqDto(PolicyAndFaq policyAndFaq) {
-		PolicyAndFaqDto policyAndFaqDto = modelMapper.map(policyAndFaq,PolicyAndFaqDto.class);
-		return policyAndFaqDto;
-	}
+	@Override
+	public Status update(PolicyAndFaqDto policyAndFaqDto) {
+		//PolicyAndFaqResponse  policyAndFaqResponse = new PolicyAndFaqResponse();
+		Status status = null;
+		try {
+			PolicyAndFaq policyAndFaq = policyAndFaqRepository.findPolicyAndFaqByPageId(policyAndFaqDto.getPageId());
+			if(policyAndFaq != null) {
+				PolicyAndFaq policyAndFaq1  = policyAndFaqRepository.findPolicyAndFaqByValue(policyAndFaqDto.getValue());
+				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
+				status = new Status(false, 200, "Updated successfully");
+			}else {
+				status = new Status(false, 200, " Not Found");
+			}
+		}catch(Exception e) {
+			status = new Status(true, 500, e.getMessage());
 
-	/*
-	 * @Override public PolicyAndFaqResponse update(PolicyAndFaqDto policyAndFaqDto)
-	 * {
-	 * 
-	 * PolicyAndFaqResponse policyAndFaqResponse = new PolicyAndFaqResponse(); try {
-	 * //PolicyAndFaq policyAndFaq = policyAndFaqRepository.
-	 * updatePolicyAndFaqByPolicyAndFaq_FaqTextAndPolicyAndFaq_PolicyText(
-	 * policyAndFaqDto.getFaqText(), policyAndFaqDto.getPolicyText()); PolicyAndFaq
-	 * policyAndFaq = new PolicyAndFaq();
-	 * policyAndFaq.setFaqText(policyAndFaqDto.getFaqText());
-	 * policyAndFaq.setPolicyText(policyAndFaqDto.getPolicyText());
-	 * policyAndFaqRepository.save(policyAndFaq); policyAndFaqResponse.status = new
-	 * Status(false,200, "Updated successfully");
-	 * 
-	 * }catch(Exception e) { policyAndFaqResponse.status = new Status(true,3000,
-	 * e.getMessage());
-	 * 
-	 * }
-	 * 
-	 * return policyAndFaqResponse; }
-	 */
+		}
+
+		return status;
+	}
 }

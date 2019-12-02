@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecustomerservice.service.masters.CustBrHolidayService;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayDto;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayResponse;
-import com.lng.dto.masters.department.DepartmentDto;
-import com.lng.dto.masters.department.DepartmentResponse;
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
 @RequestMapping(value="/cust/brholiday")

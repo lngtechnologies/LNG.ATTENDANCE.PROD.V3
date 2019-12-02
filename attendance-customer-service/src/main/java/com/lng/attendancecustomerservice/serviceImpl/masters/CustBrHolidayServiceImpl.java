@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.CustBrHoliday;
-import com.lng.attendancecustomerservice.entity.masters.Department;
 import com.lng.attendancecustomerservice.entity.masters.HolidayCalendar;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustBrHolidayRepository;
@@ -16,9 +15,9 @@ import com.lng.attendancecustomerservice.repositories.masters.HolidayCalendarRep
 import com.lng.attendancecustomerservice.service.masters.CustBrHolidayService;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayDto;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayResponse;
-import com.lng.dto.masters.department.DepartmentDto;
 
 import status.Status;
+import status.StatusDto;
 @Service
 public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 
@@ -35,21 +34,30 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 	@Override
 	public CustBrHolidayResponse saveCustBrHoliday(List<CustBrHolidayDto> custBrHolidayDtos) {
 		CustBrHolidayResponse  custBrHolidayResponse  =  new  CustBrHolidayResponse();
+		//String msg = "Branch already maped for:";
+		//String Holiday ="";
 		try {
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 
 				Branch branch1 =branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
 				HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
 				if(branch1 != null &&  holidayCalendar != null) {
-					CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
-					custBrHoliday1.setBranch(branch1);
-					custBrHoliday1.setHolidayCalendar(holidayCalendar);
-					custBrHolidayRepository.save(custBrHoliday1);
-					custBrHolidayResponse.status = new Status(false,200, "success");
+					CustBrHoliday cH = custBrHolidayRepository.findCustBrHolidayByBranch_brIdAndHolidayCalendar_HolidayId(custBrHolidayDto.getRefbrId(), custBrHolidayDto.getRefHolidayId());
+					if(cH == null) {
+						CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
+						custBrHoliday1.setBranch(branch1);
+						custBrHoliday1.setHolidayCalendar(holidayCalendar);
+						custBrHolidayRepository.save(custBrHoliday1);
+						custBrHolidayResponse.status = new Status(true,400, "Successfully Created");
+					}else {
+						custBrHolidayResponse.status = new Status(true,400, "Haliday Name Already Exists");
+
+					}
 				}else {
-					custBrHolidayResponse.status = new Status(false,400, "Not Found");
+					custBrHolidayResponse.status = new Status(true,400, "Not Found");
 				}
 			}
+
 		}catch(Exception ex){
 			custBrHolidayResponse.status = new Status(true,500, "Something went wrong"); 
 		}

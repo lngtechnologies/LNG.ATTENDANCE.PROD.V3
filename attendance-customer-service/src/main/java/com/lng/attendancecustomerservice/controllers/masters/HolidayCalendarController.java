@@ -80,15 +80,17 @@ public class HolidayCalendarController {
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
 	
-	@PostMapping(value = "/getHolidayCalendarByBranchId")
-	public ResponseEntity<HolidayCalendarResponse> findHolidayCalendarByBrId(@RequestBody HolidayCalendarDto holidayCalendarDto) {
-		HolidayCalendarResponse holidayCalendarResponse = holidayCalendarService.getHolidayCalendarByRefBrIdAndRefCustId(holidayCalendarDto.getRefbrId(),holidayCalendarDto.getRefCustId());
-		if (holidayCalendarResponse !=null){
-			return new ResponseEntity<HolidayCalendarResponse>(holidayCalendarResponse, HttpStatus.OK);
-		}
-		return new ResponseEntity(HttpStatus.NOT_FOUND);
-	}
-	
+	/*
+	 * @PostMapping(value = "/getHolidayCalendarByBranchId") public
+	 * ResponseEntity<HolidayCalendarResponse>
+	 * findHolidayCalendarByBrId(@RequestBody HolidayCalendarDto holidayCalendarDto)
+	 * { HolidayCalendarResponse holidayCalendarResponse =
+	 * holidayCalendarService.getHolidayCalendarByRefBrIdAndRefCustId(
+	 * holidayCalendarDto.getRefbrId(),holidayCalendarDto.getRefCustId()); if
+	 * (holidayCalendarResponse !=null){ return new
+	 * ResponseEntity<HolidayCalendarResponse>(holidayCalendarResponse,
+	 * HttpStatus.OK); } return new ResponseEntity(HttpStatus.NOT_FOUND); }
+	 */
 	@PostMapping(value = "/getHolidayCalendarByCustId")
 	public ResponseEntity<HolidayCalendarResponse> findHolidayCalendarByCustId(@RequestBody HolidayCalendarDto holidayCalendarDto) {
 		HolidayCalendarResponse holidayCalendarResponse = holidayCalendarService.getHolidayCalendarByRefCustId(holidayCalendarDto.getRefCustId());
@@ -105,7 +107,7 @@ public class HolidayCalendarController {
 		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
 	
-	@PostMapping(value = "/getByBrId")
+	@PostMapping(value = "/getByBrId") 
 	public ResponseEntity<HolidayCalendarResponse> findByBrId(@RequestBody HolidayCalendarDto holidayCalendarDto) {
 		HolidayCalendarResponse holidayCalendarResponse = holidayCalendarService.getHolidayCalendarByRefBrId(holidayCalendarDto.getRefbrId());
 		if (holidayCalendarResponse !=null){

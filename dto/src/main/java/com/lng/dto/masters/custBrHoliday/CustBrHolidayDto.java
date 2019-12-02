@@ -30,6 +30,9 @@ public class CustBrHolidayDto {
 		this.refbrId = refbrId;
 	}
 
+
+
+
 	public Integer getRefHolidayId() {
 		return refHolidayId;
 	}
