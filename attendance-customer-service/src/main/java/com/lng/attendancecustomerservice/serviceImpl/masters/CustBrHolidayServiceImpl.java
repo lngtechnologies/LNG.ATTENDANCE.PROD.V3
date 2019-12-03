@@ -74,7 +74,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 				custBrHolidayRepository.delete(custBrHoliday);	
 				custBrHolidayResponse.status = new Status(false,200, "successfully deleted");
 			}else {
-				custBrHolidayResponse.status = new Status(false,400, "Not Found");	
+				custBrHolidayResponse.status = new Status(true,400, "Not Found");	
 			}
 
 		}catch(Exception ex){
@@ -160,7 +160,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 				}
 			}
 			else {
-				status = new Status(false, 200, "Not Found");
+				status = new Status(true, 400, "Not Found");
 
 			}
 		}
