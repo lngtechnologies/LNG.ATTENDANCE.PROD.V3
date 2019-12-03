@@ -1,35 +1,26 @@
 package com.lng.dto.empAttendance;
 
-import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 public class EmpAttendanceParamDto2 {
-	
-	private  Time   Times;
 	
 	private String  emp;
 	
 	private   Integer  refCustId;
 	
-	private Date empAttendanceDatetime;
+	private Date empAttendanceDate;
 	
 	private  Integer refEmpId;
 
 	private  String  empName;
 	
-	private String   shiftStart;
+	private String shiftStart;
 	
-	private  Date  empAttendanceConsiderDatetime;
+	private String shiftEnd;
 	
-	public Time getTimes() {
-		return Times;
-	}
-
-	public void setTimes(Time times) {
-		Times = times;
-	}
+	private  Date  empAttendanceInDatetime;
+	
+	private  Date  empAttendanceOutDatetime;
 
 	public String getEmp() {
 		return emp;
@@ -47,14 +38,13 @@ public class EmpAttendanceParamDto2 {
 		this.refCustId = refCustId;
 	}
 
-	public Date getEmpAttendanceDatetime() {
-		return empAttendanceDatetime;
+	public Date getEmpAttendanceDate() {
+		return empAttendanceDate;
 	}
 
-	public void setEmpAttendanceDatetime(Date empAttendanceDatetime) {
-		this.empAttendanceDatetime = empAttendanceDatetime;
+	public void setEmpAttendanceDate(Date empAttendanceDate) {
+		this.empAttendanceDate = empAttendanceDate;
 	}
-
 
 	public Integer getRefEmpId() {
 		return refEmpId;
@@ -72,6 +62,22 @@ public class EmpAttendanceParamDto2 {
 		this.empName = empName;
 	}
 
+	public Date getEmpAttendanceInDatetime() {
+		return empAttendanceInDatetime;
+	}
+
+	public void setEmpAttendanceInDatetime(Date empAttendanceInDatetime) {
+		this.empAttendanceInDatetime = empAttendanceInDatetime;
+	}
+
+	public Date getEmpAttendanceOutDatetime() {
+		return empAttendanceOutDatetime;
+	}
+
+	public void setEmpAttendanceOutDatetime(Date empAttendanceOutDatetime) {
+		this.empAttendanceOutDatetime = empAttendanceOutDatetime;
+	}
+
 	public String getShiftStart() {
 		return shiftStart;
 	}
@@ -80,14 +86,13 @@ public class EmpAttendanceParamDto2 {
 		this.shiftStart = shiftStart;
 	}
 
-	public Date getEmpAttendanceConsiderDatetime() {
-		return empAttendanceConsiderDatetime;
+	public String getShiftEnd() {
+		return shiftEnd;
 	}
 
-	public void setEmpAttendanceConsiderDatetime(Date empAttendanceConsiderDatetime) {
-		this.empAttendanceConsiderDatetime = empAttendanceConsiderDatetime;
+	public void setShiftEnd(String shiftEnd) {
+		this.shiftEnd = shiftEnd;
 	}
-
 	
-
+	
 }

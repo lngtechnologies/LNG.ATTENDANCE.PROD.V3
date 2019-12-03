@@ -39,40 +39,33 @@ public class Branch {
 	private State state;
 
 	@Column(name = "brCity")
-	@Size(max = 50)
 	@NotNull(message = "This field should not be an empty")
 	private String brCity;
 
-	@Size(max = 50)
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "brName")
 	private String brName;
 
-	@Size(max = 100)
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "brAddress")
 	private String brAddress;
 
-	@Size(max = 7)
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "brPincode")
 	private String brPincode;
 
-	@Size(max = 8)
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "brCode")
 	private String brCode;
 
-	@Size(max = 10)
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "brMobile")
 	private String brMobile;
 
-	@Size(max = 30)
 	@Column(name = "brLandline")
 	private String brLandline;
 
-	@Size(max = 50)
+
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "brEmail")
 	private String brEmail;
