@@ -16,16 +16,64 @@ import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
+import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
+
+import status.Status;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
-@RequestMapping(value="/employee/attendance")
+@RequestMapping(value="/employee/manual/attendance")
 public class EmpManualAttendanceController {
 	
 	@Autowired
 	EmpManualAttendanceService  empAttendanceService;
 	
-	@PostMapping(value = "/getAbsentAttendanceByDeptIdAndDate")
+	@PostMapping(value = "/getEmpAttendanceByDeptIdAndDate")
+	public ResponseEntity<EmpAttendanceResponse> edit(@RequestBody EmpAttendanceParamDto empAttendanceDto) {
+		EmpAttendanceResponse empAttendanceResponse = empAttendanceService.getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(empAttendanceDto.getDeptId(), empAttendanceDto.getEmpAttendanceDatetime());
+		if(empAttendanceResponse !=null){
+			return new ResponseEntity<EmpAttendanceResponse>(empAttendanceResponse, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	 @PostMapping(value = "/mark/signIn")
+		public ResponseEntity<Status> saveSignIn(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
+			Status status = empAttendanceService.saveSignIn(employeeAttendanceDto);
+			if (status !=null){
+				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	 
+	 @PostMapping(value = "/mark/signOut")
+		public ResponseEntity<Status> saveSignOut(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
+			Status status = empAttendanceService.saveSignOut(employeeAttendanceDto);
+			if (status !=null){
+				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	
+	 @PostMapping(value = "/getEmployeeByNameAndDateAndCustomer")
+		public ResponseEntity<EmpAttendanceResponse> edit1(@RequestBody EmpAttendanceParamDto2 empAttendanceDto) {
+			EmpAttendanceResponse empAttendanceResponse = empAttendanceService.searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetime(empAttendanceDto.getEmp(), empAttendanceDto.getRefCustId(), empAttendanceDto.getEmpAttendanceDate());
+			if(empAttendanceResponse !=null){
+				return new ResponseEntity<EmpAttendanceResponse>(empAttendanceResponse, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	 
+	 @PostMapping(value = "/update/override")
+		public ResponseEntity<Status> saveSignIn(@RequestBody EmployeeAttendanceDto employeeAttendanceDto) {
+			Status status = empAttendanceService.updateEmpOverRideAttendance(employeeAttendanceDto);
+			if (status !=null){
+				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	 
+	/*@PostMapping(value = "/getAbsentAttendanceByDeptIdAndDate")
 	public ResponseEntity<EmpAttendanceResponse> edit(@RequestBody EmpAttendanceParamDto empAttendanceDto) {
 		EmpAttendanceResponse empAttendanceResponse = empAttendanceService.getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(empAttendanceDto.getDeptId(), empAttendanceDto.getEmpAttendanceDatetime());
 		if(empAttendanceResponse !=null){
@@ -60,6 +108,6 @@ public class EmpManualAttendanceController {
 			return new ResponseEntity<EmpAttendanceResponse>(empAttendanceResponse, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
-	}
+	}*/
 
 }

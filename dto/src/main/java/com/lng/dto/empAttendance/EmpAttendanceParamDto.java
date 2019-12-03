@@ -11,6 +11,8 @@ public class EmpAttendanceParamDto {
 	private  String  empName;
 
 	private String   shiftStart; 
+	
+	private String shiftEnd;
 
 	private  Integer  deptId;
 
@@ -56,12 +58,12 @@ public class EmpAttendanceParamDto {
 		this.empAttendanceDatetime = empAttendanceDatetime;
 	}
 
+	public String getShiftEnd() {
+		return shiftEnd;
+	}
 
-
-
-
-
-
-
+	public void setShiftEnd(String shiftEnd) {
+		this.shiftEnd = shiftEnd;
+	}
 
 }

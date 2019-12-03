@@ -41,42 +41,35 @@ public class Customer {
 	private IndustryType industryType;
 
 	@Column(name = "custName")
-	@Size(max = 50)
 	@NotNull(message = "This field should not be an empty")
 	private String custName;
 
 	
 	@Column(name = "custAddress")
-	@Size(max = 100)
 	@NotNull(message = "This field should not be an empty")
 	private String custAddress;
 
-	@Size(max = 50)
+	
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "custCity")
 	private String custCity;
 
 	@Column(name = "custPincode")
-	@Size(max = 7)
 	@NotNull(message = "This field should not be an empty")
 	private String custPincode;
 
 	@Column(name = "custCode")
-	@Size(min = 3, max = 6)
 	@NotNull(message = "This field should not be an empty")
 	private String custCode;
 
 	@Column(name = "custMobile")
-	@Size(max = 10)
 	@NotNull(message = "This field should not be an empty")
 	private String custMobile;
 
 	@Column(name = "custLandline")
-	@Size(max = 50)
 	private String custLandline;
 
 	@Column(name = "custEmail")
-	@Size(max = 50)
 	@NotNull(message = "This field should not be an empty")
 	private String custEmail;
 
@@ -102,7 +95,6 @@ public class Customer {
 	private byte[] custLogoFile;
 	
 	@Column(name = "custGSTIN")
-	@Size(max = 50)
 	private String custGSTIN;
 
 	public Integer getCustId() {

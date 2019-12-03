@@ -276,7 +276,6 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendarDto1.setHolidayName((p[4].toString()));
 					holidayCalendarDto1.setCustBrHolidayId(Integer.valueOf(p[5].toString()));
 					holidayCalendarDto1.setRefbrId(Integer.valueOf(p[6].toString()));
-					
 					HolidayCalendarDtoList.add(holidayCalendarDto1);
 					holidayCalendarResponse.status = new Status(false,200, "success");
 				}

@@ -54,6 +54,8 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 		try {
 
 			Shift shift = shiftRepository.getByEmpId(empId);
+			Employee employee = employeeRepository.getByEmpId(empId);
+			
 			if(shift != null) {
 				shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 				shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
@@ -65,7 +67,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 				}
 				shiftDetailsDto.setShiftStartTime(shift.getShiftStart());
 				shiftDetailsDto.setShiftEndTime(shift.getShiftEnd());
-
+				shiftDetailsDto.setEmpId(employee.getEmpId());
 				shiftResponseDto.setDetailsDto(shiftDetailsDto);
 				shiftResponseDto.status = new Status(false, 200, "Success");
 			} else {
@@ -109,6 +111,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 
 				} else {
 					unmatchedEmployeeAttendance.setEmployee(employee);
+					unmatchedEmployeeAttendance.setEmpAttendanceDate(new Date());
 					unmatchedEmpAttndRepo.save(unmatchedEmployeeAttendance);
 					empSignOutResponse.status = new Status(true, 400, "Un Matched attendance found, Please contact your manager to rectify the same.");
 				}
