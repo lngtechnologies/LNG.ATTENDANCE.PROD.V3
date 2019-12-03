@@ -30,16 +30,16 @@ public class EmpManualAttendanceController {
 	
 	@PostMapping(value = "/getEmpAttendanceByDeptIdAndDate")
 	public ResponseEntity<EmpAttendanceResponse> edit(@RequestBody EmpAttendanceParamDto empAttendanceDto) {
-		EmpAttendanceResponse empAttendanceResponse = empAttendanceService.getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(empAttendanceDto.getDeptId(), empAttendanceDto.getEmpAttendanceDatetime());
+		EmpAttendanceResponse empAttendanceResponse = empAttendanceService.getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(empAttendanceDto.getDeptId(), empAttendanceDto.getEmpAttendanceDate());
 		if(empAttendanceResponse !=null){
 			return new ResponseEntity<EmpAttendanceResponse>(empAttendanceResponse, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
-	 @PostMapping(value = "/mark/signIn")
+	 @PostMapping(value = "/mark")
 		public ResponseEntity<Status> saveSignIn(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
-			Status status = empAttendanceService.saveSignIn(employeeAttendanceDto);
+			Status status = empAttendanceService.saveEmpAttnd(employeeAttendanceDto);
 			if (status !=null){
 				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
 			}
