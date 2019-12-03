@@ -32,7 +32,7 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
 				policyAndFaqResponse.status = new Status(false,200, "successfully created");
 			}else {
-				policyAndFaqResponse.status = new Status(false,400, "Not Found");
+				policyAndFaqResponse.status = new Status(true,400, "Not Found");
 			}
 		}catch(Exception e) {
 			policyAndFaqResponse.status = new Status(true,3000, e.getMessage()); 
@@ -55,7 +55,7 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 			policyAndFaqResponse.setData(policyAndFaqList.stream().map(policyAndFaq -> convertToPolicyAndFaqDto(policyAndFaq)).collect(Collectors.toList()));
 
 			if(policyAndFaqResponse.getData().isEmpty()) {
-				policyAndFaqResponse.status = new Status(false,400, "Not found"); 
+				policyAndFaqResponse.status = new Status(true,400, "Not found"); 
 			}else {
 				policyAndFaqResponse.status = new Status(false,200, "success");
 			}
@@ -77,7 +77,7 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
 				status = new Status(false, 200, "Updated successfully");
 			}else {
-				status = new Status(false, 400, " Not Found");
+				status = new Status(true, 400, " Not Found");
 			}
 		}catch(Exception e) {
 			status = new Status(true, 500, e.getMessage());

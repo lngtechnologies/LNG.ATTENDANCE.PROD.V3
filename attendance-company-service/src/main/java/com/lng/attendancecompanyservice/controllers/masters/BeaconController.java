@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecompanyservice.service.masters.BeaconService;
 import com.lng.dto.masters.beacon.BeaconDto;
 import com.lng.dto.masters.beacon.BeaconListResponseDto;
-import com.lng.dto.masters.country.CountryDto;
-import com.lng.dto.masters.country.CountryResponse;
 
 import status.Status;
 import status.StatusDto;

@@ -37,7 +37,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			List<HolidayCalendar> holidayCalendars = holidayCalendarRepository.findAllByRefCustId(refCustId);
 			holidayCalendarResponse.setData1(holidayCalendars.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 			if(holidayCalendarResponse.getData1().isEmpty()) {
-				holidayCalendarResponse.status = new Status(false,400, "Not Found");
+				holidayCalendarResponse.status = new Status(true,400, "Not Found");
 			}else {
 				holidayCalendarResponse.status = new Status(false,200, "success");
 
