@@ -1,6 +1,8 @@
 package com.lng.attendancecustomerservice.serviceImpl.reports;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,23 +40,47 @@ public class ReportServiceImpl implements IReport {
 			
 			String whereClause = BuildWhereClause(reportParam);
 			if(whereClause != null) {
-				List<Object[]> resultReport = reportRepo.GetPresentReport(whereClause); 
-				if(resultReport != null) {
-					for(Object[] dt: resultReport) {
-						ReportDto rptData = new ReportDto();
-						rptData.setName(dt[0].toString());
-						rptData.setDesignation(dt[1].toString());
-						rptData.setBlock(dt[2].toString());
-						rptData.setShift(dt[3].toString());
-						rptData.setTimeIn(dt[4].toString());
-						rptData.setTimeInLocation(dt[5].toString());
-						rptData.setTimeOut(dt[6].toString());
-						rptData.setTimeOutLocation(dt[7].toString());
-						rptData.setApprovedGeoLocation(dt[8].toString());
-						rptData.setWorkedHrs(dt[9].toString());
-						rptDataList.add(rptData);
+				List<Object[]> resultReport = null;
+				if(reportParam.getReportType() == 1) {
+					resultReport = reportRepo.GetPresentReport(whereClause);
+					if(resultReport != null) {
+						for(Object[] dt: resultReport) {
+							ReportDto rptData = new ReportDto();
+							rptData.setName(dt[0].toString());
+							rptData.setDesignation(dt[1].toString());
+							rptData.setBlock(dt[2].toString());
+							rptData.setShift(dt[3].toString());
+							rptData.setTimeIn(dt[4].toString());
+							rptData.setTimeInLocation(dt[5].toString());
+							rptData.setTimeOut(dt[6].toString());
+							rptData.setTimeOutLocation(dt[7].toString());
+							rptData.setApprovedGeoLocation(dt[8].toString());
+							rptData.setWorkedHrs(dt[9].toString());
+							rptDataList.add(rptData);
+						}
+						response.setResult(rptDataList);
 					}
-					response.setResult(rptDataList);
+				} else if(reportParam.getReportType() == 2) {
+					String date = null;
+					if(reportParam.getFromDate() != null) {
+						date = reportParam.getFromDate();
+					} else {
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+	                    date = dateFormat.format(new Date());
+					}
+					resultReport = reportRepo.GetAbsentReport(whereClause, date);
+					if(resultReport != null) {
+						for(Object[] dt: resultReport) {
+							ReportDto rptData = new ReportDto();
+							rptData.setName(dt[0].toString());
+							rptData.setDesignation(dt[1].toString());
+							rptData.setBlock(dt[2].toString());
+							rptData.setShift(dt[3].toString());
+							rptData.setApprovedGeoLocation(dt[4].toString());
+							rptDataList.add(rptData);
+						}
+						response.setResult(rptDataList);
+					}
 				}
 			}
 			
@@ -78,7 +104,7 @@ public class ReportServiceImpl implements IReport {
 		if(reportParam.getBlkId() != null && reportParam.getBlkId() != 0) {
 			whereClause += " AND empBlk.refBlkId = " + reportParam.getBlkId();
 		}
-		if(reportParam.getFromDate() != null && reportParam.getToDate() != null) {
+		if(reportParam.getFromDate() != null && reportParam.getToDate() != null && reportParam.getReportType() == 1) {
 			whereClause += " AND empAttnd.empAttendanceDate BETWEEN '" + reportParam.getFromDate() +"' AND '" + reportParam.getToDate() +"' ";
 		}
 		return whereClause;

@@ -7,7 +7,14 @@ public class ReportParam {
 	private Integer blkId;
 	private String fromDate;
 	private String toDate;
-
+	private Integer reportType;
+	
+	public Integer getReportType() {
+		return reportType;
+	}
+	public void setReportType(Integer reportType) {
+		this.reportType = reportType;
+	}
 	public Integer getCustId() {
 		return custId;
 	}

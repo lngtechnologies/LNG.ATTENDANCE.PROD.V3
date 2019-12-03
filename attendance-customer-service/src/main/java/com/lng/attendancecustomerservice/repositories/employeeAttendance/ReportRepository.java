@@ -15,4 +15,7 @@ public interface ReportRepository extends PagingAndSortingRepository<EmployeeAtt
 	
 	@Query(value = "CALL Sp_getPresentReport(?1)", nativeQuery = true)
 	List<Object[]> GetPresentReport(String whereClause);
+	
+	@Query(value = "CALL Sp_getAbsentReport(?1, ?2)", nativeQuery = true)
+	List<Object[]> GetAbsentReport(String whereClause, String date);
 }
