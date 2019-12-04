@@ -68,11 +68,11 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendarResponse.status = new Status(false,200, "Successfully created");
 				}
 				else{ 
-					holidayCalendarResponse.status = new Status(true,400,"Holiday name already exists");
+					holidayCalendarResponse.status = new Status(false,400,"Holiday name already exists");
 				}
 			}
 			else{ 
-				holidayCalendarResponse.status = new Status(true,400,"Holiday Date already exists");
+				holidayCalendarResponse.status = new Status(false,400,"Holiday Date already exists");
 			}
 
 		}catch(Exception ex){
@@ -104,7 +104,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 			else{ 
 
-				status = new Status(true,400,"Holiday name already exists");
+				status = new Status(false,400,"Holiday name already exists");
 
 			}
 		}
@@ -200,7 +200,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 			List<Object[]> branchList = holidayCalendarRepository.findBranchByRefCustomerId(refCustId);
 			if(branchList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, "Customer Not Found");
+				holidayCalendarResponse.status = new Status(false,400, "Customer Not Found");
 			}else {
 				for (Object[] p : branchList) {	
 
@@ -228,7 +228,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 		try {
 			List<HolidayCalendar> holidayList = holidayCalendarRepository.findHolidayCalendarByrefCustId(refCustId);
 			if(holidayList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, " Not Found");
+				holidayCalendarResponse.status = new Status(false,400, " Not Found");
 			}else { 
 				holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 				holidayCalendarResponse.status = new Status(false,200, "success");
@@ -247,7 +247,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 			List<HolidayCalendar> holidayCalendarList = holidayCalendarRepository.findHolidayCalendarByRefCustId(refCustId);
 			if(holidayCalendarList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, " Not Found");
+				holidayCalendarResponse.status = new Status(false,400, " Not Found");
 			}else {
 				holidayCalendarResponse.setData1(holidayCalendarList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 				holidayCalendarResponse.status = new Status(false,200, "success");
