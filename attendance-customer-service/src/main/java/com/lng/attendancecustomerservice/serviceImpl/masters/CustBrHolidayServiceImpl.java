@@ -17,7 +17,6 @@ import com.lng.dto.masters.custBrHoliday.CustBrHolidayDto;
 import com.lng.dto.masters.custBrHoliday.CustBrHolidayResponse;
 
 import status.Status;
-import status.StatusDto;
 @Service
 public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 
@@ -34,8 +33,6 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 	@Override
 	public CustBrHolidayResponse saveCustBrHoliday(List<CustBrHolidayDto> custBrHolidayDtos) {
 		CustBrHolidayResponse  custBrHolidayResponse  =  new  CustBrHolidayResponse();
-		//String msg = "Branch already maped for:";
-		//String Holiday ="";
 		try {
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 

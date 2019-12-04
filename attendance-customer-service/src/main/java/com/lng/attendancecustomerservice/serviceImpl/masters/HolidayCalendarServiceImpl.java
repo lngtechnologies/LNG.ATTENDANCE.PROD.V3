@@ -262,7 +262,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 		List<HolidayCalendarDto> HolidayCalendarDtoList = new ArrayList<>();
 		try {
 			List<Object[]> holidayList =  holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
-			
+
 			if(holidayList.isEmpty()) {
 				holidayCalendarResponse.status = new Status(true,400, " Not Found");
 			}else {
