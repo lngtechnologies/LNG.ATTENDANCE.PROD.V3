@@ -8,7 +8,14 @@ public class ReportParam {
 	private String fromDate;
 	private String toDate;
 	private Integer reportType;
+	private Integer empId;
 	
+	public Integer getEmpId() {
+		return empId;
+	}
+	public void setEmpId(Integer empId) {
+		this.empId = empId;
+	}
 	public Integer getReportType() {
 		return reportType;
 	}

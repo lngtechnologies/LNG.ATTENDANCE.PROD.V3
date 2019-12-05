@@ -5,6 +5,7 @@ public class ReportMasterDataDto {
 	private String deptName;
 	private String brName;
 	private String empType;
+	private String empName;
 	
 	public String getCustName() {
 		return custName;
@@ -30,4 +31,11 @@ public class ReportMasterDataDto {
 	public void setEmpType(String empType) {
 		this.empType = empType;
 	}
+	public String getEmpName() {
+		return empName;
+	}
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+	
 }
