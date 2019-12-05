@@ -69,10 +69,6 @@ public class Employee {
 	@Column(name = "empIsSupervisor_Manager")
 	private Boolean	empIsSupervisor_Manager;
 
-	@Column(name = "empReportingTo")
-	@NotNull(message = "This field should not be an empty")
-	private Integer empReportingTo;
-
 	@Column(name = "empJoiningDate")
 	private Date empJoiningDate;
 
@@ -184,14 +180,6 @@ public class Employee {
 
 	public void setEmpInService(Boolean empInService) {
 		this.empInService = empInService;
-	}
-
-	public Integer getEmpReportingTo() {
-		return empReportingTo;
-	}
-
-	public void setEmpReportingTo(Integer empReportingTo) {
-		this.empReportingTo = empReportingTo;
 	}
 
 	public Boolean getEmpIsSupervisor_Manager() {
