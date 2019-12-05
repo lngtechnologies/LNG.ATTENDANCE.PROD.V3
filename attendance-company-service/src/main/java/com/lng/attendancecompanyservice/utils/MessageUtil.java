@@ -23,10 +23,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 
 public class MessageUtil {
-	
+
 	@Value("#('${sms.url}')")
 	private String smsurl;
-	
+
 	//Send SMS
 	public String sms(String to, String message)
 	{
@@ -34,22 +34,22 @@ public class MessageUtil {
 
 		//  String messageBody="Your OTP for this registration is "+message;
 		//message=messageBody;
-		
+
 		// SMSVendor smsVendor = smsVendorRepository.getAllBySmsVndrIsActive();
-		
+
 
 		String mobileNumbers = to;
 
 		String textMessage = message;
 
 		// final  String uri = smsurl;
-		
+
 		final  String uri = "http://promotional.mysmsbasket.com/V2/http-api.php?apikey=YE5ssFpB9306XlDP&senderid=LNGATS&number=mobileNumbers&message=textMessage&format=json";
 
 		StringBuilder sb = new StringBuilder(uri);
 		sb.replace(sb.indexOf("mobileNumbers"), sb.indexOf("mobileNumbers") + "mobileNumbers".length(), mobileNumbers);
 		sb.replace(sb.indexOf("textMessage"), sb.indexOf("textMessage") + "textMessage".length(), textMessage);
-		
+
 		String result = restTemplate.getForObject(sb.toString(),String.class);
 
 		return result;
@@ -97,47 +97,47 @@ public class MessageUtil {
 
 			// sends the e-mail
 			Transport.send(msg);
-			
+
 		} catch(javax.mail.SendFailedException  mx) {
 			StringBuilder errorSB = null;
-			 
-		    if(mx.getInvalidAddresses() != null) {
-		        errorSB = new StringBuilder();
-		        for(Address email: mx.getInvalidAddresses()) {
-		            errorSB.append(email.toString());
-		            errorSB.append(", ");
-		        }
-		        System.out.println("Invalid Address Found: "+ errorSB);
-		    }
-		 
-		    if(mx.getValidSentAddresses() != null) {
-		        errorSB = new StringBuilder();
-		        for(Address email: mx.getValidSentAddresses()) {
-		            errorSB.append(email.toString());
-		            errorSB.append(", ");
-		        }
-		        System.out.println("Email sent to valid address: "+ errorSB);
-		    }
-		 
-		    if(mx.getValidUnsentAddresses() != null) {
-		        errorSB = new StringBuilder();
-		        for(Address email: mx.getValidUnsentAddresses()) {
-		            errorSB.append(email.toString());
-		            errorSB.append(", ");
-		        }
-		        System.out.println("Email not sent to valid address: "+ errorSB);
-		    }
-		 
+
+			if(mx.getInvalidAddresses() != null) {
+				errorSB = new StringBuilder();
+				for(Address email: mx.getInvalidAddresses()) {
+					errorSB.append(email.toString());
+					errorSB.append(", ");
+				}
+				System.out.println("Invalid Address Found: "+ errorSB);
+			}
+
+			if(mx.getValidSentAddresses() != null) {
+				errorSB = new StringBuilder();
+				for(Address email: mx.getValidSentAddresses()) {
+					errorSB.append(email.toString());
+					errorSB.append(", ");
+				}
+				System.out.println("Email sent to valid address: "+ errorSB);
+			}
+
+			if(mx.getValidUnsentAddresses() != null) {
+				errorSB = new StringBuilder();
+				for(Address email: mx.getValidUnsentAddresses()) {
+					errorSB.append(email.toString());
+					errorSB.append(", ");
+				}
+				System.out.println("Email not sent to valid address: "+ errorSB);
+			}
+
 		} catch(javax.mail.MessagingException mx) {
-		 
-		    System.out.println(mx.getMessage());
-		 
+
+			System.out.println(mx.getMessage());
+
 		} catch (Exception ex) {
-		 
-		    System.out.println(ex.getMessage());
-		 
+
+			System.out.println(ex.getMessage());
+
 		}
-		
+
 
 	}
 

@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.repositories.masters;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,9 @@ public interface HolidayCalendarRepository extends PagingAndSortingRepository<Ho
 	
 	@Query(value = "CALL CheckCustIsExistsForHolidayCalendar(?1, ?2)",nativeQuery = true)
 	int  findByRefCustIdAndHolidayName(Integer refCustId,String holidayName);
+	
+	@Query(value = "CALL CheckDateIsExistsForHolidayName(?1, ?2)",nativeQuery = true)
+	int  findByRefCustIdAndHolidayDate(Integer refCustId,Date holidayDate);
 	
 	HolidayCalendar findHolidayCalendarByHolidayId(Integer holidayId);
 	

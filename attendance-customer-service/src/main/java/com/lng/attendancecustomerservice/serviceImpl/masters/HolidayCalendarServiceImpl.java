@@ -37,7 +37,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			List<HolidayCalendar> holidayCalendars = holidayCalendarRepository.findAllByRefCustId(refCustId);
 			holidayCalendarResponse.setData1(holidayCalendars.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 			if(holidayCalendarResponse.getData1().isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, "Not Found");
+				holidayCalendarResponse.status = new Status(false,400, "Not Found");
 			}else {
 				holidayCalendarResponse.status = new Status(false,200, "success");
 
@@ -55,20 +55,24 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 		try{
 			if(holidayCalendarDto.getHolidayName() == null || holidayCalendarDto.getHolidayName().isEmpty()) throw new Exception("Please enter Holiday name");
-
-			int a = holidayCalendarRepository.findByRefCustIdAndHolidayName(holidayCalendarDto.getRefCustId(), holidayCalendarDto.getHolidayName());
-			if(a == 0) {
-				HolidayCalendar holidayCalendar = new HolidayCalendar();
-				holidayCalendar.setHolidayCalendarYear(holidayCalendarDto.getHolidayCalendarYear());
-				holidayCalendar.setHolidayDate(holidayCalendarDto.getHolidayDate());
-				holidayCalendar.setRefCustId(holidayCalendarDto.getRefCustId());
-				holidayCalendar.setHolidayName(holidayCalendarDto.getHolidayName());
-				holidayCalendarRepository.save(holidayCalendar);
-				holidayCalendarResponse.status = new Status(false,200, "Successfully created");
-
+			int b = holidayCalendarRepository.findByRefCustIdAndHolidayDate(holidayCalendarDto.getRefCustId(), holidayCalendarDto.getHolidayDate());
+			if(b == 0) {
+				int a = holidayCalendarRepository.findByRefCustIdAndHolidayName(holidayCalendarDto.getRefCustId(), holidayCalendarDto.getHolidayName());
+				if(a == 0) {
+					HolidayCalendar holidayCalendar = new HolidayCalendar();
+					holidayCalendar.setHolidayCalendarYear(holidayCalendarDto.getHolidayCalendarYear());
+					holidayCalendar.setHolidayDate(holidayCalendarDto.getHolidayDate());
+					holidayCalendar.setRefCustId(holidayCalendarDto.getRefCustId());
+					holidayCalendar.setHolidayName(holidayCalendarDto.getHolidayName());
+					holidayCalendarRepository.save(holidayCalendar);
+					holidayCalendarResponse.status = new Status(false,200, "Successfully created");
+				}
+				else{ 
+					holidayCalendarResponse.status = new Status(false,400,"Holiday name already exists");
+				}
 			}
 			else{ 
-				holidayCalendarResponse.status = new Status(true,400,"Holiday name already exists");
+				holidayCalendarResponse.status = new Status(false,400,"Holiday Date already exists");
 			}
 
 		}catch(Exception ex){
@@ -100,7 +104,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 			else{ 
 
-				status = new Status(true,400,"Holiday name already exists");
+				status = new Status(false,400,"Holiday name already exists");
 
 			}
 		}
@@ -129,7 +133,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 				}
 			}else {
 
-				holidayCalendarResponse.status = new Status(true, 400, "Holiday  not found");
+				holidayCalendarResponse.status = new Status(false, 400, "Holiday  not found");
 
 			}
 
@@ -150,7 +154,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 				holidayCalendarResponse.status = new Status(false,200, "Success");
 			}
 			else {
-				holidayCalendarResponse.status = new Status(true, 400, "Not found");
+				holidayCalendarResponse.status = new Status(false, 400, "Not found");
 			}
 		}catch(Exception e) {
 			holidayCalendarResponse.status = new Status(true,500, e.getMessage()); 
@@ -196,7 +200,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 			List<Object[]> branchList = holidayCalendarRepository.findBranchByRefCustomerId(refCustId);
 			if(branchList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, "Customer Not Found");
+				holidayCalendarResponse.status = new Status(false,400, "Customer Not Found");
 			}else {
 				for (Object[] p : branchList) {	
 
@@ -224,7 +228,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 		try {
 			List<HolidayCalendar> holidayList = holidayCalendarRepository.findHolidayCalendarByrefCustId(refCustId);
 			if(holidayList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, " Not Found");
+				holidayCalendarResponse.status = new Status(false,400, " Not Found");
 			}else { 
 				holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 				holidayCalendarResponse.status = new Status(false,200, "success");
@@ -243,7 +247,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 			List<HolidayCalendar> holidayCalendarList = holidayCalendarRepository.findHolidayCalendarByRefCustId(refCustId);
 			if(holidayCalendarList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, " Not Found");
+				holidayCalendarResponse.status = new Status(false,400, " Not Found");
 			}else {
 				holidayCalendarResponse.setData1(holidayCalendarList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 				holidayCalendarResponse.status = new Status(false,200, "success");
@@ -262,9 +266,9 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 		List<HolidayCalendarDto> HolidayCalendarDtoList = new ArrayList<>();
 		try {
 			List<Object[]> holidayList =  holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
-			
+
 			if(holidayList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(true,400, " Not Found");
+				holidayCalendarResponse.status = new Status(false,400, " Not Found");
 			}else {
 				for (Object[] p : holidayList) {	
 
