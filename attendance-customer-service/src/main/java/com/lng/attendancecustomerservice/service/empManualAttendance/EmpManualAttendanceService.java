@@ -12,7 +12,7 @@ import status.Status;
 
 public interface EmpManualAttendanceService {
 
-	EmpAttendanceResponse    getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId ,Date empAttendanceDate );
+	EmpAttendanceResponse    getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId ,String empAttendanceDate );
 
 	//EmpAttendanceResponse    saveEmpAttendanceByRefEmpIdAndShift_ShiftStartAndEmpAttendanceDatetime(Integer refEmpId ,String shiftStart,Date empAttendanceDatetime );
 	/*EmpAttendanceResponse     saveEmpAttendance(List<EmpAttendanceDto> EmpAttendanceDtos);
@@ -21,9 +21,10 @@ public interface EmpManualAttendanceService {
 	
 	EmpAttendanceResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetime(String emp,Integer  refCustId,Date empAttendanceDatetime);
 
-	Status saveSignIn(List<EmployeeAttendanceDto> employeeAttendanceDtos);
+	Status saveEmpAttnd(List<EmployeeAttendanceDto> employeeAttendanceDtos);
 
 	Status saveSignOut(List<EmployeeAttendanceDto> employeeAttendanceDtos);
 	
 	Status  updateEmpOverRideAttendance(EmployeeAttendanceDto employeeAttendanceDto);
+	
 }

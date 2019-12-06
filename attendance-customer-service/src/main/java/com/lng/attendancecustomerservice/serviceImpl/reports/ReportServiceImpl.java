@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.reports.ReportDto;
+import com.lng.attendancecustomerservice.entity.reports.ReportEmployeeSummaryDto;
 import com.lng.attendancecustomerservice.entity.reports.ReportMasterDataDto;
 import com.lng.attendancecustomerservice.entity.reports.ReportResponseDto;
+import com.lng.attendancecustomerservice.entity.reports.ResponseSummaryReport;
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.ReportRepository;
 import com.lng.attendancecustomerservice.service.reports.IReport;
 import com.lng.dto.reports.ReportParam;
@@ -108,6 +110,54 @@ public class ReportServiceImpl implements IReport {
 			whereClause += " AND empAttnd.empAttendanceDate BETWEEN '" + reportParam.getFromDate() +"' AND '" + reportParam.getToDate() +"' ";
 		}
 		return whereClause;
+	}
+
+	@Override
+	public ResponseSummaryReport GetEmployeeSummaryReport(ReportParam reportParam) {
+		ResponseSummaryReport responseSummaryReport = new ResponseSummaryReport();
+		List<ReportEmployeeSummaryDto> rptDataList = new ArrayList<>();
+
+		try {
+			if(reportParam.getCustId() != null) {
+				List<Object[]> masterData = reportRepo.GetEmployeMasterData(reportParam.getCustId(), reportParam.getEmpId());
+				if(masterData != null) {
+					for(Object[] mData: masterData) {
+						ReportMasterDataDto mstData = new ReportMasterDataDto();
+						mstData.setCustName(mData[0].toString());
+						mstData.setDeptName(mData[1].toString());
+						mstData.setBrName(mData[2].toString());
+						mstData.setEmpType(mData[3].toString());
+						mstData.setEmpName(mData[4].toString());
+						responseSummaryReport.setMasterData(mstData);
+					}
+				}
+			}
+
+		 if(reportParam.getEmpId() != null) {
+			 List<Object[]> summaryReportResult = reportRepo.GetEmployeeSummaryReport(reportParam.getFromDate(), reportParam.getToDate(), reportParam.getEmpId());
+			 if(summaryReportResult != null) {
+					for(Object[] dt: summaryReportResult) {
+						ReportEmployeeSummaryDto rptData = new ReportEmployeeSummaryDto();
+						rptData.setDate(dt[2].toString());
+						rptData.setShift(dt[3].toString());
+						rptData.setTimeIn(dt[4].toString());
+						rptData.setTimeOut(dt[5].toString());
+						rptData.setWorkedHrs(dt[6].toString());
+						rptData.setStatus(dt[7].toString());
+						rptData.setApprovedGeoLocation(dt[8].toString());
+						rptData.setTimeInLocation(dt[9].toString());
+						rptData.setTimeOutLocation(dt[10].toString());
+						
+						rptDataList.add(rptData);
+					}
+					responseSummaryReport.setResult(rptDataList);
+				}
+		 }
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return responseSummaryReport;
 	}
 
 }

@@ -49,6 +49,8 @@ public class CustEmployeeDto {
 	
 	private Date empWeeklyOffDayFromDate;
 	
+	private Date empReportingToFromDate;
+	
 	private List<EmpBlockMapDto> empBlockMapDtoList;
 	
 	public Integer getEmpId() {
@@ -233,6 +235,14 @@ public class CustEmployeeDto {
 
 	public void setEmpBlockMapDtoList(List<EmpBlockMapDto> empBlockMapDtoList) {
 		this.empBlockMapDtoList = empBlockMapDtoList;
+	}
+
+	public Date getEmpReportingToFromDate() {
+		return empReportingToFromDate;
+	}
+
+	public void setEmpReportingToFromDate(Date empReportingToFromDate) {
+		this.empReportingToFromDate = empReportingToFromDate;
 	}
 
 }

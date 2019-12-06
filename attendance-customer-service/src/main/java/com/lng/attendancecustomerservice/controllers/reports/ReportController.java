@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.entity.reports.ReportResponseDto;
+import com.lng.attendancecustomerservice.entity.reports.ResponseSummaryReport;
 import com.lng.attendancecustomerservice.service.reports.IReport;
 import com.lng.dto.reports.ReportParam;
 
@@ -28,4 +29,14 @@ public class ReportController {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+	
+	@PostMapping(value = "/summary/employee")
+	public ResponseEntity<ResponseSummaryReport> GetSummaryReportByEmployee(@RequestBody ReportParam reportParam) {
+		ResponseSummaryReport responseSummaryReport = iReport.GetEmployeeSummaryReport(reportParam);
+		if (responseSummaryReport !=null){
+            return new ResponseEntity<ResponseSummaryReport>(responseSummaryReport, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+	
 }

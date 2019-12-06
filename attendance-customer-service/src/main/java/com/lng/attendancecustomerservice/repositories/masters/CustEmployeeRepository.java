@@ -18,7 +18,7 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	Employee findEmployeeByEmpIdAndEmpInService(Integer empId, Boolean empInService);
 	
-	@Query(value = "SELECT * FROM tmemployee WHERE empId = (SELECT empReportingTo FROM tmemployee WHERE empId = ?1)",nativeQuery = true)
+	@Query(value = "SELECT * FROM tmemployee WHERE empId = (SELECT refEmpReportingToId FROM ttempreportingto WHERE refEmpId = ?1 AND empToDate IS NULL)",nativeQuery = true)
 	Employee findEmpReportingToByEmpId(Integer empId);
 	
 	@Query(value = "CALL getEmpDetails();", nativeQuery = true)
