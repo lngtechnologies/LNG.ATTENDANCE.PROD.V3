@@ -68,11 +68,11 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendarResponse.status = new Status(false,200, "Successfully created");
 				}
 				else{ 
-					holidayCalendarResponse.status = new Status(false,400,"Holiday name already exists");
+					holidayCalendarResponse.status = new Status(true,400,"Holiday name already exists");
 				}
 			}
 			else{ 
-				holidayCalendarResponse.status = new Status(false,400,"Holiday Date already exists");
+				holidayCalendarResponse.status = new Status(true,400,"Holiday Date already exists");
 			}
 
 		}catch(Exception ex){
@@ -90,22 +90,28 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			if(holidayCalendarDto.getRefCustId() == null || holidayCalendarDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
 
 			HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(holidayCalendarDto.getHolidayId());
-			HolidayCalendar he = holidayCalendarRepository.findHolidayCalendarByHolidayNameAndRefCustId(holidayCalendarDto.getHolidayName(), holidayCalendarDto.getRefCustId());
-			if(he == null) {
+			int b = holidayCalendarRepository.findByRefCustIdAndHolidayDate(holidayCalendarDto.getRefCustId(), holidayCalendarDto.getHolidayDate());
+			if(b == 0) {
+				HolidayCalendar he = holidayCalendarRepository.findHolidayCalendarByHolidayNameAndRefCustId(holidayCalendarDto.getHolidayName(), holidayCalendarDto.getRefCustId());
+				if(he == null) {
 
-				holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
-				holidayCalendarRepository.save(holidayCalendar);
-				status = new Status(false, 200, "Updated successfully");
-			} else if (he.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
+					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
+					holidayCalendarRepository.save(holidayCalendar);
+					status = new Status(false, 200, "Updated successfully");
+				} else if (he.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
-				holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
-				holidayCalendarRepository.save(holidayCalendar);
-				status = new Status(false, 200, "Updated successfully");
+					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
+					holidayCalendarRepository.save(holidayCalendar);
+					status = new Status(false, 200, "Updated successfully");
+				}
+				else{ 
+
+					status = new Status(true,400,"Holiday name already exists");
+
+				}
 			}
 			else{ 
-
-				status = new Status(false,400,"Holiday name already exists");
-
+				status = new Status(true,400,"Holiday Date already exists");
 			}
 		}
 		catch(Exception e) {
@@ -122,7 +128,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(holidayId);
 			if(holidayCalendar != null) {
 
-				// Check weather the branch is used in any transaction or no
+				// Check weather the HolidayCalendar is used in any transaction or no
 				List<CustBrHoliday> custBrHoliday = custBrHolidayRepository.findByHolidayCalendar_HolidayId(holidayId);
 				if(custBrHoliday.isEmpty()) {
 					holidayCalendarRepository.delete(holidayCalendar);

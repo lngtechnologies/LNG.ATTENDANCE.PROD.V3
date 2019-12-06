@@ -20,4 +20,6 @@ public interface CustEmployeeService {
 	CustEmployeeStatus deleteEmployeeByEmpIdId(Integer empId);
 	
 	CustEmployeeListResponse searchEmployeeByEmpName(String empName);
+	
+	CustEmployeeListResponse   FindEmployeeByRefLoginId(Integer refLoginId);
 }
