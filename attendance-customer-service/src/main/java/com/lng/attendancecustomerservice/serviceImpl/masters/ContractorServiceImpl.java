@@ -121,7 +121,7 @@ public class ContractorServiceImpl implements ContractorService {
 					status = new Status(false, 200, "Updated successfully");
 				}
 				else{
-					status = new Status(true,400,"ContractorName already exist for CustomerId");
+					status = new Status(true,400,"ContractorName already exist for Customer");
 
 				}
 			}
