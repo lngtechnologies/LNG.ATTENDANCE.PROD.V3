@@ -36,6 +36,7 @@ public interface HolidayCalendarRepository extends PagingAndSortingRepository<Ho
 	
 	@Query(value = "CALL GetRemaingHolidayList(?1)",nativeQuery = true)
 	List<HolidayCalendar>  findHolidayCalendarByRefCustId(Integer refCustId);
-	
+
+	HolidayCalendar findHolidayCalendarByHolidayDateAndRefCustId(Date holidayDate, Integer refCustId);
 
 }

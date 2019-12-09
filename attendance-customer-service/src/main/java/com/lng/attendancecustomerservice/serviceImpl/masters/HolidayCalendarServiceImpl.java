@@ -90,15 +90,30 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			if(holidayCalendarDto.getRefCustId() == null || holidayCalendarDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
 
 			HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(holidayCalendarDto.getHolidayId());
-			int b = holidayCalendarRepository.findByRefCustIdAndHolidayDate(holidayCalendarDto.getRefCustId(), holidayCalendarDto.getHolidayDate());
-			if(b == 0) {
-				HolidayCalendar he = holidayCalendarRepository.findHolidayCalendarByHolidayNameAndRefCustId(holidayCalendarDto.getHolidayName(), holidayCalendarDto.getRefCustId());
-				if(he == null) {
+			HolidayCalendar h = holidayCalendarRepository.findHolidayCalendarByHolidayDateAndRefCustId(holidayCalendarDto.getHolidayDate(), holidayCalendarDto.getRefCustId());
+			HolidayCalendar he = holidayCalendarRepository.findHolidayCalendarByHolidayNameAndRefCustId(holidayCalendarDto.getHolidayName(), holidayCalendarDto.getRefCustId());
+			if(h == null ) {
+				if(he == null  ) {
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "Updated successfully");
-				} else if (he.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
+
+				} else if ( he.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
+
+					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
+					holidayCalendarRepository.save(holidayCalendar);
+					status = new Status(false, 200, "Updated successfully");
+				}
+			}
+			else if(h != null && h.getHolidayId() == holidayCalendarDto.getHolidayId() ) {
+				HolidayCalendar he1 = holidayCalendarRepository.findHolidayCalendarByHolidayNameAndRefCustId(holidayCalendarDto.getHolidayName(), holidayCalendarDto.getRefCustId());
+				if(he1 == null) {
+
+					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
+					holidayCalendarRepository.save(holidayCalendar);
+					status = new Status(false, 200, "Updated successfully");
+				} else if (he1.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
