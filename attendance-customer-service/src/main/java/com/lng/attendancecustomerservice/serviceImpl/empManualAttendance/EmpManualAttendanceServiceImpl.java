@@ -379,11 +379,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			} else {
 				empAttendanceResponse.status = new Status(true, 4000, "Please enter more than 3 character");
 
-			}
-			else {
-				empAttendanceResponse.status = new Status(true, 4000, "Data too less ");
-
-			}
+			} 
 
 		} catch (Exception e) {
 			empAttendanceResponse.status = new Status(true, 400, e.getMessage());
