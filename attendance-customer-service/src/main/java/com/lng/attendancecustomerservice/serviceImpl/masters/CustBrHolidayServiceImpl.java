@@ -47,7 +47,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHolidayRepository.save(custBrHoliday1);
 						custBrHolidayResponse.status = new Status(false,200, "Successfully Created");
 					}else {
-						custBrHolidayResponse.status = new Status(true,400, "Haliday Name Already Exists");
+						custBrHolidayResponse.status = new Status(true,400, "Holiday Name Already Exists");
 
 					}
 				}else {

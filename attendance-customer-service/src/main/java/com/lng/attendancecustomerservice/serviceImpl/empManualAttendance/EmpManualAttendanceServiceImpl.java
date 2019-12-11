@@ -47,7 +47,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			List<Object[]> empAttendance = empAttendanceRepository
 					.findEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(deptId, empAttendanceDate);
 			if (empAttendance.isEmpty()) {
-				empAttendanceResponse.status = new Status(true, 400, "Emp Attendance Not Found");
+				empAttendanceResponse.status = new Status(true, 400, "Employee Attendance Not Found");
 			} else {
 				for (Object[] p : empAttendance) {
 
@@ -350,7 +350,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			if(emp.length() <= 3) {
 				List<Object[]> empAttendance = empAttendanceRepository.SearchEmployeeByNameAndDate(emp, refCustId, empAttendanceDatetime);
 				if (empAttendance.isEmpty()) {
-					empAttendanceResponse.status = new Status(true, 400, "Emp Attendance Not Found");
+					empAttendanceResponse.status = new Status(true, 400, "Employee Attendance Not Found");
 				} else {
 					for (Object[] p : empAttendance) {
 
@@ -369,7 +369,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 				}
 			}
 			else {
-				empAttendanceResponse.status = new Status(true, 4000, "Data too long ");
+				empAttendanceResponse.status = new Status(true, 4000, "Data too less ");
 
 			}
 
