@@ -46,4 +46,7 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	@Query(value = "SELECT	* FROM tmemployee e LEFT JOIN ttempdept ed ON e.empId = ed.refEmpId LEFT JOIN tmdepartment d ON d.deptId = ed.refDeptId WHERE d.deptId = ?1 AND deptIsActive = TRUE", nativeQuery = true)
 	List<Employee> findByDeptId(Integer deptId);
+	
+	@Query(value = "SELECT emp.empId,emp.empName FROM tmemployee emp LEFT JOIN ttlogindataright ldr ON ldr.refBrId = emp.refBrId WHERE  ldr.refLoginId =?1",nativeQuery = true)
+	List<Object[]> findEmployeeByLoginDataRight_refLoginId(Integer refLoginId);
 }

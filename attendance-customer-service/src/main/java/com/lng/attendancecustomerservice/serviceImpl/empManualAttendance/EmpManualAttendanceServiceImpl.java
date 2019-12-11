@@ -47,7 +47,11 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			List<Object[]> empAttendance = empAttendanceRepository
 					.findEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(deptId, empAttendanceDate);
 			if (empAttendance.isEmpty()) {
+<<<<<<< HEAD
 				empAttendanceResponse.status = new Status(false, 400, "Records Not Found");
+=======
+				empAttendanceResponse.status = new Status(true, 400, "Employee Attendance Not Found");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			} else {
 				for (Object[] p : empAttendance) {
 
@@ -350,7 +354,11 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			if(emp.length() >= 3) {
 				List<Object[]> empAttendance = empAttendanceRepository.SearchEmployeeByNameAndDate(emp, refCustId, empAttendanceDatetime);
 				if (empAttendance.isEmpty()) {
+<<<<<<< HEAD
 					empAttendanceResponse.status = new Status(false, 400, "Records Not Found");
+=======
+					empAttendanceResponse.status = new Status(true, 400, "Employee Attendance Not Found");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 				} else {
 					for (Object[] p : empAttendance) {
 
@@ -367,8 +375,14 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 					}
 
 				}
+<<<<<<< HEAD
 			} else {
 				empAttendanceResponse.status = new Status(true, 4000, "Please enter more than 3 character");
+=======
+			}
+			else {
+				empAttendanceResponse.status = new Status(true, 4000, "Data too less ");
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 
 			}
 

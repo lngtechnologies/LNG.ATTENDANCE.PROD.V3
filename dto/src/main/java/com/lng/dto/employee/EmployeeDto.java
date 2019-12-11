@@ -45,6 +45,8 @@ public class EmployeeDto {
 	private String empAndriodVersion;
 
 	private String custCode;
+	
+	private Integer refLoginId;
 
 	public Integer getEmpId() {
 		return empId;
@@ -214,4 +216,12 @@ public class EmployeeDto {
 		this.empIsSupervisor_Manager = empIsSupervisor_Manager;
 	}
 
+	public Integer getRefLoginId() {
+		return refLoginId;
+	}
+
+	public void setRefLoginId(Integer refLoginId) {
+		this.refLoginId = refLoginId;
+	}
+  
 }

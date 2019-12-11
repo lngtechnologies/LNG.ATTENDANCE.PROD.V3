@@ -48,6 +48,7 @@ import com.lng.attendancecustomerservice.repositories.masters.EmployeeTypeReposi
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.masters.CustEmployeeService;
 import com.lng.attendancecustomerservice.utils.Encoder;
+import com.lng.dto.employee.EmployeeDto2;
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
@@ -973,5 +974,35 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	public Date subtractDaysFromDate(Date date) {
 		Date toDate = custEmployeeRepository.subtractDaysFromDate(date);
 		return toDate;
+	}
+
+	@Override
+	public CustEmployeeListResponse FindEmployeeByRefLoginId(Integer refLoginId) {
+		CustEmployeeListResponse custEmployeeListResponse = new CustEmployeeListResponse();
+		List<EmployeeDto2> EmployeeDtoList = new ArrayList<>();
+		try {
+			List<Object[]> employeeList =  custEmployeeRepository.findEmployeeByLoginDataRight_refLoginId(refLoginId);
+
+			if(employeeList.isEmpty()) {
+				custEmployeeListResponse.status = new Status(false,400, " Not Found");
+			}else {
+				for (Object[] p : employeeList) {	
+
+					EmployeeDto2 employeeDto = new EmployeeDto2();
+					employeeDto.setEmpId(Integer.valueOf(p[0].toString()));
+					employeeDto.setEmpName((p[1].toString()));
+					EmployeeDtoList.add(employeeDto);
+					custEmployeeListResponse.status = new Status(false,200, "success"); 
+				}
+
+			}
+
+		}catch (Exception e){
+			custEmployeeListResponse.status = new Status(true,500, e.getMessage());
+
+
+		}
+		custEmployeeListResponse.setData1(EmployeeDtoList);
+		return custEmployeeListResponse;
 	}
 }

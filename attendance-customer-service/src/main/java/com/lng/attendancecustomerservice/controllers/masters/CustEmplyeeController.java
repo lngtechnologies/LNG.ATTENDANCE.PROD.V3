@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.masters.CustEmployeeService;
+import com.lng.dto.employee.EmployeeDto2;
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
@@ -85,4 +86,13 @@ public class CustEmplyeeController {
        }
        return new ResponseEntity<CustEmployeeListResponse>(custEmployeeListResponse, HttpStatus.OK);
    }
+	
+	@PostMapping(value = "/findByLoginId")
+    public ResponseEntity<CustEmployeeListResponse> findByLoginId(@RequestBody EmployeeDto2 employeeDto) {
+		CustEmployeeListResponse custEmployeeListResponse = custEmployeeService.FindEmployeeByRefLoginId(employeeDto.getRefLoginId());
+        if (custEmployeeListResponse !=null){
+            return new ResponseEntity<CustEmployeeListResponse>(custEmployeeListResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
 }
