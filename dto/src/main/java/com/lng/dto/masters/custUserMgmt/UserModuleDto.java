@@ -6,8 +6,7 @@ public class UserModuleDto {
 	private String moduleName;
 	private String moduleURL;
 	private Integer parentId;
-	private String icon;
-	private String classes;
+	private Integer userRightId;
 	
 	public Integer getModuleId() {
 		return moduleId;
@@ -41,22 +40,12 @@ public class UserModuleDto {
 		this.parentId = parentId;
 	}
 
-	public String getIcon() {
-		return icon;
+	public Integer getUserRightId() {
+		return userRightId;
 	}
 
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
-
-	public String getClasses() {
-		return classes;
-	}
-
-	public void setClasses(String classes) {
-		this.classes = classes;
+	public void setUserRightId(Integer userRightId) {
+		this.userRightId = userRightId;
 	}
 	
-	
-
 }

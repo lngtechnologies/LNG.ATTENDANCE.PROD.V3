@@ -19,10 +19,13 @@ public interface IModuleRepository extends JpaRepository<Module, Integer> {
 	List<Module> getUserSubModuleMap(int loginId);
 	
 	@Query(value = "call getAssignedModulesInUserRight(?1, ?2)", nativeQuery = true)
-	List<Module> getAssignedModuleByLogin_LoginIdAndCustomer_CustId(Integer LoginId, Integer custId);
+	List<Object[]> getAssignedModuleByLogin_LoginIdAndCustomer_CustId(Integer LoginId, Integer custId);
 	
 	@Query(value = "call getUnAssignedModulesInUserRight(?1)", nativeQuery = true)
-	List<Module> getUnAssignedModuleByLogin_LoginId(Integer LoginId);
+	List<Object[]> getUnAssignedModuleByLogin_LoginId(Integer LoginId);
+	
+	@Query(value = "SELECT m.moduleId, m.moduleName, m.moduleURL, m.parentId FROM tmmodule m", nativeQuery = true)
+	List<Object[]> getAllModules();
 	
 	Module findByModuleId(Integer moduleId);
 	

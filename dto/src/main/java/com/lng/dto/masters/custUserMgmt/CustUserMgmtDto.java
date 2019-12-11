@@ -10,6 +10,7 @@ public class CustUserMgmtDto {
 	
 	private String uMobileNumber;
 
+	private Integer empId;
 	
 	public Integer getCustomerId() {
 		return customerId;
@@ -41,6 +42,14 @@ public class CustUserMgmtDto {
 
 	public void setLoginId(Integer loginId) {
 		this.loginId = loginId;
+	}
+
+	public Integer getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(Integer empId) {
+		this.empId = empId;
 	}
 
 }

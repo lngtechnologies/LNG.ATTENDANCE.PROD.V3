@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.CustLeave;
+import com.lng.attendancecustomerservice.entity.masters.EmpLeave;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeLeave;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
@@ -80,7 +81,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
 				custLeaveTrypeListDto.status = new Status(false, 200, "Success");
 			}else {
-				custLeaveTrypeListDto.status = new Status(true, 400, "Not found");
+				custLeaveTrypeListDto.status = new Status(false, 400, "Not found");
 			}
 		} catch (Exception e) {
 			custLeaveTrypeListDto.status = new Status(true, 500, "Oops..! Something went wrong..");
@@ -111,7 +112,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 					employeeDtatListDto.status = new Status(false, 200, "Success");
 				}
 			}else {
-				employeeDtatListDto.status = new Status(true, 400, "Not found");
+				employeeDtatListDto.status = new Status(false, 400, "Not found");
 			}
 
 		} catch (Exception e) {
@@ -130,17 +131,22 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 			Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 			Employee employee = employeeRepository.getByEmpId(employeeLeaveDto.getEmpId());
 			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveId(employeeLeaveDto.getCustLeaveId());
+			int empLeave = employeeLeaveRepository.getEmpLeaveAlreadyApplied(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo(), employeeLeaveDto.getEmpId());
 			if(employee != null) {
 				if(custLeave != null) {
-					EmployeeLeave employeeLeave = modelMapper.map(employeeLeaveDto, EmployeeLeave.class);
-				
-					employeeLeave.setEmployee(employee);
-					employeeLeave.setCustLeave(custLeave);
-					employeeLeave.setEmpLeaveDaysCount(countNoOfDays);
-					employeeLeave.setEmpLeaveAppliedDatetime(new Date());
-					employeeLeave.setEmpLeaveStatus("");
-					employeeLeaveRepository.save(employeeLeave);
-					status = new Status(false, 200, "Leave Applied for "+employee.getEmpName());
+					if(empLeave == 0) {
+						EmployeeLeave employeeLeave = modelMapper.map(employeeLeaveDto, EmployeeLeave.class);
+						
+						employeeLeave.setEmployee(employee);
+						employeeLeave.setCustLeave(custLeave);
+						employeeLeave.setEmpLeaveDaysCount(countNoOfDays);
+						employeeLeave.setEmpLeaveAppliedDatetime(new Date());
+						employeeLeave.setEmpLeaveStatus("");
+						employeeLeaveRepository.save(employeeLeave);
+						status = new Status(false, 200, "Leave Applied for "+employee.getEmpName());
+					} else {
+						status = new Status(true, 400, "Leave already applied for this date");
+					}	
 				
 				}else {
 					status = new Status(true, 400, "Cust Leave not found");

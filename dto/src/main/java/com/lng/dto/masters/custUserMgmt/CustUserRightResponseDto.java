@@ -12,6 +12,8 @@ public class CustUserRightResponseDto {
 	
 	private List<UserModuleDto> unAssignedModules;
 
+	private List<UserModuleDto> allModules;
+	
 	public List<UserModuleDto> getAssignedModules() {
 		return assignedModules;
 	}
@@ -26,6 +28,14 @@ public class CustUserRightResponseDto {
 
 	public void setUnAssignedModules(List<UserModuleDto> unAssignedModules) {
 		this.unAssignedModules = unAssignedModules;
+	}
+
+	public List<UserModuleDto> getAllModules() {
+		return allModules;
+	}
+
+	public void setAllModules(List<UserModuleDto> allModules) {
+		this.allModules = allModules;
 	}
 	
 	

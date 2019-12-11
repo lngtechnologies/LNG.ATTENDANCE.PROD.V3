@@ -16,4 +16,6 @@ public interface EmpLeaveApproveOrCancelService {
 	EmpLeaveResponseDto getEmpLeaveAppByLoginIdAndCustID(Integer loginId, Integer custId);
 	
 	Status empApproveCancelLeave(EmployeeLeaveDto employeeLeaveDto);
+	
+	EmpLeaveResponseDto getByLoginIdAndCustIDAndEmpId(Integer loginId, Integer custId);
 }

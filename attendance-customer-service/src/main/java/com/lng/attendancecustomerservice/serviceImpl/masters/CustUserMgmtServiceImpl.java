@@ -97,6 +97,12 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						login.setLoginCreatedDate(new Date());
 						login.setLoginIsActive(true);
 						login.setRefCustId(customer.getCustId());
+						if(custUserMgmtDto.getEmpId() != null) {
+							login.setRefEmpId(custUserMgmtDto.getEmpId());
+						}else {
+							login.setRefEmpId(0);
+						}
+						
 						iLoginRepository.save(login);
 
 						String mobileNo = login.getLoginMobile();
@@ -183,23 +189,61 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	@Override
 	public CustUserRightResponseDto getAssignedAndUnAssignedUserRights(Integer loginId, Integer custId) {
 		CustUserRightResponseDto custUserRightResponseDto = new CustUserRightResponseDto();
+		List<UserModuleDto> userModuleDtos1 = new ArrayList<>();
+		List<UserModuleDto> userModuleDtos2 = new ArrayList<>();
+		List<UserModuleDto> userModuleDtos3 = new ArrayList<>();
 		try {
 
-			List<Module> assignedModules = iModuleRepository.getAssignedModuleByLogin_LoginIdAndCustomer_CustId(loginId, custId);
-			custUserRightResponseDto.setAssignedModules(assignedModules.stream().map(module -> convertToUserModuleDto(module)).collect(Collectors.toList()));
+			List<Object[]> assignedModules = iModuleRepository.getAssignedModuleByLogin_LoginIdAndCustomer_CustId(loginId, custId);
+			
+				for(Object[] p: assignedModules) {
+					UserModuleDto userModuleDto = new UserModuleDto();
+					userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
+					userModuleDto.setModuleName(p[1].toString());
+					userModuleDto.setModuleURL(p[2].toString());
+					userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
+					userModuleDto.setUserRightId(Integer.valueOf(p[4].toString()));
+					
+					userModuleDtos1.add(userModuleDto);
+					custUserRightResponseDto.setAssignedModules(userModuleDtos1);
+				}
 
-			List<Module> unAssignedModules = iModuleRepository.getUnAssignedModuleByLogin_LoginId(loginId);
-			custUserRightResponseDto.setUnAssignedModules(unAssignedModules.stream().map(module -> convertToUserModuleDto(module)).collect(Collectors.toList()));
+				List<Object[]> unAssignedModules = iModuleRepository.getUnAssignedModuleByLogin_LoginId(loginId);
+				for(Object[] p: unAssignedModules) {
+					UserModuleDto userModuleDto = new UserModuleDto();
+					userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
+					userModuleDto.setModuleName(p[1].toString());
+					userModuleDto.setModuleURL(p[2].toString());
+					userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
+					userModuleDto.setUserRightId(0);
+					
+					userModuleDtos2.add(userModuleDto);
+					custUserRightResponseDto.setUnAssignedModules(userModuleDtos2);
+				}
 
-			if(assignedModules.isEmpty()) {
-				custUserRightResponseDto.status = new Status(false, 200, "Modules are not assigned to this customer");
+				List<Object[]> allModules = iModuleRepository.getAllModules();
+				
+				for(Object[] p: allModules) {
+					UserModuleDto userModuleDto = new UserModuleDto();
+					userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
+					userModuleDto.setModuleName(p[1].toString());
+					userModuleDto.setModuleURL(p[2].toString());
+					userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
+					userModuleDto.setUserRightId(0);
+					
+					userModuleDtos3.add(userModuleDto);
+					custUserRightResponseDto.setAllModules(userModuleDtos3);
+				}
+				
+				if(assignedModules.isEmpty()) {
+					custUserRightResponseDto.status = new Status(false, 200, "Modules are not assigned to this customer");
 
-			} else if(unAssignedModules.isEmpty()) {
-				custUserRightResponseDto.status = new Status(false, 200, "All modules are assigned");
-			} else {
-				custUserRightResponseDto.status = new Status(false, 200, "Success");
-			}
-
+				} else if(unAssignedModules.isEmpty()) {
+					custUserRightResponseDto.status = new Status(false, 200, "All modules are assigned");
+				} else {
+					custUserRightResponseDto.status = new Status(false, 200, "Success");
+				}
+			
 		} catch (Exception e) {
 			custUserRightResponseDto.status = new Status(true, 500, "Opps..! Sometging went wrong..");
 

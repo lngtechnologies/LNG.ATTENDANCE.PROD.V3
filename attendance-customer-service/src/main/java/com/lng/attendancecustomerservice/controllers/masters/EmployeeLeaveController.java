@@ -58,7 +58,7 @@ public class EmployeeLeaveController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
-	@PostMapping(value = "/getEmpLeaveByLoginIdAndCustId")
+	/*@PostMapping(value = "/getEmpLeaveByLoginIdAndCustId")
 	public ResponseEntity<EmpLeaveResponseDto> getEmpLeaveByLoginIdAndCustId(@RequestBody EmpLeaveDto empLeaveDto) {
 		EmpLeaveResponseDto empLeaveResponseDto = EmpLeaveApproveOrCancelService.getByLoginIdAndCustID(empLeaveDto.getLoginId(), empLeaveDto.getCustId());
 		return new ResponseEntity<EmpLeaveResponseDto>(empLeaveResponseDto, HttpStatus.OK);
@@ -68,7 +68,14 @@ public class EmployeeLeaveController {
 	public ResponseEntity<EmpLeaveResponseDto> getEmpLeaveAppByLoginIdAndCustId(@RequestBody EmpLeaveDto empLeaveDto) {
 		EmpLeaveResponseDto empLeaveResponseDto = EmpLeaveApproveOrCancelService.getEmpLeaveAppByLoginIdAndCustID(empLeaveDto.getLoginId(), empLeaveDto.getCustId());
 		return new ResponseEntity<EmpLeaveResponseDto>(empLeaveResponseDto, HttpStatus.OK);
+	}*/
+	
+	@PostMapping(value = "/getEmpLeaveByLoginIdAndCustId")
+	public ResponseEntity<EmpLeaveResponseDto> getEmpLeaveByLoginIdAndCustId(@RequestBody EmpLeaveDto empLeaveDto) {
+		EmpLeaveResponseDto empLeaveResponseDto = EmpLeaveApproveOrCancelService.getByLoginIdAndCustIDAndEmpId(empLeaveDto.getLoginId(), empLeaveDto.getCustId());
+		return new ResponseEntity<EmpLeaveResponseDto>(empLeaveResponseDto, HttpStatus.OK);
 	}
+	
 	
 	@PostMapping(value = "/approve")
 	public ResponseEntity<Status> approve(@RequestBody EmployeeLeaveDto employeeLeaveDto) {

@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,6 +147,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 					//set empId to employeeReportingTo
 					EmployeeReportingTo employeeReportingTo = new EmployeeReportingTo();
+					//String date= "0000-00-00";
+					//SimpleDateFormat sf = new SimpleDateFormat("yyyy-mm-dd");
+					//Date mydate = new Date(date);
 					try {
 						employeeReportingTo.setEmployee(employee);
 						if(custEmployeeDto.getEmpReportingToId() != null) {
@@ -153,7 +157,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						}else {
 							employeeReportingTo.setRefEmpReportingToId(0);
 						}
-						employeeReportingTo.setEmpFromDate(custEmployeeDto.getEmpReportingToFromDate());
+						if(custEmployeeDto.getEmpReportingToFromDate() != null) {
+							employeeReportingTo.setEmpFromDate(custEmployeeDto.getEmpReportingToFromDate());
+						}else {
+							employeeReportingTo.setEmpFromDate(null);
+						}
+						
 						employeeReportingToRepository.save(employeeReportingTo);
 						
 					} catch (Exception e) {

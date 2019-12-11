@@ -154,7 +154,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				} else {
 					department.setDeptIsActive(false);
 					departmentRepository.save(department);
-					departmentResponse.status = new Status(false,200, "The record has been disabled, since it has been used in another transactions");
+					departmentResponse.status = new Status(false,200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {
 				departmentResponse.status = new Status(true,400, "Department Not Found");
