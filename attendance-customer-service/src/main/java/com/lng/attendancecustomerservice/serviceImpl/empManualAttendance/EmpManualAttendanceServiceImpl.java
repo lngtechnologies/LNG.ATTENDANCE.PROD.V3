@@ -47,7 +47,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			List<Object[]> empAttendance = empAttendanceRepository
 					.findEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(deptId, empAttendanceDate);
 			if (empAttendance.isEmpty()) {
-				empAttendanceResponse.status = new Status(true, 400, "Emp Attendance Not Found");
+				empAttendanceResponse.status = new Status(false, 400, "Records Not Found");
 			} else {
 				for (Object[] p : empAttendance) {
 
@@ -113,14 +113,14 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 		BigDecimal bd = new BigDecimal(100.100);
 		try {
 			for(EmployeeAttendanceDto employeeAttendanceDto : employeeAttendanceDtos) {
-				EmployeeAttendance employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceInModeAndEmpAttendanceInDatetimeAndEmpAttendanceInLatLong
-						(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceInMode(), employeeAttendanceDto.getEmpAttendanceInDatetime(), employeeAttendanceDto.getEmpAttendanceInLatLong());
+				
+				List<EmployeeAttendance> employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceInDatetime(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceInDatetime());
 				
 				EmployeeAttendance employeeAttendance2 = employeeAttendanceRepository.findByEmpAttendanceId(employeeAttendanceDto.getEmpAttendanceId());
 				
 				Employee employee = employeeRepository.getByEmpId(employeeAttendanceDto.getRefEmpId());
 				if(employee != null) {
-					if(employeeAttendance == null) {
+					if(employeeAttendance.isEmpty()) {
 						
 						if(employeeAttendance2 == null) {
 							EmployeeAttendance employeeAttendance1 = new EmployeeAttendance();
@@ -173,9 +173,9 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							
 							employeeAttendance2.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
 							employeeAttendance2.setEmployee(employee);
-							employeeAttendance2.setEmpAttendanceInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
+							employeeAttendance2.setEmpAttendanceInDatetime(employeeAttendance2.getEmpAttendanceInDatetime());
 							employeeAttendance2.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
-							employeeAttendance2.setEmpAttendanceConsiderInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
+							employeeAttendance2.setEmpAttendanceConsiderInDatetime(employeeAttendance2.getEmpAttendanceConsiderInDatetime());
 							employeeAttendance2.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
 							
 							if(employeeAttendanceDto.getEmpAttendanceInMode() == null) {
@@ -347,10 +347,10 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 		List<EmpAttendanceParamDto2> empAttendanceDtoList = new ArrayList<>();
 
 		try {
-			if(emp.length() <= 3) {
+			if(emp.length() >= 3) {
 				List<Object[]> empAttendance = empAttendanceRepository.SearchEmployeeByNameAndDate(emp, refCustId, empAttendanceDatetime);
 				if (empAttendance.isEmpty()) {
-					empAttendanceResponse.status = new Status(true, 400, "Emp Attendance Not Found");
+					empAttendanceResponse.status = new Status(false, 400, "Records Not Found");
 				} else {
 					for (Object[] p : empAttendance) {
 
@@ -367,9 +367,8 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 					}
 
 				}
-			}
-			else {
-				empAttendanceResponse.status = new Status(true, 4000, "Data too long ");
+			} else {
+				empAttendanceResponse.status = new Status(true, 4000, "Please enter more than 3 character");
 
 			}
 

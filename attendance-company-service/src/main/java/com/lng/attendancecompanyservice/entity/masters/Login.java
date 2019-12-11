@@ -51,6 +51,9 @@ public class Login {
 	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginCreatedDate")
 	private Date loginCreatedDate;
+	
+	@Column(name = "refEmpId")
+	private Integer refEmpId;
 
 	public Integer getLoginId() {
 		return loginId;
@@ -106,6 +109,14 @@ public class Login {
 
 	public void setLoginCreatedDate(Date loginCreatedDate) {
 		this.loginCreatedDate = loginCreatedDate;
+	}
+
+	public Integer getRefEmpId() {
+		return refEmpId;
+	}
+
+	public void setRefEmpId(Integer refEmpId) {
+		this.refEmpId = refEmpId;
 	}
 	
 }

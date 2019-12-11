@@ -133,7 +133,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeaveRepository.delete(custLeave);
 					custLeaveResponse.status = new Status(false, 200, "Deleted successfully");
 				}else {
-					custLeaveResponse.status = new Status(false, 200, "The record has been disabled, since it has been used in another transactions");
+					custLeaveResponse.status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {
 				custLeaveResponse.status = new Status(true, 400, "CustLeave  not found");

@@ -552,6 +552,7 @@ public class CustomerServiceImpl implements CustomerService {
 			login.setLoginMobile(customer.getCustMobile());
 			login.setLoginIsActive(true);
 			login.setLoginCreatedDate(new Date());
+			login.setRefEmpId(0);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}		

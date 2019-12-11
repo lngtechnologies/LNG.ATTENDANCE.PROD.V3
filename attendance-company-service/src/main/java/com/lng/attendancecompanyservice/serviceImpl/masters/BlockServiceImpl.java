@@ -151,7 +151,7 @@ public class BlockServiceImpl implements BlockService {
 				}else  {
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
-					response.status = new Status(false,200, "The record has been disabled, since it has been used in another transactions");
+					response.status = new Status(false,200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {
 				response.status = new Status(true,400, "BlockId Not Found");

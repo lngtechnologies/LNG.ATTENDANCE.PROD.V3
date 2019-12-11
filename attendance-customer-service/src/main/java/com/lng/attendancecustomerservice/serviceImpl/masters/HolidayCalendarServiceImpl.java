@@ -129,7 +129,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendarResponse.status = new Status(false, 200, "Deleted successfully");
 				}else {
 					holidayCalendarRepository.save(holidayCalendar);
-					holidayCalendarResponse.status = new Status(false, 200, "The record cannot be deleted as it is already used");
+					holidayCalendarResponse.status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {
 
