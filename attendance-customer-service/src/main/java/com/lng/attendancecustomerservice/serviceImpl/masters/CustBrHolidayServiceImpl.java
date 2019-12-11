@@ -95,7 +95,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 					HolidayCalendar holidayCalendar = holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
 					if(branch1 != null &&  holidayCalendar != null) {
 						CustBrHoliday  custBrHoliday1 = new CustBrHoliday();
-						custBrHoliday1.setBranch(branch1);
+						custBrHoliday1.setBranch(branch1);		
 						custBrHoliday1.setHolidayCalendar(holidayCalendar);
 						custBrHolidayRepository.save(custBrHoliday1);
 						custBrHolidayResponse.status = new Status(false,200, "success"); 
