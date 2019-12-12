@@ -64,7 +64,7 @@ public class DesignationServiceImpl implements DesignationService{
 					response.status = new Status(true,400, "Customer not found");
 				}
 			}else {
-				response.status = new Status(true,400,"DesignationName already exist for Customer");
+				response.status = new Status(true,400,"Designation name already exists");
 
 			}
 		}catch(Exception e){
@@ -122,7 +122,7 @@ public class DesignationServiceImpl implements DesignationService{
 				}
 				else{ 
 
-					status = new Status(true,400,"DesignationName already exist for Customer");
+					status = new Status(true,400,"Designation name already exists");
 
 				}
 			}

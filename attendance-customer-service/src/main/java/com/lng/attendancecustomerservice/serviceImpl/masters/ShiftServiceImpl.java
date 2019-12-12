@@ -58,7 +58,7 @@ public class ShiftServiceImpl implements ShiftService {
 			}
 			else{ 
 
-				shiftResponse.status = new Status(true,400,"ShiftName already exist for branch");
+				shiftResponse.status = new Status(true,400,"Shift name already exists");
 			}
 		} catch (Exception e) {
 			shiftResponse.status = new Status(true, 4000, e.getMessage());
@@ -115,7 +115,7 @@ public class ShiftServiceImpl implements ShiftService {
 				}
 				else{ 
 
-					status = new Status(true,400,"ShiftName already exist for branch");
+					status = new Status(true,400,"Shift name already exists");
 
 				}
 			}

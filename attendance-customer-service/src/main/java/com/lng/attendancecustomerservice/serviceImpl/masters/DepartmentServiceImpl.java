@@ -99,7 +99,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 		try {
 			if(departmentDto.getDeptName() == null || departmentDto.getDeptName().isEmpty()) throw new Exception("Please enter Department name");
 			if(departmentDto.getDeptId() == null || departmentDto.getDeptId() == 0) throw new Exception("Department id is null or zero");
-			if(departmentDto.getRefCustId() == null || departmentDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
+			if(departmentDto.getRefCustId()	 == null || departmentDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
 
 			Department department = departmentRepository.findDepartmentByDeptId(departmentDto.getDeptId());	
 			Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
