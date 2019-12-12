@@ -67,7 +67,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				}
 			}else {
 				
-				response.status = new Status(true,400,"DepartmentName already exists");
+				response.status = new Status(true,400,"Department name already exists");
 			}
 
 		}catch(Exception ex){
@@ -122,7 +122,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				}
 				else{ 
 
-					status = new Status(true,400,"DepartmentName already exist for Customer");
+					status = new Status(true,400,"Department name already exists");
 
 				}
 			}
