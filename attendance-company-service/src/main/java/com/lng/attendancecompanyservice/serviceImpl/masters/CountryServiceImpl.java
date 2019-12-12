@@ -65,7 +65,7 @@ public class CountryServiceImpl implements CountryService {
 					}
 			
 		}catch(Exception ex){
-			response.status = new Status(true,3000, ex.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 
 		return response;
@@ -102,7 +102,7 @@ public class CountryServiceImpl implements CountryService {
 			response.status = new Status(false,200, "Success");
 
 		}catch(Exception e) {
-			response.status = new Status(false,4000, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 		return response;
 	}
@@ -125,27 +125,27 @@ public class CountryServiceImpl implements CountryService {
 					country = modelMapper.map(countryDto,Country.class);
 					country.setCountryIsActive(true);
 					countryRepositary.save(country);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				} else if (ct.getCountryId() == countryDto.getCountryId()) { 
 
 					country = modelMapper.map(countryDto,Country.class);
 					country.setCountryIsActive(true);
 					countryRepositary.save(country);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				}
 				else{ 
-					status = new Status(true,400,"CountryName already Exist");
+					status = new Status(true,400,"Country name already exist");
 
 				}
 			}
 
 			else {
-				status = new Status(true, 400, "Country Not Found");
+				status = new Status(true, 400, "Country not found");
 
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -167,11 +167,11 @@ public class CountryServiceImpl implements CountryService {
 					countryResponse.status = new Status(true,400, "The record has been disabled since it has been used in other transactions");
 				}
 			} else  {
-				countryResponse.status = new Status(true,400, "Country Not Found");
+				countryResponse.status = new Status(true,400, "Country not found");
 			}
 
 		}catch(Exception e) { 
-			countryResponse.status = new Status(true,400, e.getMessage());
+			countryResponse.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 
 		return countryResponse;

@@ -47,7 +47,7 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorName(contractorDto.getContractorName());
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "successfully created");
 
 				}
 				else{ 
@@ -61,7 +61,7 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor1.setContractorName(contractorDto.getContractorName());
 					contractor1.setContractorIsActive(true);
 					contractorRepository.save(contractor1);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "successfully created");
 
 				}
 				else{ 
@@ -111,14 +111,14 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setCustomer(customer);
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				} else if (ch.getContractorId() == contractorDto.getContractorId()) { 
 
 					contractor = modelMapper.map(contractorDto,Contractor.class);
 					contractor.setCustomer(customer);
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				}
 				else{
 					status = new Status(true,400,"ContractorName already exist for Customer");
@@ -132,7 +132,7 @@ public class ContractorServiceImpl implements ContractorService {
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true,500, "Oops..! Something went wrong");
 		}
 		return status;
 	}
@@ -167,7 +167,7 @@ public class ContractorServiceImpl implements ContractorService {
 			}
 
 		}catch(Exception e) { 
-			scontractorResponse.status = new Status(true,400, e.getMessage());
+			scontractorResponse.status = new Status(true,500, "Oops..! Something went wrong");
 		}
 
 		return scontractorResponse;
@@ -187,7 +187,7 @@ public class ContractorServiceImpl implements ContractorService {
 				response.status = new Status(true, 4000, "Not found");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong"); 
 
 		}
 		return response;
@@ -207,7 +207,7 @@ public class ContractorServiceImpl implements ContractorService {
 			}
 
 		}catch(Exception e) {
-			response.status = new Status(true,500, "Something went wrong"); 
+			response.status = new Status(true,500, "Oops..! Something went wrong"); 
 		}
 		return response;
 	}

@@ -44,23 +44,23 @@ public class BeaconServiceImpl implements BeaconService {
 				beaconRepository.save(beacon);
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("Successfully Saved");
+				statusDto.setMessage("successfully created");
 			}else if (beacon1!= null){
 				beacon1.setBeaconIsActive(true);
 				beacon1.setBeaconCreatedDate(new Date());
 				beaconRepository.save(beacon1);
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("Successfully Saved");
+				statusDto.setMessage("successfully created");
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("Beacon Code is Already Exist");
+				statusDto.setMessage("Beacon code is already exist");
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Opps...! Something Went Wrong!");
+			statusDto.setMessage("Opps...! Something went wrong!");
 		}
 		
 		return statusDto;
@@ -76,14 +76,14 @@ public class BeaconServiceImpl implements BeaconService {
 
 			if(beaconListResponseDto != null && beaconListResponseDto.getBeaconDtoList() != null) {
 
-				beaconListResponseDto.status = new Status(false, 2000, "Success");
+				beaconListResponseDto.status = new Status(false, 200, "Success");
 			}else {
-				beaconListResponseDto.status = new Status(false, 4000, "Not Found");
+				beaconListResponseDto.status = new Status(false, 400, "Not found");
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			beaconListResponseDto.status = new Status(true, 5000, "Oops...! Something went wrong!");
+			beaconListResponseDto.status = new Status(true, 500, "Oops...! Something went wrong!");
 		}
 		return beaconListResponseDto;
 	}
@@ -110,22 +110,22 @@ public class BeaconServiceImpl implements BeaconService {
 					
 					statusDto.setCode(200);
 					statusDto.setError(false);
-					statusDto.setMessage("Successfully Updated");
+					statusDto.setMessage("successfully updated");
 				} else {
 					statusDto.setCode(400);
 					statusDto.setError(true);
-					statusDto.setMessage("Beacon Code Already Exist");
+					statusDto.setMessage("Beacon code already exist");
 				}
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("Beacon Not Found");
+				statusDto.setMessage("Beacon not found");
 			}
 
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Opps...! Somenthing Went Wrong!");
+			statusDto.setMessage("Opps...! Somenthing went wrong!");
 		}
 		return statusDto;
 	}
@@ -141,7 +141,7 @@ public class BeaconServiceImpl implements BeaconService {
 		if(beacon != null) {
 			if(blockBeaconMap == null) {
 				beaconRepository.delete(beacon);
-				status = new Status(false, 200, "Successfully deleted");
+				status = new Status(false, 200, "successfully deleted");
 			}else {
 				status = new Status(true, 400, "The record has been disabled since it has been used in other transactions");
 			}

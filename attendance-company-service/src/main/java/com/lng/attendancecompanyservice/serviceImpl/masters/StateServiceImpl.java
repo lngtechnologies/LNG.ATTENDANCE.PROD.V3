@@ -53,11 +53,11 @@ public class StateServiceImpl implements StateService {
 					state.setStateName(stateDto.getStateName());
 					state.setStateIsActive(true);
 					stateRepository.save(state);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "successfully created");
 
 				}
 				else{ 
-					response.status = new Status(true,400, "Country Not Found");
+					response.status = new Status(true,400, "Country not found");
 				}
 			} else if(state1 != null){
 				Country country = countryRepository.findCountryByCountryId(stateDto.getRefCountryId());
@@ -66,18 +66,18 @@ public class StateServiceImpl implements StateService {
 					state1.setStateName(stateDto.getStateName());
 					state1.setStateIsActive(true);
 					stateRepository.save(state1);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "successfully created");
 
 				}
 				else{ 
-					response.status = new Status(true,400, "Country Not Found");
+					response.status = new Status(true,400, "Country not found");
 				}
 			}else {
 				response.status = new Status(true,400,"State name already exists");
 
 			}
 		} catch (Exception e) {
-			response.status = new Status(true, 400, e.getMessage());
+			response.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 
 		return response;
@@ -99,7 +99,7 @@ public class StateServiceImpl implements StateService {
 			}
 
 		}catch(Exception e) {
-			response.status = new Status(true,500, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -123,28 +123,28 @@ public class StateServiceImpl implements StateService {
 					state.setCountry(country);
 					state.setStateIsActive(true);
 					stateRepository.save(state);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				} else if (st.getStateId() == stateDto.getStateId()) { 
 
 					state = modelMapper.map(stateDto,State.class);
 					state.setCountry(country);
 					state.setStateIsActive(true);
 					stateRepository.save(state);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				}
 				else{ 
-					status = new Status(true,400,"State Name already exist");
+					status = new Status(true,400,"State name already exist");
 
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "Country Not Found");
+				status = new Status(false, 400, "Country not found");
 
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -166,11 +166,11 @@ public class StateServiceImpl implements StateService {
 				}
 
 			} else  {
-				stateResponse.status = new Status(true,400, "State Not Found");
+				stateResponse.status = new Status(true,400, "State not found");
 			}
 
 		}catch(Exception e) { 
-			stateResponse.status = new Status(true,500, e.getMessage());
+			stateResponse.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 
 		return stateResponse;
@@ -194,7 +194,7 @@ public class StateServiceImpl implements StateService {
 			}
 
 		}catch (Exception e){
-			stateResponse.status = new Status(true,3000, e.getMessage());
+			stateResponse.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		stateResponse.setData1(stateDtoList);
 		return stateResponse;
@@ -214,7 +214,7 @@ public class StateServiceImpl implements StateService {
 				response.status = new Status(true, 4000, "Not found");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;

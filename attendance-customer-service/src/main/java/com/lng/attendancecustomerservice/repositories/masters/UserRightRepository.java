@@ -15,7 +15,7 @@ public interface UserRightRepository extends PagingAndSortingRepository<UserRigh
 
 	UserRight findByRefModuleId(Integer moduleId);
 	
-	UserRight findByRefLoginId(Integer loginId);
+	List<UserRight> findByRefLoginId(Integer loginId);
 	
 	List<UserRight> getByRefLoginId(Integer loginId);
 	

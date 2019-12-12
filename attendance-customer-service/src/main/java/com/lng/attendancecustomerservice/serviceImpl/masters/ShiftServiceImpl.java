@@ -49,11 +49,11 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftEnd(shiftDto.getShiftEnd());
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
-					shiftResponse.status = new Status(false,200, "Successfully created");
+					shiftResponse.status = new Status(false,200, "successfully created");
 
 				}
 				else{ 
-					shiftResponse.status = new Status(true,400, "Branch Not Found");
+					shiftResponse.status = new Status(true,400, "Branch not found");
 				}
 			}
 			else{ 
@@ -104,28 +104,28 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setBranch(branch);
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				} else if (sh.getShiftId() == shiftDto.getShiftId()) { 
 
 					shift = modelMapper.map(shiftDto,Shift.class);
 					shift.setBranch(branch);
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				}
 				else{ 
 
-					status = new Status(true,400,"ShiftName already exist for Branch");
+					status = new Status(true,400,"ShiftName already exist for branch");
 
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "Branch Not Found");
+				status = new Status(false, 200, "Branch not found");
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -140,7 +140,7 @@ public class ShiftServiceImpl implements ShiftService {
 				if(b == 0) {
 
 					shiftRepository.delete(shift);	
-					shiftResponse.status = new Status(false,200, "Successfully deleted");
+					shiftResponse.status = new Status(false,200, "successfully deleted");
 				} else {
 					shift.setShiftIsActive(false);
 					shiftRepository.save(shift);
@@ -148,11 +148,11 @@ public class ShiftServiceImpl implements ShiftService {
 				}
 
 			} else {
-				shiftResponse.status = new Status(true,400, "Shift Not Found");
+				shiftResponse.status = new Status(true,400, "Shift not found");
 			}
 
 		}catch(Exception e) { 
-			shiftResponse.status = new Status(true,500, e.getMessage());
+			shiftResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 
 		return shiftResponse;
@@ -167,7 +167,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 			List<Object[]> shiftList = shiftRepository.findShiftDetailsByBranch_RefBrIdAndShiftIsActive(refBrId, true);
 			if(shiftList.isEmpty()) {
-				response.status = new Status(true,400, "Shift Not Found");
+				response.status = new Status(true,400, "Shift not found");
 			}else {
 				for (Object[] p : shiftList) {	
 
@@ -183,7 +183,7 @@ public class ShiftServiceImpl implements ShiftService {
 			}
 
 		}catch (Exception e){
-			response.status = new Status(true,4000, e.getMessage());
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
 
 
 		}
@@ -206,7 +206,7 @@ public class ShiftServiceImpl implements ShiftService {
 				response.status = new Status(true, 4000, "Not found");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -220,12 +220,12 @@ public class ShiftServiceImpl implements ShiftService {
 			List<Shift> shiftList=shiftRepository.findByCustomer_CustIdAndShiftIsActive(custId);
 			response.setData1(shiftList.stream().map(shift -> convertToShiftDto(shift)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(false,400, "Not Found"); 
+				response.status = new Status(false,400, "Not found"); 
 			}else {
 				response.status = new Status(false,200, "success");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,500, "Something Went Wrong"); 
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;

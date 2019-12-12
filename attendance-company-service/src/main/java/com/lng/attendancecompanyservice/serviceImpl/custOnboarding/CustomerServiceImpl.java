@@ -178,17 +178,17 @@ public class CustomerServiceImpl implements CustomerService {
 				sendMailWithoutAttachments(customerDto, login.getLoginName());
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("Successfully Saved");
+				statusDto.setMessage("successfully created");
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("Customer Mobile Number or Email Already Exist");			
+				statusDto.setMessage("Customer mobile number or email already exist");			
 			}
 
 		} catch (Exception e) {
 			statusDto.setCode(400);
 			statusDto.setError(true);
-			statusDto.setMessage(e.getMessage());		
+			statusDto.setMessage("Oops..! Something went wrong..");		
 		}
 		return statusDto;
 	}
@@ -587,14 +587,14 @@ public class CustomerServiceImpl implements CustomerService {
 			customerListResponse.setDataList(customerDtoList.stream().map(customer -> convertToCustomerDtoTwo(customer)).collect(Collectors.toList()));
 
 			if(customerListResponse != null && customerListResponse.getDataList() != null) {
-				customerListResponse.status = new Status(false, 2000, "Success");
+				customerListResponse.status = new Status(false, 200, "Success");
 			}else {
-				customerListResponse.status = new Status(false, 4000, "Not Found");
+				customerListResponse.status = new Status(false, 400, "Not found");
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			customerListResponse.status = new Status(true, 5000, "Something went wrong");
+			customerListResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return customerListResponse;
 	}
@@ -613,10 +613,10 @@ public class CustomerServiceImpl implements CustomerService {
 				customerResponse.status = new Status(false, 200, "Success");
 			}
 			else {
-				customerResponse.status = new Status(true, 4000, "Not found");
+				customerResponse.status = new Status(true, 400, "Not found");
 			}
 		} catch (Exception e) {
-			customerResponse.status = new Status(true, 5000, "Something went wrong");
+			customerResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return customerResponse;
 	}
@@ -656,13 +656,13 @@ public class CustomerServiceImpl implements CustomerService {
 
 				customer.setCustGSTIN(customerDto.getCustGSTIN());
 				customerRepository.save(customer);
-				customerResponse.status = new Status(false, 2000, "Successfully Updated");
+				customerResponse.status = new Status(false, 200, "successfully updated");
 			}	else {
-				customerResponse.status = new Status(false, 4000, "Customer Not Found");
+				customerResponse.status = new Status(false, 400, "Customer not found");
 			}
 
 		} catch (Exception e) {
-			customerResponse.status = new Status(false, 5000, "Something went wrong");
+			customerResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return customerResponse;
 	}
@@ -677,13 +677,13 @@ public class CustomerServiceImpl implements CustomerService {
 			if(customer != null) {
 				customer.setCustIsActive(false);
 				customerRepository.save(customer);
-				customerResponse.status = new Status(false, 200, "Successfully Deleted");
+				customerResponse.status = new Status(false, 200, "successfully deleted");
 			} else {
-				customerResponse.status = new Status(true, 400, "Customer Not Found");
+				customerResponse.status = new Status(true, 400, "Customer not found");
 			}
 		} catch (Exception e) {
 			e.printStackTrace(); 
-			customerResponse.status = new Status(true, 5000, "Something went wrong");
+			customerResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return customerResponse;
 	}
@@ -700,17 +700,17 @@ public class CustomerServiceImpl implements CustomerService {
 				customerListResponse.setDataList(customerDtoList.stream().map(customer -> convertToCustomerDtoTwo(customer)).collect(Collectors.toList()));
 
 				if(customerListResponse != null && customerListResponse.getDataList() != null) {
-					customerListResponse.status = new Status(false, 2000, "Success");
+					customerListResponse.status = new Status(false, 200, "Success");
 				}else {
-					customerListResponse.status = new Status(true, 4000, "Not Found");
+					customerListResponse.status = new Status(true, 400, "Not found");
 				}
 			}else {
-				customerListResponse.status = new Status(true, 4000, "Data too long or too less");
+				customerListResponse.status = new Status(true, 400, "Data too long or too less");
 			}
 		}
 		catch (Exception e) {
 
-			customerListResponse.status = new Status(true, 5000, "Something went wrong");
+			customerListResponse.status = new Status(true, 500, "Something went wrong");
 		}
 		return customerListResponse;
 	}

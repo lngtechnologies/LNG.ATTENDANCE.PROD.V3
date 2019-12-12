@@ -144,24 +144,24 @@ public class BranchServiceImpl implements BranchService {
 									e.printStackTrace();
 								}
 
-								response.status = new Status(false,200, "Successfully Created");
+								response.status = new Status(false,200, "successfully created");
 							}
 							else{ 
-								response.status = new Status(true,400, "State Not Found");
+								response.status = new Status(true,400, "State not found");
 							}
 						}
 						else{ 
-							response.status = new Status(true,400, "Country Not Found");
+							response.status = new Status(true,400, "Country not found");
 						}
 					}
 					else{ 
-						response.status = new Status(true,400, "Customer Not Found");
+						response.status = new Status(true,400, "Customer not found");
 					}
 				}
 				/*response.status = new Status(true,400, " Branch Can't Create");
 				}*/
 				else{ 
-					response.status = new Status(true,400,"BranchName already exist");
+					response.status = new Status(true,400,"Branch name already exist");
 				}
 
 			}else {
@@ -170,7 +170,7 @@ public class BranchServiceImpl implements BranchService {
 
 
 		}catch(Exception ex){
-			response.status = new Status(true,3000, ex.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 
 		return response;
@@ -184,12 +184,12 @@ public class BranchServiceImpl implements BranchService {
 			List<Branch> branchList=branchRepository.findAllBranchByBrIsActive(true);
 			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(false,4000, "Not found"); 
+				response.status = new Status(false,400, "Not found"); 
 			}else {
 				response.status = new Status(false,200, "success");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -227,19 +227,19 @@ public class BranchServiceImpl implements BranchService {
 							branch.setBrIsBillable(true);
 							branch.setBrCreatedDate(new Date());
 							branchRepository.save(branch);
-							status = new Status(false, 200, "Updated successfully");
+							status = new Status(false, 200, "successfully updated");
 						
 						} else {
-							status = new Status(true,400,"Branch Name already exist"); 
+							status = new Status(true,400,"Branch name already exist"); 
 						}
 					}
 
 					else{ 
-						status = new Status(true,400, "State Not Found");
+						status = new Status(true,400, "State not found");
 					}
 				}
 				else{ 
-					status = new Status(true,400, "Country Not Found");
+					status = new Status(true,400, "Country not found");
 				}
 			}
 			else{ 
@@ -247,7 +247,7 @@ public class BranchServiceImpl implements BranchService {
 			}
 
 		}catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -266,7 +266,7 @@ public class BranchServiceImpl implements BranchService {
 				response.status = new Status(true, 4000, "Not found");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -291,7 +291,7 @@ public class BranchServiceImpl implements BranchService {
 
 				if(loginDataRight.isEmpty() && block.isEmpty() && employee.isEmpty() && shift.isEmpty() && employeeBranch.isEmpty()) {
 					branchRepository.delete(branch);
-					response.status = new Status(false, 200, "Deleted successfully");
+					response.status = new Status(false, 200, "successfully deleted");
 				}else {
 					branch.setBrIsActive(false);
 					branchRepository.save(branch);
@@ -304,7 +304,7 @@ public class BranchServiceImpl implements BranchService {
 			}
 
 		}catch(Exception e) {
-			response.status = new Status(true,400, e.getMessage());
+			response.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return response;
 	}
@@ -332,13 +332,13 @@ public class BranchServiceImpl implements BranchService {
 			List<Branch> branchList=branchRepository.findAllByCustomer_CustIdAndBrIsActive(custId, true);
 			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
 			if(response != null && response.getData1() != null) {
-				response.status = new Status(false,200, "success");
+				response.status = new Status(false,200, "Success");
 			}else {
-				response.status = new Status(false,400, "Not Found"); 
+				response.status = new Status(false,400, "Not found"); 
 			}
 
 		}catch(Exception e) {
-			response.status = new Status(true,500, "Somenthing Went Wrong.."); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 		return response;
 	}

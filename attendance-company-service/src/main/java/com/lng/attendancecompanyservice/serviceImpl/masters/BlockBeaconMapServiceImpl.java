@@ -66,7 +66,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 						blockBeaconMapRepository.save(blockBeaconMap);
 						statusDto.setCode(200);
 						statusDto.setError(false);
-						msg = "Successfully saved";
+						msg = "successfully created";
 						//statusDto.setMessage("Successfully saved");
 					}else {
 						statusDto.setCode(400);
@@ -87,7 +87,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Opps...! Something Went Wrong!");
+			statusDto.setMessage("Opps...! Something went wrong!");
 		}
 		return statusDto;
 	}
@@ -262,7 +262,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				// msg = "Successfully Updates";
-				statusDto.setMessage("Successfully updated");
+				statusDto.setMessage("successfully updated");
 				//}
 
 			}else {
@@ -273,7 +273,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Opps...! Something Went Wrong!");
+			statusDto.setMessage("Opps...! Something went wrong!");
 		}
 		return statusDto;
 	}
@@ -399,7 +399,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 				blockBeaconMapRepository.delete(blockBeaconMap);
 				statusDto.setError(false);
 				statusDto.setCode(200);					
-				statusDto.setMessage("Successfully deleted");
+				statusDto.setMessage("successfully deleted");
 			}else {
 				statusDto.setError(true);
 				statusDto.setCode(400);

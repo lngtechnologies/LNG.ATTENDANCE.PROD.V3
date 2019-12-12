@@ -32,10 +32,10 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
 				policyAndFaqResponse.status = new Status(false,200, "successfully created");
 			}else {
-				policyAndFaqResponse.status = new Status(true,400, "Not Found");
+				policyAndFaqResponse.status = new Status(true,400, "Not found");
 			}
 		}catch(Exception e) {
-			policyAndFaqResponse.status = new Status(true,3000, e.getMessage()); 
+			policyAndFaqResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 
@@ -57,10 +57,10 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 			if(policyAndFaqResponse.getData().isEmpty()) {
 				policyAndFaqResponse.status = new Status(true,400, "Not found"); 
 			}else {
-				policyAndFaqResponse.status = new Status(false,200, "success");
+				policyAndFaqResponse.status = new Status(false,200, "Success");
 			}
 		}catch(Exception e) {
-			policyAndFaqResponse.status = new Status(true,3000, e.getMessage()); 
+			policyAndFaqResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return policyAndFaqResponse;
@@ -75,12 +75,12 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 			if(policyAndFaq != null) {
 				PolicyAndFaq policyAndFaq1  = policyAndFaqRepository.findPolicyAndFaqByValue(policyAndFaqDto.getValue());
 				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
-				status = new Status(false, 200, "Updated successfully");
+				status = new Status(false, 200, "successfully updated");
 			}else {
-				status = new Status(true, 400, " Not Found");
+				status = new Status(true, 400, " Not found");
 			}
 		}catch(Exception e) {
-			status = new Status(true, 500, e.getMessage());
+			status = new Status(true,500, "Oops..! Something went wrong..");
 
 		}
 

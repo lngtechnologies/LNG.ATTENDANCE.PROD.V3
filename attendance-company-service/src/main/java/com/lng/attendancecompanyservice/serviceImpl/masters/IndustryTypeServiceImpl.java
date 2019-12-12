@@ -47,7 +47,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				industryTypeRepository.save(industryType);
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("Successfully Saved");
+				statusDto.setMessage("successfully created");
 			}else if(industryType1 != null){
 				
 				industryType1 = modelMapper.map(industryTypeDto, IndustryType.class);
@@ -55,16 +55,16 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				industryTypeRepository.save(industryType1);
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("Successfully Saved");
+				statusDto.setMessage("successfully created");
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("Industry Type Already Exist");
+				statusDto.setMessage("Industry type already exist");
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Opps...! Something Went Wrong!");
+			statusDto.setMessage("Oops..! Something went wrong..");
 		}
 
 		return statusDto;
@@ -83,12 +83,12 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 
 				industryTypeListResponse.status = new Status(false, 2000, "Success");
 			}else {
-				industryTypeListResponse.status = new Status(false, 4000, "Not Found");
+				industryTypeListResponse.status = new Status(false, 4000, "Not found");
 			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
-			industryTypeListResponse.status = new Status(true, 5000, "Oops...! Something went wrong!");
+			industryTypeListResponse.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return industryTypeListResponse;
 	}	
@@ -103,10 +103,10 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				industryTypeResponse.data = industryTypeDto;
 				industryTypeResponse.status = new Status(false, 200, "Success");
 			}else {
-				industryTypeResponse.status = new Status(false, 400, "Not Found");
+				industryTypeResponse.status = new Status(false, 400, "Not found");
 			}
 		}catch (Exception e) {
-			industryTypeResponse.status = new Status(true, 500, "Opps...! Something Went Wrong!");
+			industryTypeResponse.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return industryTypeResponse;
 	}
@@ -127,22 +127,22 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 					industryTypeRepository.save(industryType1);
 					statusDto.setCode(200);
 					statusDto.setError(false);
-					statusDto.setMessage("Successfully Updated");
+					statusDto.setMessage("successfully updated");
 				}else {
 					statusDto.setCode(400);
 					statusDto.setError(true);
-					statusDto.setMessage("Industry Already Exist");
+					statusDto.setMessage("Industry already exist");
 				}
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("Industry Not Found");
+				statusDto.setMessage("Industry not found");
 			}
 
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Opps...! Somenthing Went Wrong!");
+			statusDto.setMessage("Oops..! Something went wrong..");
 		}
 
 		return statusDto;
@@ -161,7 +161,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 					industryTypeRepository.delete(industryType);
 					statusDto.setCode(200);
 					statusDto.setError(false);
-					statusDto.setMessage("Successfully Deleted");
+					statusDto.setMessage("successfully deleted");
 				
 				}else {
 					industryType.setIndustryIsActive(false);
@@ -174,13 +174,13 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("Industry Not Found");
+				statusDto.setMessage("Industry not found");
 				
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Opps...! Somenthing Went Wrong!");		
+			statusDto.setMessage("Oops..! Something went wrong..");		
 		}
 
 		return statusDto;

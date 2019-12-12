@@ -37,13 +37,13 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			List<HolidayCalendar> holidayCalendars = holidayCalendarRepository.findAllByRefCustId(refCustId);
 			holidayCalendarResponse.setData1(holidayCalendars.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 			if(holidayCalendarResponse.getData1().isEmpty()) {
-				holidayCalendarResponse.status = new Status(false,400, "Not Found");
+				holidayCalendarResponse.status = new Status(false,400, "Not found");
 			}else {
 				holidayCalendarResponse.status = new Status(false,200, "success");
 
 			}
 		}catch(Exception e) {
-			holidayCalendarResponse.status = new Status(true,500, "Something went wrong"); 
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return holidayCalendarResponse;
@@ -65,18 +65,18 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendar.setRefCustId(holidayCalendarDto.getRefCustId());
 					holidayCalendar.setHolidayName(holidayCalendarDto.getHolidayName());
 					holidayCalendarRepository.save(holidayCalendar);
-					holidayCalendarResponse.status = new Status(false,200, "Successfully created");
+					holidayCalendarResponse.status = new Status(false,200, "successfully created");
 				}
 				else{ 
 					holidayCalendarResponse.status = new Status(true,400,"Holiday name already exists");
 				}
 			}
 			else{ 
-				holidayCalendarResponse.status = new Status(true,400,"Holiday Date already exists");
+				holidayCalendarResponse.status = new Status(true,400,"Holiday date already exists");
 			}
 
 		}catch(Exception ex){
-			holidayCalendarResponse.status = new Status(true, 4000, ex.getMessage());
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 
 		return holidayCalendarResponse;
@@ -97,13 +97,13 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "Successfully updated");
 
 				} else if ( he.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				}
 			}
 			else if(h != null && h.getHolidayId() == holidayCalendarDto.getHolidayId() ) {
@@ -112,12 +112,12 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				} else if (he1.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				}
 				else{ 
 
@@ -130,7 +130,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -147,7 +147,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 				List<CustBrHoliday> custBrHoliday = custBrHolidayRepository.findByHolidayCalendar_HolidayId(holidayId);
 				if(custBrHoliday.isEmpty()) {
 					holidayCalendarRepository.delete(holidayCalendar);
-					holidayCalendarResponse.status = new Status(false, 200, "Deleted successfully");
+					holidayCalendarResponse.status = new Status(false, 200, "successfully deleted");
 				}else {
 					holidayCalendarRepository.save(holidayCalendar);
 					holidayCalendarResponse.status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");
@@ -159,7 +159,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 
 		}catch(Exception e) {
-			holidayCalendarResponse.status = new Status(true,4000, e.getMessage());
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return holidayCalendarResponse;
 	}
@@ -178,7 +178,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 				holidayCalendarResponse.status = new Status(false, 400, "Not found");
 			}
 		}catch(Exception e) {
-			holidayCalendarResponse.status = new Status(true,500, e.getMessage()); 
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return holidayCalendarResponse;
@@ -199,7 +199,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 
 		}catch(Exception e) {
-			holidayCalendarResponse.status = new Status(true,500, e.getMessage()); 
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return holidayCalendarResponse;
@@ -221,7 +221,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 			List<Object[]> branchList = holidayCalendarRepository.findBranchByRefCustomerId(refCustId);
 			if(branchList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(false,400, "Customer Not Found");
+				holidayCalendarResponse.status = new Status(false,400, "Customer not found");
 			}else {
 				for (Object[] p : branchList) {	
 
@@ -235,7 +235,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 
 		}catch (Exception e){
-			holidayCalendarResponse.status = new Status(true,500, e.getMessage());
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 
 
 		}
@@ -249,13 +249,13 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 		try {
 			List<HolidayCalendar> holidayList = holidayCalendarRepository.findHolidayCalendarByrefCustId(refCustId);
 			if(holidayList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(false,400, " Not Found");
+				holidayCalendarResponse.status = new Status(false,400, " Not found");
 			}else { 
 				holidayCalendarResponse.setData1(holidayList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 				holidayCalendarResponse.status = new Status(false,200, "success");
 			}
 		}catch(Exception e) {
-			holidayCalendarResponse.status = new Status(true,500, "Something went wrong"); 
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return holidayCalendarResponse;
@@ -268,7 +268,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 			List<HolidayCalendar> holidayCalendarList = holidayCalendarRepository.findHolidayCalendarByRefCustId(refCustId);
 			if(holidayCalendarList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(false,400, " Not Found");
+				holidayCalendarResponse.status = new Status(false,400, "Not found");
 			}else {
 				holidayCalendarResponse.setData1(holidayCalendarList.stream().map(holidayCalendar -> convertToHolidayCalendarDto(holidayCalendar)).collect(Collectors.toList()));
 				holidayCalendarResponse.status = new Status(false,200, "success");
@@ -289,7 +289,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			List<Object[]> holidayList =  holidayCalendarRepository.findHolidayCalendarBybrId(refbrId);
 
 			if(holidayList.isEmpty()) {
-				holidayCalendarResponse.status = new Status(false,400, " Not Found");
+				holidayCalendarResponse.status = new Status(false,400, " Not found");
 			}else {
 				for (Object[] p : holidayList) {	
 
@@ -308,7 +308,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 
 		}catch (Exception e){
-			holidayCalendarResponse.status = new Status(true,500, e.getMessage());
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 
 
 		}

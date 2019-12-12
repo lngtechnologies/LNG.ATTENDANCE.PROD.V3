@@ -50,8 +50,6 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 				empAttendanceResponse.status = new Status(false, 400, "Records Not Found");
 
-				empAttendanceResponse.status = new Status(true, 400, "Employee Attendance Not Found");
-
 			} else {
 				for (Object[] p : empAttendance) {
 
@@ -172,7 +170,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							}
 							
 							employeeAttendanceRepository.save(employeeAttendance1);
-							status = new Status(false, 200, "Successfully attendance marked");
+							status = new Status(false, 200, "Attendance marked successfully");
 						} else {
 							
 							employeeAttendance2.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
@@ -219,11 +217,11 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							}
 							
 							employeeAttendanceRepository.save(employeeAttendance2);
-							status = new Status(false, 200, "Successfully attendance marked");
+							status = new Status(false, 200, "Attendance marked successfully");
 						}
 
 					} else {
-						status = new Status(false, 200, "Successfully attendance marked");
+						status = new Status(false, 200, "Attendance marked successfully");
 					} 
 
 				}else {
@@ -277,12 +275,12 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						}
 
 						employeeAttendanceRepository.save(employeeAttendance1);
-						status = new Status(false, 200, "Successfully attendance marked");
+						status = new Status(false, 200, "Attendance marked successfully");
 					}else {
 						status = new Status(false, 400, "Employye not found");
 					}
 				} else {
-					status = new Status(false, 200, "Successfully attendance marked"); 
+					status = new Status(false, 200, "Attendance marked successfully"); 
 				}
 			}
 
@@ -357,8 +355,6 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 					empAttendanceResponse.status = new Status(false, 400, "Records Not Found");
 
-					empAttendanceResponse.status = new Status(true, 400, "Employee Attendance Not Found");
-
 				} else {
 					for (Object[] p : empAttendance) {
 
@@ -382,7 +378,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			} 
 
 		} catch (Exception e) {
-			empAttendanceResponse.status = new Status(true, 400, e.getMessage());
+			empAttendanceResponse.status = new Status(true, 500, "Opps..! Something went wrong..");
 
 		}
 		empAttendanceResponse.setData2(empAttendanceDtoList);
@@ -397,11 +393,11 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			if(!employeeAttendance1.isEmpty()) {
 				for(EmployeeAttendance employeeAttendance: employeeAttendance1) {
 					
-					employeeAttendance.setEmpAttendanceConsiderInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
-					employeeAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+					employeeAttendance.setEmpAttendanceConsiderInDatetime(employeeAttendanceDto.getEmpAttendanceConsiderInDatetime());
+					employeeAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceConsiderOutDatetime());
 					
 					employeeAttendanceRepository.save(employeeAttendance);
-					status = new Status(false, 200, "Successfully attendance marked");
+					status = new Status(false, 200, "Attendance marked successfully");
 				}
 
 			}else {

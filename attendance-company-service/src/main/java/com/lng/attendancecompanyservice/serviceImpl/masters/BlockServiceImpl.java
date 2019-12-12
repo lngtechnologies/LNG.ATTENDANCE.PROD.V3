@@ -57,11 +57,11 @@ public class BlockServiceImpl implements BlockService {
 					response.status = new Status(false,200, "successfully created");
 				}
 				else{ 
-					response.status = new Status(true,400, "BranchId Not Found");
+					response.status = new Status(true,400, "Branch not found");
 				}
 			}
 			else{ 
-				response.status = new Status(true,400,"Block Name already exist");
+				response.status = new Status(true,400,"Block name already exist");
 			}
 
 		}catch(Exception ex){
@@ -78,12 +78,12 @@ public class BlockServiceImpl implements BlockService {
 			List<Block> blockList=blockRepository.findAll();
 			response.setData1(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(false,4000, "Not found"); 
+				response.status = new Status(false,400, "Not found"); 
 			}else {
 				response.status = new Status(false,200, "success");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -108,27 +108,27 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkCreatedDate(new Date());
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				} else if (bl.getBlkId() == blockDto.getBlkId()) { 
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
 					block.setBlkCreatedDate(new Date());
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				}
 				else{ 
-					status = new Status(true,400,"Block Name already exist");
+					status = new Status(true,400,"Block name already exist");
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "BranchId Not Found");
+				status = new Status(false, 400, "Branch not found");
 
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -154,10 +154,10 @@ public class BlockServiceImpl implements BlockService {
 					response.status = new Status(false,200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {
-				response.status = new Status(true,400, "BlockId Not Found");
+				response.status = new Status(true,400, "Block not found");
 			}
 		}catch(Exception e) { 
-			response.status = new Status(true,500, e.getMessage());
+			response.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return response;
 	}
@@ -187,7 +187,7 @@ public class BlockServiceImpl implements BlockService {
 
 
 		}catch (Exception e){
-			response.status = new Status(true,4000,e.getMessage());
+			response.status = new Status(true,500, "Oops..! Something went wrong..");
 
 
 		}
@@ -244,7 +244,7 @@ public class BlockServiceImpl implements BlockService {
 				response.status = new Status(true, 4000, "Not found");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -297,7 +297,7 @@ public class BlockServiceImpl implements BlockService {
 			}
 
 		}catch(Exception e) {
-			response.status = new Status(true,500, "Something went wrong"); 
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 		return response;
 	}

@@ -274,16 +274,16 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						saveEmpMonthlyNoOfDays(empMonthlyNoOfDays);
 					}
 
-					custEmployeeStatus.status = new Status(false, 200, "Successfully Saved");
+					custEmployeeStatus.status = new Status(false, 200, "successfully created");
 				} else {
-					custEmployeeStatus.status = new Status(true, 400, "Cannot Save");
+					custEmployeeStatus.status = new Status(true, 400, "cannot Save");
 				}
 			}else {
-				custEmployeeStatus.status = new Status(true, 400, "Employee Mobile Number Already Exists");
+				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number already exists");
 			}
 
 		}catch (Exception e) {
-			custEmployeeStatus.status = new Status(true, 400, "Oops...! Something Went Wrong");
+			custEmployeeStatus.status = new Status(true, 400, "Oops...! Something went wrong");
 		}
 
 		return custEmployeeStatus;
@@ -521,7 +521,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			}
 
 		} catch (Exception e) {
-			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
+			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something went wrong");
 		}
 		return custEmployeeListResponse;
 	}
@@ -778,14 +778,14 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 					custEmployeeStatus.status = new Status(false, 200, "Successfully Updated");
 				} else {
-					custEmployeeStatus.status = new Status(true, 400, "Employee Not Found or Employee Not In Service");
+					custEmployeeStatus.status = new Status(true, 400, "Employee not found or employee not in service");
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number aleady exist");
 			}
 
 		} catch (Exception e) {
-			custEmployeeStatus.status = new Status(true, 500, "Opps...! Something Went Wrong");
+			custEmployeeStatus.status = new Status(true, 500, "Opps...! Something went wrong");
 		}
 		return custEmployeeStatus;
 	}
@@ -800,7 +800,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			List<Object[]> employeeList = custEmployeeRepository.findAllEmployeeByEmpInService();
 
 			if(employeeList.isEmpty()) {
-				custEmployeeListResponse.status = new Status(false, 4000, "Not Found");
+				custEmployeeListResponse.status = new Status(false, 4000, "Not found");
 			}else {
 				for(Object[] p : employeeList) {
 
@@ -833,7 +833,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 			}
 		} catch (Exception e) {
-			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
+			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something went wrong");
 		}
 		return custEmployeeListResponse;
 	}
@@ -848,13 +848,13 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			if(employee != null) {
 				employee.setEmpInService(false);
 				custEmployeeRepository.save(employee);
-				custEmployeeStatus.status = new Status(false, 200, "Successfully Deleted");
+				custEmployeeStatus.status = new Status(false, 200, "successfully deleted");
 			} else {
-				custEmployeeStatus.status = new Status(true, 400, "Employee Not Found");
+				custEmployeeStatus.status = new Status(true, 400, "Employee not found");
 			}
 		} catch (Exception e) {
 			e.printStackTrace(); 
-			custEmployeeStatus.status = new Status(true, 5000, "Opps...! Something Went Wrong");
+			custEmployeeStatus.status = new Status(true, 5000, "Opps...! Something went wrong");
 		}
 		return custEmployeeStatus;
 	}
@@ -881,7 +881,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 				custEmployeeListResponse.status = new Status(true, 4000, "Data too long or too less");
 			}
 		} catch (Exception e) {
-			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
+			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something went wrong");
 		}
 		return custEmployeeListResponse;
 	}
@@ -937,7 +937,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			}
 
 		} catch (Exception e) {
-			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something Went Wrong");
+			custEmployeeListResponse.status = new Status(true, 5000, "Opps...! Something went wrong");
 		}
 		return custEmployeeListResponse;
 	}
@@ -984,7 +984,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			List<Object[]> employeeList =  custEmployeeRepository.findEmployeeByLoginDataRight_refLoginId(refLoginId);
 
 			if(employeeList.isEmpty()) {
-				custEmployeeListResponse.status = new Status(false,400, " Not Found");
+				custEmployeeListResponse.status = new Status(false,400, " Not found");
 			}else {
 				for (Object[] p : employeeList) {	
 

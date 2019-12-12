@@ -44,10 +44,10 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesignationName(designationDto.getDesignationName());
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "successfully created");
 				}
 				else{ 
-					response.status = new Status(true,400, "Customer Not Found");
+					response.status = new Status(true,400, "Customer not found");
 				}
 			} else if(designation1 != null){
 
@@ -58,17 +58,17 @@ public class DesignationServiceImpl implements DesignationService{
 					designation1.setDesignationName(designationDto.getDesignationName());
 					designation1.setDesigIsActive(true);
 					designationRepository.save(designation1);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "successfully created");
 				}
 				else{ 
-					response.status = new Status(true,400, "Customer Not Found");
+					response.status = new Status(true,400, "Customer not found");
 				}
 			}else {
 				response.status = new Status(true,400,"DesignationName already exist for Customer");
 
 			}
 		}catch(Exception e){
-			response.status = new Status(true, 4000, e.getMessage());
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 
 		return response;
@@ -87,7 +87,7 @@ public class DesignationServiceImpl implements DesignationService{
 			response.setData1(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
 			response.status = new Status(false,200, "successfully GetAll");
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -110,14 +110,14 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesignationName(designationDto.getDesignationName());
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
-					status = new Status(false,200, "Updated successfully");
+					status = new Status(false,200, "successfully updated");
 				} else if (de.getDesignationId() == designationDto.getDesignationId()) { 
 
 					designation.setCustomer(customer);
 					designation.setDesignationName(designationDto.getDesignationName());
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
-					status = new Status(false,200, "Updated successfully");
+					status = new Status(false,200, "successfully updated");
 
 				}
 				else{ 
@@ -128,12 +128,12 @@ public class DesignationServiceImpl implements DesignationService{
 			}
 
 			else {
-				status = new Status(false, 200, "Customer Not Found");
+				status = new Status(false, 200, "Customer not found");
 
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -156,7 +156,7 @@ public class DesignationServiceImpl implements DesignationService{
 				if(a == 0) {
 
 					designationRepository.delete(designation);	
-					designationResponse.status = new Status(false,200, "Successfully deleted");
+					designationResponse.status = new Status(false,200, "successfully deleted");
 				}else {
 					designation.setDesigIsActive(false);
 					designationRepository.save(designation);
@@ -164,11 +164,11 @@ public class DesignationServiceImpl implements DesignationService{
 				}
 
 			} else {
-				designationResponse.status = new Status(true,400, "Designation Not Found");
+				designationResponse.status = new Status(true,400, "Designation not found");
 			}
 
 		}catch(Exception e) { 
-			designationResponse.status = new Status(true,500, e.getMessage());
+			designationResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 
 		return designationResponse;
@@ -188,7 +188,7 @@ public class DesignationServiceImpl implements DesignationService{
 				response.status = new Status(true, 4000, "Not found");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -202,13 +202,13 @@ public class DesignationServiceImpl implements DesignationService{
 			response.setData1(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
 
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(false,400, "Not Found"); 
+				response.status = new Status(false,400, "Not found"); 
 
 			}else {
 				response.status = new Status(false,200, "Success");
 			}			
 		}catch(Exception e) {
-			response.status = new Status(true,500, "Something went wrong"); 
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;

@@ -102,7 +102,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						}else {
 							login.setRefEmpId(0);
 						}
-						
+
 						iLoginRepository.save(login);
 
 						String mobileNo = login.getLoginMobile();
@@ -110,7 +110,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 								+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
 						String s = messageUtil.sms(mobileNo, mobileSmS);
 
-						status = new Status(false, 200, "User Added successfully");
+						status = new Status(false, 200, "successfully created");
 
 					}else {
 						status = new Status(true, 400, "Mobile number already exist");
@@ -159,12 +159,12 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 							login.setRefCustId(customer.getCustId());
 							iLoginRepository.save(login);
 
-							String mobileNo = login.getLoginMobile();
+							/*String mobileNo = login.getLoginMobile();
 							String mobileSmS = "User Id has been successfully created to access the Attendance System Web application."
 									+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
-							String s = messageUtil.sms(mobileNo, mobileSmS);
+							String s = messageUtil.sms(mobileNo, mobileSmS);*/
 
-							status = new Status(false, 200, "User Added successfully");
+							status = new Status(false, 200, "successfully updated");
 
 						}else {
 							status = new Status(true, 400, "Mobile number already exist");
@@ -195,55 +195,55 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 		try {
 
 			List<Object[]> assignedModules = iModuleRepository.getAssignedModuleByLogin_LoginIdAndCustomer_CustId(loginId, custId);
-			
-				for(Object[] p: assignedModules) {
-					UserModuleDto userModuleDto = new UserModuleDto();
-					userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
-					userModuleDto.setModuleName(p[1].toString());
-					userModuleDto.setModuleURL(p[2].toString());
-					userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
-					userModuleDto.setUserRightId(Integer.valueOf(p[4].toString()));
-					
-					userModuleDtos1.add(userModuleDto);
-					custUserRightResponseDto.setAssignedModules(userModuleDtos1);
-				}
 
-				List<Object[]> unAssignedModules = iModuleRepository.getUnAssignedModuleByLogin_LoginId(loginId);
-				for(Object[] p: unAssignedModules) {
-					UserModuleDto userModuleDto = new UserModuleDto();
-					userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
-					userModuleDto.setModuleName(p[1].toString());
-					userModuleDto.setModuleURL(p[2].toString());
-					userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
-					userModuleDto.setUserRightId(0);
-					
-					userModuleDtos2.add(userModuleDto);
-					custUserRightResponseDto.setUnAssignedModules(userModuleDtos2);
-				}
+			for(Object[] p: assignedModules) {
+				UserModuleDto userModuleDto = new UserModuleDto();
+				userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
+				userModuleDto.setModuleName(p[1].toString());
+				userModuleDto.setModuleURL(p[2].toString());
+				userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
+				userModuleDto.setUserRightId(Integer.valueOf(p[4].toString()));
 
-				List<Object[]> allModules = iModuleRepository.getAllModules();
-				
-				for(Object[] p: allModules) {
-					UserModuleDto userModuleDto = new UserModuleDto();
-					userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
-					userModuleDto.setModuleName(p[1].toString());
-					userModuleDto.setModuleURL(p[2].toString());
-					userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
-					userModuleDto.setUserRightId(0);
-					
-					userModuleDtos3.add(userModuleDto);
-					custUserRightResponseDto.setAllModules(userModuleDtos3);
-				}
-				
-				if(assignedModules.isEmpty()) {
-					custUserRightResponseDto.status = new Status(false, 200, "Modules are not assigned to this customer");
+				userModuleDtos1.add(userModuleDto);
+				custUserRightResponseDto.setAssignedModules(userModuleDtos1);
+			}
 
-				} else if(unAssignedModules.isEmpty()) {
-					custUserRightResponseDto.status = new Status(false, 200, "All modules are assigned");
-				} else {
-					custUserRightResponseDto.status = new Status(false, 200, "Success");
-				}
-			
+			List<Object[]> unAssignedModules = iModuleRepository.getUnAssignedModuleByLogin_LoginId(loginId);
+			for(Object[] p: unAssignedModules) {
+				UserModuleDto userModuleDto = new UserModuleDto();
+				userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
+				userModuleDto.setModuleName(p[1].toString());
+				userModuleDto.setModuleURL(p[2].toString());
+				userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
+				userModuleDto.setUserRightId(0);
+
+				userModuleDtos2.add(userModuleDto);
+				custUserRightResponseDto.setUnAssignedModules(userModuleDtos2);
+			}
+
+			List<Object[]> allModules = iModuleRepository.getAllModules();
+
+			for(Object[] p: allModules) {
+				UserModuleDto userModuleDto = new UserModuleDto();
+				userModuleDto.setModuleId(Integer.valueOf(p[0].toString()));
+				userModuleDto.setModuleName(p[1].toString());
+				userModuleDto.setModuleURL(p[2].toString());
+				userModuleDto.setParentId(Integer.valueOf(p[3].toString()));
+				userModuleDto.setUserRightId(0);
+
+				userModuleDtos3.add(userModuleDto);
+				custUserRightResponseDto.setAllModules(userModuleDtos3);
+			}
+
+			if(assignedModules.isEmpty()) {
+				custUserRightResponseDto.status = new Status(false, 200, "Modules are not assigned to this customer");
+
+			} else if(unAssignedModules.isEmpty()) {
+				custUserRightResponseDto.status = new Status(false, 200, "All modules are assigned");
+			} else {
+				custUserRightResponseDto.status = new Status(false, 200, "Success");
+			}
+
 		} catch (Exception e) {
 			custUserRightResponseDto.status = new Status(true, 500, "Opps..! Sometging went wrong..");
 
@@ -305,7 +305,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				loginDataRight.setRefLoginId(custUserBranchLoginMapDto.getLoginId());
 				loginDataRight.setRefBrId(custUserBranchDto.getBrId());
 				loginDataRightRepository.save(loginDataRight);
-				status = new Status(false, 200, "Branches added successfully");
+				status = new Status(false, 200, "Branches successfully added");
 			}
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
@@ -331,26 +331,38 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			}
 
 			for(CustUserModuleDto custUserModuleDto : custUserModuleMapDto.getModuleIds()) {
-
-				Module module = iModuleRepository.findByModuleId(custUserModuleDto.getModuleId());
-				UserRight userRight = userRightRepository.findByRefLoginId(custUserModuleMapDto.getLoginId());
-				//UserRight userRight2 = userRightRepository.findByRefModuleId(custUserModuleDto.getModuleId());
-
-				if(module != null && custUserModuleDto.getUserRightId() != null) {
-					userRight.setRefModuleId(module.getModuleId());
-					userRightRepository.save(userRight);
-
-				} else if(module != null && custUserModuleDto.getUserRightId() == null){
+				
+				if(custUserModuleDto.getUserRightId() == null && custUserModuleDto.getModuleId() != null) {
 					UserRight userRight2 = new UserRight();
 					userRight2.setRefLoginId(custUserModuleMapDto.getLoginId());
 					userRight2.setRefModuleId(custUserModuleDto.getModuleId());
 					userRightRepository.save(userRight2);
+				}
 
-				} else if(module == null){
-					userRightRepository.delete(userRight);
+				Module module = iModuleRepository.findByModuleId(custUserModuleDto.getModuleId());
+				List<UserRight> userRights = userRightRepository.findByRefLoginId(custUserModuleMapDto.getLoginId());
+				//UserRight userRight2 = userRightRepository.findByRefModuleId(custUserModuleDto.getModuleId());
+				for(UserRight userRight: userRights) {
+					if(custUserModuleDto.getUserRightId() != null && custUserModuleDto.getUserRightId().equals(userRight.getUserRightId())) {
+						userRight.setRefModuleId(module.getModuleId());
+						userRightRepository.save(userRight);
+					} 
+					/*
+					 * else if(module != null && custUserModuleDto.getUserRightId() == null){
+					 * 
+					 * UserRight userRight2 = new UserRight();
+					 * userRight2.setRefLoginId(custUserModuleMapDto.getLoginId());
+					 * userRight2.setRefModuleId(custUserModuleDto.getModuleId());
+					 * userRightRepository.save(userRight2);
+					 * 
+					 * }
+					 */
+					else if(module == null){
+						userRightRepository.delete(userRight);
+					}
 				}
 			}
-			status = new Status(false, 200, "Modules updated successfully");
+			status = new Status(false, 200, "Modules successfully updated");
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
@@ -394,7 +406,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 					loginDataRightRepository.delete(loginDataRight);
 				}
 
-				status = new Status(false, 200, "Branches updated successfully");
+				status = new Status(false, 200, "Branches successfully updated");
 
 			}
 
@@ -497,7 +509,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				custUserLoginDto.setCustId(Integer.valueOf(p[3].toString()));
 				custUserLoginDto.setCustName(p[4].toString());
 				custUserLoginDto.setCustCode(p[5].toString());
-				
+
 				custUserLoginDtoList.add(custUserLoginDto);
 				custUserLoginModuleBranchMapResponseDto.setLoginDetails(custUserLoginDtoList);
 
@@ -531,7 +543,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				}
 				custUserLoginDto.setBranches(custUserBranchesDtolist);
 			}
-			
+
 			if(loginList.isEmpty()) {
 				custUserLoginModuleBranchMapResponseDto.status = new Status(false, 200, "Success and there is no login details exist");
 			}else {
@@ -548,12 +560,12 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	@Override
 	public CustLoginDto getLoginDetailsByLoginId(Integer loginId) {
 		CustLoginDto custLoginDto = new CustLoginDto();
-		
+
 		try {
 			List<Object[]> loginDetails = iLoginRepository.findLogindDetailsByLoginId(loginId);
 			if(loginDetails != null) {
 				for(Object[] p: loginDetails) {
-					
+
 					custLoginDto.setLoginId(Integer.valueOf(p[0].toString()));
 					custLoginDto.setLoginName(p[1].toString());
 					custLoginDto.setLoginMobile(p[2].toString());
@@ -565,15 +577,15 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			} else {
 				custLoginDto.status = new Status(true, 400, "Not found");
 			}
-			
+
 		} catch (Exception e) {
 			custLoginDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return custLoginDto;
 	}
 
-	
-	
+
+
 	@Override
 	public Status deleteByLoginId(Integer loginId) {
 		Status status = null;
@@ -582,7 +594,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			if(login != null) {
 				login.setLoginIsActive(false);
 				iLoginRepository.save(login);
-				status = new Status(false, 200, "Successfully deleted");
+				status = new Status(false, 200, "successfully deleted");
 			}else {
 				status = new Status(true, 400, "Login id not found");
 			}
@@ -612,13 +624,13 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			}
 
 		} catch (Exception e) {
-			status = new Status(true, 400, "Oops..! Something went wrong..");
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
 
-	
-	
+
+
 
 
 	public UserModuleDto convertToUserModuleDto(Module module) {
@@ -638,7 +650,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	}
 
 
-	
+
 
 
 	/*public CustUserModulesDto convertToCustUserModulesDto(Module module) {

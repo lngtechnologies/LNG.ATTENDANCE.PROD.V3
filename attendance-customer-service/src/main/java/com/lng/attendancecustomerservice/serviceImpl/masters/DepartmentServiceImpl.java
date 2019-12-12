@@ -49,7 +49,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 				}
 				else{ 
-					response.status = new Status(true,400, "Customer Not Found");
+					response.status = new Status(true,400, "Customer not found");
 				}
 			}else if(department1 != null){
 				Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
@@ -59,19 +59,19 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department1.setDeptName(departmentDto.getDeptName());
 					department1.setDeptIsActive(true);
 					departmentRepository.save(department1);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "successfully created");
 
 				}
 				else{ 
-					response.status = new Status(true,400, "Customer Not Found");
+					response.status = new Status(true,400, "Customer not found");
 				}
 			}else {
 				
-				response.status = new Status(true,400,"DepartmentName already exists");
+				response.status = new Status(true,400,"Department name already exists");
 			}
 
 		}catch(Exception ex){
-			response.status = new Status(true, 4000, ex.getMessage());
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 
 		return response;
@@ -86,7 +86,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			response.setData1(stateList.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList()));
 			response.status = new Status(false,200, "Success");
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -111,29 +111,29 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setCustomer(customer);
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				} else if (de.getDeptId() == departmentDto.getDeptId()) { 
 
 					department = modelMapper.map(departmentDto,Department.class);
 					department.setCustomer(customer);
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
-					status = new Status(false, 200, "Updated successfully");
+					status = new Status(false, 200, "successfully updated");
 				}
 				else{ 
 
-					status = new Status(true,400,"DepartmentName already exist for Customer");
+					status = new Status(true,400,"Department name already exists");
 
 				}
 			}
 
 			else {
-				status = new Status(false, 200, "Customer Not Found");
+				status = new Status(false, 200, "Customer not found");
 
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -157,10 +157,10 @@ public class DepartmentServiceImpl implements DepartmentService {
 					departmentResponse.status = new Status(false,200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {
-				departmentResponse.status = new Status(true,400, "Department Not Found");
+				departmentResponse.status = new Status(true,400, "Department not found");
 			}
 		}catch(Exception e) { 
-			departmentResponse.status = new Status(true,400, e.getMessage());
+			departmentResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 
 		return departmentResponse;
@@ -188,7 +188,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				response.status = new Status(true, 4000, "Not found");
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,3000, e.getMessage()); 
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
@@ -201,13 +201,13 @@ public class DepartmentServiceImpl implements DepartmentService {
 			List<Department> departments = departmentRepository.findAllByCustomer_CustIdAndDeptIsActive(custId, true);
 			response.setData1(departments.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
-				response.status = new Status(false,400, "Not Found");
+				response.status = new Status(false,400, "Not found");
 			}else {
 				response.status = new Status(false,200, "success");
 
 			}
 		}catch(Exception e) {
-			response.status = new Status(true,500, "Something went wrong"); 
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
