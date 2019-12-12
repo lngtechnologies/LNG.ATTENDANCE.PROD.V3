@@ -225,7 +225,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 					} 
 
 				}else {
-					status = new Status(false, 400, "Employye not found");
+					status = new Status(false, 400, "Employee not found");
 				}
 			}
 
@@ -277,7 +277,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						employeeAttendanceRepository.save(employeeAttendance1);
 						status = new Status(false, 200, "Successfully attendance marked");
 					}else {
-						status = new Status(false, 400, "Employye not found");
+						status = new Status(false, 400, "Employee not found");
 					}
 				} else {
 					status = new Status(false, 200, "Successfully attendance marked"); 
@@ -401,7 +401,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 				}
 
 			}else {
-				status = new Status(false, 400, "Employye not found");
+				status = new Status(false, 400, "Employee not found");
 			}
 
 		} catch (Exception e) {

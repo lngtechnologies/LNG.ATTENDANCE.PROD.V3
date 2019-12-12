@@ -152,7 +152,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 					} 
 
 				}else {
-					status = new Status(false, 400, "Employye not found");
+					status = new Status(false, 400, "Employee not found");
 				}
 			}
 
@@ -191,7 +191,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 							}
 							
 						}else {
-							status = new Status(false, 400, "Employye not found");
+							status = new Status(false, 400, "Employee not found");
 						}
 					} else {
 						status = new Status(false, 200, "Successfully attendance marked"); 
