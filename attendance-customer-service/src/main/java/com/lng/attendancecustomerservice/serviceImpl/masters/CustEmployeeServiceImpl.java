@@ -492,6 +492,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					custEmployeeDto.setEmployeeDesignationFromDate((Date)p[24]);
 					custEmployeeDto.setEmpWeeklyOffDayFromDate((Date)p[25]);
 					custEmployeeDto.setDayOfWeek(p[26].toString());
+					custEmployeeDto.setEmpReportingToFromDate((Date)p[27]);
 
 					if(custEmployeeDto.getEmpReportingToId() != 0) {
 						List<Object[]> reportingToList = custEmployeeRepository.getReportingToDepartment(custEmployeeDto.getEmpReportingToId());

@@ -52,6 +52,8 @@ public class CustEmployeeDtoTwo {
 
 	private Date empJoiningDate;
 
+	private Date empReportingToFromDate;
+	
 	private Date employeeBranchFromDate;
 
 	private Date employeeDepartmentFromDate;
@@ -67,6 +69,15 @@ public class CustEmployeeDtoTwo {
 	private String reportingToDeptName;
 	
 	private List<EmpBlockMapDto> empBlockMapDtoList;
+
+	
+	public Date getEmpReportingToFromDate() {
+		return empReportingToFromDate;
+	}
+
+	public void setEmpReportingToFromDate(Date empReportingToFromDate) {
+		this.empReportingToFromDate = empReportingToFromDate;
+	}
 
 	public Integer getEmpId() {
 		return empId;
