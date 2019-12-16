@@ -393,13 +393,8 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			if(!employeeAttendance1.isEmpty()) {
 				for(EmployeeAttendance employeeAttendance: employeeAttendance1) {
 
-					
 					employeeAttendance.setEmpAttendanceConsiderInDatetime(employeeAttendanceDto.getEmpAttendanceConsiderInDatetime());
-					
-
-					employeeAttendance.setEmpAttendanceConsiderInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
-					employeeAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
-
+					employeeAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceConsiderOutDatetime());
 
 					employeeAttendanceRepository.save(employeeAttendance);
 					status = new Status(false, 200, "Attendance marked successfully");

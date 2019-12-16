@@ -24,7 +24,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 
 	@Autowired
 	EmployeeLeaveRepository employeeLeaveRepository;
-	
+
 	@Autowired
 	ILoginRepository iLoginRepository;
 
@@ -36,12 +36,12 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 		EmpLeaveResponseDto empLeaveResponseDto = new EmpLeaveResponseDto();
 		List<EmpLeaveDto> empLeaveDtoList = new ArrayList<>();
 		try {
-			
+
 			List<Object[]> employeeList = employeeLeaveRepository.getEmpLeaveByLoginIdAndCustId(loginId, custId);
 			if(!employeeList.isEmpty()) {
 				for(Object[] p: employeeList) {				
 					EmpLeaveDto empLeaveDto = new EmpLeaveDto();
-					
+
 					empLeaveDto.setEmpLeaveId(Integer.valueOf(p[0].toString()));
 					empLeaveDto.setLoginId(Integer.valueOf(p[1].toString()));
 					empLeaveDto.setCustId(Integer.valueOf(p[2].toString()));
@@ -54,14 +54,14 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 					empLeaveDto.setEmpLeaveDaysCount(Integer.valueOf(p[9].toString()));
 					empLeaveDto.setEmpLeaveStatus(p[10].toString());
 					empLeaveDtoList.add(empLeaveDto);
-					
+
 					empLeaveResponseDto.setEmpLeaveDtoList(empLeaveDtoList);
 					empLeaveResponseDto.status = new Status(false, 200, "Success");
 				}
 			}else {
 				empLeaveResponseDto.status = new Status(false, 400, "No records found");
 			}
-		
+
 		} catch (Exception e) {
 			empLeaveResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
@@ -72,7 +72,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 	public Status empApproveLeave(EmployeeLeaveDto employeeLeaveDto) {
 		Status status = null;
 		try {
-			
+
 			EmployeeLeave employeeLeave = employeeLeaveRepository.findByEmpLeaveId(employeeLeaveDto.getEmpLeaveId());
 			if(employeeLeave != null) {
 				employeeLeave.setEmpLeaveStatus("App");
@@ -81,7 +81,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 			} else {
 				status = new Status(false, 400, "Not found");
 			}
-			
+
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
@@ -92,7 +92,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 	public Status empRejectLeave(EmployeeLeaveDto employeeLeaveDto) {
 		Status status = null;
 		try {
-			
+
 			EmployeeLeave employeeLeave = employeeLeaveRepository.findByEmpLeaveId(employeeLeaveDto.getEmpLeaveId());
 			if(employeeLeave != null) {
 				employeeLeave.setEmpLeaveStatus("Rej");
@@ -102,7 +102,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 			} else {
 				status = new Status(false, 400, "Not found");
 			}
-			
+
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
@@ -114,12 +114,12 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 		EmpLeaveResponseDto empLeaveResponseDto = new EmpLeaveResponseDto();
 		List<EmpLeaveDto> empLeaveDtoList = new ArrayList<>();
 		try {
-			
+
 			List<Object[]> employeeList = employeeLeaveRepository.getEmpLeaveAppByLoginIdAndCustId(loginId, custId);
 			if(!employeeList.isEmpty()) {
 				for(Object[] p: employeeList) {				
 					EmpLeaveDto empLeaveDto = new EmpLeaveDto();
-					
+
 					empLeaveDto.setEmpLeaveId(Integer.valueOf(p[0].toString()));
 					empLeaveDto.setLoginId(Integer.valueOf(p[1].toString()));
 					empLeaveDto.setCustId(Integer.valueOf(p[2].toString()));
@@ -132,14 +132,14 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 					empLeaveDto.setEmpLeaveDaysCount(Integer.valueOf(p[9].toString()));
 					empLeaveDto.setEmpLeaveStatus(p[10].toString());
 					empLeaveDtoList.add(empLeaveDto);
-					
+
 					empLeaveResponseDto.setEmpLeaveDtoList(empLeaveDtoList);
 					empLeaveResponseDto.status = new Status(false, 200, "Success");
 				}
 			}else {
 				empLeaveResponseDto.status = new Status(false, 400, "No records found");
 			}
-		
+
 		} catch (Exception e) {
 			empLeaveResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
@@ -149,9 +149,9 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 	@Override
 	public Status empApproveCancelLeave(EmployeeLeaveDto employeeLeaveDto) {
 		Status status = null;
-		
+
 		try {
-			
+
 			EmployeeLeave employeeLeave = employeeLeaveRepository.findByEmpLeaveId(employeeLeaveDto.getEmpLeaveId());
 			if(employeeLeave != null) {
 				employeeLeave.setEmpLeaveStatus("AppCan");
@@ -161,7 +161,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 			} else {
 				status = new Status(false, 400, "Not found");
 			}
-			
+
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
@@ -175,15 +175,16 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 		try {
 			Login login = iLoginRepository.findByLoginId(loginId);
 			if(login != null) {
-				
-				if(login.getRefEmpId() != 0) {
-					
-					List<Object[]> employeeList = employeeLeaveRepository.getEmpLeaveByLoginIdAndCustIdAndEmpId(loginId, custId, login.getRefEmpId());
-					if(!employeeList.isEmpty()) {
-						
-						for(Object[] p: employeeList) {				
+
+				List<Object[]> employeeList = employeeLeaveRepository.getEmpLeaveByLoginIdAndCustIdAndEmpId(loginId, custId, login.getRefEmpId());
+				if(!employeeList.isEmpty()) {
+
+					for(Object[] p: employeeList) {	
+
+						if(login.getRefEmpId() != 0 && Integer.valueOf(p[0].toString()) != 0) {
+
 							EmpLeaveDto empLeaveDto = new EmpLeaveDto();
-							
+
 							empLeaveDto.setEmpLeaveId(Integer.valueOf(p[0].toString()));
 							empLeaveDto.setLoginId(Integer.valueOf(p[1].toString()));
 							empLeaveDto.setCustId(Integer.valueOf(p[2].toString()));
@@ -196,18 +197,19 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 							empLeaveDto.setEmpLeaveDaysCount(Integer.valueOf(p[9].toString()));
 							empLeaveDto.setEmpLeaveStatus(p[10].toString());
 							empLeaveDtoList.add(empLeaveDto);
-							
+
 							empLeaveResponseDto.setEmpLeaveDtoList(empLeaveDtoList);
 							empLeaveResponseDto.status = new Status(false, 200, "Success");
+
+						} else {
+							empLeaveResponseDto.status = new Status(true, 400, "Not authorized user to approve leave");
 						}
-					}else {
-						empLeaveResponseDto.status = new Status(false, 400, "No records found");
 					}
-				} else {
-					empLeaveResponseDto.status = new Status(false, 400, "Not authorized user to approve leave");
+				}else {
+					empLeaveResponseDto.status = new Status(false, 400, "No records found");
 				}
 			}
-			
+
 		} catch (Exception e) {
 			empLeaveResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
