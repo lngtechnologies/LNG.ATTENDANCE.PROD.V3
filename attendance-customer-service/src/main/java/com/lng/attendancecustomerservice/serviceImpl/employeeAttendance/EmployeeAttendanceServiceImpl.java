@@ -1,6 +1,10 @@
 package com.lng.attendancecustomerservice.serviceImpl.employeeAttendance;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -18,6 +22,7 @@ import com.lng.attendancecustomerservice.repositories.employeeAttendance.Employe
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.UnmatchedEmployeeAttendanceRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.employeeAttendance.EmployeeAttendanceService;
+import com.lng.dto.employeeAttendance.CurrentDateDto;
 import com.lng.dto.employeeAttendance.EmpSignOutDto;
 import com.lng.dto.employeeAttendance.EmpSignOutResponse;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
@@ -254,6 +259,24 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 	public EmployeeAttendanceDto convertToEmployeeAttendanceDto(EmployeeAttendance employeeAttendance) {
 		EmployeeAttendanceDto  employeeAttendanceDto = modelMapper.map(employeeAttendance, EmployeeAttendanceDto.class);
 		return employeeAttendanceDto;
+	}
+
+	@Override
+	public CurrentDateDto getCurrentDate() {
+		CurrentDateDto currentDateDto = new CurrentDateDto();
+		try {
+			
+			String pattern = "dd / MM / yyyy";
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			String sysDate = dateFormat.format(new Date());
+			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+			currentDateDto.setCurrentDate(sysDate);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return currentDateDto;
 	}
 
 }

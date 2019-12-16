@@ -21,6 +21,10 @@ public class EmpAttendanceParamDto2 {
 	private  Date  empAttendanceInDatetime;
 	
 	private  Date  empAttendanceOutDatetime;
+	
+	private Date empAttendanceConsiderInDatetime;
+	
+	private Date empAttendanceConsiderOutDatetime;
 
 	public String getEmp() {
 		return emp;
@@ -93,6 +97,21 @@ public class EmpAttendanceParamDto2 {
 	public void setShiftEnd(String shiftEnd) {
 		this.shiftEnd = shiftEnd;
 	}
-	
-	
+
+	public Date getEmpAttendanceConsiderInDatetime() {
+		return empAttendanceConsiderInDatetime;
+	}
+
+	public void setEmpAttendanceConsiderInDatetime(Date empAttendanceConsiderInDatetime) {
+		this.empAttendanceConsiderInDatetime = empAttendanceConsiderInDatetime;
+	}
+
+	public Date getEmpAttendanceConsiderOutDatetime() {
+		return empAttendanceConsiderOutDatetime;
+	}
+
+	public void setEmpAttendanceConsiderOutDatetime(Date empAttendanceConsiderOutDatetime) {
+		this.empAttendanceConsiderOutDatetime = empAttendanceConsiderOutDatetime;
+	}
+
 }

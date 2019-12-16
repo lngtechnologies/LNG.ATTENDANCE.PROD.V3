@@ -2,6 +2,7 @@ package com.lng.attendancecustomerservice.service.employeeAttendance;
 
 import java.util.List;
 
+import com.lng.dto.employeeAttendance.CurrentDateDto;
 import com.lng.dto.employeeAttendance.EmpSignOutDto;
 import com.lng.dto.employeeAttendance.EmpSignOutResponse;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
@@ -21,4 +22,6 @@ public interface EmployeeAttendanceService {
 	Status saveSignIn(List<EmployeeAttendanceDto> employeeAttendanceDtos);
 	
 	Status saveSignOut(List<EmployeeAttendanceDto> employeeAttendanceDtos);
+	
+	CurrentDateDto getCurrentDate();
 }

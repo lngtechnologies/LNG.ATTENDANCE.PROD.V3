@@ -44,6 +44,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public ResponseDto getByCustCodeAndEmpMobile(String custCode, String empMobile) {
 		ResponseDto response = new ResponseDto();
 		Employee employee = new Employee();
+		String inDate = "NA";
+		String outDate = "NA";
 		try {
 			Customer customer = customerRepository.getByCustCode(custCode);
 
@@ -65,26 +67,34 @@ public class EmployeeServiceImpl implements EmployeeService {
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
 					String strDate = formatter.format(new Date());
 
-					Date empAttndDate = employeeRepository.getRecentDateByAttndDateAndEmpId(strDate, employee.getEmpId());
+					Date empInAttndDate = employeeRepository.getRecentInDateByAttndDateAndEmpId(strDate, employee.getEmpId());
 
-
+					Date empOutAttndDate = employeeRepository.getRecentOutDateByAttndDateAndEmpId(strDate, employee.getEmpId());
 					// Date date = new Date();
+				
 
-
-					if(empAttndDate != null) {
+					if(empInAttndDate != null || empOutAttndDate != null) {
 
 						String pattern = "dd / MM / yyyy h:mm a";
 						SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 						dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-						String date = dateFormat.format(empAttndDate);
 
+						
+						if(empInAttndDate != null) {
+							inDate = dateFormat.format(empInAttndDate);
+						}
+						
+						if(empOutAttndDate != null) {
+							outDate = dateFormat.format(empOutAttndDate);
+						}
+						
 						if(employee.getEmpPresistedFaceId() == null) {
 
 							byte[] custLogo = employee.getCustomer().getCustLogoFile();
 							String base64CustLogo = byteTobase64(custLogo);
 							String brCode = employee.getBranch().getBrCode().toLowerCase();
 							response.status = new Status(false,200,"success");
-							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, false, employee.getEmpPresistedFaceId(), true, date);	
+							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, false, employee.getEmpPresistedFaceId(), true, inDate, outDate);	
 
 						}else {
 
@@ -92,7 +102,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 							String base64CustLogo = byteTobase64(custLogo);
 							String brCode = employee.getBranch().getBrCode().toLowerCase();
 							response.status = new Status(false,200,"success");
-							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId(), true, date);	
+							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId(), true, inDate, outDate);	
 						}
 					}else {
 						if(employee.getEmpPresistedFaceId() == null) {
@@ -101,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 							String base64CustLogo = byteTobase64(custLogo);
 							String brCode = employee.getBranch().getBrCode().toLowerCase();
 							response.status = new Status(false,200,"success");
-							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, false, employee.getEmpPresistedFaceId(), false, "");	
+							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, false, employee.getEmpPresistedFaceId(), false, inDate,outDate);	
 
 						}else {
 
@@ -109,7 +119,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 							String base64CustLogo = byteTobase64(custLogo);
 							String brCode = employee.getBranch().getBrCode().toLowerCase();
 							response.status = new Status(false,200,"success");
-							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId(), false, "");	
+							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId(), false, inDate,outDate);	
 						}
 					}
 				}

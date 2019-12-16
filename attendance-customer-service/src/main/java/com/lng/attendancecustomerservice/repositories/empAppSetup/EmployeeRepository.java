@@ -29,7 +29,10 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	// List<EmployeeAttendance> getByEmpAttendanceDatetimeAndrefEmpId(Date attndDate, Integer empId);
 	
 	@Query(value = "SELECT 	Min(empAttendanceInDatetime) AS DATE FROM ttempattendance WHERE empAttendanceInDatetime LIKE %?1% AND refEmpId = ?2", nativeQuery = true)
-	Date getRecentDateByAttndDateAndEmpId(String attndDate, Integer empId);
+	Date getRecentInDateByAttndDateAndEmpId(String attndDate, Integer empId);
+	
+	@Query(value = "SELECT 	Min(empAttendanceOutDatetime) AS DATE FROM ttempattendance WHERE empAttendanceInDatetime LIKE %?1% AND refEmpId = ?2", nativeQuery = true)
+	Date getRecentOutDateByAttndDateAndEmpId(String attndDate, Integer empId);
 	
 	/*
 	 * @Query(value =
