@@ -52,8 +52,8 @@ public class CustomerDto1 {
 		return custLogoFile;
 	}
 
-	public void setCustLogoFile(String custLogoFile) {
-		this.custLogoFile = custLogoFile;
+	public void setCustLogoFile(String bs) {
+		this.custLogoFile = bs;
 	}
 
 	public String getCustName() {

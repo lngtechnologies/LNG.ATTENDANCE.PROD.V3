@@ -1,16 +1,20 @@
 package com.lng.dto.tabService;
 
 public class EmployeeDto1 {
-	
+
 	private Integer  empId;
-	
+
 	private Integer refBrId;
-	
+
 	private Integer refCustId;
-	
+
 	private String empName;
-	
+
 	private String empMobile;
+
+	private String empPresistedFaceId;
+
+	private String empPicBlobPath;
 
 	public Integer getRefBrId() {
 		return refBrId;
@@ -51,7 +55,23 @@ public class EmployeeDto1 {
 	public void setEmpId(Integer empId) {
 		this.empId = empId;
 	}
-	
-	
+
+	public String getEmpPresistedFaceId() {
+		return empPresistedFaceId;
+	}
+
+	public void setEmpPresistedFaceId(String empPresistedFaceId) {
+		this.empPresistedFaceId = empPresistedFaceId;
+	}
+
+	public String getEmpPicBlobPath() {
+		return empPicBlobPath;
+	}
+
+	public void setEmpPicBlobPath(String empPicBlobPath) {
+		this.empPicBlobPath = empPicBlobPath;
+	}
+
+
 
 }
