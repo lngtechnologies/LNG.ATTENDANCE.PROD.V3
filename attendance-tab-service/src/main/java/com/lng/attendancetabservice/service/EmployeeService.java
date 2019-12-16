@@ -10,5 +10,7 @@ public interface EmployeeService {
 	EmployeeResponse1  verifyEmpNameAndMobileNo(Integer refBrId,Integer refCustId,String empName,String empMobile);
 	
 	  Status  updateEmployee(EmployeeDto1 employeeDto1);
+	  
+	  
 
 }

@@ -1,6 +1,7 @@
 package com.lng.attendancetabservice.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +20,18 @@ import com.lng.dto.tabService.CustomerResponse1;
 import status.Status;
 @Service
 public class CustomerServiceImpl implements CustomerService {
-	
+
 	@Autowired
 	CustomerRepository customerRepository;
 
 	@Autowired
 	EmployeeRepository employeeRepository;
-    
+
 	MessageUtil messageUtil = new MessageUtil();
-	
+
 	@Override
 	public OtpResponseDto generateOtp(String custCode, String brCode) {
-	
+
 		OtpResponseDto otpResponseDto = new OtpResponseDto();
 		try {
 			// Generate random otp
@@ -45,7 +46,7 @@ public class CustomerServiceImpl implements CustomerService {
 			if(customer != null) {
 
 				String mobileNo = customer.getCustMobile();
-				String mobileSmS = otp +" is OTP to verify your Customer details with "+ customer.getCustName();
+				String mobileSmS = otp +" is OTP to verify your details";
 				String s = messageUtil.sms(mobileNo, mobileSmS);
 				if(s != null) {
 					otpResponseDto.status = new Status(false,200,"Successfully sent OTP");
@@ -75,10 +76,10 @@ public class CustomerServiceImpl implements CustomerService {
 					CustomerDto1 customerDto1 = new CustomerDto1();
 					customerDto1.setCustId(Integer.valueOf(p[0].toString()));
 					customerDto1.setBrId(Integer.valueOf(p[1].toString()));
-					customerDto1.setCustLogoFile((p[2].toString()));
+					customerDto1.setCustLogoFile(byteTobase64((byte[])p[2]));
 					customerDto1.setCustName((p[3].toString()));
 					customerDto1.setBrName((p[4].toString()));
-					customerDto1.setBrCode((p[4].toString()));
+					customerDto1.setBrCode((p[5].toString()));
 					CustomerDtoList.add(customerDto1);
 					customerResponse1.status = new Status(false,200, "success");
 				}
@@ -93,4 +94,11 @@ public class CustomerServiceImpl implements CustomerService {
 		customerResponse1.setData1(CustomerDtoList);
 		return customerResponse1;
 	}
+
+	// convert byte to base64
+	public  String byteTobase64(byte[] custLogoFile) {
+		String base64 = Base64.getEncoder().encodeToString(custLogoFile);
+		return base64;
+	}
+
 }

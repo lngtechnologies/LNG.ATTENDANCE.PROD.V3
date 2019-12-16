@@ -1,5 +1,7 @@
 package com.lng.attendancetabservice.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +23,22 @@ public class EmployeeController {
 	EmployeeService employeeService;
 	
 	
-	@PostMapping(value = "/getByBrCodeAndCustCode") 
-	public ResponseEntity<EmployeeResponse1> findByBrId(@RequestBody EmployeeDto1 employeeDto) {
+	@PostMapping(value = "/getEmployeeByNameAndMobileno") 
+	public ResponseEntity<EmployeeResponse1> findEmployeeByNameAndMobileNo(@RequestBody EmployeeDto1 employeeDto) {
 		EmployeeResponse1 employeeResponse1 = employeeService.verifyEmpNameAndMobileNo(employeeDto.getRefBrId(), employeeDto.getRefCustId(), employeeDto.getEmpName(), employeeDto.getEmpMobile());
 		if (employeeResponse1 !=null){
 			return new ResponseEntity<EmployeeResponse1>(employeeResponse1, HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+	
+	@PostMapping(value="/updateByEmpId")
+	public ResponseEntity<status.Status> update(@RequestBody EmployeeDto1 employeeDto1){
+		status.Status status = employeeService.updateEmployee(employeeDto1);
+		if(employeeDto1 != null){
+			return new ResponseEntity<status.Status>(status, HttpStatus.OK);
+		}
+		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
 
 }

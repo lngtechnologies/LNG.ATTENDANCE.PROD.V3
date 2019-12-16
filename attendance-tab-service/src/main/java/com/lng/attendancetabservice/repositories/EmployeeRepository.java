@@ -21,4 +21,6 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	
 	@Query(value = " SELECT empId FROM tmemployee emp WHERE empName=?1 AND empMobile=?2", nativeQuery = true)
 	List<Object[]> findEmployee(String empName,String empMobile);
+	
+	Employee findByempId(Integer empId);
 }
