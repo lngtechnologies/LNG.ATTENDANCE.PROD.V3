@@ -40,7 +40,7 @@ public class CustomerServiceImpl implements CustomerService {
 			Customer customer = customerRepository.findByCustomer_CustCodeAndBranch_BrCode(custCode, brCode);
 
 			// Check if Customer exist or no
-			if(customer == null) throw new Exception("Customer can not found");
+			if(customer == null) throw new Exception("Customer not found");
 
 			// If Customer exist Triger otp to Customer mobile number
 			if(customer != null) {

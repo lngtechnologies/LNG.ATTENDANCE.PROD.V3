@@ -65,7 +65,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				status = new Status(false,400,"Not found");
 			}
 		}catch(Exception e){
-			status = new Status(true, 500, e.getMessage());
+			status = new Status(true, 500,"Oops..! Something went wrong..");
 		}
 		return status;
 	}
