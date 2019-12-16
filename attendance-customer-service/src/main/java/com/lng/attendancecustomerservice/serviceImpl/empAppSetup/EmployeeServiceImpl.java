@@ -65,8 +65,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
 					String strDate = formatter.format(new Date());
 
-
-
 					Date empAttndDate = employeeRepository.getRecentDateByAttndDateAndEmpId(strDate, employee.getEmpId());
 
 
