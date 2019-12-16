@@ -10,6 +10,7 @@ public class HolidayCalendarResponse {
 	public Status status;
 	public List<HolidayCalendarDto> data1;
 	public HolidayCalendarDto data;
+	
 	public Status getStatus() {
 		return status;
 	}

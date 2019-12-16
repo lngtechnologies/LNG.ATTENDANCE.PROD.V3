@@ -77,7 +77,7 @@ public class StateServiceImpl implements StateService {
 
 			}
 		} catch (Exception e) {
-			response.status = new Status(true,500, "Oops..! Something went wrong..");
+			response.status = new Status(true,500, e.getMessage());
 		}
 
 		return response;
