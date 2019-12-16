@@ -65,7 +65,7 @@ public class CountryServiceImpl implements CountryService {
 					}
 			
 		}catch(Exception ex){
-			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+			response.status = new Status(true,500, ex.getMessage()); 
 		}
 
 		return response;
