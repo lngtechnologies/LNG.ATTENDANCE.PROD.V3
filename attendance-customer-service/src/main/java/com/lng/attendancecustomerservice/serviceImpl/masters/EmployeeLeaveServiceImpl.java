@@ -126,6 +126,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	@Override
 	public Status saveEmpLeave(EmployeeLeaveDto employeeLeaveDto) {
 		Status status = null;
+		char dq = '"';
 		try {
 			
 			Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
@@ -143,7 +144,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 						employeeLeave.setEmpLeaveAppliedDatetime(new Date());
 						employeeLeave.setEmpLeaveStatus("");
 						employeeLeaveRepository.save(employeeLeave);
-						status = new Status(false, 200, "Leave Applied for "+employee.getEmpName());
+						status = new Status(false, 200, "Leave Applied for "+employee.getEmpName()+" successfully");
 					} else {
 						status = new Status(true, 400, "Leave already applied for this date");
 					}	
