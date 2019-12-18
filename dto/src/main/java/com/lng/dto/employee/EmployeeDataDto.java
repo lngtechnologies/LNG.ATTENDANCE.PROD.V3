@@ -24,6 +24,8 @@ public class EmployeeDataDto {
 	private String empPresistedFaceId;
 	
 	private Boolean empAttndStatus;
+	
+	private String empAttndancedate;
 
 	private String empAttndanceInDateTime;
 	
@@ -36,7 +38,7 @@ public class EmployeeDataDto {
 	//private Boolean empAppSetupStatus;
 
 	public EmployeeDataDto(Integer custId, String custName, Integer brId, String brName, String brCode, Integer empid, String empName, 
-						   String custLogo, Boolean appStatus, String empPresistedFaceId, Boolean empAttndStatus, String empAttndanceInDateTime, String empAttndanceOutDateTime) {
+						   String custLogo, Boolean appStatus, String empPresistedFaceId, Boolean empAttndStatus, String empAttndancedate, String empAttndanceInDateTime, String empAttndanceOutDateTime) {
 		this.custId = custId;
 		this.custName = custName;
 		this.brId = brId;
@@ -48,9 +50,21 @@ public class EmployeeDataDto {
 		this.appStatus = appStatus;
 		this.empPresistedFaceId = empPresistedFaceId;
 		this.empAttndStatus = empAttndStatus;
+		this.empAttndancedate = empAttndancedate;
 		this.empAttndanceInDateTime = empAttndanceInDateTime;
 		this.empAttndanceOutDateTime = empAttndanceOutDateTime;
 	}
+
+	
+	public String getEmpAttndancedate() {
+		return empAttndancedate;
+	}
+
+
+	public void setEmpAttndancedate(String empAttndancedate) {
+		this.empAttndancedate = empAttndancedate;
+	}
+
 
 	public Integer getCustId() {
 		return custId;

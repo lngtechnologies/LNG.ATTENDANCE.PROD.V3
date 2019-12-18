@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -266,11 +267,16 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 		CurrentDateDto currentDateDto = new CurrentDateDto();
 		try {
 			
-			String pattern = "dd / MM / yyyy";
+			String pattern = "yyyy-MM-dd'T'HH:mm:ss";
 			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
-			String sysDate = dateFormat.format(new Date());
-			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		
+			dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+			 Date date = new Date();
+			String sysDate = dateFormat.format(date);
+			// dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+			//TimeZone istTimeZone = TimeZone.getTimeZone("Asia/Kolkata");    //Source timezone
+			//Calendar today = Calendar.getInstance(istTimeZone);
+			//currentDateDto.setCurrentDate(dateFormat.format(today.getTime()));
+			
 			currentDateDto.setCurrentDate(sysDate);
 			
 		} catch (Exception e) {

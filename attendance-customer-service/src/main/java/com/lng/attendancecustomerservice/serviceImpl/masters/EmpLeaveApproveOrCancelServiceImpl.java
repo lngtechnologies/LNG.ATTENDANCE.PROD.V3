@@ -196,6 +196,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 							empLeaveDto.setEmpLeaveTo((Date)p[8]);
 							empLeaveDto.setEmpLeaveDaysCount(Integer.valueOf(p[9].toString()));
 							empLeaveDto.setEmpLeaveStatus(p[10].toString());
+							empLeaveDto.setEmpLeaveRemarks(p[11].toString());
 							empLeaveDtoList.add(empLeaveDto);
 
 							empLeaveResponseDto.setEmpLeaveDtoList(empLeaveDtoList);

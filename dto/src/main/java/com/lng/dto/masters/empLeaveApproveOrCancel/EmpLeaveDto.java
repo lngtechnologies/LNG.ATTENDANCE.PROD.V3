@@ -25,6 +25,18 @@ public class EmpLeaveDto {
 	private Integer empLeaveDaysCount;
 	
 	private String empLeaveStatus;
+	
+	private String empLeaveRemarks;
+	
+	
+
+	public String getEmpLeaveRemarks() {
+		return empLeaveRemarks;
+	}
+
+	public void setEmpLeaveRemarks(String empLeaveRemarks) {
+		this.empLeaveRemarks = empLeaveRemarks;
+	}
 
 	public Integer getEmpLeaveId() {
 		return empLeaveId;
