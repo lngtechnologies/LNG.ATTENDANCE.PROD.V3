@@ -32,6 +32,9 @@ public interface StateRepository extends CrudRepository<State,Integer> {
 	int  findByRefCountryIdAndStateName(Integer refCountryId,String stateName);
 	
 	State findByCountry_CountryIdAndStateNameAndStateIsActive(Integer refCountryId,String stateName, Boolean stateIsActive);
+	
+	@Query(value = "SELECT tc.countryIsActive,tc.countryName,ts.refCountryId FROM  tmstate ts LEFT JOIN tmcountry tc ON tc.countryId = ts.refCountryId WHERE  tc.countryIsActive =FALSE" ,nativeQuery = true)
+	State   findCountryIsActiveOrNot();
 
 
 }
