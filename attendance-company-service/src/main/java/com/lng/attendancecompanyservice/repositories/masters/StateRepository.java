@@ -32,6 +32,7 @@ public interface StateRepository extends CrudRepository<State,Integer> {
 	int  findByRefCountryIdAndStateName(Integer refCountryId,String stateName);
 	
 	State findByCountry_CountryIdAndStateNameAndStateIsActive(Integer refCountryId,String stateName, Boolean stateIsActive);
+	
 
 
 }

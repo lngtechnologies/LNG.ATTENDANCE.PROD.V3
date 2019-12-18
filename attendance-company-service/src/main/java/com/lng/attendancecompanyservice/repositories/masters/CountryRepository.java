@@ -2,11 +2,14 @@ package com.lng.attendancecompanyservice.repositories.masters;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.lng.attendancecompanyservice.entity.masters.Country;
+import com.lng.attendancecompanyservice.entity.masters.State;
 
 @Repository
 public interface CountryRepository extends CrudRepository<Country,Integer> {
@@ -24,6 +27,13 @@ public interface CountryRepository extends CrudRepository<Country,Integer> {
 	Country   getStateByCountryId(Integer countryId);
 	Country   getCoustomerByCountryId(Integer countryId );
 	Country  findCountryNameByCountryTelCode(String countryTelCode);
+	
+	
+	@Transactional
+	@Modifying 
+	@Query(value = "UPDATE tmstate ts SET ts.stateIsActive = 0 WHERE ts.refCountryId = ?1", nativeQuery = true)
+	void findByState_refCountryId(Integer countryId);
+	
 
 
 }

@@ -54,7 +54,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 				}
 			}
 			else{ 
-				custLeaveResponse.status = new Status(true,400,"CustLeave name already exist");
+				custLeaveResponse.status = new Status(true,400,"Leave type already exist");
 			}
 		}catch(Exception e) {
 			custLeaveResponse.status = new Status(true, 500, "Oops..! Something went wrong");

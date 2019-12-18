@@ -163,6 +163,7 @@ public class CountryServiceImpl implements CountryService {
 					countryResponse.status = new Status(false,200, "successfully deleted");
 				}else {
 					country.setCountryIsActive(false);
+					countryRepositary. findByState_refCountryId(countryId);
 					countryRepositary.save(country);
 					countryResponse.status = new Status(true,400, "The record has been disabled since it has been used in other transactions");
 				}

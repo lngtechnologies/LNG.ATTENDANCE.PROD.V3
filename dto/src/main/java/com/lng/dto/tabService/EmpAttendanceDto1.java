@@ -1,63 +1,41 @@
-package com.lng.attendancetabservice.entity;
+package com.lng.dto.tabService;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+public class EmpAttendanceDto1 {
 
-@Entity
-@Table(name = "ttempattendance")
-public class EmployeeAttendance {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "empAttendanceId")
 	private Integer empAttendanceId;
 
-	@ManyToOne
-	@JoinColumn(name = "refEmpId")
-	private Employee employee;
+	private Integer refEmpId;
 
-	@Column(name = "empAttendanceDate")
 	private Date empAttendanceDate;
 
-	@Column(name = "empAttendanceInMode")
 	private String empAttendanceInMode;
 
-	@Column(name = "empAttendanceOutMode")
 	private String empAttendanceOutMode;
 
-	@Column(name = "empAttendanceInDatetime")
 	private Date empAttendanceInDatetime;
 
-	@Column(name = "empAttendanceOutDatetime")
 	private Date empAttendanceOutDatetime;
 
-	@Column(name = "empAttendanceConsiderInDatetime")
 	private Date empAttendanceConsiderInDatetime;
 
-	@Column(name = "empAttendanceConsiderOutDatetime")
 	private Date empAttendanceConsiderOutDatetime;
 
-	@Column(name = "empAttendanceInConfidence")
 	private BigDecimal empAttendanceInConfidence;
 
-	@Column(name = "empAttendanceOutConfidence")
 	private BigDecimal empAttendanceOutConfidence;
 
-	@Column(name = "empAttendanceInLatLong")
 	private String empAttendanceInLatLong;
 
-	@Column(name = "empAttendanceOutLatLong")
 	private String empAttendanceOutLatLong;
 
+	private  String  empName;
+
+	private String   shiftStart;
+
+	private String  Flag;
 
 	public Integer getEmpAttendanceId() {
 		return empAttendanceId;
@@ -67,12 +45,12 @@ public class EmployeeAttendance {
 		this.empAttendanceId = empAttendanceId;
 	}
 
-	public Employee getEmployee() {
-		return employee;
+	public Integer getRefEmpId() {
+		return refEmpId;
 	}
 
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
+	public void setRefEmpId(Integer refEmpId) {
+		this.refEmpId = refEmpId;
 	}
 
 	public Date getEmpAttendanceDate() {
@@ -162,5 +140,31 @@ public class EmployeeAttendance {
 	public void setEmpAttendanceOutLatLong(String empAttendanceOutLatLong) {
 		this.empAttendanceOutLatLong = empAttendanceOutLatLong;
 	}
+
+	public String getEmpName() {
+		return empName;
+	}
+
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+
+	public String getShiftStart() {
+		return shiftStart;
+	}
+
+	public void setShiftStart(String shiftStart) {
+		this.shiftStart = shiftStart;
+	}
+
+	public String getFlag() {
+		return Flag;
+	}
+
+	public void setFlag(String flag) {
+		Flag = flag;
+	} 
+
+
 
 }

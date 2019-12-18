@@ -23,4 +23,5 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	List<Object[]> findEmployee(String empName,String empMobile);
 	
 	Employee findByempId(Integer empId);
+	
 }

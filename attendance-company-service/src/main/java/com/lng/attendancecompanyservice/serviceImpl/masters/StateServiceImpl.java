@@ -43,9 +43,11 @@ public class StateServiceImpl implements StateService {
 			if(stateDto.getStateName() == null || stateDto.getStateName().isEmpty()) throw new Exception("Please enter State name");
 
 			int a = stateRepository.findByRefCountryIdAndStateName(stateDto.getRefCountryId(), stateDto.getStateName());
-			
+
 			State state1 = stateRepository.findByCountry_CountryIdAndStateNameAndStateIsActive(stateDto.getRefCountryId(), stateDto.getStateName(), false);
-			
+
+
+
 			if(a == 0) {
 				Country country = countryRepository.findCountryByCountryId(stateDto.getRefCountryId());
 				if(country != null) {
@@ -93,7 +95,7 @@ public class StateServiceImpl implements StateService {
 			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not found");
-				
+
 			}else {
 				response.status = new Status(false,200, "Success");
 			}
@@ -112,8 +114,7 @@ public class StateServiceImpl implements StateService {
 			if(stateDto.getStateName() == null || stateDto.getStateName().isEmpty()) throw new Exception("Please enter State name");
 			if(stateDto.getStateId() == null || stateDto.getStateId() == 0) throw new Exception("State id is null or zero");
 			if(stateDto.getRefCountryId() == null || stateDto.getRefCountryId() == 0) throw new Exception("RefCountryId id is null or zero");
-			State 	state = stateRepository.findStateByStateId(stateDto.getStateId())	;		
-
+			State state = stateRepository.findStateByStateId(stateDto.getStateId())	;		
 			Country country = countryRepository.findCountryByCountryId(stateDto.getRefCountryId());
 			if(country != null) {
 				State st = stateRepository.findStateBystateNameAndCountry_countryId(stateDto.getStateName(), stateDto.getRefCountryId());
