@@ -1,8 +1,10 @@
 package com.lng.attendancecompanyservice.controllers.masters;
 
+import org.hibernate.annotations.Synchronize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,7 @@ public class BranchController {
 	@Autowired
 	BranchService branchService;
 
+	@Async
 	@PostMapping(value = "/create")
 	public ResponseEntity<BranchResponse> save(@RequestBody BranchDto branchDto) {
 		BranchResponse branchDto1 = branchService.saveBranch(branchDto);

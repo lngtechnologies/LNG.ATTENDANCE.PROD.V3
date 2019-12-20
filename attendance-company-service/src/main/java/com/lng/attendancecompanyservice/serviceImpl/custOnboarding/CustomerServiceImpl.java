@@ -428,7 +428,7 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			synchronized (this) {
 				custCode = customerRepository.generateCustCode();
-			}
+
 				if(customerDto.getCustNoOfBranch() == 0) {
 					customer.setCustNoOfBranch(1);
 				}else {
@@ -450,8 +450,8 @@ public class CustomerServiceImpl implements CustomerService {
 
 				}catch (Exception e) {
 					e.printStackTrace();
-
 				}
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

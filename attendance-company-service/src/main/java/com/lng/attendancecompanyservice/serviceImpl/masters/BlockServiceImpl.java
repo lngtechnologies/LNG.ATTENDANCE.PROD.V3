@@ -163,7 +163,7 @@ public class BlockServiceImpl implements BlockService {
 	}
 
 
-	
+
 
 	@Override
 	public BlockResponse getBranchDetailsByCustId(Integer custId) {
@@ -172,17 +172,19 @@ public class BlockServiceImpl implements BlockService {
 		try {
 
 			List<Object[]> blockList = blockRepository.findBranchDetailsByCustomer_CustId(custId);
-
-			for (Object[] p : blockList) {	
-				BlockDto blockDto1 = new BlockDto();
-				blockDto1.setCustId(Integer.valueOf(p[0].toString()));
-				blockDto1.setRefBranchId(Integer.valueOf(p[1].toString()));
-				blockDto1.setBrCode(p[2].toString());
-				blockDto1.setBrName(p[3].toString());
-				blockDtoList.add(blockDto1);
-				response.status = new Status(false,200, "Success");
-
-
+			if(!blockList.isEmpty()) {
+				for (Object[] p : blockList) {	
+					BlockDto blockDto1 = new BlockDto();
+					blockDto1.setCustId(Integer.valueOf(p[0].toString()));
+					blockDto1.setRefBranchId(Integer.valueOf(p[1].toString()));
+					blockDto1.setBrCode(p[2].toString());
+					blockDto1.setBrName(p[3].toString());
+					blockDtoList.add(blockDto1);
+					response.setData1(blockDtoList);
+					response.status = new Status(false,200, "Success");
+				}
+			}else {
+				response.status = new Status(false,400, "Not found");
 			}
 
 
@@ -191,7 +193,6 @@ public class BlockServiceImpl implements BlockService {
 
 
 		}
-		response.setData1(blockDtoList);
 		return response;
 	}
 
@@ -203,28 +204,30 @@ public class BlockServiceImpl implements BlockService {
 		List<BlockDto> blockDtoList = new ArrayList<>();
 		try {
 			List<Object[]> blockList = blockRepository.findBlockDetailsByCustomer_CustIdAndBranch_RefBranchId( custId, refBranchId);
+			if(!blockList.isEmpty()) {
+				for (Object[] p : blockList) {
 
-			for (Object[] p : blockList) {
-
-				BlockDto blockDto1 = new BlockDto();
-				blockDto1.setBlkId(Integer.valueOf(p[0].toString()));
-				blockDto1.setBlkLogicalName(p[1].toString());
-				blockDto1.setBlkGPSRadius(Integer.valueOf(p[2].toString()));
-				blockDto1.setBlkLatitude((Double)p[3]);
-				blockDto1.setBlkLongitude((Double)p[4]);
-				blockDto1.setCustId(Integer.valueOf(p[5].toString()));
-				blockDtoList.add(blockDto1);
-				response.status = new Status(false,200, "success");
-
+					BlockDto blockDto1 = new BlockDto();
+					blockDto1.setBlkId(Integer.valueOf(p[0].toString()));
+					blockDto1.setBlkLogicalName(p[1].toString());
+					blockDto1.setBlkGPSRadius(Integer.valueOf(p[2].toString()));
+					blockDto1.setBlkLatitude((Double)p[3]);
+					blockDto1.setBlkLongitude((Double)p[4]);
+					blockDto1.setCustId(Integer.valueOf(p[5].toString()));
+					blockDtoList.add(blockDto1);
+					response.setData1(blockDtoList);
+					response.status = new Status(false,200, "success");
+				}
+			}else {
+				response.status = new Status(false,400, "Not found");
 			}
 
 
 		}catch (Exception e){
-			response.status = new Status(true,4000,e.getMessage());
+			response.status = new Status(true,500,"Oops..! Something went wrong..");
 
 
 		}
-		response.setData1(blockDtoList);
 		return response;
 	}
 
@@ -279,18 +282,18 @@ public class BlockServiceImpl implements BlockService {
 	 */
 	public BlockResponse getByCustomer_CustId(Integer custId) {
 		BlockResponse response = new BlockResponse();
-		
+
 		try {
 			Customer customer = customerRepository.findCustomerByCustId(custId);
 			if(customer != null) {
 				List<Block> blockList = blockRepository.findByCustomer_CustId(custId);
 				response.setData1(blockList.stream().map(block -> convertToBlockDto(block)).collect(Collectors.toList()));
-				
+
 				if(response.getData1().isEmpty()) {
 					response.status = new Status(false,400, "Not found"); 
 				}else {
 					response.status = new Status(false,200, "Success");
-					
+
 				}
 			}else {
 				response.status = new Status(true,400, "Not found for this customer"); 
@@ -301,7 +304,7 @@ public class BlockServiceImpl implements BlockService {
 		}
 		return response;
 	}
-	
+
 	public BlockDto convertToBlockDto(Block block) {
 		BlockDto blockDto = modelMapper.map(block,BlockDto.class);
 		blockDto.setCustId(block.getBranch().getCustomer().getCustId());
