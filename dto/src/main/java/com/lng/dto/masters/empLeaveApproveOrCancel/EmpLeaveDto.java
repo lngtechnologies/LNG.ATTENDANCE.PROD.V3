@@ -28,15 +28,7 @@ public class EmpLeaveDto {
 	
 	private String empLeaveRemarks;
 	
-	
-
-	public String getEmpLeaveRemarks() {
-		return empLeaveRemarks;
-	}
-
-	public void setEmpLeaveRemarks(String empLeaveRemarks) {
-		this.empLeaveRemarks = empLeaveRemarks;
-	}
+	private String empLeaveRejectionRemarks;
 
 	public Integer getEmpLeaveId() {
 		return empLeaveId;
@@ -126,4 +118,19 @@ public class EmpLeaveDto {
 		this.empLeaveStatus = empLeaveStatus;
 	}
 
+	public String getEmpLeaveRemarks() {
+		return empLeaveRemarks;
+	}
+
+	public void setEmpLeaveRemarks(String empLeaveRemarks) {
+		this.empLeaveRemarks = empLeaveRemarks;
+	}
+
+	public String getEmpLeaveRejectionRemarks() {
+		return empLeaveRejectionRemarks;
+	}
+
+	public void setEmpLeaveRejectionRemarks(String empLeaveRejectionRemarks) {
+		this.empLeaveRejectionRemarks = empLeaveRejectionRemarks;
+	}
 }

@@ -424,32 +424,34 @@ public class CustomerServiceImpl implements CustomerService {
 	private Customer saveCustomerData(CustomerDto customerDto) {
 		CustomerResponse customerResponse = new CustomerResponse();
 		Customer customer = modelMapper.map(customerDto, Customer.class);
-
+		String custCode = "";
 		try {
-			String custCode = customerRepository.generateCustCode();
-			if(customerDto.getCustNoOfBranch() == 0) {
-				customer.setCustNoOfBranch(1);
-			}else {
-				customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
+			synchronized (this) {
+				custCode = customerRepository.generateCustCode();
 			}
-			customer.setCustIsActive(true);
-			customer.setCustCreatedDate(new Date());
-			customer.setCustCode(customerDto.getCustCode() + custCode);
-			if(customerDto.getCustLogoFile() == null) {
-				customer.setCustLogoFile(base64ToByte(Logo));
-			}else {
-				customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));	
-			}
+				if(customerDto.getCustNoOfBranch() == 0) {
+					customer.setCustNoOfBranch(1);
+				}else {
+					customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
+				}
+				customer.setCustIsActive(true);
+				customer.setCustCreatedDate(new Date());
+				customer.setCustCode(customerDto.getCustCode() + custCode);
+				if(customerDto.getCustLogoFile() == null) {
+					customer.setCustLogoFile(base64ToByte(Logo));
+				}else {
+					customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));	
+				}
 
-			try {
+				try {
 
-				customer = customerRepository.save(customer);
-				customerResponse.data = customerDto;
+					customer = customerRepository.save(customer);
+					customerResponse.data = customerDto;
 
-			}catch (Exception e) {
-				e.printStackTrace();
+				}catch (Exception e) {
+					e.printStackTrace();
 
-			}
+				}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
