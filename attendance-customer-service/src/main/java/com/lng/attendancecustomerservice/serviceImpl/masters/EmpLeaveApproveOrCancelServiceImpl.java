@@ -169,14 +169,14 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 	}
 
 	@Override
-	public EmpLeaveResponseDto getByLoginIdAndCustIDAndEmpId(Integer loginId, Integer custId) {
+	public EmpLeaveResponseDto getByLoginIdAndCustIDAndEmpId(Integer loginId, Integer custId,Date empLeaveFrom,Date empLeaveTo) {
 		EmpLeaveResponseDto empLeaveResponseDto = new EmpLeaveResponseDto();
 		List<EmpLeaveDto> empLeaveDtoList = new ArrayList<>();
 		try {
 			Login login = iLoginRepository.findByLoginId(loginId);
 			if(login != null) {
 
-				List<Object[]> employeeList = employeeLeaveRepository.getEmpLeaveByLoginIdAndCustIdAndEmpId(loginId, custId, login.getRefEmpId());
+				List<Object[]> employeeList = employeeLeaveRepository.getEmpLeaveByLoginIdAndCustIdAndEmpId(loginId, custId,login.getRefEmpId(),empLeaveFrom, empLeaveTo);
 				if(!employeeList.isEmpty()) {
 
 					for(Object[] p: employeeList) {	

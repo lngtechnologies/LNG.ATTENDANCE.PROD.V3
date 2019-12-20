@@ -1,5 +1,7 @@
 package com.lng.attendancecustomerservice.service.masters;
 
+import java.util.Date;
+
 import com.lng.dto.masters.empLeaveApproveOrCancel.EmpLeaveResponseDto;
 import com.lng.dto.masters.employeeLeave.EmployeeLeaveDto;
 
@@ -17,5 +19,5 @@ public interface EmpLeaveApproveOrCancelService {
 	
 	Status empApproveCancelLeave(EmployeeLeaveDto employeeLeaveDto);
 	
-	EmpLeaveResponseDto getByLoginIdAndCustIDAndEmpId(Integer loginId, Integer custId);
+	EmpLeaveResponseDto getByLoginIdAndCustIDAndEmpId(Integer loginId, Integer custId,Date empLeaveFrom,Date empLeaveTo);
 }

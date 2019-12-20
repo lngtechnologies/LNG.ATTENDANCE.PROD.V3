@@ -72,7 +72,7 @@ public class EmployeeLeaveController {
 	
 	@PostMapping(value = "/getEmpLeaveByLoginIdAndCustId")
 	public ResponseEntity<EmpLeaveResponseDto> getEmpLeaveByLoginIdAndCustId(@RequestBody EmpLeaveDto empLeaveDto) {
-		EmpLeaveResponseDto empLeaveResponseDto = EmpLeaveApproveOrCancelService.getByLoginIdAndCustIDAndEmpId(empLeaveDto.getLoginId(), empLeaveDto.getCustId());
+		EmpLeaveResponseDto empLeaveResponseDto = EmpLeaveApproveOrCancelService.getByLoginIdAndCustIDAndEmpId(empLeaveDto.getLoginId(), empLeaveDto.getCustId(),empLeaveDto.getEmpLeaveFrom(),empLeaveDto.getEmpLeaveTo());
 		return new ResponseEntity<EmpLeaveResponseDto>(empLeaveResponseDto, HttpStatus.OK);
 	}
 	

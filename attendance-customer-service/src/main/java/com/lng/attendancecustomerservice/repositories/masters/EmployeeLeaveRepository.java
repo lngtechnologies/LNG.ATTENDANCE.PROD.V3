@@ -31,8 +31,8 @@ public interface EmployeeLeaveRepository extends PagingAndSortingRepository<Empl
 	@Query(value = "call getRecentEmpLeaveByEmpId(?1)", nativeQuery = true)
 	List<Object[]> findByEmployee_EmpId(Integer empId);
 	
-	@Query(value = "call getEmpLeaveByLoginIdAndCustIdAndEmpId(?1, ?2, ?3)", nativeQuery = true)
-	List<Object[]> getEmpLeaveByLoginIdAndCustIdAndEmpId(Integer loginId, Integer custId, Integer empId);
+	@Query(value = "call getEmpLeaveByLoginIdAndCustIdAndEmpId(?1, ?2, ?3,?4,?5)", nativeQuery = true)
+	List<Object[]> getEmpLeaveByLoginIdAndCustIdAndEmpId(Integer loginId, Integer custId,Integer empId,Date empLeaveFrom,Date empLeaveTo);
 	
 	List<EmployeeLeave> getEmployeeLeaveByEmployee_EmpIdAndEmpLeaveFrom(Integer empId, Date empLeaveFrom);
 	
