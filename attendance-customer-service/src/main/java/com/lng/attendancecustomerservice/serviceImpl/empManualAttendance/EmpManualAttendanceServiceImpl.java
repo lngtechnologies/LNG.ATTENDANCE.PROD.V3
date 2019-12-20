@@ -353,7 +353,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 				List<Object[]> empAttendance = empAttendanceRepository.SearchEmployeeByNameAndDate(emp, refCustId, empAttendanceDatetime);
 				if (empAttendance.isEmpty()) {
 
-					empAttendanceResponse.status = new Status(false, 400, "Records Not Found");
+					empAttendanceResponse.status = new Status(false, 400, "Records not found");
 
 				} else {
 					for (Object[] p : empAttendance) {
@@ -373,7 +373,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 				}
 
 			} else {
-				empAttendanceResponse.status = new Status(true, 4000, "Please enter more than 3 character");
+				empAttendanceResponse.status = new Status(true, 400, "Please enter more than 3 character");
 
 			} 
 
