@@ -184,20 +184,24 @@ public class StateServiceImpl implements StateService {
 		try {
 
 			List<Object[]> stateList = stateRepository.findStateDetailsByCountry_RefCountryId(refCountryId);
+			if(stateList.isEmpty()) {
+				stateResponse.status = new Status(false,400, "Not found");
+			}else {
 
-			for (Object[] p : stateList) {	
-				StateDto stateDto1 = new StateDto();
-				stateDto1.setStateId(Integer.valueOf(p[0].toString()));
-				stateDto1.setStateName(p[1].toString());
-				stateDtoList.add(stateDto1);
-				stateResponse.status = new Status(false,200, "Success");
+				for (Object[] p : stateList) {	
+					StateDto stateDto1 = new StateDto();
+					stateDto1.setStateId(Integer.valueOf(p[0].toString()));
+					stateDto1.setStateName(p[1].toString());
+					stateDtoList.add(stateDto1);
+					stateResponse.setData1(stateDtoList);
+					stateResponse.status = new Status(false,200, "Success");
 
+				}
 			}
 
 		}catch (Exception e){
 			stateResponse.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
-		stateResponse.setData1(stateDtoList);
 		return stateResponse;
 	}
 

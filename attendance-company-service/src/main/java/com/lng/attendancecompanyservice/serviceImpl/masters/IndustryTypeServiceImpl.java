@@ -81,9 +81,9 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 
 			if(industryTypeListResponse != null && industryTypeListResponse.getIndustryTypeDtoList() != null) {
 
-				industryTypeListResponse.status = new Status(false, 2000, "Success");
+				industryTypeListResponse.status = new Status(false, 200, "Success");
 			}else {
-				industryTypeListResponse.status = new Status(false, 4000, "Not found");
+				industryTypeListResponse.status = new Status(false, 400, "Not found");
 			}
 		}
 		catch (Exception e) {

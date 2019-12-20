@@ -83,7 +83,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	LeaveTypeRepository leaveTypeRepository;
-	
+
 	@Autowired
 	LoginDataRightRepository loginDataRightRepository;
 
@@ -143,11 +143,11 @@ public class CustomerServiceImpl implements CustomerService {
 
 					if(branch != null) {
 						int custId = saveBranch(branch);
-						
-						
+
+
 						// Create faceList in Azure
 						createBranchFaceListId(branch.getBrCode());
-						
+
 						login = setCustomerToLogin(customer);
 
 						if(login != null) {
@@ -156,7 +156,7 @@ public class CustomerServiceImpl implements CustomerService {
 								List<UserRight> userRights = userRightRepository.assignDefaultModulesToDefaultCustomerAdmin(loginId);
 							}
 						}
-						
+
 						// saves to LoginDataRight table
 						try {
 							if(login != null) {
@@ -166,7 +166,7 @@ public class CustomerServiceImpl implements CustomerService {
 								loginDataRight.setLogin(login1);
 								loginDataRightRepository.save(loginDataRight);
 							}
-							
+
 						}catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -426,29 +426,31 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = modelMapper.map(customerDto, Customer.class);
 
 		try {
-			String custCode = customerRepository.generateCustCode();
-			if(customerDto.getCustNoOfBranch() == 0) {
-				customer.setCustNoOfBranch(1);
-			}else {
-				customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
-			}
-			customer.setCustIsActive(true);
-			customer.setCustCreatedDate(new Date());
-			customer.setCustCode(customerDto.getCustCode() + custCode);
-			if(customerDto.getCustLogoFile() == null) {
-				customer.setCustLogoFile(base64ToByte(Logo));
-			}else {
-				customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));	
-			}
+			synchronized (customer) {
+				String custCode = customerRepository.generateCustCode();
+				if(customerDto.getCustNoOfBranch() == 0) {
+					customer.setCustNoOfBranch(1);
+				}else {
+					customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
+				}
+				customer.setCustIsActive(true);
+				customer.setCustCreatedDate(new Date());
+				customer.setCustCode(customerDto.getCustCode() + custCode);
+				if(customerDto.getCustLogoFile() == null) {
+					customer.setCustLogoFile(base64ToByte(Logo));
+				}else {
+					customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));	
+				}
 
-			try {
+				try {
 
-				customer = customerRepository.save(customer);
-				customerResponse.data = customerDto;
+					customer = customerRepository.save(customer);
+					customerResponse.data = customerDto;
 
-			}catch (Exception e) {
-				e.printStackTrace();
+				}catch (Exception e) {
+					e.printStackTrace();
 
+				}
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
@@ -533,12 +535,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 		try {
 			branchRepository.save(branch);
-		
-			
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return branch.getCustomer().getCustId();
 	}
 
@@ -781,7 +783,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 	/*@Override
 	public void trainBranchFaceListId(String branchCode) throws Exception {
-		
+
 		HttpClient httpclient = HttpClients.createDefault();
 		try {
 			String brCode = branchCode.toLowerCase();
@@ -808,15 +810,15 @@ public class CustomerServiceImpl implements CustomerService {
 	            {
 	                System.out.println(EntityUtils.toString(entity));
 	            }
-	        
-		
+
+
 		} catch (Exception e) {
-			
+
 		}
-		
+
 	}*/
-	
-	
+
+
 	//http://52.183.137.54/lngattendancesystem
 }
 

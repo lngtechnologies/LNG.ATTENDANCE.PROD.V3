@@ -72,8 +72,8 @@ public class BranchServiceImpl implements BranchService {
 	@Autowired
 	EmployeeBranchRepositories employeeBranchRepositories;
 
-	
-	
+
+
 	@Override
 	public BranchResponse saveBranch(BranchDto branchDto) {
 		BranchResponse response = new BranchResponse();
@@ -94,7 +94,7 @@ public class BranchServiceImpl implements BranchService {
 
 			int chechNoOfBranches = branchRepository.chechNoOfBranchesCreatedByCustomer(branchDto.getRefCustomerId());
 			if(chechNoOfBranches == 0) {
-				
+
 				int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
 				if(b == 0) {
 					Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
@@ -104,287 +104,290 @@ public class BranchServiceImpl implements BranchService {
 
 							State state = stateRepository.findStateByStateId(branchDto.getRefStateId());
 							if(state != null) {
-								String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
-								Branch branch = new Branch();
-								branch.setState(state);
-								branch.setCustomer(customer);
-								branch.setCountry(country);
-								branch.setBrAddress(branchDto.getBrAddress());
-								branch.setBrCity(branchDto.getBrCity());
-								branch.setBrCode(customer.getCustCode() + brnchCode);
-								branch.setBrCreatedDate(new Date());
-								branch.setBrEmail(branchDto.getBrEmail());
-								branch.setBrLatitude(branchDto.getBrLatitude());
-								branch.setBrLongitude(branchDto.getBrLongitude());
-								branch.setBrIsActive(true);
-								branch.setBrIsBillable(branchDto.getBrIsBillable());
-								branch.setBrLandline(branchDto.getBrLandline());
-								branch.setBrMobile(branchDto.getBrMobile());
-								branch.setBrName(branchDto.getBrName());
-								branch.setBrPincode(branchDto.getBrPincode());
-								branch.setBrValidityEnd(branchDto.getBrValidityEnd());
-								branch.setBrValidityStart(branchDto.getBrValidityStart());
-								branchRepository.save(branch);
-								
-								try {
-									// Create faceList in Azure
-									createBranchFaceListId(branch.getBrCode());
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								
-								// Save to login data right table
-								try {
-									Login login = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
-									LoginDataRight loginDataRight = new LoginDataRight();
-									loginDataRight.setBranch(branch);
-									loginDataRight.setLogin(login);
-									loginDataRightRepository.save(loginDataRight);
-								}catch (Exception e) {
-									e.printStackTrace();
-								}
+								synchronized (this) {
+									String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
+									Branch branch = new Branch();
+									branch.setState(state);
+									branch.setCustomer(customer);
+									branch.setCountry(country);
+									branch.setBrAddress(branchDto.getBrAddress());
+									branch.setBrCity(branchDto.getBrCity());
+									branch.setBrCode(customer.getCustCode() + brnchCode);
+									branch.setBrCreatedDate(new Date());
+									branch.setBrEmail(branchDto.getBrEmail());
+									branch.setBrLatitude(branchDto.getBrLatitude());
+									branch.setBrLongitude(branchDto.getBrLongitude());
+									branch.setBrIsActive(true);
+									branch.setBrIsBillable(branchDto.getBrIsBillable());
+									branch.setBrLandline(branchDto.getBrLandline());
+									branch.setBrMobile(branchDto.getBrMobile());
+									branch.setBrName(branchDto.getBrName());
+									branch.setBrPincode(branchDto.getBrPincode());
+									branch.setBrValidityEnd(branchDto.getBrValidityEnd());
+									branch.setBrValidityStart(branchDto.getBrValidityStart());
+									branchRepository.save(branch);
 
-								response.status = new Status(false,200, "successfully created");
+
+									try {
+										// Create faceList in Azure
+										createBranchFaceListId(branch.getBrCode());
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+
+									// Save to login data right table
+									try {
+										Login login = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
+										LoginDataRight loginDataRight = new LoginDataRight();
+										loginDataRight.setBranch(branch);
+										loginDataRight.setLogin(login);
+										loginDataRightRepository.save(loginDataRight);
+									}catch (Exception e) {
+										e.printStackTrace();
+									}
+
+									response.status = new Status(false,200, "successfully created");
+								}
+							}
+								else{ 
+									response.status = new Status(true,400, "State not found");
+								}
 							}
 							else{ 
-								response.status = new Status(true,400, "State not found");
+								response.status = new Status(true,400, "Country not found");
 							}
 						}
 						else{ 
-							response.status = new Status(true,400, "Country not found");
+							response.status = new Status(true,400, "Customer not found");
 						}
 					}
-					else{ 
-						response.status = new Status(true,400, "Customer not found");
-					}
-				}
-				/*response.status = new Status(true,400, " Branch Can't Create");
+					/*response.status = new Status(true,400, " Branch Can't Create");
 				}*/
-				else{ 
-					response.status = new Status(true,400,"Branch name already exist");
+					else{ 
+						response.status = new Status(true,400,"Branch name already exist");
+					}
+
+				}else {
+					response.status = new Status(true,400,"Number of Branches allowed exceeds, Contact LNG Technologies Admin for the resolution.");
 				}
 
-			}else {
-				response.status = new Status(true,400,"Number of Branches allowed exceeds, Contact LNG Technologies Admin for the resolution.");
+
+			}catch(Exception ex){
+				response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 			}
 
-
-		}catch(Exception ex){
-			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+			return response;
 		}
 
-		return response;
-	}
 
+		@Override
+		public BranchResponse getAll() {
+			BranchResponse response = new BranchResponse();
+			try {
+				List<Branch> branchList=branchRepository.findAllBranchByBrIsActive(true);
+				response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+				if(response.getData1().isEmpty()) {
+					response.status = new Status(false,400, "Not found"); 
+				}else {
+					response.status = new Status(false,200, "success");
+				}
+			}catch(Exception e) {
+				response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
-	@Override
-	public BranchResponse getAll() {
-		BranchResponse response = new BranchResponse();
-		try {
-			List<Branch> branchList=branchRepository.findAllBranchByBrIsActive(true);
-			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
-			if(response.getData1().isEmpty()) {
-				response.status = new Status(false,400, "Not found"); 
-			}else {
-				response.status = new Status(false,200, "success");
 			}
-		}catch(Exception e) {
-			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
-
+			return response;
 		}
-		return response;
-	}
 
-	@Override
-	public Status updateBranchByBrId(BranchDto branchDto) {
-		Status status = null;
-		try {
-			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
-			if(branchDto.getBrId() == null || branchDto.getBrId() == 0) throw new Exception("Branch id is null or zero");
-			if(branchDto.getRefCustomerId() == null || branchDto.getRefCustomerId() == 0) throw new Exception("RefCoustomerId id is null or zero");
-			if(branchDto.getRefCountryId() == null || branchDto.getRefCountryId() == 0) throw new Exception("RefCountryId id is null or zero");
-			if(branchDto.getRefStateId() == null || branchDto.getRefStateId() == 0) throw new Exception("RefStateId id is null or zero");
+		@Override
+		public Status updateBranchByBrId(BranchDto branchDto) {
+			Status status = null;
+			try {
+				if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
+				if(branchDto.getBrId() == null || branchDto.getBrId() == 0) throw new Exception("Branch id is null or zero");
+				if(branchDto.getRefCustomerId() == null || branchDto.getRefCustomerId() == 0) throw new Exception("RefCoustomerId id is null or zero");
+				if(branchDto.getRefCountryId() == null || branchDto.getRefCountryId() == 0) throw new Exception("RefCountryId id is null or zero");
+				if(branchDto.getRefStateId() == null || branchDto.getRefStateId() == 0) throw new Exception("RefStateId id is null or zero");
 
-			Branch branch = branchRepository.findBranchByBrId(branchDto.getBrId())	;	
+				Branch branch = branchRepository.findBranchByBrId(branchDto.getBrId())	;	
 
-			Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
-			if(customer != null) {
+				Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
+				if(customer != null) {
 
-				Country country = countryRepository.findCountryByCountryId(branchDto.getRefCountryId());
-				if(country != null) {
+					Country country = countryRepository.findCountryByCountryId(branchDto.getRefCountryId());
+					if(country != null) {
 
-					State state = stateRepository.findStateByStateId(branchDto.getRefStateId());
-					if(state != null) {
-						Branch branch1 = branchRepository.findBranchByBrId(branchDto.getBrId());
-						// int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
-						Branch br = branchRepository.findBranchBybrNameAndCustomer_custId(branchDto.getBrName(), branchDto.getRefCustomerId());
-						if(br == null || (branch1.getBrId() == branchDto.getBrId() && branch1.getBrName().equals(branchDto.getBrName()))) {
-							branch = modelMapper.map(branchDto,Branch.class);
-							branch.setCustomer(customer);
-							branch.setCountry(country);
-							branch.setState(state);
-							branch.setBrIsActive(true);
-							branch.setBrIsBillable(true);
-							branch.setBrCreatedDate(new Date());
-							branchRepository.save(branch);
-							status = new Status(false, 200, "successfully updated");
-						
-						} else {
-							status = new Status(true,400,"Branch name already exist"); 
+						State state = stateRepository.findStateByStateId(branchDto.getRefStateId());
+						if(state != null) {
+							Branch branch1 = branchRepository.findBranchByBrId(branchDto.getBrId());
+							// int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
+							Branch br = branchRepository.findBranchBybrNameAndCustomer_custId(branchDto.getBrName(), branchDto.getRefCustomerId());
+							if(br == null || (branch1.getBrId() == branchDto.getBrId() && branch1.getBrName().equals(branchDto.getBrName()))) {
+								branch = modelMapper.map(branchDto,Branch.class);
+								branch.setCustomer(customer);
+								branch.setCountry(country);
+								branch.setState(state);
+								branch.setBrIsActive(true);
+								branch.setBrIsBillable(true);
+								branch.setBrCreatedDate(new Date());
+								branchRepository.save(branch);
+								status = new Status(false, 200, "successfully updated");
+
+							} else {
+								status = new Status(true,400,"Branch name already exist"); 
+							}
+						}
+
+						else{ 
+							status = new Status(true,400, "State not found");
 						}
 					}
-
 					else{ 
-						status = new Status(true,400, "State not found");
+						status = new Status(true,400, "Country not found");
 					}
 				}
 				else{ 
-					status = new Status(true,400, "Country not found");
+					status = new Status(true,400, "Customer Not Found");
 				}
-			}
-			else{ 
-				status = new Status(true,400, "Customer Not Found");
-			}
 
-		}catch(Exception e) {
-			status = new Status(true,500, "Oops..! Something went wrong..");
+			}catch(Exception e) {
+				status = new Status(true,500, "Oops..! Something went wrong..");
+			}
+			return status;
 		}
-		return status;
-	}
 
-	@Override
-	public BranchResponse getBranchByBrId(int brId) {
-		BranchResponse response = new BranchResponse();
-		try {
-			Branch branch=branchRepository.findBranchByBrId(brId);
-			if(branch != null) {
-				BranchDto branchDto = convertToBranchDto(branch);
-				response.data = branchDto;
-				response.status = new Status(false,200, "Success");
-			}
-			else {
-				response.status = new Status(true, 4000, "Not found");
-			}
-		}catch(Exception e) {
-			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+		@Override
+		public BranchResponse getBranchByBrId(int brId) {
+			BranchResponse response = new BranchResponse();
+			try {
+				Branch branch=branchRepository.findBranchByBrId(brId);
+				if(branch != null) {
+					BranchDto branchDto = convertToBranchDto(branch);
+					response.data = branchDto;
+					response.status = new Status(false,200, "Success");
+				}
+				else {
+					response.status = new Status(true, 4000, "Not found");
+				}
+			}catch(Exception e) {
+				response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
+			}
+			return response;
 		}
-		return response;
-	}
 
 
 
-	@Override
-	public BranchResponse deleteByBrId(Integer brId) {
-		BranchResponse response=new BranchResponse();
-		Branch branch = new Branch();
-		try {
-			branch = branchRepository.findBranchByBrId(brId);
-			if(branch != null) {
+		@Override
+		public BranchResponse deleteByBrId(Integer brId) {
+			BranchResponse response=new BranchResponse();
+			Branch branch = new Branch();
+			try {
+				branch = branchRepository.findBranchByBrId(brId);
+				if(branch != null) {
 
-				// Check weather the branch is used in any transaction or no
-				List<LoginDataRight> loginDataRight = loginDataRightRepository.findByBranch_BrId(brId);
-				List<Block> block = blockRepository.findByBranch_BrId(brId);
-				List<Employee> employee = custEmployeeRepository.findByBranch_BrId(brId);
-				List<Shift> shift = shiftRepository.findByBranch_BrId(brId);
-				List<EmployeeBranch> employeeBranch = employeeBranchRepositories.findByBranch_BrId(brId);
+					// Check weather the branch is used in any transaction or no
+					List<LoginDataRight> loginDataRight = loginDataRightRepository.findByBranch_BrId(brId);
+					List<Block> block = blockRepository.findByBranch_BrId(brId);
+					List<Employee> employee = custEmployeeRepository.findByBranch_BrId(brId);
+					List<Shift> shift = shiftRepository.findByBranch_BrId(brId);
+					List<EmployeeBranch> employeeBranch = employeeBranchRepositories.findByBranch_BrId(brId);
 
-				if(loginDataRight.isEmpty() && block.isEmpty() && employee.isEmpty() && shift.isEmpty() && employeeBranch.isEmpty()) {
-					branchRepository.delete(branch);
-					response.status = new Status(false, 200, "successfully deleted");
+					if(loginDataRight.isEmpty() && block.isEmpty() && employee.isEmpty() && shift.isEmpty() && employeeBranch.isEmpty()) {
+						branchRepository.delete(branch);
+						response.status = new Status(false, 200, "successfully deleted");
+					}else {
+						branch.setBrIsActive(false);
+						branchRepository.save(branch);
+						response.status = new Status(false, 200, "The record has been disabled, since it has been used in another transactions");
+					}
 				}else {
-					branch.setBrIsActive(false);
-					branchRepository.save(branch);
-					response.status = new Status(false, 200, "The record has been disabled, since it has been used in another transactions");
+
+					response.status = new Status(true, 400, "Branch  not found");
+
 				}
-			}else {
 
-				response.status = new Status(true, 400, "Branch  not found");
-
+			}catch(Exception e) {
+				response.status = new Status(true,500, "Oops..! Something went wrong..");
 			}
-
-		}catch(Exception e) {
-			response.status = new Status(true,500, "Oops..! Something went wrong..");
+			return response;
 		}
-		return response;
-	}
 
-	public BranchDto convertToBranchDto(Branch branch) {
-		BranchDto branchDto = modelMapper.map(branch,BranchDto.class);
-		branchDto.setBrId(branch.getBrId());
-		branchDto.setRefCustomerId(branch.getCustomer().getCustId());
-		branchDto.setRefCountryId(branch.getCountry().getCountryId());
-		branchDto.setRefStateId(branch.getState().getStateId());
-		branchDto.setCustName(branch.getCustomer().getCustName());
-		branchDto.setStateName(branch.getState().getStateName());
-		branchDto.setCountryName(branch.getCountry().getCountryName());
-		CustomerDto customerDto = modelMapper.map(branch.getCustomer(),CustomerDto.class);
-		StateDto stateDto = modelMapper.map(branch.getState(),StateDto.class);
-		CountryDto countryDto = modelMapper.map(branch.getCountry(),CountryDto.class);
-		return branchDto;
-	}
+		public BranchDto convertToBranchDto(Branch branch) {
+			BranchDto branchDto = modelMapper.map(branch,BranchDto.class);
+			branchDto.setBrId(branch.getBrId());
+			branchDto.setRefCustomerId(branch.getCustomer().getCustId());
+			branchDto.setRefCountryId(branch.getCountry().getCountryId());
+			branchDto.setRefStateId(branch.getState().getStateId());
+			branchDto.setCustName(branch.getCustomer().getCustName());
+			branchDto.setStateName(branch.getState().getStateName());
+			branchDto.setCountryName(branch.getCountry().getCountryName());
+			CustomerDto customerDto = modelMapper.map(branch.getCustomer(),CustomerDto.class);
+			StateDto stateDto = modelMapper.map(branch.getState(),StateDto.class);
+			CountryDto countryDto = modelMapper.map(branch.getCountry(),CountryDto.class);
+			return branchDto;
+		}
 
 
-	@Override
-	public BranchResponse getAllByCustId(Integer custId) {
-		BranchResponse response = new BranchResponse();
-		try {
-			List<Branch> branchList=branchRepository.findAllByCustomer_CustIdAndBrIsActive(custId, true);
-			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
-			if(response != null && response.getData1() != null) {
-				response.status = new Status(false,200, "Success");
-			}else {
-				response.status = new Status(false,400, "Not found"); 
+		@Override
+		public BranchResponse getAllByCustId(Integer custId) {
+			BranchResponse response = new BranchResponse();
+			try {
+				List<Branch> branchList=branchRepository.findAllByCustomer_CustIdAndBrIsActive(custId, true);
+				response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+				if(response != null && response.getData1() != null) {
+					response.status = new Status(false,200, "Success");
+				}else {
+					response.status = new Status(false,400, "Not found"); 
+				}
+
+			}catch(Exception e) {
+				response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 			}
-
-		}catch(Exception e) {
-			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+			return response;
 		}
-		return response;
-	}
-	
-	@Override
-	public void createBranchFaceListId(String branchCode) throws Exception {
 
-		HttpClient httpclient = HttpClients.createDefault();
+		@Override
+		public void createBranchFaceListId(String branchCode) throws Exception {
 
-		try
-		{
-			String brCode = branchCode.toLowerCase();
+			HttpClient httpclient = HttpClients.createDefault();
 
-			URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/largefacelists/"+brCode);
-
-
-			URI uri = builder.build();
-			HttpPut request = new HttpPut(uri);
-			request.setHeader("Content-Type", "application/json");
-			request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
-
-			// Creating API Body
-			JSONObject json = new JSONObject();
-			json.put("name", brCode);
-			json.put("userData", "User-provided data attached to the face list.");
-			json.put("recognitionModel", "recognition_02");
-			// Request body
-			StringEntity reqEntity = new StringEntity(json.toJSONString());
-			request.setEntity(reqEntity);
-
-			HttpResponse response = httpclient.execute(request);
-			HttpEntity entity = response.getEntity();
-
-			if (entity != null) 
+			try
 			{
-				System.out.println(EntityUtils.toString(entity));
+				String brCode = branchCode.toLowerCase();
+
+				URIBuilder builder = new URIBuilder("https://centralindia.api.cognitive.microsoft.com/face/v1.0/largefacelists/"+brCode);
+
+
+				URI uri = builder.build();
+				HttpPut request = new HttpPut(uri);
+				request.setHeader("Content-Type", "application/json");
+				request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
+
+				// Creating API Body
+				JSONObject json = new JSONObject();
+				json.put("name", brCode);
+				json.put("userData", "User-provided data attached to the face list.");
+				json.put("recognitionModel", "recognition_02");
+				// Request body
+				StringEntity reqEntity = new StringEntity(json.toJSONString());
+				request.setEntity(reqEntity);
+
+				HttpResponse response = httpclient.execute(request);
+				HttpEntity entity = response.getEntity();
+
+				if (entity != null) 
+				{
+					System.out.println(EntityUtils.toString(entity));
+				}
+			}
+			catch (Exception e)
+			{
+				throw e;
+				// System.out.println(e.getMessage());
 			}
 		}
-		catch (Exception e)
-		{
-			throw e;
-			// System.out.println(e.getMessage());
-		}
-	}
-	
-	/*@Override
+
+		/*@Override
 	public void trainBranchFaceListId(String branchCode) throws Exception {
 		HttpClient httpclient = HttpClients.createDefault();
 		try {
@@ -410,10 +413,10 @@ public class BranchServiceImpl implements BranchService {
 	            {
 	                System.out.println(EntityUtils.toString(entity));
 	            }
-		
+
 		} catch (Exception e) {
-			
+
 		}
-		
+
 	}*/
-}
+	}
