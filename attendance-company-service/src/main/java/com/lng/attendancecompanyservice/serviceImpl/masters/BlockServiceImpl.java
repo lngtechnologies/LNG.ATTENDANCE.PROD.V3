@@ -214,7 +214,6 @@ public class BlockServiceImpl implements BlockService {
 					blockDto1.setBlkLatitude((Double)p[3]);
 					blockDto1.setBlkLongitude((Double)p[4]);
 					blockDto1.setCustId(Integer.valueOf(p[5].toString()));
-<<<<<<< HEAD
 					blockDto1.setRefBranchId(Integer.valueOf(p[6].toString()));
 					blockDtoList.add(blockDto1);
 					response.setData1(blockDtoList);
@@ -222,23 +221,12 @@ public class BlockServiceImpl implements BlockService {
 
 				}
 			} else {
-=======
-					blockDtoList.add(blockDto1);
-					response.setData1(blockDtoList);
-					response.status = new Status(false,200, "success");
-				}
-			}else {
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+			
 				response.status = new Status(false,400, "Not found");
 			}
 			
 		}catch (Exception e){
 			response.status = new Status(true,500,"Oops..! Something went wrong..");
-<<<<<<< HEAD
-=======
-
-
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 		}
 		return response;
 	}
