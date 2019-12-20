@@ -424,10 +424,11 @@ public class CustomerServiceImpl implements CustomerService {
 	private Customer saveCustomerData(CustomerDto customerDto) {
 		CustomerResponse customerResponse = new CustomerResponse();
 		Customer customer = modelMapper.map(customerDto, Customer.class);
-
+		String custCode = "";
 		try {
-			synchronized (customer) {
-				String custCode = customerRepository.generateCustCode();
+			synchronized (this) {
+				custCode = customerRepository.generateCustCode();
+			}
 				if(customerDto.getCustNoOfBranch() == 0) {
 					customer.setCustNoOfBranch(1);
 				}else {
@@ -451,7 +452,6 @@ public class CustomerServiceImpl implements CustomerService {
 					e.printStackTrace();
 
 				}
-			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

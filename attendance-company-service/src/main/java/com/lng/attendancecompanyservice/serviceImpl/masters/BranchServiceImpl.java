@@ -104,8 +104,10 @@ public class BranchServiceImpl implements BranchService {
 
 							State state = stateRepository.findStateByStateId(branchDto.getRefStateId());
 							if(state != null) {
+								String brnchCode = "";
 								synchronized (this) {
-									String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
+									brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
+								}
 									Branch branch = new Branch();
 									branch.setState(state);
 									branch.setCustomer(customer);
@@ -148,7 +150,6 @@ public class BranchServiceImpl implements BranchService {
 
 									response.status = new Status(false,200, "successfully created");
 								}
-							}
 								else{ 
 									response.status = new Status(true,400, "State not found");
 								}
