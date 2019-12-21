@@ -275,7 +275,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 
 		}catch(Exception ex){
-			holidayCalendarResponse.status = new Status(true,500, "Something went wrong"); 
+			holidayCalendarResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 
 		return holidayCalendarResponse;
