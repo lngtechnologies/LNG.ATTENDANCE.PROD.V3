@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -106,7 +108,7 @@ public class CustomerServiceImpl implements CustomerService {
 	 * @Bean public BCryptPasswordEncoder getEncoder() { return new
 	 * BCryptPasswordEncoder(); }
 	 */
-
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	@Transactional(rollbackOn={Exception.class})
@@ -121,9 +123,14 @@ public class CustomerServiceImpl implements CustomerService {
 			List<Customer> customerList2 = customerRepository.findCustomerByCustMobile(customerDto.getCustMobile());
 			List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
 
+			final Lock displayLock = this.displayQueueLock; 
+			displayLock.lock();
+			Thread.sleep(3000L);
+			
 			if(customerList1.isEmpty() && customerList2.isEmpty()) {
 
 				Customer customer = saveCustomerData(customerDto);
+
 				if(customer != null) {
 
 					List<LeaveType> leaveTypes = leaveTypeRepository.findAll();
@@ -158,19 +165,13 @@ public class CustomerServiceImpl implements CustomerService {
 						}
 
 						// saves to LoginDataRight table
-						try {
-							if(login != null) {
-								Login login1 = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
-								LoginDataRight loginDataRight = new LoginDataRight();
-								loginDataRight.setBranch(branch);
-								loginDataRight.setLogin(login1);
-								loginDataRightRepository.save(loginDataRight);
-							}
-
-						}catch (Exception e) {
-							e.printStackTrace();
+						if(login != null) {
+							Login login1 = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
+							LoginDataRight loginDataRight = new LoginDataRight();
+							loginDataRight.setBranch(branch);
+							loginDataRight.setLogin(login1);
+							loginDataRightRepository.save(loginDataRight);
 						}
-
 					}
 				}
 				//send mail
@@ -179,12 +180,13 @@ public class CustomerServiceImpl implements CustomerService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("successfully created");
+				
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Customer mobile number or email already exist");			
 			}
-
+			displayLock.unlock();
 		} catch (Exception e) {
 			statusDto.setCode(400);
 			statusDto.setError(true);
@@ -426,32 +428,33 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer customer = modelMapper.map(customerDto, Customer.class);
 		String custCode = "";
 		try {
-			synchronized (this) {
-				custCode = customerRepository.generateCustCode();
 
-				if(customerDto.getCustNoOfBranch() == 0) {
-					customer.setCustNoOfBranch(1);
-				}else {
-					customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
-				}
-				customer.setCustIsActive(true);
-				customer.setCustCreatedDate(new Date());
-				customer.setCustCode(customerDto.getCustCode() + custCode);
-				if(customerDto.getCustLogoFile() == null) {
-					customer.setCustLogoFile(base64ToByte(Logo));
-				}else {
-					customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));	
-				}
 
-				try {
+			custCode = customerRepository.generateCustCode();
 
-					customer = customerRepository.save(customer);
-					customerResponse.data = customerDto;
-
-				}catch (Exception e) {
-					e.printStackTrace();
-				}
+			if(customerDto.getCustNoOfBranch() == 0) {
+				customer.setCustNoOfBranch(1);
+			}else {
+				customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
 			}
+			customer.setCustIsActive(true);
+			customer.setCustCreatedDate(new Date());
+			customer.setCustCode(customerDto.getCustCode() + custCode);
+			if(customerDto.getCustLogoFile() == null) {
+				customer.setCustLogoFile(base64ToByte(Logo));
+			}else {
+				customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));	
+			}
+
+			try {
+
+				customer = customerRepository.save(customer);
+				customerResponse.data = customerDto;
+
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -473,6 +476,7 @@ public class CustomerServiceImpl implements CustomerService {
 	private Branch setCustomerDetailsToBranch(Customer customer){
 		Branch branch = new Branch();
 		try {
+
 			String brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
 			//Customer customer = new Customer();
 			branch.setBrAddress(customer.getCustAddress());
@@ -491,6 +495,7 @@ public class CustomerServiceImpl implements CustomerService {
 			branch.setCountry(customer.getCountry());
 			branch.setCustomer(customer);
 			branch.setState(customer.getState());
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

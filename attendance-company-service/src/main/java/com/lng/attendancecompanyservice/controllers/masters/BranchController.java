@@ -23,7 +23,7 @@ public class BranchController {
 	@Autowired
 	BranchService branchService;
 
-	@Async
+	
 	@PostMapping(value = "/create")
 	public ResponseEntity<BranchResponse> save(@RequestBody BranchDto branchDto) {
 		BranchResponse branchDto1 = branchService.saveBranch(branchDto);
