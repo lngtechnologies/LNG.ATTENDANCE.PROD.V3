@@ -107,7 +107,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					status = new Status(false, 200, "successfully updated");
 				}
 				else{ 
-					status = new Status(true,400,"CustLeave name already exist");
+					status = new Status(true,400,"Leave type already exist");
 				}
 			}
 
