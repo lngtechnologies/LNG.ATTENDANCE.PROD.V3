@@ -73,7 +73,7 @@ public class ContractorServiceImpl implements ContractorService {
 			}
 
 		}catch(Exception ex){
-			response.status = new Status(true,3000, ex.getMessage()); 
+			response.status = new Status(true,4000, ex.getMessage()); 
 		}
 
 		return response;

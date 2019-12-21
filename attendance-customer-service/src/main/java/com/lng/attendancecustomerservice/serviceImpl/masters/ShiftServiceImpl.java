@@ -121,7 +121,7 @@ public class ShiftServiceImpl implements ShiftService {
 			}
 
 			else {
-				status = new Status(false, 200, "Branch not found");
+				status = new Status(false, 400, "Branch not found");
 			}
 		}
 		catch(Exception e) {
@@ -203,7 +203,7 @@ public class ShiftServiceImpl implements ShiftService {
 				response.status = new Status(false,200, "Success");
 			}
 			else {
-				response.status = new Status(true, 4000, "Not found");
+				response.status = new Status(false, 400, "Not found");
 			}
 		}catch(Exception e) {
 			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
