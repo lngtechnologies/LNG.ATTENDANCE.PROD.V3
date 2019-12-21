@@ -126,7 +126,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 				}
 			}
 			else{ 
-				status = new Status(true,400,"Holiday Date already exists");
+				status = new Status(true,400,"Holiday date already exists");
 			}
 		}
 		catch(Exception e) {
@@ -275,7 +275,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 			}
 
 		}catch(Exception ex){
-			holidayCalendarResponse.status = new Status(true,500, "Something went wrong"); 
+			holidayCalendarResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 
 		return holidayCalendarResponse;
