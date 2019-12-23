@@ -31,17 +31,16 @@ public class CountryServiceImpl implements CountryService {
 	@Override
 	public CountryResponse saveCountry(CountryDto countryDto) {
 
-		//CountryDto  countryDto1 = new CountryDto();
 		CountryResponse response = new CountryResponse();
 		try{
 			if(countryDto.getCountryName() == null || countryDto.getCountryName().isEmpty()) throw new Exception("Please enter country name");
-			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country Telcode");
+			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country code");
 
-			
+
 			// Country countryTel =  countryRepositary.findByCountryTelCode(countryDto.getCountryTelCode());
 			// Country country =  countryRepositary.findByCountryName(countryDto.getCountryName());
 			Country country1 = countryRepositary.findByCountryNameAndCountryTelCodeAndCountryIsActive(countryDto.getCountryName(), countryDto.getCountryTelCode(), false);
-			
+
 			if(country1 != null) {
 				country1.setCountryName(countryDto.getCountryName());
 				country1.setCountryTelCode(countryDto.getCountryTelCode());
@@ -49,21 +48,20 @@ public class CountryServiceImpl implements CountryService {
 				countryRepositary.save(country1);
 				response.status = new Status(false,200, "successfully created");
 			} else {
-						if(countryDto.getCountryName() != null) {
-							
-							if(CheckCountryExists(countryDto.getCountryName())) throw new Exception("Country already exists");
+				if(countryDto.getCountryName() != null) {
 
-							if(CheckCoutryTelExists(countryDto.getCountryTelCode())) throw new Exception("Country Tel code already exists");
-							
-							Country country = new Country();
-							country.setCountryName(countryDto.getCountryName());
-							country.setCountryTelCode(countryDto.getCountryTelCode());
-							country.setCountryIsActive(true);
-							countryRepositary.save(country);
-							response.status = new Status(false,200, "successfully created");
-						}
-					}
-			
+					if(CheckCountryExists(countryDto.getCountryName())) throw new Exception("Country already exists");
+					if(CheckCoutryTelExists(countryDto.getCountryTelCode())) throw new Exception("Country code already exists");
+
+					Country country = new Country();
+					country.setCountryName(countryDto.getCountryName());
+					country.setCountryTelCode(countryDto.getCountryTelCode());
+					country.setCountryIsActive(true);
+					countryRepositary.save(country);
+					response.status = new Status(false,200, "successfully created");
+				}
+			}
+
 		}catch(Exception ex){
 			response.status = new Status(true,500, ex.getMessage()); 
 		}
@@ -76,7 +74,7 @@ public class CountryServiceImpl implements CountryService {
 		//Country country1 = countryRepositary.findByCountryNameAndCountryIsActive(countryName, false);
 		if(country != null) {
 			return true;
-		
+
 		}else {
 
 			return false;
@@ -112,7 +110,7 @@ public class CountryServiceImpl implements CountryService {
 		Status status = null;
 		try {
 			if(countryDto.getCountryName() == null || countryDto.getCountryName().isEmpty()) throw new Exception("Please enter country name");
-			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country Telcode");
+			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country code");
 			if(countryDto.getCountryId() == null || countryDto.getCountryId() == 0) throw new Exception("Country id is null or zero");
 
 			Country country = countryRepositary.findCountryByCountryId(countryDto.getCountryId());			

@@ -225,7 +225,7 @@ public class BranchServiceImpl implements BranchService {
 							branch.setCountry(country);
 							branch.setState(state);
 							branch.setBrIsActive(true);
-							branch.setBrIsBillable(true);
+							//branch.setBrIsBillable(true);
 							branch.setBrCreatedDate(new Date());
 							branchRepository.save(branch);
 							status = new Status(false, 200, "successfully updated");
@@ -248,7 +248,7 @@ public class BranchServiceImpl implements BranchService {
 			}
 
 		}catch(Exception e) {
-			status = new Status(true,500, "Oops..! Something went wrong..");
+			status = new Status(true,500,e.getMessage());
 		}
 		return status;
 	}
