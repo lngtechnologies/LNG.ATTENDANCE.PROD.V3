@@ -229,6 +229,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendarDto1.setRefbrId(Integer.valueOf(p[0].toString()));
 					holidayCalendarDto1.setBrName((p[1].toString()));
 					HolidayCalendarDtoList.add(holidayCalendarDto1);
+					holidayCalendarResponse.setData1(HolidayCalendarDtoList);
 					holidayCalendarResponse.status = new Status(false,200, "success");
 				}
 
@@ -239,7 +240,6 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 
 		}
-		holidayCalendarResponse.setData1(HolidayCalendarDtoList);
 		return holidayCalendarResponse;
 	}
 
@@ -262,11 +262,11 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 	}
 
 	@Override
-	public HolidayCalendarResponse getRemaingHoliday(Integer refCustId) {
+	public HolidayCalendarResponse getRemaingHoliday(Integer refCustId,Integer refbrId) {
 		HolidayCalendarResponse  holidayCalendarResponse  =  new  HolidayCalendarResponse();
 		try {
 
-			List<HolidayCalendar> holidayCalendarList = holidayCalendarRepository.findHolidayCalendarByRefCustId(refCustId);
+			List<HolidayCalendar> holidayCalendarList = holidayCalendarRepository.findHolidayCalendarByrefCustIdAndRefbrId(refCustId,refbrId);
 			if(holidayCalendarList.isEmpty()) {
 				holidayCalendarResponse.status = new Status(false,400, "Not found");
 			}else {

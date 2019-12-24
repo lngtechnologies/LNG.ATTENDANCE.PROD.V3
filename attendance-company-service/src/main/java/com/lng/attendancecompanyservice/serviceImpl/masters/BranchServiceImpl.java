@@ -1,6 +1,7 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +44,8 @@ import com.lng.dto.customer.CustomerDto;
 import com.lng.dto.masters.branch.BranchDto;
 import com.lng.dto.masters.branch.BranchResponse;
 import com.lng.dto.masters.country.CountryDto;
+import com.lng.dto.masters.holidayCalendar.HolidayCalendarDto;
+import com.lng.dto.masters.holidayCalendar.HolidayCalendarResponse;
 import com.lng.dto.masters.state.StateDto;
 
 import status.Status;
@@ -384,6 +387,36 @@ public class BranchServiceImpl implements BranchService {
 			// System.out.println(e.getMessage());
 		}
 	}
+
+
+	/*@Override
+	public BranchResponse findBranchList(Integer refCustomerId) {
+		BranchResponse branchResponse = new BranchResponse();
+		List<BranchDto> BranchDtoList = new ArrayList<>();
+		try {
+			List<Object[]> branchList = branchRepository.findBranchByRefCustomerId(refCustomerId);
+			if(branchList.isEmpty()) {
+				branchResponse.status = new Status(false,400, "Customer not found");
+			}else {
+				for (Object[] p : branchList) {	
+
+					BranchDto branchDto1 = new BranchDto();
+					branchDto1.setBrId(Integer.valueOf(p[0].toString()));
+					branchDto1.setBrName((p[1].toString()));
+					BranchDtoList.add(branchDto1);
+					branchResponse.setData1(BranchDtoList);
+					branchResponse.status = new Status(false,200, "success");
+				}
+
+			}
+
+		}catch(Exception e) {
+			branchResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
+		}
+
+
+		return branchResponse;
+	}*/
 
 	/*@Override
 	public void trainBranchFaceListId(String branchCode) throws Exception {
