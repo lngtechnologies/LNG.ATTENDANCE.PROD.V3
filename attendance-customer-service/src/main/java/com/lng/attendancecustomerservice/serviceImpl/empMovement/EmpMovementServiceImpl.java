@@ -50,7 +50,7 @@ public class EmpMovementServiceImpl implements EmpMovementService {
 			}
 
 		}catch(Exception e){
-			empMovementResponse.status = new Status(true,500,e.getMessage());
+			empMovementResponse.status = new Status(true,500,"Oops..! Something went wrong");
 
 		}
 

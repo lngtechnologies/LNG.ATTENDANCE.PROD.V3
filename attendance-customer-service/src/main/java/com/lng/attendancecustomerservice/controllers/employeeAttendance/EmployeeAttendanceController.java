@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.employeeAttendance.EmployeeAttendanceService;
+import com.lng.dto.employeeAttendance.CurrentDateDto;
 import com.lng.dto.employeeAttendance.EmpSignOutDto;
 import com.lng.dto.employeeAttendance.EmpSignOutResponse;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
@@ -37,6 +39,12 @@ public class EmployeeAttendanceController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}*/
 
+	@GetMapping(value = "/getCurrentDate")
+	public ResponseEntity<CurrentDateDto> getCurrentDate() {
+		CurrentDateDto currentDateDto = employeeAttendanceService.getCurrentDate();
+		return new ResponseEntity<CurrentDateDto>(currentDateDto, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/getShiftDetails")
 	public ResponseEntity<ShiftResponseDto> getShiftDetails(@RequestBody ShiftDetailsDto shiftDetailsDto) {
 		ShiftResponseDto status = employeeAttendanceService.getShiftDetailsByEmpId(shiftDetailsDto.getEmpId());

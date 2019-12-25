@@ -133,7 +133,4 @@ public class EmpLeaveDto {
 	public void setEmpLeaveRejectionRemarks(String empLeaveRejectionRemarks) {
 		this.empLeaveRejectionRemarks = empLeaveRejectionRemarks;
 	}
-	
-	
-
 }

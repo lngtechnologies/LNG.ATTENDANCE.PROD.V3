@@ -1,6 +1,11 @@
 package com.lng.attendancecustomerservice.serviceImpl.employeeAttendance;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -18,6 +23,7 @@ import com.lng.attendancecustomerservice.repositories.employeeAttendance.Employe
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.UnmatchedEmployeeAttendanceRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.employeeAttendance.EmployeeAttendanceService;
+import com.lng.dto.employeeAttendance.CurrentDateDto;
 import com.lng.dto.employeeAttendance.EmpSignOutDto;
 import com.lng.dto.employeeAttendance.EmpSignOutResponse;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
@@ -254,6 +260,29 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 	public EmployeeAttendanceDto convertToEmployeeAttendanceDto(EmployeeAttendance employeeAttendance) {
 		EmployeeAttendanceDto  employeeAttendanceDto = modelMapper.map(employeeAttendance, EmployeeAttendanceDto.class);
 		return employeeAttendanceDto;
+	}
+
+	@Override
+	public CurrentDateDto getCurrentDate() {
+		CurrentDateDto currentDateDto = new CurrentDateDto();
+		try {
+			
+			String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+			 Date date = new Date();
+			String sysDate = dateFormat.format(date);
+			// dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+			//TimeZone istTimeZone = TimeZone.getTimeZone("Asia/Kolkata");    //Source timezone
+			//Calendar today = Calendar.getInstance(istTimeZone);
+			//currentDateDto.setCurrentDate(dateFormat.format(today.getTime()));
+			
+			currentDateDto.setCurrentDate(sysDate);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return currentDateDto;
 	}
 
 }

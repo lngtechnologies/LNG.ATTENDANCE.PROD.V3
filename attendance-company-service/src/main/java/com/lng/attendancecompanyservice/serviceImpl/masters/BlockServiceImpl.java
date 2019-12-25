@@ -214,19 +214,19 @@ public class BlockServiceImpl implements BlockService {
 					blockDto1.setBlkLatitude((Double)p[3]);
 					blockDto1.setBlkLongitude((Double)p[4]);
 					blockDto1.setCustId(Integer.valueOf(p[5].toString()));
+					blockDto1.setRefBranchId(Integer.valueOf(p[6].toString()));
 					blockDtoList.add(blockDto1);
 					response.setData1(blockDtoList);
 					response.status = new Status(false,200, "success");
+
 				}
-			}else {
+			} else {
+			
 				response.status = new Status(false,400, "Not found");
 			}
-
-
+			
 		}catch (Exception e){
 			response.status = new Status(true,500,"Oops..! Something went wrong..");
-
-
 		}
 		return response;
 	}

@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpEntity;
@@ -40,6 +42,7 @@ import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
 import com.lng.attendancecompanyservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.service.masters.BranchService;
+import com.lng.attendancecompanyservice.utils.AzureFaceListSubscriptionKey;
 import com.lng.dto.customer.CustomerDto;
 import com.lng.dto.masters.branch.BranchDto;
 import com.lng.dto.masters.branch.BranchResponse;
@@ -75,7 +78,9 @@ public class BranchServiceImpl implements BranchService {
 	@Autowired
 	EmployeeBranchRepositories employeeBranchRepositories;
 
-
+	AzureFaceListSubscriptionKey subscription = new AzureFaceListSubscriptionKey();
+	
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public BranchResponse saveBranch(BranchDto branchDto) {
@@ -83,19 +88,9 @@ public class BranchServiceImpl implements BranchService {
 
 		try{
 			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
-
-			/*int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
-			if(b == 0) {
-				Customer customer = customerRepository.findCustomerByCustId(branchDto.getRefCustomerId());
-				if(customer != null) {
-					//int c =customerRepository.findCustomerByCustNoOfBranch(branchDto.getCustNoOfBranch());
-					//for(int i=1;i<=c;i++) {
-
-					Country country = countryRepository.findCountryByCountryId(branchDto.getRefCountryId());
-					if(country != null) {*/
-
-
+			
 			int chechNoOfBranches = branchRepository.chechNoOfBranchesCreatedByCustomer(branchDto.getRefCustomerId());
+			
 			if(chechNoOfBranches == 0) {
 
 				int b = branchRepository.findByRefCustomerIdAndBrName(branchDto.getRefCustomerId(), branchDto.getBrName());
@@ -109,6 +104,9 @@ public class BranchServiceImpl implements BranchService {
 							if(state != null) {
 								String brnchCode = "";
 								Branch branch = new Branch();
+								final Lock displayLock = this.displayQueueLock; 
+								displayLock.lock();
+								Thread.sleep(3000L);
 								brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
 								branch.setState(state);
 								branch.setCustomer(customer);
@@ -129,13 +127,14 @@ public class BranchServiceImpl implements BranchService {
 								branch.setBrValidityEnd(branchDto.getBrValidityEnd());
 								branch.setBrValidityStart(branchDto.getBrValidityStart());
 								branchRepository.save(branch);
+								displayLock.unlock();
 								try {
 									// Create faceList in Azure
 									createBranchFaceListId(branch.getBrCode());
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
-
+								
 								// Save to login data right table
 								try {
 									Login login = loginRepository.findByRefCustId(branch.getCustomer().getCustId());
@@ -362,7 +361,7 @@ public class BranchServiceImpl implements BranchService {
 			URI uri = builder.build();
 			HttpPut request = new HttpPut(uri);
 			request.setHeader("Content-Type", "application/json");
-			request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
+			request.setHeader("Ocp-Apim-Subscription-Key", subscription.getKey());
 
 			// Creating API Body
 			JSONObject json = new JSONObject();

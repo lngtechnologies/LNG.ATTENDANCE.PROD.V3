@@ -24,8 +24,12 @@ public class EmployeeDataDto {
 	private String empPresistedFaceId;
 	
 	private Boolean empAttndStatus;
+	
+	private String empAttndancedate;
 
-	private String empAttndDateTime;
+	private String empAttndanceInDateTime;
+	
+	private String empAttndanceOutDateTime;
 	
 	private String custLogo;
 	
@@ -34,7 +38,7 @@ public class EmployeeDataDto {
 	//private Boolean empAppSetupStatus;
 
 	public EmployeeDataDto(Integer custId, String custName, Integer brId, String brName, String brCode, Integer empid, String empName, 
-						   String custLogo, Boolean appStatus, String empPresistedFaceId, Boolean empAttndStatus, String empAttndDateTime) {
+						   String custLogo, Boolean appStatus, String empPresistedFaceId, Boolean empAttndStatus, String empAttndancedate, String empAttndanceInDateTime, String empAttndanceOutDateTime) {
 		this.custId = custId;
 		this.custName = custName;
 		this.brId = brId;
@@ -46,8 +50,21 @@ public class EmployeeDataDto {
 		this.appStatus = appStatus;
 		this.empPresistedFaceId = empPresistedFaceId;
 		this.empAttndStatus = empAttndStatus;
-		this.empAttndDateTime = empAttndDateTime;
+		this.empAttndancedate = empAttndancedate;
+		this.empAttndanceInDateTime = empAttndanceInDateTime;
+		this.empAttndanceOutDateTime = empAttndanceOutDateTime;
 	}
+
+	
+	public String getEmpAttndancedate() {
+		return empAttndancedate;
+	}
+
+
+	public void setEmpAttndancedate(String empAttndancedate) {
+		this.empAttndancedate = empAttndancedate;
+	}
+
 
 	public Integer getCustId() {
 		return custId;
@@ -136,12 +153,20 @@ public class EmployeeDataDto {
 		this.empAttndStatus = empAttndStatus;
 	}
 
-	public String getEmpAttndDateTime() {
-		return empAttndDateTime;
+	public String getEmpAttndanceInDateTime() {
+		return empAttndanceInDateTime;
 	}
 
-	public void setEmpAttndDateTime(String empAttndDateTime) {
-		this.empAttndDateTime = empAttndDateTime;
+	public void setEmpAttndanceInDateTime(String empAttndanceInDateTime) {
+		this.empAttndanceInDateTime = empAttndanceInDateTime;
+	}
+
+	public String getEmpAttndanceOutDateTime() {
+		return empAttndanceOutDateTime;
+	}
+
+	public void setEmpAttndanceOutDateTime(String empAttndanceOutDateTime) {
+		this.empAttndanceOutDateTime = empAttndanceOutDateTime;
 	}
 
 }

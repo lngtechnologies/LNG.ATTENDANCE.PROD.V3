@@ -366,6 +366,8 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						EmpAttendanceDto1.setShiftEnd(p[4].toString());
 						EmpAttendanceDto1.setEmpAttendanceInDatetime((Date)p[5]);
 						EmpAttendanceDto1.setEmpAttendanceOutDatetime((Date)p[6]);
+						EmpAttendanceDto1.setEmpAttendanceConsiderInDatetime((Date)p[7]);
+						EmpAttendanceDto1.setEmpAttendanceConsiderOutDatetime((Date)p[8]);
 						empAttendanceDtoList.add(EmpAttendanceDto1);
 						empAttendanceResponse.status = new Status(false, 200, "success");
 					}
