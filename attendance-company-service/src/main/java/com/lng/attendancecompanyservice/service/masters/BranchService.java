@@ -17,5 +17,7 @@ public interface BranchService {
 	void createBranchFaceListId(String branchCode) throws Exception;
 	
 	//void trainBranchFaceListId(String branchCode) throws Exception;
+	
+	//BranchResponse findBranchList(Integer refCustomerId);
 
 }

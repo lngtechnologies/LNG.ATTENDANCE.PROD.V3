@@ -126,7 +126,6 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	@Override
 	public Status saveEmpLeave(EmployeeLeaveDto employeeLeaveDto) {
 		Status status = null;
-		char dq = '"';
 		try {
 			
 			Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());

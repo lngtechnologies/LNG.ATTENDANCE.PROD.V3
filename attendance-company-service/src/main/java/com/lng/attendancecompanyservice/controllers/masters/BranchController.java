@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecompanyservice.service.masters.BranchService;
 import com.lng.dto.masters.branch.BranchDto;
 import com.lng.dto.masters.branch.BranchResponse;
+import com.lng.dto.masters.holidayCalendar.HolidayCalendarDto;
+import com.lng.dto.masters.holidayCalendar.HolidayCalendarResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
@@ -76,5 +78,13 @@ public class BranchController {
 		}
 		return new ResponseEntity<BranchResponse>(branchResponse, HttpStatus.OK);
 	}
+	/*@PostMapping(value = "/getBranchByCustId")
+	public ResponseEntity<BranchResponse> findBranchByCustId(@RequestBody BranchDto branchDto) {
+		BranchResponse branchResponse = branchService.findBranchList(branchDto.getRefCustomerId());
+		if (branchResponse !=null){
+			return new ResponseEntity<BranchResponse>(branchResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}*/
 
 }

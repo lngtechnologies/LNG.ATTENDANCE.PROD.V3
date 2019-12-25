@@ -29,4 +29,7 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch, Int
 	int chechNoOfBranchesCreatedByCustomer(int custId);
 	
 	Branch findBranchBybrNameAndBrIsActive(String brName, Boolean brIsActive);
+	
+	@Query(value = "select  br.brId,br.brName from  tmbranch br where br.refCustomerId = ?1",nativeQuery = true)
+	List<Object[]>  findBranchByRefCustomerId(Integer refCustomerId);
 }
