@@ -1,6 +1,6 @@
 package com.lng.dto.empAzureDetails;
 
-public class AzureFacelistDto {
+public class AzurePersistedFaceIdsDto {
 
 	private String persistedFaceId;
 

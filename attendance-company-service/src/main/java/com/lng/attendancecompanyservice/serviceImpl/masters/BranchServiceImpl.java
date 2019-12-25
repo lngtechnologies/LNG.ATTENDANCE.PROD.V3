@@ -41,6 +41,7 @@ import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
 import com.lng.attendancecompanyservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.service.masters.BranchService;
+import com.lng.attendancecompanyservice.utils.AzureFaceListSubscriptionKey;
 import com.lng.dto.customer.CustomerDto;
 import com.lng.dto.masters.branch.BranchDto;
 import com.lng.dto.masters.branch.BranchResponse;
@@ -74,6 +75,8 @@ public class BranchServiceImpl implements BranchService {
 	@Autowired
 	EmployeeBranchRepositories employeeBranchRepositories;
 
+	AzureFaceListSubscriptionKey subscription = new AzureFaceListSubscriptionKey();
+	
 	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
@@ -355,7 +358,7 @@ public class BranchServiceImpl implements BranchService {
 			URI uri = builder.build();
 			HttpPut request = new HttpPut(uri);
 			request.setHeader("Content-Type", "application/json");
-			request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
+			request.setHeader("Ocp-Apim-Subscription-Key", subscription.getKey());
 
 			// Creating API Body
 			JSONObject json = new JSONObject();

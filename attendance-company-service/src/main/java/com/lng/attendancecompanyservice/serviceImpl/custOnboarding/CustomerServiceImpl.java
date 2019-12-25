@@ -45,6 +45,7 @@ import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.repositories.masters.UserRightRepository;
 import com.lng.attendancecompanyservice.service.custOnboarding.CustomerService;
+import com.lng.attendancecompanyservice.utils.AzureFaceListSubscriptionKey;
 import com.lng.attendancecompanyservice.utils.Encoder;
 import com.lng.attendancecompanyservice.utils.MessageUtil;
 import com.lng.dto.customer.CustomerDto;
@@ -98,6 +99,8 @@ public class CustomerServiceImpl implements CustomerService {
 	MessageUtil messageUtil = new MessageUtil();
 
 	Encoder Encoder = new Encoder();
+	
+	AzureFaceListSubscriptionKey subscription = new AzureFaceListSubscriptionKey();
 
 	//Sms sms = new Sms();
 
@@ -760,7 +763,7 @@ public class CustomerServiceImpl implements CustomerService {
 			URI uri = builder.build();
 			HttpPut request = new HttpPut(uri);
 			request.setHeader("Content-Type", "application/json");
-			request.setHeader("Ocp-Apim-Subscription-Key", "935ac35bce0149d8bf2818b936e25e1c");
+			request.setHeader("Ocp-Apim-Subscription-Key", subscription.getKey());
 
 			// Creating API Body
 			JSONObject json = new JSONObject();
