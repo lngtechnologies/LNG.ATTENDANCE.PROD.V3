@@ -102,7 +102,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			}
 
 		} catch (Exception e) {
-			empAttendanceResponse.status = new Status(true, 400, e.getMessage());
+			empAttendanceResponse.status = new Status(true, 400, "Opps..! Something went wrong..");
 
 		}
 		empAttendanceResponse.setData1(empAttendanceDtoList);
@@ -170,7 +170,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							}
 
 							employeeAttendanceRepository.save(employeeAttendance1);
-							status = new Status(false, 200, "Attendance marked successfully");
+							status = new Status(false, 200, "Attendance IN marked successfully");
 						} else {
 
 							employeeAttendance2.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
@@ -217,11 +217,11 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							}
 
 							employeeAttendanceRepository.save(employeeAttendance2);
-							status = new Status(false, 200, "Attendance marked successfully");
+							status = new Status(false, 200, "Attendance OUT marked successfully");
 						}
 
 					} else {
-						status = new Status(false, 200, "Attendance marked successfully");
+						status = new Status(false, 200, "Attendance IN marked successfully");
 					} 
 
 				}else {
@@ -231,7 +231,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 		} catch (Exception e) {
 
-			status = new Status(true, 500, "Opps..! Something went wrong..");
+			status = new Status(true, 500,"Opps..! Something went wrong..");
 		}
 		return status;
 	}
