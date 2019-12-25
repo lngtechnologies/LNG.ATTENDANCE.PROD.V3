@@ -56,7 +56,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			}
 
 		}catch(Exception ex){
-			custBrHolidayResponse.status = new Status(true,500, "Something went wrong"); 
+			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 
 		return custBrHolidayResponse;
@@ -75,7 +75,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			}
 
 		}catch(Exception ex){
-			custBrHolidayResponse.status = new Status(true,500, "Something went wrong"); 
+			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 
 		return custBrHolidayResponse;
@@ -127,7 +127,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 				}
 			}
 		}catch(Exception ex){
-			custBrHolidayResponse.status = new Status(true,500, "Something went wrong"); 
+			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
 		}
 
 		return custBrHolidayResponse;
@@ -162,7 +162,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			}
 		}
 		catch(Exception e) {
-			status = new Status(true, 4000, e.getMessage());
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -181,7 +181,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 				custBrHolidayResponse.status = new Status(false, 400, "Not found");
 			}
 		}catch(Exception e) {
-			custBrHolidayResponse.status = new Status(true,3000, e.getMessage()); 
+			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return custBrHolidayResponse;
