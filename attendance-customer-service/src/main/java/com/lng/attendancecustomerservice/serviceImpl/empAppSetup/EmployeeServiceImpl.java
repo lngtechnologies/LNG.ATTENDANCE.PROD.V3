@@ -51,7 +51,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			Customer customer = customerRepository.getByCustCode(custCode);
 
 			// Check customer exist else throw exception	
-			if(customer == null || !customer.getCustIsActive()) throw new Exception("Validity Expired or Invalid Data");
+			if(customer == null || !customer.getCustIsActive()) throw new Exception("Invalid Data or Validity Expired");
 
 			// Check customer validity
 			if(customer.getCustIsActive() == true) {
@@ -82,7 +82,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 						String pattern = "yyyy-MM-dd'T'HH:mm:ss";
 						SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 						dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-
 						
 						if(empInAttndDate != null) {
 							inDate = dateFormat.format(empInAttndDate);
