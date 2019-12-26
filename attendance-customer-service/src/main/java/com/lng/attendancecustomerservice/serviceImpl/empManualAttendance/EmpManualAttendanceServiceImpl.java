@@ -37,7 +37,6 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	@Autowired
 	EmployeeAttendanceRepository employeeAttendanceRepository;
 
-
 	@Override
 	public EmpAttendanceResponse getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId, String empAttendanceDate) {
 		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();

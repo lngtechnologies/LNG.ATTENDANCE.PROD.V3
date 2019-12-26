@@ -16,8 +16,9 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JsonParser;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonParser;
 import com.lng.attendancecompanyservice.entity.masters.Branch;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CustEmployeeRepository;
@@ -28,6 +29,7 @@ import com.lng.dto.empAzureDetails.AzureLargeFaceListResponseDto;
 import com.lng.dto.empAzureDetails.AzurePersistedFaceIdsDto;
 import com.lng.dto.empAzureDetails.AzurePersistedFaceIdsResponseDto;
 import status.Status;
+
 
 @Service
 public class RegisteredEmployeeServiceImpl implements RegisteredEmployeeService {
@@ -89,10 +91,21 @@ public class RegisteredEmployeeServiceImpl implements RegisteredEmployeeService 
 
 			HttpResponse response = httpclient.execute(request);
 			entity = response.getEntity();
+			
+			String content = EntityUtils.toString(entity);
+			
+			/*JSONArray jsonArr = new JSONArray(content);
+
+	        for (int i = 0; i < jsonArr.length(); i++)
+	        {
+	            JSONObject jsonObj = jsonArr.getJSONObject(i);
+
+	            System.out.println(jsonObj);
+	        }*/
 							
 			if (entity != null) 
 			{
-				list.add(convertToAzureLargeFaceListDto(entity));
+				list.add(convertToAzureLargeFaceListDto(content));
 				System.out.println(EntityUtils.toString(entity));
 			}
 		}
@@ -150,7 +163,7 @@ public class RegisteredEmployeeServiceImpl implements RegisteredEmployeeService 
 		return azureFacelistDto;
 	}
 
-	public AzureLargeFaceListDto convertToAzureLargeFaceListDto(HttpEntity entity) {
+	public AzureLargeFaceListDto convertToAzureLargeFaceListDto(String entity) {
 		AzureLargeFaceListDto  azureLargeFaceListDto = mapper.map(entity, AzureLargeFaceListDto.class);
 		return azureLargeFaceListDto;
 	}

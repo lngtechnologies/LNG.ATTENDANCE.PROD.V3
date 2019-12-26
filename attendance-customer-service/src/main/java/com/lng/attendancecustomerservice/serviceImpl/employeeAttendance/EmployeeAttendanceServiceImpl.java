@@ -271,12 +271,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 			dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
 			 Date date = new Date();
-			String sysDate = dateFormat.format(date);
-			// dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
-			//TimeZone istTimeZone = TimeZone.getTimeZone("Asia/Kolkata");    //Source timezone
-			//Calendar today = Calendar.getInstance(istTimeZone);
-			//currentDateDto.setCurrentDate(dateFormat.format(today.getTime()));
-			
+			String sysDate = dateFormat.format(date);			
 			currentDateDto.setCurrentDate(sysDate);
 			
 		} catch (Exception e) {
