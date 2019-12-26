@@ -1,7 +1,6 @@
 package com.lng.attendancetabservice.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +25,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		EmployeeResponse1  employeeResponse1  =  new  EmployeeResponse1();
 		List<EmployeeDto2> EmployeeDtoList = new ArrayList<>();
 		try {
-			List<Object[]> employeeList =  employeeRepository.findEmployee(empName, empMobile);
-			Employee employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId, empName, empMobile);
+			List<Object[]> employeeList =  employeeRepository.findEmployee(empMobile);
+			Employee employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
 			if(employee == null) {
-				employeeResponse1.status = new Status(false,400, "Invalid employee or mobile number");
+				employeeResponse1.status = new Status(true,400, "Invalid mobile number");
 			}else {
 				for (Object[] p : employeeList) {	
 
@@ -71,11 +70,5 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		return status;
 	}
-
-	// Convert base64 to byte
-		public  byte[] base64ToByte(String base64) {
-			byte[] decodedByte = Base64.getDecoder().decode(base64);
-			return decodedByte;
-		}
 
 }

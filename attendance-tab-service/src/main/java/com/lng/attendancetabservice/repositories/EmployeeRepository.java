@@ -15,11 +15,11 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	int generateOtp();
 	
 	
-	@Query(value = "SELECT emp.* FROM tmemployee emp WHERE refBrId =?1 AND refCustId =?2 AND empName=?3 AND empMobile=?4", nativeQuery = true)
-	Employee checkEmployeeExistsOrNot(Integer refBrId,Integer refCustId,String empName,String empMobile);
+	@Query(value = "SELECT emp.* FROM tmemployee emp WHERE refBrId =?1 AND refCustId =?2 AND empMobile=?3", nativeQuery = true)
+	Employee checkEmployeeExistsOrNot(Integer refBrId,Integer refCustId,String empMobile);
 	
-	@Query(value = " SELECT empId,empName FROM tmemployee emp WHERE empName=?1 AND empMobile=?2", nativeQuery = true)
-	List<Object[]> findEmployee(String empName,String empMobile);
+	@Query(value = " SELECT empId,empName FROM tmemployee emp WHERE empMobile=?1", nativeQuery = true)
+	List<Object[]> findEmployee(String empMobile);
 	
 	Employee findByempId(Integer empId);
 	
