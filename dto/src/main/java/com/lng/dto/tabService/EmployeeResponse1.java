@@ -6,15 +6,15 @@ import status.Status;
 
 public class EmployeeResponse1 {
 	
-	public List<EmployeeDto1> data1;
+	public List<EmployeeDto2> data1;
 
 	public Status status;
 
-	public List<EmployeeDto1> getData1() {
+	public List<EmployeeDto2> getData1() {
 		return data1;
 	}
 
-	public void setData1(List<EmployeeDto1> data1) {
+	public void setData1(List<EmployeeDto2> data1) {
 		this.data1 = data1;
 	}
 

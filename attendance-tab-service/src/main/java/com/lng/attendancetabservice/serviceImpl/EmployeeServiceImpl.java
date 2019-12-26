@@ -1,7 +1,6 @@
 package com.lng.attendancetabservice.serviceImpl;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import com.lng.attendancetabservice.entity.Employee;
 import com.lng.attendancetabservice.repositories.EmployeeRepository;
 import com.lng.attendancetabservice.service.EmployeeService;
 import com.lng.dto.tabService.EmployeeDto1;
+import com.lng.dto.tabService.EmployeeDto2;
 import com.lng.dto.tabService.EmployeeResponse1;
 
 import status.Status;
@@ -23,18 +23,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 	public EmployeeResponse1 verifyEmpNameAndMobileNo(Integer refBrId, Integer refCustId, String empName,
 			String empMobile) {
 		EmployeeResponse1  employeeResponse1  =  new  EmployeeResponse1();
-		List<EmployeeDto1> EmployeeDtoList = new ArrayList<>();
+		List<EmployeeDto2> EmployeeDtoList = new ArrayList<>();
 		try {
-			List<Object[]> employeeList =  employeeRepository.findEmployee(empName, empMobile);
-			Employee employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId, empName, empMobile);
+			List<Object[]> employeeList =  employeeRepository.findEmployee(empMobile);
+			Employee employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
 			if(employee == null) {
-				employeeResponse1.status = new Status(false,400, "Invalid employee or mobile number");
+				employeeResponse1.status = new Status(true,400, "Invalid mobile number");
 			}else {
 				for (Object[] p : employeeList) {	
 
-					EmployeeDto1 employeeDto1 = new EmployeeDto1();
+					EmployeeDto2 employeeDto1 = new EmployeeDto2();
 					employeeDto1.setEmpId(Integer.valueOf(p[0].toString()));
+					employeeDto1.setEmpName(p[1].toString());
 					EmployeeDtoList.add(employeeDto1);
+					employeeResponse1.setData1(EmployeeDtoList);
 					employeeResponse1.status = new Status(false,200, "success");
 				}
 
@@ -45,7 +47,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
 		}
-		employeeResponse1.setData1(EmployeeDtoList);
 		return employeeResponse1;
 	}
 
@@ -69,11 +70,5 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		return status;
 	}
-
-	// Convert base64 to byte
-		public  byte[] base64ToByte(String base64) {
-			byte[] decodedByte = Base64.getDecoder().decode(base64);
-			return decodedByte;
-		}
 
 }

@@ -26,7 +26,7 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 	EmpAttendanceRepository empAttendanceRepository;
 	@Autowired
 	EmployeeRepository  employeeRepository;
-	
+
 	@Autowired
 	UnmatchedEmployeeAttendanceRepository unmatchedEmpAttndRepo;	
 
@@ -34,11 +34,8 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 	@Override
 	public Status saveEmpAttndIn(EmpAttendanceDto1 empAttendanceDto1) {
 		Status status = null;
-		String Flag = null;
 		EmpAttendance empAttendance = new EmpAttendance();
 		try {
-			/*empAttendance = empAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceInModeAndEmpAttendanceInDatetimeAndEmpAttendanceInLatLong
-					(empAttendanceDto1.getRefEmpId(), empAttendanceDto1.getEmpAttendanceInMode(), empAttendanceDto1.getEmpAttendanceInDatetime(), empAttendanceDto1.getEmpAttendanceInLatLong());*/
 			empAttendance = empAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceDate(empAttendanceDto1.getRefEmpId(), empAttendanceDto1.getEmpAttendanceDate());
 			Employee employee = employeeRepository.findByempId(empAttendanceDto1.getRefEmpId());
 			if(employee != null ) {
@@ -65,7 +62,6 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 					empAttendanceRepository.save(empAttendance);
 					status = new Status(false, 200, "Attendance marked successfully");
 				}else {
-					//EmpAttendance empAttendance1 = new EmpAttendance();
 					empAttendanceDto1.setFlag("IN");
 					empAttendance.setEmpAttendanceDate(empAttendanceDto1.getEmpAttendanceDate());
 					empAttendance.setEmployee(employee);
@@ -105,7 +101,6 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 	@Override
 	public Status saveEmpAttndOut(EmpAttendanceDto1 empAttendanceDto1) {
 		Status status = null;
-		String Flag = null;
 		UnmatchedEmployeeAttendance unmatchedEmployeeAttendance = new UnmatchedEmployeeAttendance();
 		EmpAttendance employeeAttendance1 = new EmpAttendance();
 		try {
@@ -116,9 +111,6 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 			Employee employee = employeeRepository.findByempId(empAttendanceDto1.getRefEmpId());
 			if(employeeAttendance1 != null ) {
 				if(employeeAttendance == null) {
-
-					//EmpAttendance employeeAttendance1 = empAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceDate(empAttendanceDto1.getRefEmpId(), empAttendanceDto1.getEmpAttendanceDate());
-					//EmpAttendance employeeAttendance1 = new EmpAttendance();
 					empAttendanceDto1.setFlag("OUT");
 					employeeAttendance1.setEmpAttendanceOutDatetime(empAttendanceDto1.getEmpAttendanceOutDatetime());
 					employeeAttendance1.setEmpAttendanceConsiderOutDatetime(empAttendanceDto1.getEmpAttendanceOutDatetime());
@@ -182,7 +174,7 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 
 				unmatchedEmployeeAttendance.setEmpAttendanceOutConfidence(empAttendanceDto1.getEmpAttendanceOutConfidence());
 				unmatchedEmpAttndRepo.save(unmatchedEmployeeAttendance);
-				
+
 				status = new Status(true, 400, "Un Matched attendance found, Please contact your manager to rectify the same.");
 			}
 

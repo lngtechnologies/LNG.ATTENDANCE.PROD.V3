@@ -114,35 +114,54 @@ public class CountryServiceImpl implements CountryService {
 			if(countryDto.getCountryId() == null || countryDto.getCountryId() == 0) throw new Exception("Country id is null or zero");
 
 			Country country = countryRepositary.findCountryByCountryId(countryDto.getCountryId());			
-			//if(CheckCountryExists(countryDto.getCountryName())) throw new Exception("Country already exists");
+			Country cu1 = countryRepositary.findByCountryName(countryDto.getCountryName());
+			Country  cu2 = countryRepositary.findByCountryTelCode(countryDto.getCountryTelCode());
+			if(country != null ) {
+				if(cu1 == null ) {
+					if(cu2 == null  ) {
+						country = modelMapper.map(countryDto,Country.class);
+						country.setCountryIsActive(true);
+						countryRepositary.save(country);
+						status = new Status(false, 200, "successfully updated");
 
-			//if(CheckCoutryTelExistsForUpdate(countryDto.getCountryTelCode(), countryDto.getCountryId())) throw new Exception("Country Tel code already exists");
-			if(country != null) {
-				Country ct = countryRepositary.findCountryNameByCountryTelCode(countryDto.getCountryTelCode());
-				if(ct == null) {
-					country = modelMapper.map(countryDto,Country.class);
-					country.setCountryIsActive(true);
-					countryRepositary.save(country);
-					status = new Status(false, 200, "successfully updated");
-				} else if (ct.getCountryId() == countryDto.getCountryId()) { 
+					} else if ( cu2.getCountryId() == countryDto.getCountryId()) { 
 
-					country = modelMapper.map(countryDto,Country.class);
-					country.setCountryIsActive(true);
-					countryRepositary.save(country);
-					status = new Status(false, 200, "successfully updated");
+						country = modelMapper.map(countryDto,Country.class);
+						country.setCountryIsActive(true);
+						countryRepositary.save(country);
+						status = new Status(false, 200, "successfully updated");
+					}
+				}
+				else if( cu1!= null && cu1.getCountryId() == countryDto.getCountryId() ) {
+					Country te1 = countryRepositary.findByCountryTelCode(countryDto.getCountryTelCode());
+					if(te1 == null) {
+						country = modelMapper.map(countryDto,Country.class);
+						country.setCountryIsActive(true);
+						countryRepositary.save(country);
+						status = new Status(false, 200, "successfully updated");
+					} else if (te1.getCountryId() == countryDto.getCountryId()) { 
+						country = modelMapper.map(countryDto,Country.class);
+						country.setCountryIsActive(true);
+						countryRepositary.save(country);
+						status = new Status(false, 200, "successfully updated");
+					}else{ 
+
+						status = new Status(true,400,"Country code already exists");
+
+					}
 				}
 				else{ 
-					status = new Status(true,400,"Country name already exist");
+
+					status = new Status(true,400,"Country already exists");
 				}
 			}
-
-			else {
-				status = new Status(true, 400, "Country not found");
-
+			else{ 
+				status = new Status(false,400,"Country not found");
 			}
 		}
+
 		catch(Exception e) {
-			status = new Status(true,500, "Oops..! Something went wrong..");
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}

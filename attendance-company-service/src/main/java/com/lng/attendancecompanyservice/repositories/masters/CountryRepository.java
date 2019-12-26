@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.lng.attendancecompanyservice.entity.masters.Country;
-import com.lng.attendancecompanyservice.entity.masters.State;
 
 @Repository
 public interface CountryRepository extends CrudRepository<Country,Integer> {
@@ -22,12 +21,10 @@ public interface CountryRepository extends CrudRepository<Country,Integer> {
 	Country findByCountryName(String countryName);
 	
 	Country findByCountryNameAndCountryTelCodeAndCountryIsActive(String countryName, String countryTelCode, Boolean countryIsActive);
-
 	Country  findByCountryTelCode(String countryTelCode);
 	Country   getStateByCountryId(Integer countryId);
 	Country   getCoustomerByCountryId(Integer countryId );
 	Country  findCountryNameByCountryTelCode(String countryTelCode);
-	
 	
 	@Transactional
 	@Modifying 
