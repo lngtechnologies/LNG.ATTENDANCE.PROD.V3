@@ -361,7 +361,7 @@ public class BranchServiceImpl implements BranchService {
 			URI uri = builder.build();
 			HttpPut request = new HttpPut(uri);
 			request.setHeader("Content-Type", "application/json");
-			request.setHeader("Ocp-Apim-Subscription-Key", subscription.getKey());
+			request.setHeader("Ocp-Apim-Subscription-Key", subscription.getKey().trim());
 
 			// Creating API Body
 			JSONObject json = new JSONObject();
