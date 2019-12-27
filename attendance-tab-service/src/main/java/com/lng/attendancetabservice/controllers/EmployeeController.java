@@ -22,8 +22,8 @@ public class EmployeeController {
 	EmployeeService employeeService;
 	
 	
-	@PostMapping(value = "/getEmployeeByNameAndMobileno") 
-	public ResponseEntity<EmployeeResponse1> findEmployeeByNameAndMobileNo(@RequestBody EmployeeDto2 employeeDto) {
+	@PostMapping(value = "/getEmployeeByMobileno") 
+	public ResponseEntity<EmployeeResponse1> findEmployeeByNameAndMobileNo(@RequestBody EmployeeDto1 employeeDto) {
 		EmployeeResponse1 employeeResponse1 = employeeService.verifyEmpNameAndMobileNo(employeeDto.getRefBrId(), employeeDto.getRefCustId(), employeeDto.getEmpName(), employeeDto.getEmpMobile());
 		if (employeeResponse1 !=null){
 			return new ResponseEntity<EmployeeResponse1>(employeeResponse1, HttpStatus.OK);
