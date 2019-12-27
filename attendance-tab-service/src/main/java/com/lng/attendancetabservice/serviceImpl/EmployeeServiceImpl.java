@@ -20,23 +20,22 @@ public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeRepository employeeRepository;
 
 	@Override
-	public EmployeeResponse1 verifyEmpNameAndMobileNo(Integer refBrId, Integer refCustId, String empName,
-			String empMobile) {
+	public EmployeeResponse1 verifyEmpNameAndMobileNo(Integer refBrId, Integer refCustId, String empName,String empMobile) {
 		EmployeeResponse1  employeeResponse1  =  new  EmployeeResponse1();
-		List<EmployeeDto2> EmployeeDtoList = new ArrayList<>();
 		try {
+			
 			List<Object[]> employeeList =  employeeRepository.findEmployee(empMobile);
 			Employee employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
+			
 			if(employee == null) {
 				employeeResponse1.status = new Status(true,400, "Invalid mobile number");
-			}else {
+			} else {
 				for (Object[] p : employeeList) {	
 
 					EmployeeDto2 employeeDto1 = new EmployeeDto2();
 					employeeDto1.setEmpId(Integer.valueOf(p[0].toString()));
 					employeeDto1.setEmpName(p[1].toString());
-					EmployeeDtoList.add(employeeDto1);
-					employeeResponse1.setData1(EmployeeDtoList);
+					employeeResponse1.setData1(employeeDto1);
 					employeeResponse1.status = new Status(false,200, "success");
 				}
 
@@ -44,8 +43,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		}catch (Exception e){
 			employeeResponse1.status = new Status(true, 500, "Oops..! Something went wrong..");
-
-
 		}
 		return employeeResponse1;
 	}
