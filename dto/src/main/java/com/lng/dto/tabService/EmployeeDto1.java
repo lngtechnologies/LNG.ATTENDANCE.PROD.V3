@@ -14,7 +14,7 @@ public class EmployeeDto1 {
 
 	private String empPresistedFaceId;
 
-	private String empPicBlobPath;
+	private String employeePic;
 
 	public Integer getRefBrId() {
 		return refBrId;
@@ -64,13 +64,15 @@ public class EmployeeDto1 {
 		this.empPresistedFaceId = empPresistedFaceId;
 	}
 
-	public String getEmpPicBlobPath() {
-		return empPicBlobPath;
+	public String getEmployeePic() {
+		return employeePic;
 	}
 
-	public void setEmpPicBlobPath(String empPicBlobPath) {
-		this.empPicBlobPath = empPicBlobPath;
+	public void setEmployeePic(String employeePic) {
+		this.employeePic = employeePic;
 	}
+
+
 
 
 
