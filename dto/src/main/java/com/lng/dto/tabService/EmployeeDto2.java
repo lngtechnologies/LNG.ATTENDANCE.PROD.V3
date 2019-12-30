@@ -6,6 +6,11 @@ public class EmployeeDto2 {
 
 	private String empName;
 
+	private String shiftType;
+
+	private String empPresistedFaceId;
+
+
 	public Integer getEmpId() {
 		return empId;
 	}
@@ -21,4 +26,23 @@ public class EmployeeDto2 {
 	public void setEmpName(String empName) {
 		this.empName = empName;
 	}
+
+	public String getShiftType() {
+		return shiftType;
+	}
+
+	public void setShiftType(String shiftType) {
+		this.shiftType = shiftType;
+	}
+
+	public String getEmpPresistedFaceId() {
+		return empPresistedFaceId;
+	}
+
+	public void setEmpPresistedFaceId(String empPresistedFaceId) {
+		this.empPresistedFaceId = empPresistedFaceId;
+	}
+
+
+
 }

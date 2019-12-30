@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancetabservice.service.EmployeeService;
+import com.lng.dto.employee.OtpResponseDto;
+import com.lng.dto.tabService.CustomerDto1;
 import com.lng.dto.tabService.EmployeeDto1;
 import com.lng.dto.tabService.EmployeeDto2;
 import com.lng.dto.tabService.EmployeeResponse1;
@@ -24,7 +26,7 @@ public class EmployeeController {
 	
 	@PostMapping(value = "/getEmployeeByMobileno") 
 	public ResponseEntity<EmployeeResponse1> findEmployeeByNameAndMobileNo(@RequestBody EmployeeDto1 employeeDto) {
-		EmployeeResponse1 employeeResponse1 = employeeService.verifyEmpNameAndMobileNo(employeeDto.getRefBrId(), employeeDto.getRefCustId(), employeeDto.getEmpName(), employeeDto.getEmpMobile());
+		EmployeeResponse1 employeeResponse1 = employeeService.verifyMobileNo(employeeDto.getRefBrId(), employeeDto.getRefCustId(),employeeDto.getEmpMobile());
 		if (employeeResponse1 !=null){
 			return new ResponseEntity<EmployeeResponse1>(employeeResponse1, HttpStatus.OK);
 		}
@@ -39,5 +41,15 @@ public class EmployeeController {
 		}
 		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
+	
+
+	@PostMapping(value = "/generateOtp")
+    public ResponseEntity<OtpResponseDto> generateOtp(@RequestBody EmployeeDto1 employeeDto1) {
+		OtpResponseDto otpResponseDto = employeeService.generateOtp(employeeDto1.getEmpMobile());
+        if (otpResponseDto !=null){
+            return new ResponseEntity<OtpResponseDto>(otpResponseDto, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
 
 }
