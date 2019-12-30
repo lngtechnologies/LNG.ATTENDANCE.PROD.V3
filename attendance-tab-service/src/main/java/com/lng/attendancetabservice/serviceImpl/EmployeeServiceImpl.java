@@ -69,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				employeeResponse1.status = new Status(true, 400, "Invalid mobile number");
 			}
 		}catch (Exception e){
-			employeeResponse1.status = new Status(true, 500, e.getMessage());
+			employeeResponse1.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return employeeResponse1;
 	}
