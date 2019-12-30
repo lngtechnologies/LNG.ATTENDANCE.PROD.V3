@@ -1,7 +1,5 @@
 package com.lng.dto.tabService;
 
-import java.util.List;
-
 import status.Status;
 
 public class EmployeeResponse1 {

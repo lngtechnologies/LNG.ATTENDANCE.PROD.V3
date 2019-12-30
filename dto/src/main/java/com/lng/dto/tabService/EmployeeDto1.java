@@ -15,6 +15,13 @@ public class EmployeeDto1 {
 	private String empPresistedFaceId;
 
 	private String employeePic;
+	
+	private String shiftStartTime;
+	
+	private String shiftEndTime;
+	
+	private String shiftType;
+
 
 	public Integer getRefBrId() {
 		return refBrId;
@@ -70,6 +77,30 @@ public class EmployeeDto1 {
 
 	public void setEmployeePic(String employeePic) {
 		this.employeePic = employeePic;
+	}
+
+	public String getShiftStartTime() {
+		return shiftStartTime;
+	}
+
+	public void setShiftStartTime(String shiftStartTime) {
+		this.shiftStartTime = shiftStartTime;
+	}
+
+	public String getShiftEndTime() {
+		return shiftEndTime;
+	}
+
+	public void setShiftEndTime(String shiftEndTime) {
+		this.shiftEndTime = shiftEndTime;
+	}
+
+	public String getShiftType() {
+		return shiftType;
+	}
+
+	public void setShiftType(String shiftType) {
+		this.shiftType = shiftType;
 	}
 
 

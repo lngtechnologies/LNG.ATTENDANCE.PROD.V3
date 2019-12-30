@@ -1,7 +1,5 @@
 package com.lng.attendancetabservice.repositories;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -18,9 +16,14 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	@Query(value = "SELECT emp.* FROM tmemployee emp WHERE refBrId =?1 AND refCustId =?2 AND empMobile=?3", nativeQuery = true)
 	Employee checkEmployeeExistsOrNot(Integer refBrId,Integer refCustId,String empMobile);
 	
-	@Query(value = " SELECT empId,empName FROM tmemployee emp WHERE empMobile=?1", nativeQuery = true)
-	List<Object[]> findEmployee(String empMobile);
+	//@Query(value = " SELECT empId,empName FROM tmemployee emp WHERE empMobile=?1", nativeQuery = true)
+	//List<Object[]> findEmployee(String empMobile);
 	
 	Employee findByempId(Integer empId);
 	
+	@Query(value = "SELECT e.* FROM tmemployee e WHERE e.empMobile = ?1", nativeQuery = true)
+	Employee findEmployeeByEmpMobile(String empMobile);
+	
+	@Query(value = "select s.* ,e.* from tmshift s left join ttempshift es on s.shiftId = es.refShiftId  Left join tmemployee e on e.empId = es.refEmpId WHERE e.empMobile = ?1 AND es.shiftToDate IS NULL AND s.shiftIsActive = TRUE", nativeQuery = true)
+	Employee findEmployee(String empMobile);
 }
