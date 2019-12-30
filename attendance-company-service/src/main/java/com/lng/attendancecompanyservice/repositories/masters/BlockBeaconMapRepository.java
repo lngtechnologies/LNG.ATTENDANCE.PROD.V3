@@ -40,5 +40,8 @@ public interface BlockBeaconMapRepository extends PagingAndSortingRepository<Blo
 	@Query(value = "CALL getBlockBeaconMapByCustId(?1)", nativeQuery = true)
 	List<BlockBeaconMap> findByCustomer_CustId(Integer custId);
 	
+	@Query(value = "CALL getBlockBeaconMapDetailsByCustIdAndBrId(?1,?2)", nativeQuery = true)
+	List<Object[]> findByCustomer_CustIdAndBranch_BrId(Integer custId,Integer brId);
+	
 	List<BlockBeaconMap> findByBlock_BlkIdAndBlkBeaconMapIsActive(Integer blkId, Boolean blkBeaconMapIsActive);
 }
