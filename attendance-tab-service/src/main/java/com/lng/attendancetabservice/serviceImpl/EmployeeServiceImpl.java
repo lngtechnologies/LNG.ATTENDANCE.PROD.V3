@@ -1,6 +1,5 @@
 package com.lng.attendancetabservice.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -44,9 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					employeeResponse1.setData1(employeeDto1);
 					employeeResponse1.status = new Status(false,200, "success");
 				}
-
 			}
-
 		}catch (Exception e){
 			employeeResponse1.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
@@ -62,7 +59,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			if(employee != null){
 				employee.setEmpPresistedFaceId(employeeDto1.getEmpPresistedFaceId());
 				employeeRepository.save(employee);
-				try {
+				
 					employeePic = employeePicRepository.findByEmployee_EmpId(employee.getEmpId());
 
 					if(employeePic == null) {
@@ -77,9 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 						employeePicRepository.save(employeePic);
 						status = new Status(false, 200, "successfully updated");
 					}
-				} catch (Exception e) {
-					status = new Status(true, 500, "Oops..! Something went wrong..");
-				}
+				
 			}else {
 				status = new Status(false,400," Employee Not found");
 			}
