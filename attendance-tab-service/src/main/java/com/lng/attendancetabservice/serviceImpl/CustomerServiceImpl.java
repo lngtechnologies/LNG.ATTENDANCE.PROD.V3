@@ -56,7 +56,7 @@ public class CustomerServiceImpl implements CustomerService {
 				}
 			}
 		} catch(Exception ex) {
-			otpResponseDto.status = new Status(true,500,ex.getMessage());
+			otpResponseDto.status = new Status(true,500,"Oops..! Something went wrong..");
 		}
 		return otpResponseDto;
 	}

@@ -31,7 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	MessageUtil messageUtil = new MessageUtil();
 	@Autowired
 	ShiftRepository shiftRepository;
-	
+
 
 
 	@Override
@@ -143,7 +143,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 				}
 			}
 		} catch(Exception ex) {
-			otpResponseDto.status = new Status(true,500,ex.getMessage());
+			otpResponseDto.status = new Status(true,500,"Oops..! Something went wrong..");
 		}
 		return otpResponseDto;
 	}
