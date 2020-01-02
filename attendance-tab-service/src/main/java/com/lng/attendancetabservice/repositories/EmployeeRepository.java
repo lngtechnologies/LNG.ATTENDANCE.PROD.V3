@@ -13,7 +13,7 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	int generateOtp();
 	
 	
-	@Query(value = "SELECT emp.* FROM tmemployee emp WHERE refBrId =?1 AND refCustId =?2 AND empMobile=?3", nativeQuery = true)
+	@Query(value = "SELECT emp.* FROM tmemployee emp WHERE refBrId =?1 AND refCustId =?2 AND empMobile=?3 AND empInService=TRUE", nativeQuery = true)
 	Employee checkEmployeeExistsOrNot(Integer refBrId,Integer refCustId,String empMobile);
 	
 	//@Query(value = " SELECT empId,empName FROM tmemployee emp WHERE empMobile=?1", nativeQuery = true)
@@ -21,9 +21,9 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	
 	Employee findByempId(Integer empId);
 	
-	@Query(value = "SELECT e.* FROM tmemployee e WHERE e.empMobile = ?1", nativeQuery = true)
+	@Query(value = "SELECT e.* FROM tmemployee e WHERE e.empMobile = ?1 AND e.empInService=TRUE", nativeQuery = true)
 	Employee findEmployeeByEmpMobile(String empMobile);
 	
-	@Query(value = "select s.* ,e.* from tmshift s left join ttempshift es on s.shiftId = es.refShiftId  Left join tmemployee e on e.empId = es.refEmpId WHERE e.empMobile = ?1 AND es.shiftToDate IS NULL AND s.shiftIsActive = TRUE", nativeQuery = true)
+	@Query(value = "SELECT e.* FROM tmemployee e WHERE e.empMobile = ?1 AND e.empInService=TRUE;", nativeQuery = true)
 	Employee findEmployee(String empMobile);
 }
