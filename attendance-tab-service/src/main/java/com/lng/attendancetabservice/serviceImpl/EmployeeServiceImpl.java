@@ -67,6 +67,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 				} else {
 					employeeResponse1.status = new Status(true, 400, "Shift not found for this employee");
 				}
+
+
 			} else {
 				employeeResponse1.status = new Status(true, 400, "Invalid mobile number");
 			}
@@ -85,7 +87,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			if(employee != null){
 				employee.setEmpPresistedFaceId(employeeDto1.getEmpPresistedFaceId());
 				employeeRepository.save(employee);
-				try {
+				
 					employeePic = employeePicRepository.findByEmployee_EmpId(employee.getEmpId());
 
 					if(employeePic == null) {
@@ -100,9 +102,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 						employeePicRepository.save(employeePic);
 						status = new Status(false, 200, "successfully updated");
 					}
-				} catch (Exception e) {
-					status = new Status(true, 500, "Oops..! Something went wrong..");
-				}
+				
 			}else {
 				status = new Status(false,400," Employee Not found");
 			}

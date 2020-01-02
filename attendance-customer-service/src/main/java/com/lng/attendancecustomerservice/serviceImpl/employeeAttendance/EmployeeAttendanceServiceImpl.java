@@ -285,6 +285,8 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 			String pattern = "yyyy-MM-dd'T'HH:mm:ss";
 			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 			dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+
+
 			Date date = new Date();
 			String sysDate = dateFormat.format(date);
 			// dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));

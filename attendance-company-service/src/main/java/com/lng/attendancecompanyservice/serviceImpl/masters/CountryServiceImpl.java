@@ -133,25 +133,25 @@ public class CountryServiceImpl implements CountryService {
 					}
 				}
 				else if( cu1!= null && cu1.getCountryId() == countryDto.getCountryId() ) {
-					Country he1 = countryRepositary.findByCountryTelCode(countryDto.getCountryTelCode());
-					if(he1 == null) {
+					Country te1 = countryRepositary.findByCountryTelCode(countryDto.getCountryTelCode());
+					if(te1 == null) {
 						country = modelMapper.map(countryDto,Country.class);
 						country.setCountryIsActive(true);
 						countryRepositary.save(country);
 						status = new Status(false, 200, "successfully updated");
-					} else if (he1.getCountryId() == countryDto.getCountryId()) { 
+					} else if (te1.getCountryId() == countryDto.getCountryId()) { 
 						country = modelMapper.map(countryDto,Country.class);
 						country.setCountryIsActive(true);
 						countryRepositary.save(country);
 						status = new Status(false, 200, "successfully updated");
-					}
-					else{ 
+					}else{ 
 
 						status = new Status(true,400,"Country code already exists");
 
 					}
 				}
 				else{ 
+
 					status = new Status(true,400,"Country already exists");
 				}
 			}

@@ -36,10 +36,13 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	@Autowired
 	EmployeeAttendanceRepository employeeAttendanceRepository;
 
+<<<<<<< HEAD
 	@Autowired
 	UnmatchedEmployeeAttendanceRepository unmatchedEmpAttndRepo;
 
 
+=======
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	@Override
 	public EmpAttendanceResponse getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId, String empAttendanceDate) {
 		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
