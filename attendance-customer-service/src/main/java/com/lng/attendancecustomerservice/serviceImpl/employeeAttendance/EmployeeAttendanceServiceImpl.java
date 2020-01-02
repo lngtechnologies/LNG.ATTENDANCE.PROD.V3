@@ -290,10 +290,8 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 			String pattern = "yyyy-MM-dd'T'HH:mm:ss";
 			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 			dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
-<<<<<<< HEAD
-			 Date date = new Date();
-			String sysDate = dateFormat.format(date);			
-=======
+
+
 			Date date = new Date();
 			String sysDate = dateFormat.format(date);
 			// dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
@@ -301,7 +299,6 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 			//Calendar today = Calendar.getInstance(istTimeZone);
 			//currentDateDto.setCurrentDate(dateFormat.format(today.getTime()));
 
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			currentDateDto.setCurrentDate(sysDate);
 
 		} catch (Exception e) {
