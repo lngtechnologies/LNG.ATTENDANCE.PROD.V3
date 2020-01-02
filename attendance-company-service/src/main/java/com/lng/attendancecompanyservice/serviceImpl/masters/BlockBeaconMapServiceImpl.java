@@ -412,6 +412,59 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 		return statusDto;
 	}
 
+	@Override
+	public BlockAndBeaconCodeMapDto findByCustIdAndBrId(Integer custId, Integer brId) {
+		BlockAndBeaconCodeMapDto blockAndBeaconCodeMapDto = new BlockAndBeaconCodeMapDto();
+
+		List<BlockBeaconMapResponseDto> blockBeaconMapLists = new ArrayList<>();
+
+		try {
+			List<Object[]> blockBeaconMapList =  blockBeaconMapRepository.findByCustomer_CustIdAndBranch_BrId(custId,brId);
+
+			for(Object[] p: blockBeaconMapList) {
+				BlockBeaconMapResponseDto beaconMapResponse = new BlockBeaconMapResponseDto();
+
+				List<BlockBeaconCodeDto> beaconCodeDtos = new ArrayList<>();
+
+				beaconMapResponse.setRefBlkId(Integer.valueOf(p[0].toString()));
+				beaconMapResponse.setBlkLogicalName(p[1].toString());
+				beaconMapResponse.setBrId(Integer.valueOf(p[2].toString()));
+				beaconMapResponse.setBrName(p[3].toString());
+				beaconMapResponse.setCustId(Integer.valueOf(p[4].toString()));
+
+				blockBeaconMapLists.add(beaconMapResponse);
+				blockAndBeaconCodeMapDto.setBeaconMapResponseDtoList(blockBeaconMapLists);
+
+				List<Object[]> beaconCodes =  blockBeaconMapRepository.findBeaconCodeByBlkId(beaconMapResponse.getRefBlkId());
+
+				for(Object[] b: beaconCodes) {
+
+					if(Integer.valueOf(b[1].toString()) == beaconMapResponse.getRefBlkId()) {
+						BlockBeaconCodeDto beaconCodeDto = new BlockBeaconCodeDto();
+						beaconCodeDto.setBlkBeaconMapId(Integer.valueOf(b[0].toString()));
+						beaconCodeDto.setRefBlkId(Integer.valueOf(b[1].toString()));
+						beaconCodeDto.setBeaconCode(b[2].toString());
+						beaconCodeDto.setBeaconType(Integer.valueOf(b[3].toString()));
+
+						beaconCodeDtos.add(beaconCodeDto);
+					}
+				}
+				beaconMapResponse.setBeaconCodeDtoList(beaconCodeDtos);
+			}
+
+			if(!blockBeaconMapList.isEmpty()) {
+				blockAndBeaconCodeMapDto.status = new Status(false, 200, "Success");
+			}else {
+				blockAndBeaconCodeMapDto.status = new Status(false, 400, "Not found");
+			}
+		}
+		catch (Exception e) {
+
+			blockAndBeaconCodeMapDto.status = new Status(true, 5000, "Oops...! Something went wrong!");
+		}
+		return blockAndBeaconCodeMapDto;
+	}
+
 
 
 }

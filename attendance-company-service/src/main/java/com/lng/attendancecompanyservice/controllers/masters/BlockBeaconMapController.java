@@ -86,6 +86,15 @@ public class BlockBeaconMapController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
+	
+	@PostMapping(value = "/getAllByCustIdAndBrId")
+	public ResponseEntity<BlockAndBeaconCodeMapDto> getAllByCustIdAndBrId(@RequestBody BlockBeaconMapDto blockBeaconMapDto) {
+		BlockAndBeaconCodeMapDto blockResponse = blockBeaconMapService.findByCustIdAndBrId(blockBeaconMapDto.getCustId(),blockBeaconMapDto.getBrId());
+		if (blockResponse != null) {
+			return new ResponseEntity<BlockAndBeaconCodeMapDto>(blockResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 }
 
 

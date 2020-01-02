@@ -61,7 +61,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 
 			Shift shift = shiftRepository.getByEmpId(empId);
 			Employee employee = employeeRepository.getByEmpId(empId);
-			
+
 			if(shift != null) {
 				shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 				shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
@@ -132,16 +132,19 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 	@Override
 	public Status saveSignIn(List<EmployeeAttendanceDto> employeeAttendanceDtos) {
 		Status status = null;
+		EmployeeAttendance employeeAttendance1 = new EmployeeAttendance();
 
 		try {
 			for(EmployeeAttendanceDto employeeAttendanceDto : employeeAttendanceDtos) {
-				EmployeeAttendance employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceInModeAndEmpAttendanceInDatetimeAndEmpAttendanceInLatLong
-						(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceInMode(), employeeAttendanceDto.getEmpAttendanceInDatetime(), employeeAttendanceDto.getEmpAttendanceInLatLong());
+				/*EmployeeAttendance employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceInModeAndEmpAttendanceInDatetimeAndEmpAttendanceInLatLong
+						(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceInMode(), employeeAttendanceDto.getEmpAttendanceInDatetime(), employeeAttendanceDto.getEmpAttendanceInLatLong());*/
 
 				Employee employee = employeeRepository.getByEmpId(employeeAttendanceDto.getRefEmpId());
+				employeeAttendance1 = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceDate(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceDate());
+
 				if(employee != null) {
-					if(employeeAttendance == null) {
-						EmployeeAttendance employeeAttendance1 = new EmployeeAttendance();
+					if(employeeAttendance1 == null) {
+						employeeAttendance1 = new EmployeeAttendance();
 						employeeAttendance1.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
 						employeeAttendance1.setEmployee(employee);
 						employeeAttendance1.setEmpAttendanceInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
@@ -152,14 +155,21 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 
 						employeeAttendanceRepository.save(employeeAttendance1);
 						status = new Status(false, 200, "Successfully attendance marked");
+					}else {
+						employeeAttendance1.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
+						employeeAttendance1.setEmployee(employee);
+						employeeAttendance1.setEmpAttendanceInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
+						employeeAttendance1.setEmpAttendanceConsiderInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
+						employeeAttendance1.setEmpAttendanceInMode(employeeAttendanceDto.getEmpAttendanceInMode());
+						employeeAttendance1.setEmpAttendanceInLatLong(employeeAttendanceDto.getEmpAttendanceInLatLong());
+						employeeAttendance1.setEmpAttendanceInConfidence(employeeAttendanceDto.getEmpAttendanceInConfidence());
 
-					} else {
+						employeeAttendanceRepository.save(employeeAttendance1);
 						status = new Status(false, 200, "Successfully attendance marked");
-					} 
-
-				}else {
-					status = new Status(false, 400, "Employee not found");
-				}
+					}
+				} else {
+					status = new Status(false, 200, "Employee not found");
+				} 
 			}
 
 		} catch (Exception e) {
@@ -172,38 +182,48 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 	@Override
 	public Status saveSignOut(List<EmployeeAttendanceDto> employeeAttendanceDtos) {
 		Status status = null;
-
+		EmployeeAttendance  emAttendance = new  EmployeeAttendance();
+		UnmatchedEmployeeAttendance unmatchedEmployeeAttendance = new UnmatchedEmployeeAttendance();
 		try {
 			for(EmployeeAttendanceDto employeeAttendanceDto : employeeAttendanceDtos) {
 				EmployeeAttendance employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceDateAndEmpAttendanceOutModeAndEmpAttendanceOutDatetimeAndEmpAttendanceOutLatLong
 						(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceDate(),employeeAttendanceDto.getEmpAttendanceOutMode(), employeeAttendanceDto.getEmpAttendanceOutDatetime(), employeeAttendanceDto.getEmpAttendanceOutLatLong());
 
-
-				if(employeeAttendance == null) {
-					
-						List<EmployeeAttendance> employeeAttendanceList = employeeAttendanceRepository.findAllByEmployee_EmpIdAndEmpAttendanceDate(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceDate());
-						
-						if(!employeeAttendanceList.isEmpty()) {
-							
-							for(EmployeeAttendance emAttendance: employeeAttendanceList) {
-								emAttendance.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
-								emAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
-								emAttendance.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
-								emAttendance.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
-								emAttendance.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
-
-								employeeAttendanceRepository.save(emAttendance);
-								status = new Status(false, 200, "Successfully attendance marked");
-							}
-							
-						}else {
-							status = new Status(false, 400, "Employee not found");
+				Employee employee = employeeRepository.getByEmpId(employeeAttendanceDto.getRefEmpId());
+				if(employee != null) {
+					emAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceDate(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceDate());
+					if(emAttendance != null) {
+						if(employeeAttendance == null) {
+							emAttendance.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+							emAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+							emAttendance.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
+							emAttendance.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
+							emAttendance.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
+							employeeAttendanceRepository.save(emAttendance);
+							status = new Status(false, 200, "Successfully attendance marked");
+						} else {
+							emAttendance.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+							emAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+							emAttendance.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
+							emAttendance.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
+							emAttendance.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
+							employeeAttendanceRepository.save(emAttendance);
+							status = new Status(false, 200, "Successfully attendance marked");
 						}
-					} else {
-						status = new Status(false, 200, "Successfully attendance marked"); 
+					}else {
+						unmatchedEmployeeAttendance.setEmployee(employee);
+						unmatchedEmployeeAttendance.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+						unmatchedEmployeeAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+						unmatchedEmployeeAttendance.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
+						unmatchedEmployeeAttendance.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
+						unmatchedEmployeeAttendance.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
+						unmatchedEmpAttndRepo.save(unmatchedEmployeeAttendance);
+						status = new Status(true, 400, "Un Matched attendance found, Please contact your manager to rectify the same.");
+					}
+				}else {
+					status = new Status(false, 200, "Employee not found");
 				}
 			}
-
 		} catch (Exception e) {
 
 			status = new Status(true, 500, "Opps..! Something went wrong..");
@@ -266,14 +286,24 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 	public CurrentDateDto getCurrentDate() {
 		CurrentDateDto currentDateDto = new CurrentDateDto();
 		try {
-			
+
 			String pattern = "yyyy-MM-dd'T'HH:mm:ss";
 			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 			dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+<<<<<<< HEAD
 			 Date date = new Date();
 			String sysDate = dateFormat.format(date);			
+=======
+			Date date = new Date();
+			String sysDate = dateFormat.format(date);
+			// dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+			//TimeZone istTimeZone = TimeZone.getTimeZone("Asia/Kolkata");    //Source timezone
+			//Calendar today = Calendar.getInstance(istTimeZone);
+			//currentDateDto.setCurrentDate(dateFormat.format(today.getTime()));
+
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			currentDateDto.setCurrentDate(sysDate);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

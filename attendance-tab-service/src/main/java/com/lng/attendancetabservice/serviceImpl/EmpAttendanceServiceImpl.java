@@ -87,9 +87,6 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 			}else {
 				status = new Status(false, 400, "Employee not found");
 			}
-
-
-
 		}catch(Exception e) {
 
 			status = new Status(true, 500, "Opps..! Something went wrong..");
