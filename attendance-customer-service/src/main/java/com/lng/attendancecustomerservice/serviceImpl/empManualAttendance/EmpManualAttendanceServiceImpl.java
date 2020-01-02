@@ -17,9 +17,13 @@ import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeReposi
 import com.lng.attendancecustomerservice.repositories.empManualAttendance.EmpManualAttendanceRepository;
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.EmployeeAttendanceRepository;
 import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
+import com.lng.dto.empAttendance.EmpAttendResponseDto;
+import com.lng.dto.empAttendance.EmpAttendaceOutDto;
+import com.lng.dto.empAttendance.EmpAttendanceInDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
+import com.lng.dto.empAttendance.EmpManualAttendance;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
 
 import status.Status;
@@ -356,7 +360,6 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 				} else {
 					for (Object[] p : empAttendance) {
-
 						EmpAttendanceParamDto2 EmpAttendanceDto1 = new EmpAttendanceParamDto2();
 						EmpAttendanceDto1.setRefEmpId(Integer.valueOf(p[0].toString()));
 						EmpAttendanceDto1.setEmpName((p[1].toString()));
@@ -370,17 +373,12 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						empAttendanceDtoList.add(EmpAttendanceDto1);
 						empAttendanceResponse.status = new Status(false, 200, "success");
 					}
-
 				}
-
 			} else {
 				empAttendanceResponse.status = new Status(true, 400, "Please enter more than 3 character");
-
 			} 
-
 		} catch (Exception e) {
 			empAttendanceResponse.status = new Status(true, 500, "Opps..! Something went wrong..");
-
 		}
 		empAttendanceResponse.setData2(empAttendanceDtoList);
 		return empAttendanceResponse;
@@ -409,6 +407,59 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			status = new Status(true, 500, "Opps..! Something went wrong..");
 		}
 		return status;
+	}
+
+	@Override
+	public EmpAttendResponseDto getEmpAttendanceBydeptIdAndEmpAttendanceDate(Integer deptId, String empAttendanceDate) {
+		EmpAttendResponseDto empAttendResponseDto = new EmpAttendResponseDto();
+		EmpManualAttendance empManualAttendanceDto = new EmpManualAttendance();
+		List<EmpAttendanceInDto> inList = new ArrayList<>();
+		List<EmpAttendaceOutDto> outList = new ArrayList<>();
+		
+		try {
+			List<Object[]> empInAttendance = empAttendanceRepository.findEmpInAttendanceByDeptAndDate(deptId, empAttendanceDate);
+			if(!empInAttendance.isEmpty()) {
+				for(Object[] p : empInAttendance) {
+					EmpAttendanceInDto empAttendanceInDto = new EmpAttendanceInDto();
+					empAttendanceInDto.setRefEmpId(Integer.valueOf(p[0].toString()));
+					empAttendanceInDto.setEmpName(p[1].toString());
+					empAttendanceInDto.setDeptId(Integer.valueOf(p[2].toString()));
+					empAttendanceInDto.setShiftName(p[3].toString());
+					empAttendanceInDto.setShiftStart(p[4].toString());
+					empAttendanceInDto.setShiftEnd(p[5].toString());
+					empAttendanceInDto.setEmpAttendanceId(Integer.valueOf(p[6].toString()));
+					empAttendanceInDto.setEmpAttendanceInDatetime(p[7].toString());
+					empAttendanceInDto.setEmpAttendanceOutDatetime(p[8].toString());
+					empAttendanceInDto.setEmpAttendanceDate(p[9].toString());
+					inList.add(empAttendanceInDto);
+					empManualAttendanceDto.setAttendanceInDetails(inList);		
+				}
+			}
+			
+			List<Object[]> empoutAttendance = empAttendanceRepository.findEmpOutAttendanceByDeptAndDate(deptId, empAttendanceDate);
+			if(!empoutAttendance.isEmpty()) {
+				for(Object[] p : empoutAttendance) {
+					EmpAttendaceOutDto empAttendanceOutDto = new EmpAttendaceOutDto();
+					empAttendanceOutDto.setRefEmpId(Integer.valueOf(p[0].toString()));
+					empAttendanceOutDto.setEmpName(p[1].toString());
+					empAttendanceOutDto.setDeptId(Integer.valueOf(p[2].toString()));
+					empAttendanceOutDto.setShiftName(p[3].toString());
+					empAttendanceOutDto.setShiftStart(p[4].toString());
+					empAttendanceOutDto.setShiftEnd(p[5].toString());
+					empAttendanceOutDto.setEmpAttendanceId(Integer.valueOf(p[6].toString()));
+					empAttendanceOutDto.setEmpAttendanceInDatetime(p[7].toString());
+					empAttendanceOutDto.setEmpAttendanceOutDatetime(p[8].toString());
+					empAttendanceOutDto.setEmpAttendanceDate(p[9].toString());
+					outList.add(empAttendanceOutDto);
+					empManualAttendanceDto.setAttendanceOutDetails(outList);
+				}
+			}
+			empAttendResponseDto.setResponse(empManualAttendanceDto);
+			empAttendResponseDto.status = new Status(false, 200, "Success");
+		} catch (Exception e) {
+			empAttendResponseDto.status = new Status(true, 500, "Oops..! Something went wrong");
+		}
+		return empAttendResponseDto;
 	}
 
 	/*@Override

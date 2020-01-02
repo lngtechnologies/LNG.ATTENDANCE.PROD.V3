@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
+import com.lng.dto.empAttendance.EmpAttendResponseDto;
 import com.lng.dto.empAttendance.EmpAttendanceDto;
+import com.lng.dto.empAttendance.EmpAttendanceInDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
@@ -109,5 +111,14 @@ public class EmpManualAttendanceController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}*/
+	 
+	 @PostMapping(value = "/getEmpAttndByDeptIdAndDate")
+		public ResponseEntity<EmpAttendResponseDto> edit(@RequestBody EmpAttendanceInDto empAttendanceDto) {
+		 EmpAttendResponseDto empAttendanceResponse = empAttendanceService.getEmpAttendanceBydeptIdAndEmpAttendanceDate(empAttendanceDto.getDeptId(), empAttendanceDto.getEmpAttendanceDate());
+			if(empAttendanceResponse !=null){
+				return new ResponseEntity<EmpAttendResponseDto>(empAttendanceResponse, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
 
 }

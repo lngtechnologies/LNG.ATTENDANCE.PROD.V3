@@ -3,6 +3,7 @@ package com.lng.attendancecustomerservice.service.empManualAttendance;
 import java.util.Date;
 import java.util.List;
 
+import com.lng.dto.empAttendance.EmpAttendResponseDto;
 import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
@@ -26,5 +27,7 @@ public interface EmpManualAttendanceService {
 	Status saveSignOut(List<EmployeeAttendanceDto> employeeAttendanceDtos);
 	
 	Status  updateEmpOverRideAttendance(EmployeeAttendanceDto employeeAttendanceDto);
+	
+	EmpAttendResponseDto getEmpAttendanceBydeptIdAndEmpAttendanceDate(Integer deptId , String empAttendanceDate);
 	
 }

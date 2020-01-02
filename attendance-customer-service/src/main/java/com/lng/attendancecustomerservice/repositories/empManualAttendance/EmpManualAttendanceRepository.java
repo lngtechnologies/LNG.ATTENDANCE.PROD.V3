@@ -26,5 +26,9 @@ public interface EmpManualAttendanceRepository extends PagingAndSortingRepositor
 	@Query(value = "CALL getEmployeeOverrideAttendance(?1,?2,?3)",nativeQuery = true)
 	EmpManualAttendance findEmpManualAttendanceByRefEmpIdAndRefCustIdAndEmpAttendanceConsiderDatetime(Integer refEmpId,Integer refCustId,Date empAttendanceConsiderDatetime);
 	
+	@Query(value = "CALL getEmpManualAttndInDetails(?1,?2)",nativeQuery = true)
+	List<Object[]> findEmpInAttendanceByDeptAndDate(Integer deptId, String empAttendanceDate);
 	
+	@Query(value = "CALL getEmpManualAttndOutDetails(?1,?2)",nativeQuery = true)
+	List<Object[]> findEmpOutAttendanceByDeptAndDate(Integer deptId, String empAttendanceDate);
 }
