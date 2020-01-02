@@ -18,9 +18,12 @@ public interface EmployeeAttendanceRepository extends PagingAndSortingRepository
 	@Query(value = "call getMaxAttndDateAndHrsByEmpId(?1)", nativeQuery = true)
 	List<Object[]> getSignOutDetailsByEmpId(Integer empId);
 	
+	EmployeeAttendance findEmployeeByEmpAttendanceDate(Date empAttendanceDate);
+	
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceInModeAndEmpAttendanceInDatetimeAndEmpAttendanceInLatLong(Integer refEmpId, String empAttendanceInMode, Date empAttendanceInDatetime,String empAttendanceInLatLong);
 	
-	List<EmployeeAttendance> findByEmployee_EmpIdAndEmpAttendanceInDatetime(Integer refEmpId, Date empAttendanceInDatetime);
+	//@Query(value = "call CheckAttendanceDateIsExistForEmployeeOrNot(?1,?2)", nativeQuery = true)
+	//EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceInDatetime( Date empAttendanceInDatetime,Integer refEmpId);
 	
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDate(Integer refEmpId, Date empAttendanceDate);
 	

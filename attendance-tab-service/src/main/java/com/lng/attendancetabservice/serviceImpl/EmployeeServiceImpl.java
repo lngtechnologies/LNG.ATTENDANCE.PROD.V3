@@ -64,6 +64,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 					}
 					employeeResponse1.setData1(employeeDto2);
 					employeeResponse1.status = new Status(false,200, "success");
+				} else {
+					employeeResponse1.status = new Status(true, 400, "Shift not found for this employee");
 				}
 			} else {
 				employeeResponse1.status = new Status(true, 400, "Invalid mobile number");

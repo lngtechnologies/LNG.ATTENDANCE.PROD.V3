@@ -1,11 +1,9 @@
 package com.lng.attendancecustomerservice.serviceImpl.empManualAttendance;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.empManualAttendance.EmpManualAttendanceRepository;
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.EmployeeAttendanceRepository;
+import com.lng.attendancecustomerservice.repositories.employeeAttendance.UnmatchedEmployeeAttendanceRepository;
 import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
@@ -36,6 +35,9 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 	@Autowired
 	EmployeeAttendanceRepository employeeAttendanceRepository;
+
+	@Autowired
+	UnmatchedEmployeeAttendanceRepository unmatchedEmpAttndRepo;
 
 
 	@Override
@@ -94,11 +96,9 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						EmpAttendanceDto1.setEmpAttendanceDate("NA");
 					}
 
-
 					empAttendanceDtoList.add(EmpAttendanceDto1);
 					empAttendanceResponse.status = new Status(false, 200, "success");
 				}
-
 			}
 
 		} catch (Exception e) {
@@ -113,19 +113,16 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	public Status saveEmpAttnd(List<EmployeeAttendanceDto> employeeAttendanceDtos) {
 		Status status = null;
 		BigDecimal bd = new BigDecimal(100.100);
+		EmployeeAttendance employeeAttendance1 = new EmployeeAttendance();
 		try {
 			for(EmployeeAttendanceDto employeeAttendanceDto : employeeAttendanceDtos) {
-
-				List<EmployeeAttendance> employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceInDatetime(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceInDatetime());
-
+				employeeAttendance1 = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceDate(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceDate());
 				EmployeeAttendance employeeAttendance2 = employeeAttendanceRepository.findByEmpAttendanceId(employeeAttendanceDto.getEmpAttendanceId());
-
 				Employee employee = employeeRepository.getByEmpId(employeeAttendanceDto.getRefEmpId());
 				if(employee != null) {
-					if(employeeAttendance.isEmpty()) {
-
-						if(employeeAttendance2 == null) {
-							EmployeeAttendance employeeAttendance1 = new EmployeeAttendance();
+					if(employeeAttendance2 == null) {
+						if(employeeAttendance1 == null) {
+							employeeAttendance1 = new EmployeeAttendance();
 							employeeAttendance1.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
 							employeeAttendance1.setEmployee(employee);
 							employeeAttendance1.setEmpAttendanceInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
@@ -172,58 +169,101 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							employeeAttendanceRepository.save(employeeAttendance1);
 							status = new Status(false, 200, "Attendance IN marked successfully");
 						} else {
-
-							employeeAttendance2.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
-							employeeAttendance2.setEmployee(employee);
-							employeeAttendance2.setEmpAttendanceInDatetime(employeeAttendance2.getEmpAttendanceInDatetime());
-							employeeAttendance2.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
-							employeeAttendance2.setEmpAttendanceConsiderInDatetime(employeeAttendance2.getEmpAttendanceConsiderInDatetime());
-							employeeAttendance2.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+							//employeeAttendance1 = new EmployeeAttendance();
+							employeeAttendance1.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
+							employeeAttendance1.setEmployee(employee);
+							employeeAttendance1.setEmpAttendanceInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
+							employeeAttendance1.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+							employeeAttendance1.setEmpAttendanceConsiderInDatetime(employeeAttendanceDto.getEmpAttendanceInDatetime());
+							employeeAttendance1.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
 
 							if(employeeAttendanceDto.getEmpAttendanceInMode() == null) {
-								employeeAttendance2.setEmpAttendanceInMode("D");
+								employeeAttendance1.setEmpAttendanceInMode("D");
 							}else {
-								employeeAttendance2.setEmpAttendanceInMode(employeeAttendanceDto.getEmpAttendanceInMode());
+								employeeAttendance1.setEmpAttendanceInMode(employeeAttendanceDto.getEmpAttendanceInMode());
 							}
 
 							if(employeeAttendanceDto.getEmpAttendanceOutMode() == null) {
-								employeeAttendance2.setEmpAttendanceOutMode("D");
+								employeeAttendance1.setEmpAttendanceOutMode("D");
 							}else {
-								employeeAttendance2.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
+								employeeAttendance1.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
 							}
 
 							if(employeeAttendanceDto.getEmpAttendanceInLatLong() == null) {
-								employeeAttendance2.setEmpAttendanceInLatLong("00.0000, 00.0000");
+								employeeAttendance1.setEmpAttendanceInLatLong("00.0000, 00.0000");
 							}else {
-								employeeAttendance2.setEmpAttendanceInLatLong(employeeAttendanceDto.getEmpAttendanceInLatLong());
+								employeeAttendance1.setEmpAttendanceInLatLong(employeeAttendanceDto.getEmpAttendanceInLatLong());
 							}
 
 							if(employeeAttendanceDto.getEmpAttendanceOutLatLong() == null) {
-								employeeAttendance2.setEmpAttendanceOutLatLong("00.0000, 00.0000");
+								employeeAttendance1.setEmpAttendanceOutLatLong("00.0000, 00.0000");
 							}else {
-								employeeAttendance2.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
+								employeeAttendance1.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
 							}
 
 							if(employeeAttendanceDto.getEmpAttendanceInConfidence() == null) {
-								employeeAttendance2.setEmpAttendanceInConfidence(bd);
+								employeeAttendance1.setEmpAttendanceInConfidence(bd);
 							}else {
-								employeeAttendance2.setEmpAttendanceInConfidence(employeeAttendanceDto.getEmpAttendanceInConfidence());
+								employeeAttendance1.setEmpAttendanceInConfidence(employeeAttendanceDto.getEmpAttendanceInConfidence());
 							}
 
 							if(employeeAttendanceDto.getEmpAttendanceOutConfidence() == null) {
-								employeeAttendance2.setEmpAttendanceOutConfidence(bd);
+								employeeAttendance1.setEmpAttendanceOutConfidence(bd);
 							}else {
-								employeeAttendance2.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
+								employeeAttendance1.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
 							}
 
-							employeeAttendanceRepository.save(employeeAttendance2);
-							status = new Status(false, 200, "Attendance OUT marked successfully");
+							employeeAttendanceRepository.save(employeeAttendance1);
+							status = new Status(false, 200, "Attendance IN marked successfully");
+
+						}
+					} else {
+						employeeAttendance2.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
+						employeeAttendance2.setEmployee(employee);
+						employeeAttendance2.setEmpAttendanceInDatetime(employeeAttendance2.getEmpAttendanceInDatetime());
+						employeeAttendance2.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+						employeeAttendance2.setEmpAttendanceConsiderInDatetime(employeeAttendance2.getEmpAttendanceConsiderInDatetime());
+						employeeAttendance2.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
+
+						if(employeeAttendanceDto.getEmpAttendanceInMode() == null) {
+							employeeAttendance2.setEmpAttendanceInMode("D");
+						}else {
+							employeeAttendance2.setEmpAttendanceInMode(employeeAttendanceDto.getEmpAttendanceInMode());
 						}
 
-					} else {
-						status = new Status(false, 200, "Attendance IN marked successfully");
-					} 
+						if(employeeAttendanceDto.getEmpAttendanceOutMode() == null) {
+							employeeAttendance2.setEmpAttendanceOutMode("D");
+						}else {
+							employeeAttendance2.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
+						}
 
+						if(employeeAttendanceDto.getEmpAttendanceInLatLong() == null) {
+							employeeAttendance2.setEmpAttendanceInLatLong("00.0000, 00.0000");
+						}else {
+							employeeAttendance2.setEmpAttendanceInLatLong(employeeAttendanceDto.getEmpAttendanceInLatLong());
+						}
+
+						if(employeeAttendanceDto.getEmpAttendanceOutLatLong() == null) {
+							employeeAttendance2.setEmpAttendanceOutLatLong("00.0000, 00.0000");
+						}else {
+							employeeAttendance2.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
+						}
+
+						if(employeeAttendanceDto.getEmpAttendanceInConfidence() == null) {
+							employeeAttendance2.setEmpAttendanceInConfidence(bd);
+						}else {
+							employeeAttendance2.setEmpAttendanceInConfidence(employeeAttendanceDto.getEmpAttendanceInConfidence());
+						}
+
+						if(employeeAttendanceDto.getEmpAttendanceOutConfidence() == null) {
+							employeeAttendance2.setEmpAttendanceOutConfidence(bd);
+						}else {
+							employeeAttendance2.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
+						}
+
+						employeeAttendanceRepository.save(employeeAttendance2);
+						status = new Status(false, 200, "Attendance OUT marked successfully");
+					}
 				}else {
 					status = new Status(false, 400, "Employee not found");
 				}

@@ -11,7 +11,7 @@ import com.lng.attendancetabservice.entity.Customer;
 @Repository
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer> {
 
-	@Query(value = "SELECT tc.* FROM tmcustomer tc LEFT JOIN tmbranch tb ON tb.refCustomerId = tc.custId WHERE custCode = ?1 AND brCode = ?2", nativeQuery = true)
+	@Query(value = "SELECT tc.* FROM tmcustomer tc LEFT JOIN tmbranch tb ON tb.refCustomerId = tc.custId WHERE custCode = ?1 AND brCode = ?2 AND tc.custIsActive =TRUE AND tb.brIsActive = TRUE", nativeQuery = true)
 	Customer findByCustomer_CustCodeAndBranch_BrCode(String custCode,String brCode);
 	
 	@Query(value = " CALL getCustBranchDetails(?1,?2)", nativeQuery = true)

@@ -1,11 +1,6 @@
 package com.lng.attendancecustomerservice.serviceImpl.employeeAttendance;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -27,7 +22,6 @@ import com.lng.dto.employeeAttendance.CurrentDateDto;
 import com.lng.dto.employeeAttendance.EmpSignOutDto;
 import com.lng.dto.employeeAttendance.EmpSignOutResponse;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
-import com.lng.dto.employeeAttendance.MaxAttndDateAndHrs;
 import com.lng.dto.employeeAttendance.ShiftDetailsDto;
 import com.lng.dto.employeeAttendance.ShiftResponseDto;
 
@@ -77,7 +71,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 				shiftResponseDto.setDetailsDto(shiftDetailsDto);
 				shiftResponseDto.status = new Status(false, 200, "Success");
 			} else {
-				shiftResponseDto.status = new Status(false, 400, "Shift not found for this employee");
+				shiftResponseDto.status = new Status(true, 400, "Shift not found for this employee");
 			}
 
 		} catch (Exception e) {
@@ -168,7 +162,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 						status = new Status(false, 200, "Successfully attendance marked");
 					}
 				} else {
-					status = new Status(false, 200, "Employee not found");
+					status = new Status(true, 400, "Employee not found");
 				} 
 			}
 
@@ -212,6 +206,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 						}
 					}else {
 						unmatchedEmployeeAttendance.setEmployee(employee);
+						unmatchedEmployeeAttendance.setEmpAttendanceDate(new Date());
 						unmatchedEmployeeAttendance.setEmpAttendanceOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
 						unmatchedEmployeeAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceOutDatetime());
 						unmatchedEmployeeAttendance.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
@@ -221,7 +216,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 						status = new Status(true, 400, "Un Matched attendance found, Please contact your manager to rectify the same.");
 					}
 				}else {
-					status = new Status(false, 200, "Employee not found");
+					status = new Status(true, 400, "Employee not found");
 				}
 			}
 		} catch (Exception e) {
