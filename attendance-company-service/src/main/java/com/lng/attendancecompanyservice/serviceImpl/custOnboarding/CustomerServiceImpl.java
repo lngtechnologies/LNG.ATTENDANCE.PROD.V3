@@ -99,7 +99,7 @@ public class CustomerServiceImpl implements CustomerService {
 	MessageUtil messageUtil = new MessageUtil();
 
 	Encoder Encoder = new Encoder();
-	
+
 	AzureFaceListSubscriptionKey subscription = new AzureFaceListSubscriptionKey();
 
 	//Sms sms = new Sms();
@@ -124,12 +124,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 			List<Customer> customerList1 = customerRepository.findCustomerByCustEmail(customerDto.getCustEmail());
 			List<Customer> customerList2 = customerRepository.findCustomerByCustMobile(customerDto.getCustMobile());
-			List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
+			//List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
 
 			final Lock displayLock = this.displayQueueLock; 
 			displayLock.lock();
 			Thread.sleep(3000L);
-			
+
 			if(customerList1.isEmpty() && customerList2.isEmpty()) {
 
 				Customer customer = saveCustomerData(customerDto);
@@ -183,7 +183,7 @@ public class CustomerServiceImpl implements CustomerService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("successfully created");
-				
+
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
@@ -191,7 +191,7 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 			displayLock.unlock();
 		} catch (Exception e) {
-			statusDto.setCode(400);
+			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Oops..! Something went wrong..");		
 		}

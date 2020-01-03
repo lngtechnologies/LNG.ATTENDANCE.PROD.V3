@@ -83,7 +83,6 @@ public class CustomerServiceImpl implements CustomerService {
 					CustomerDtoList.add(customerDto1);
 					customerResponse1.status = new Status(false,200, "success");
 				}
-
 			}
 
 		}catch (Exception e){
