@@ -21,5 +21,5 @@ public interface CustEmployeeService {
 	
 	CustEmployeeListResponse searchEmployeeByEmpName(String empName);
 	
-	CustEmployeeListResponse   FindEmployeeByRefLoginId(Integer refLoginId);
+	CustEmployeeListResponse FindEmployeeByRefLoginId(Integer refLoginId);
 }

@@ -34,6 +34,7 @@ import com.lng.attendancecompanyservice.entity.masters.Login;
 import com.lng.attendancecompanyservice.entity.masters.LoginDataRight;
 import com.lng.attendancecompanyservice.entity.masters.State;
 import com.lng.attendancecompanyservice.entity.masters.UserRight;
+import com.lng.attendancecompanyservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
@@ -44,6 +45,7 @@ import com.lng.attendancecompanyservice.repositories.masters.LoginDataRightRepos
 import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.repositories.masters.UserRightRepository;
+import com.lng.attendancecompanyservice.service.authentication.ILogin;
 import com.lng.attendancecompanyservice.service.custOnboarding.CustomerService;
 import com.lng.attendancecompanyservice.utils.AzureFaceListSubscriptionKey;
 import com.lng.attendancecompanyservice.utils.Encoder;
@@ -99,7 +101,7 @@ public class CustomerServiceImpl implements CustomerService {
 	MessageUtil messageUtil = new MessageUtil();
 
 	Encoder Encoder = new Encoder();
-	
+
 	AzureFaceListSubscriptionKey subscription = new AzureFaceListSubscriptionKey();
 
 	//Sms sms = new Sms();
@@ -124,12 +126,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 			List<Customer> customerList1 = customerRepository.findCustomerByCustEmail(customerDto.getCustEmail());
 			List<Customer> customerList2 = customerRepository.findCustomerByCustMobile(customerDto.getCustMobile());
-			List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
+			//List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
 
 			final Lock displayLock = this.displayQueueLock; 
 			displayLock.lock();
 			Thread.sleep(3000L);
-			
+
 			if(customerList1.isEmpty() && customerList2.isEmpty()) {
 
 				Customer customer = saveCustomerData(customerDto);
@@ -183,7 +185,7 @@ public class CustomerServiceImpl implements CustomerService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("successfully created");
-				
+
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
@@ -191,7 +193,7 @@ public class CustomerServiceImpl implements CustomerService {
 			}
 			displayLock.unlock();
 		} catch (Exception e) {
-			statusDto.setCode(400);
+			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Oops..! Something went wrong..");		
 		}
@@ -638,6 +640,7 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerResponse customerResponse = new CustomerResponse();
 		try {
 			Customer customer = customerRepository.findCustomerByCustId(customerDto.getCustId());
+			Login login = loginRepository.findByRefCustIdAndLoginMobile(customer.getCustId(), customer.getCustMobile());
 			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
 			State state = stateRepository.findByStateId(customerDto.getRefStateId());
 			IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(customerDto.getRefIndustryTypeId());
@@ -666,10 +669,17 @@ public class CustomerServiceImpl implements CustomerService {
 
 				customer.setCustGSTIN(customerDto.getCustGSTIN());
 				customerRepository.save(customer);
+
+				if(login != null) {
+					login.setLoginMobile(customerDto.getCustMobile());
+					loginRepository.save(login);
+				}
+
 				customerResponse.status = new Status(false, 200, "successfully updated");
-			}	else {
+			} else {
 				customerResponse.status = new Status(false, 400, "Customer not found");
 			}
+
 
 		} catch (Exception e) {
 			customerResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
