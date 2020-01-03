@@ -15,6 +15,7 @@ import com.lng.dto.tabService.CustomerDto1;
 import com.lng.dto.tabService.EmployeeDto1;
 import com.lng.dto.tabService.EmployeeDto2;
 import com.lng.dto.tabService.EmployeeResponse1;
+import com.lng.dto.tabService.EmployeeResponse2;
 
 @CrossOrigin(origins="*", maxAge=3600)
 @RestController
@@ -51,5 +52,12 @@ public class EmployeeController {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
-
+	@PostMapping(value = "/getShiftByEmployeeId") 
+	public ResponseEntity<EmployeeResponse2> getShift(@RequestBody EmployeeDto1 employeeDto) {
+		EmployeeResponse2 employeeResponse2 = employeeService.getShiftDetailsByEmpId(employeeDto.getEmpId());
+		if (employeeResponse2 !=null){
+			return new ResponseEntity<EmployeeResponse2>(employeeResponse2, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
 }

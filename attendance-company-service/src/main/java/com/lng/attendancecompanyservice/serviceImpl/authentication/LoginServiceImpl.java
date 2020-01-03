@@ -97,7 +97,7 @@ public class LoginServiceImpl implements ILogin {
 			}
 
 			// Check user is active
-			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+loginDto.getLoginName() + "is not active");
+			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+loginDto.getLoginName() + " is not active");
 
 			// Validate password else throw invalid details
 			//if(matches(loginDto.getLoginPassword(), user.loginPassword)) {

@@ -1,7 +1,9 @@
 package com.lng.attendancetabservice.serviceImpl;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Base64;
-import java.util.List;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,9 @@ import com.lng.dto.employee.OtpDto;
 import com.lng.dto.employee.OtpResponseDto;
 import com.lng.dto.tabService.EmployeeDto1;
 import com.lng.dto.tabService.EmployeeDto2;
+import com.lng.dto.tabService.EmployeeDto3;
 import com.lng.dto.tabService.EmployeeResponse1;
+import com.lng.dto.tabService.EmployeeResponse2;
 
 import status.Status;
 @Service
@@ -49,7 +53,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 				if(shift != null) {
 					shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 					shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
-
 					if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {
 						employeeDto2.setShiftType("D1D2");
 					} else {
@@ -67,8 +70,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 				} else {
 					employeeResponse1.status = new Status(true, 400, "Shift not found for this employee");
 				}
-
-
 			} else {
 				employeeResponse1.status = new Status(true, 400, "Invalid mobile number");
 			}
@@ -87,22 +88,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 			if(employee != null){
 				employee.setEmpPresistedFaceId(employeeDto1.getEmpPresistedFaceId());
 				employeeRepository.save(employee);
-				
-					employeePic = employeePicRepository.findByEmployee_EmpId(employee.getEmpId());
 
-					if(employeePic == null) {
-						EmployeePic employeePic1 = new EmployeePic();
-						employeePic1.setEmployee(employee);
-						employeePic1.setEmployeePic(base64ToByte(employeeDto1.getEmployeePic()));
-						employeePicRepository.save(employeePic1);
-						status = new Status(false, 200, "successfully updated");
-
-					} else {
-						employeePic.setEmployeePic(base64ToByte(employeeDto1.getEmployeePic()));
-						employeePicRepository.save(employeePic);
-						status = new Status(false, 200, "successfully updated");
-					}
-				
+				employeePic = employeePicRepository.findByEmployee_EmpId(employee.getEmpId());
+				if(employeePic == null) {
+					EmployeePic employeePic1 = new EmployeePic();
+					employeePic1.setEmployee(employee);
+					employeePic1.setEmployeePic(base64ToByte(employeeDto1.getEmployeePic()));
+					employeePicRepository.save(employeePic1);
+					status = new Status(false, 200, "successfully updated");
+				} else {
+					employeePic.setEmployeePic(base64ToByte(employeeDto1.getEmployeePic()));
+					employeePicRepository.save(employeePic);
+					status = new Status(false, 200, "successfully updated");
+				}
 			}else {
 				status = new Status(false,400," Employee Not found");
 			}
@@ -149,5 +147,41 @@ public class EmployeeServiceImpl implements EmployeeService {
 		}
 		return otpResponseDto;
 	}
+
+	@Override
+	public EmployeeResponse2 getShiftDetailsByEmpId(Integer empId) {
+		EmployeeResponse2  employeeResponse2  =  new  EmployeeResponse2();
+		String shiftStartTime = null;
+		String shiftEndTime = null;
+		String endTime = null;
+		String time = "2:00 PM";
+		EmployeeDto3 employeeDto2 = new EmployeeDto3();
+		try {
+			Shift shift = shiftRepository.findShiftByEmployee_EmpId(empId);
+			if(shift != null) {
+				shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
+				shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
+				endTime  = shift.getShiftEnd();
+				if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {
+					employeeDto2.setShiftType("D1D2");
+				} else {
+					employeeDto2.setShiftType("D1D1");
+				}
+				DateFormat sdf = new SimpleDateFormat("hh:mm aa");
+				Date date1 = sdf.parse(endTime);
+				Date date2 = sdf.parse(time);
+				long difference = date1.getTime() - date2.getTime(); 
+				employeeDto2.setOutPermisableTime(difference);
+				employeeResponse2.setData(employeeDto2);
+				employeeResponse2.status = new Status(false,200, "success");
+			} else {
+				employeeResponse2.status = new Status(true, 400, "Employee not found");
+			}
+		}catch (Exception e){
+			employeeResponse2.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return employeeResponse2;
+	}
+
 }
 
