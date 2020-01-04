@@ -38,4 +38,6 @@ public interface EmployeeLeaveRepository extends PagingAndSortingRepository<Empl
 	
 	@Query(value = "call getEmpLeaveAlreadyApplied(?1, ?2, ?3)", nativeQuery = true)
 	int getEmpLeaveAlreadyApplied(Date empLeaveFrom, Date empLeaveTo, Integer empId);
+	
+	
 }
