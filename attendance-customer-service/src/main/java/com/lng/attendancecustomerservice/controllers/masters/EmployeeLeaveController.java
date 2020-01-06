@@ -103,4 +103,10 @@ public class EmployeeLeaveController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
+	
+	@PostMapping(value = "/getEmpPendingLeaveByLoginIdAndCustId")
+	public ResponseEntity<EmpLeaveResponseDto> getEmpPendingLeaveByLoginIdAndCustId(@RequestBody EmpLeaveDto empLeaveDto) {
+		EmpLeaveResponseDto empLeaveResponseDto = EmpLeaveApproveOrCancelService.getByLoginIdAndCustID(empLeaveDto.getLoginId(), empLeaveDto.getCustId());
+		return new ResponseEntity<EmpLeaveResponseDto>(empLeaveResponseDto, HttpStatus.OK);
+	}
 }

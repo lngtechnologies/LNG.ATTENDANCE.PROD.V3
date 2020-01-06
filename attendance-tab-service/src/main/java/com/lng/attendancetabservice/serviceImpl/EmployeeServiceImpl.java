@@ -36,8 +36,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	ShiftRepository shiftRepository;
 
-
-
 	@Override
 	public EmployeeResponse1 verifyMobileNo(Integer refBrId, Integer refCustId,String empMobile) {
 		EmployeeResponse1  employeeResponse1  =  new  EmployeeResponse1();
