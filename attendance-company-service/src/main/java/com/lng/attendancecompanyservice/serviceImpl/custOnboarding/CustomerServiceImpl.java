@@ -644,41 +644,53 @@ public class CustomerServiceImpl implements CustomerService {
 			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
 			State state = stateRepository.findByStateId(customerDto.getRefStateId());
 			IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(customerDto.getRefIndustryTypeId());
-			if(customer != null) {
-				customer.setCountry(country);
-				customer.setState(state);
-				customer.setIndustryType(industryType);
-				customer.setCustAddress(customerDto.getCustAddress());
-				customer.setCustCity(customerDto.getCustCity());
-				customer.setCustCode(customerDto.getCustCode());
-				customer.setCustCreatedDate(new Date());
-				customer.setCustEmail(customerDto.getCustEmail());
-				customer.setCustIsActive(true);
-				customer.setCustLandline(customerDto.getCustLandline());
-				customer.setCustMobile(customerDto.getCustMobile());
-				customer.setCustName(customerDto.getCustName());
-				customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
-				customer.setCustPincode(customerDto.getCustPincode());
-				customer.setCustValidityEnd(customerDto.getCustValidityEnd());
-				customer.setCustValidityStart(customerDto.getCustValidityStart());
-				if(customerDto.getCustLogoFile() == null) {
-					customer.setCustLogoFile(customer.getCustLogoFile());
+			Customer customer1 = customerRepository.getCustomerByCustMobile(customerDto.getCustMobile());
+			Customer customer2 = customerRepository.getCustomerByCustEmail(customerDto.getCustEmail());
+			if(customer1 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustMobile().equals(customerDto.getCustMobile()))) {
+				if(customer2 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustEmail().equals(customerDto.getCustEmail()))) {
+					if(customer != null) {
+						customer.setCountry(country);
+						customer.setState(state);
+						customer.setIndustryType(industryType);
+						customer.setCustAddress(customerDto.getCustAddress());
+						customer.setCustCity(customerDto.getCustCity());
+						customer.setCustCode(customerDto.getCustCode());
+						customer.setCustCreatedDate(new Date());
+						customer.setCustEmail(customerDto.getCustEmail());
+						customer.setCustIsActive(true);
+						customer.setCustLandline(customerDto.getCustLandline());
+						customer.setCustMobile(customerDto.getCustMobile());
+						customer.setCustName(customerDto.getCustName());
+						customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
+						customer.setCustPincode(customerDto.getCustPincode());
+						customer.setCustValidityEnd(customerDto.getCustValidityEnd());
+						customer.setCustValidityStart(customerDto.getCustValidityStart());
+						if(customerDto.getCustLogoFile() == null) {
+							customer.setCustLogoFile(customer.getCustLogoFile());
+						} else {
+							customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));
+						}
+
+						customer.setCustGSTIN(customerDto.getCustGSTIN());
+						customerRepository.save(customer);
+
+						if(login != null) {
+							login.setLoginMobile(customerDto.getCustMobile());
+							loginRepository.save(login);
+						}
+
+						customerResponse.status = new Status(false, 200, "successfully updated");
+					} else {
+						customerResponse.status = new Status(false, 400, "Customer not found");
+					}
 				} else {
-					customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));
+					customerResponse.status = new Status(true, 400, "Customer email id already exist");
 				}
-
-				customer.setCustGSTIN(customerDto.getCustGSTIN());
-				customerRepository.save(customer);
-
-				if(login != null) {
-					login.setLoginMobile(customerDto.getCustMobile());
-					loginRepository.save(login);
-				}
-
-				customerResponse.status = new Status(false, 200, "successfully updated");
+				
 			} else {
-				customerResponse.status = new Status(false, 400, "Customer not found");
+				customerResponse.status = new Status(true, 400, "Customer mobile number already exist");
 			}
+			
 
 
 		} catch (Exception e) {
