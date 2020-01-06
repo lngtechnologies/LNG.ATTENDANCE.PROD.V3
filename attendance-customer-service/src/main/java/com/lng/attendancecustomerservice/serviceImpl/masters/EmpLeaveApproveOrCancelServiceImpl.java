@@ -36,30 +36,40 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 		EmpLeaveResponseDto empLeaveResponseDto = new EmpLeaveResponseDto();
 		List<EmpLeaveDto> empLeaveDtoList = new ArrayList<>();
 		try {
+			Login login = iLoginRepository.findByLoginId(loginId);
+			if(login != null) {
 
-			List<Object[]> employeeList = employeeLeaveRepository.getEmpLeaveByLoginIdAndCustId(loginId, custId);
-			if(!employeeList.isEmpty()) {
-				for(Object[] p: employeeList) {				
-					EmpLeaveDto empLeaveDto = new EmpLeaveDto();
+				List<Object[]> employeeList = employeeLeaveRepository.getEmpPendingLeaveByLoginIdAndCustIdAndEmpId(loginId, custId,login.getRefEmpId());
+				if(!employeeList.isEmpty()) {
 
-					empLeaveDto.setEmpLeaveId(Integer.valueOf(p[0].toString()));
-					empLeaveDto.setLoginId(Integer.valueOf(p[1].toString()));
-					empLeaveDto.setCustId(Integer.valueOf(p[2].toString()));
-					empLeaveDto.setEmpId(Integer.valueOf(p[3].toString()));
-					empLeaveDto.setEmpName(p[4].toString());
-					empLeaveDto.setDeptId(Integer.valueOf(p[5].toString()));
-					empLeaveDto.setDeptName(p[6].toString());
-					empLeaveDto.setEmpLeaveFrom((Date)p[7]);
-					empLeaveDto.setEmpLeaveTo((Date)p[8]);
-					empLeaveDto.setEmpLeaveDaysCount(Integer.valueOf(p[9].toString()));
-					empLeaveDto.setEmpLeaveStatus(p[10].toString());
-					empLeaveDtoList.add(empLeaveDto);
+					for(Object[] p: employeeList) {	
 
-					empLeaveResponseDto.setEmpLeaveDtoList(empLeaveDtoList);
-					empLeaveResponseDto.status = new Status(false, 200, "Success");
+						if(login.getRefEmpId() != 0 && Integer.valueOf(p[0].toString()) != 0) {
+
+							EmpLeaveDto empLeaveDto = new EmpLeaveDto();
+
+							empLeaveDto.setEmpLeaveId(Integer.valueOf(p[0].toString()));
+							empLeaveDto.setLoginId(Integer.valueOf(p[1].toString()));
+							empLeaveDto.setCustId(Integer.valueOf(p[2].toString()));
+							empLeaveDto.setEmpId(Integer.valueOf(p[3].toString()));
+							empLeaveDto.setEmpName(p[4].toString());
+							empLeaveDto.setDeptId(Integer.valueOf(p[5].toString()));
+							empLeaveDto.setDeptName(p[6].toString());
+							empLeaveDto.setEmpLeaveFrom((Date)p[7]);
+							empLeaveDto.setEmpLeaveTo((Date)p[8]);
+							empLeaveDto.setEmpLeaveDaysCount(Integer.valueOf(p[9].toString()));
+							empLeaveDto.setEmpLeaveStatus(p[10].toString());
+							empLeaveDto.setEmpLeaveRemarks(p[11].toString());
+							empLeaveDtoList.add(empLeaveDto);
+							empLeaveResponseDto.setEmpLeaveDtoList(empLeaveDtoList);
+							empLeaveResponseDto.status = new Status(false, 200, "Success");
+						} else {
+							empLeaveResponseDto.status = new Status(true, 400, "Not authorized user to approve leave");
+						}
+					}
+				}else {
+					empLeaveResponseDto.status = new Status(false, 400, "No records found");
 				}
-			}else {
-				empLeaveResponseDto.status = new Status(false, 400, "No records found");
 			}
 
 		} catch (Exception e) {
