@@ -52,9 +52,9 @@ public class EmployeeController {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
-	@PostMapping(value = "/getShiftByEmployeeId") 
-	public ResponseEntity<EmployeeResponse2> getShift(@RequestBody EmployeeDto1 employeeDto) {
-		EmployeeResponse2 employeeResponse2 = employeeService.getShiftDetailsByEmpId(employeeDto.getEmpId());
+	@PostMapping(value = "/getShiftByEmployeeIdAndCustId") 
+	public ResponseEntity<EmployeeResponse2> getShift(@RequestBody EmployeeDto1 employeeDto){
+		EmployeeResponse2 employeeResponse2 = employeeService.getShiftDetailsByEmpIdAndCustId(employeeDto.getEmpId(),employeeDto.getRefCustId());
 		if (employeeResponse2 !=null){
 			return new ResponseEntity<EmployeeResponse2>(employeeResponse2, HttpStatus.OK);
 		}

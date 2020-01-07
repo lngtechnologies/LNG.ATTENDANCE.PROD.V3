@@ -33,6 +33,9 @@ public class Shift {
 	
 	@Column(name = "shiftIsActive")
 	private Boolean shiftIsActive;
+	
+	@Column(name = "defaultOutInhrs")
+	private Integer defaultOutInhrs;
 
 	public Integer getShiftId() {
 		return shiftId;
@@ -82,4 +85,11 @@ public class Shift {
 		this.shiftIsActive = shiftIsActive;
 	}
 
+	public Integer getDefaultOutInhrs() {
+		return defaultOutInhrs;
+	}
+
+	public void setDefaultOutInhrs(Integer defaultOutInhrs) {
+		this.defaultOutInhrs = defaultOutInhrs;
+	}
 }

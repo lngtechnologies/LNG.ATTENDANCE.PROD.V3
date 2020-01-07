@@ -15,7 +15,7 @@ public interface EmployeeService {
 	  
 	  OtpResponseDto generateOtp(String  empMobile);
 	  
-	  EmployeeResponse2  getShiftDetailsByEmpId(Integer empId);
+	  EmployeeResponse2  getShiftDetailsByEmpIdAndCustId(Integer empId,Integer custId);
 	  
 	  
 

@@ -11,6 +11,9 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	
 	@Query(value = "call generateOtp()", nativeQuery = true)
 	int generateOtp();
+
+	@Query(value = "call getOutPermisableTimeByEmpIdAndCustId(?1,?2)", nativeQuery = true)
+	String getOutPermissibleTimeByEmployee_EmpIdAndCustomer_CustId(Integer empId,Integer custId);
 	
 	
 	@Query(value = "SELECT emp.* FROM tmemployee emp WHERE refBrId =?1 AND refCustId =?2 AND empMobile=?3 AND empInService=TRUE", nativeQuery = true)
