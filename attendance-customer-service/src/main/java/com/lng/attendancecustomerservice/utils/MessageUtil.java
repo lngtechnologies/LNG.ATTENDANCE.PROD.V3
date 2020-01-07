@@ -18,33 +18,51 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
+
+import com.lng.attendancecustomerservice.entity.smsVendor.SMSVendorCust;
+import com.lng.attendancecustomerservice.repositories.smsVendor.SMSVendorRepositoryCust;
+
 
 public class MessageUtil {
 
 
+	@Autowired
+	SMSVendorRepositoryCust smsVendorRepository;
+	
 	//Send SMS
 	public String sms(String to, String message)
 	{
-		RestTemplate restTemplate = new RestTemplate();
+		String result = null;
+		try {
+			RestTemplate restTemplate = new RestTemplate();
 
-		//  String messageBody="Your OTP for this registration is "+message;
-		//message=messageBody;
+			//  String messageBody="Your OTP for this registration is "+message;
+			//message=messageBody;
+			
+			String mobileNumbers = to;
+
+			String textMessage = message;
+			
+			// SMSVendorCust smsVendor = smsVendorRepository.getAllBySmsVndrIsActive();
+			
+			SMSVendorCust smsVendor = smsVendorRepository.findAllBySmsVndrIsActive(true);
+
+			// final  String uri = smsVendor.getSmsVndrURL();
+			
+			final  String uri = "http://promotional.mysmsbasket.com/V2/http-api.php?apikey=YE5ssFpB9306XlDP&senderid=LNGATS&number=mobileNumbers&message=textMessage&format=json";
+
+			StringBuilder sb = new StringBuilder(uri);
+			sb.replace(sb.indexOf("mobileNumbers"), sb.indexOf("mobileNumbers") + "mobileNumbers".length(), mobileNumbers);
+			sb.replace(sb.indexOf("textMessage"), sb.indexOf("textMessage") + "textMessage".length(), textMessage);
+			
+			result = restTemplate.getForObject(sb.toString(),String.class);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-
-		String mobileNumbers = to;
-
-		String textMessage = message;
-
-		// final  String uri = smsVendor.getSmsVndrURL();
-		
-		final  String uri = "http://promotional.mysmsbasket.com/V2/http-api.php?apikey=YE5ssFpB9306XlDP&senderid=LNGATS&number=mobileNumbers&message=textMessage&format=json";
-
-		StringBuilder sb = new StringBuilder(uri);
-		sb.replace(sb.indexOf("mobileNumbers"), sb.indexOf("mobileNumbers") + "mobileNumbers".length(), mobileNumbers);
-		sb.replace(sb.indexOf("textMessage"), sb.indexOf("textMessage") + "textMessage".length(), textMessage);
-		
-		String result = restTemplate.getForObject(sb.toString(),String.class);
 
 		return result;
 	}

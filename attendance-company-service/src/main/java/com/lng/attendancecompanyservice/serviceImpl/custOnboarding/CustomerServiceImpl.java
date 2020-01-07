@@ -675,7 +675,7 @@ public class CustomerServiceImpl implements CustomerService {
 						customerRepository.save(customer);
 
 						if(login != null) {
-							login.setLoginMobile(customerDto.getCustMobile());
+							login.setLoginMobile(customer.getCustMobile());
 							loginRepository.save(login);
 						}
 
