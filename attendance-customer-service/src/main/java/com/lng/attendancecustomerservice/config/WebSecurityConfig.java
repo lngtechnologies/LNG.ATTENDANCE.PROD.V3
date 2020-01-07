@@ -44,7 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.csrf().disable()
         .httpBasic().disable()
 		.authorizeRequests().antMatchers("/users/**", "/employee/setup/**", "/employee/welcome/screen/**", "/employee/mark/attendance/**",
-										"/mobile/app/employee/leave/**", "/employee/movement/**", "/mobile/app/policyandfaq/**").permitAll()
+										"/mobile/app/employee/leave/**", "/employee/movement/**", "/mobile/app/policyandfaq/**",
+										"/push/notification/token/save").permitAll()
 
 		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 

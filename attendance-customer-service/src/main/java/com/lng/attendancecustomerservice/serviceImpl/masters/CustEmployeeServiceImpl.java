@@ -135,7 +135,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						for(EmpBlockMapDto CustEmployeeDto : custEmployeeDto.getEmpBlockMapDtoList()){
 							EmployeeBlock employeeBlock = new EmployeeBlock();
 							Block block = blockRepository.findByBlkId(CustEmployeeDto.getBlkId());
-							if(block == null) throw new Exception("Cannot find block id for Employee Block");
+							if(block == null) throw new Exception("Cannot find block for Employee");
 							employeeBlock.setBlock(block);
 							employeeBlock.setEmployee(employee);
 							employeeBlockRepository.save(employeeBlock);
@@ -174,7 +174,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					try {
 
 						Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
-						if(branch == null) throw new Exception("Cannot find branch id for Employee Branch");
+						if(branch == null) throw new Exception("Cannot find branch for Employee");
 						employeeBranch.setEmployee(employee);
 						employeeBranch.setBranch(branch);
 						employeeBranch.setBranchFromDate(custEmployeeDto.getEmployeeBranchFromDate());
@@ -193,7 +193,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					EmployeeDepartment employeeDepartment = new EmployeeDepartment();
 					try {
 						Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
-						if(department == null) throw new Exception("Cannot find department id for Employee Department");
+						if(department == null) throw new Exception("Cannot find department for Employee");
 						employeeDepartment.setEmployee(employee);
 						employeeDepartment.setDepartment(department);
 						employeeDepartment.setEmpFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
@@ -211,7 +211,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					EmployeeDesignation employeeDesignation = new EmployeeDesignation();
 					try {
 						Designation designation = designationRepository.findDesignationByDesignationId(custEmployeeDto.getDesignationId());
-						if(designation == null) throw new Exception("Cannot find designation id for Employee Designation");
+						if(designation == null) throw new Exception("Cannot find designation for Employee");
 						employeeDesignation.setEmployee(employee);
 						employeeDesignation.setDesignation(designation);
 						employeeDesignation.setEmpFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
@@ -229,7 +229,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					EmployeeShift employeeShift = new EmployeeShift();
 					try {
 						Shift shift = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
-						if(shift == null) throw new Exception("Cannot find shift id for Employee Shift");
+						if(shift == null) throw new Exception("Cannot find shift for Employee");
 						employeeShift.setEmployee(employee);
 						employeeShift.setShift(shift);
 						employeeShift.setShiftFromDate(custEmployeeDto.getEmployeeShiftFromDate());
@@ -274,9 +274,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						saveEmpMonthlyNoOfDays(empMonthlyNoOfDays);
 					}
 
-					custEmployeeStatus.status = new Status(false, 200, "successfully created");
+					custEmployeeStatus.status = new Status(false, 200, "Successfully created");
 				} else {
-					custEmployeeStatus.status = new Status(true, 400, "cannot Save");
+					custEmployeeStatus.status = new Status(true, 400, "Cannot Save");
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number already exists");
@@ -560,8 +560,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					custEmployeeRepository.save(employee);
 
 					if(employee != null) {
-
-
+						
 						try {
 							List<EmployeeBlock> alreadyMappedBlocks = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
 
@@ -724,7 +723,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 								EmployeeShift employeeShift = new EmployeeShift();
 								Shift shift1 = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
-								if(shift1 == null) throw new Exception("Cannot find shift id for Employee Shift");
+								if(shift1 == null) throw new Exception("Cannot find shift for Employee");
 								employeeShift.setEmployee(employee);
 								employeeShift.setShift(shift1);
 								employeeShift.setShiftFromDate(custEmployeeDto.getEmployeeShiftFromDate());

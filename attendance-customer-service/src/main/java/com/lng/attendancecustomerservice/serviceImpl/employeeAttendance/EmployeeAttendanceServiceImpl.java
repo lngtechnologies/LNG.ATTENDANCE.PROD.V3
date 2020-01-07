@@ -213,7 +213,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 						unmatchedEmployeeAttendance.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
 						unmatchedEmployeeAttendance.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
 						unmatchedEmpAttndRepo.save(unmatchedEmployeeAttendance);
-						status = new Status(true, 400, "Un Matched attendance found, Please contact your manager to rectify the same.");
+						status = new Status(false, 200, "Unmatched attendance found, Please contact your manager to rectify the same.");
 					}
 				}else {
 					status = new Status(true, 400, "Employee not found");

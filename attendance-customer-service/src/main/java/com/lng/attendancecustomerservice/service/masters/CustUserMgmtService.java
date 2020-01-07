@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.service.masters;
 
+import com.lng.dto.masters.custUserMgmt.CustEmployeeResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
@@ -37,4 +38,6 @@ public interface CustUserMgmtService {
 	Status resetPasswordByLoginId(Integer loginId);
 	
 	CustLoginDto getLoginDetailsByLoginId(Integer loginId);
+	
+	CustEmployeeResponseDto getEmployeeByCustId(Integer custId);
 }

@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 import com.lng.attendancecustomerservice.entity.authentication.Login;
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
+import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeBlock;
 import com.lng.attendancecustomerservice.entity.masters.LoginDataRight;
 import com.lng.attendancecustomerservice.entity.masters.UserRight;
 import com.lng.attendancecustomerservice.entity.userModule.Module;
 import com.lng.attendancecustomerservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
+import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
 import com.lng.attendancecustomerservice.repositories.masters.LoginDataRightRepository;
 import com.lng.attendancecustomerservice.repositories.masters.UserRightRepository;
@@ -26,6 +28,8 @@ import com.lng.attendancecustomerservice.service.masters.CustUserMgmtService;
 import com.lng.attendancecustomerservice.utils.Encoder;
 import com.lng.attendancecustomerservice.utils.MessageUtil;
 import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
+import com.lng.dto.masters.custUserMgmt.CustEmployeeDto;
+import com.lng.dto.masters.custUserMgmt.CustEmployeeResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchDto;
@@ -61,6 +65,9 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	UserRightRepository userRightRepository;
 
 	@Autowired
+	CustEmployeeRepository custEmployeeRepository;
+
+	@Autowired
 	LoginDataRightRepository loginDataRightRepository;
 
 	MessageUtil messageUtil = new MessageUtil();
@@ -69,7 +76,75 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 	Encoder encoder = new Encoder();
 
+
 	@Override
+	public Status save(CustUserMgmtDto custUserMgmtDto) {
+		Status status = null;
+
+		Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
+		Login login3 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
+
+		try {
+			if(customer != null) {
+				if(login3 != null) {
+					if(customer.getCustMobile().equals(login3.getLoginMobile())) {
+						login3.setRefEmpId(custUserMgmtDto.getEmpId());
+						iLoginRepository.save(login3);
+						status = new Status(false, 200, "Admin has been linked to the selected employee");
+					}
+				} else {
+					String userName = custUserMgmtDto.getUserName();
+					String custCode = customer.getCustCode();
+
+					String loginUserName = userName+"@"+custCode;
+
+					Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
+					Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
+
+					if(login1 == null) {
+						if(login2 == null) {
+
+							String newPassword = iLoginRepository.generatePassword();
+							Login login = new Login();
+							login.setLoginName(loginUserName);
+							login.setLoginMobile(custUserMgmtDto.getuMobileNumber());
+							login.setLoginPassword(encoder.getEncoder().encode(newPassword));
+							login.setLoginCreatedDate(new Date());
+							login.setLoginIsActive(true);
+							login.setRefCustId(customer.getCustId());
+							if(custUserMgmtDto.getEmpId() != null) {
+								login.setRefEmpId(custUserMgmtDto.getEmpId());
+							}else {
+								login.setRefEmpId(0);
+							}
+
+							iLoginRepository.save(login);
+
+							String mobileNo = login.getLoginMobile();
+							String mobileSmS = "User Id has been successfully created to access the Attendance System Web application."
+									+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
+							String s = messageUtil.sms(mobileNo, mobileSmS);
+
+							status = new Status(false, 200, "successfully created");
+
+						}else {
+							status = new Status(true, 400, "Mobile number already exist");
+						}
+					}else {
+						status = new Status(true, 400, "User name already exist");
+					}
+				}
+			} else {
+				status = new Status(true, 400, "Customer is not exist");
+			}
+
+		} catch (Exception e) {
+			status = new Status(true, 400, "Oops..! Something went wrong..");
+		}
+		return status;
+	}
+
+	/*@Override
 	public Status save(CustUserMgmtDto custUserMgmtDto) {
 		Status status = null;
 
@@ -126,7 +201,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			status = new Status(true, 400, "Oops..! Something went wrong..");
 		}
 		return status;
-	}
+	}*/
 
 
 	@Override
@@ -331,7 +406,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			}
 
 			for(CustUserModuleDto custUserModuleDto : custUserModuleMapDto.getModuleIds()) {
-				
+
 				if(custUserModuleDto.getUserRightId() == null && custUserModuleDto.getModuleId() != null) {
 					UserRight userRight2 = new UserRight();
 					userRight2.setRefLoginId(custUserModuleMapDto.getLoginId());
@@ -649,8 +724,28 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 		return custUserLoginDto;
 	}
 
+	@Override
+	public CustEmployeeResponseDto getEmployeeByCustId(Integer custId) {
+		CustEmployeeResponseDto custEmployeeResponseDto = new CustEmployeeResponseDto();
+		try {
+			List<Employee> empList = custEmployeeRepository.findByCustomer_CustId(custId);
+			if(!empList.isEmpty()) {
+				custEmployeeResponseDto.setEmpData(empList.stream().map(employee -> convertToUserCustEmployeeDto(employee)).collect(Collectors.toList()));
+				custEmployeeResponseDto.status = new Status(false, 200, "Success");
+			} else {
+				custEmployeeResponseDto.status = new Status(false, 400, "No records found");
+			}
+		} catch (Exception e) {
+			custEmployeeResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return custEmployeeResponseDto;
+	}
 
 
+	public CustEmployeeDto convertToUserCustEmployeeDto(Employee employee) {
+		CustEmployeeDto  custEmployeeDto = modelMapper.map(employee, CustEmployeeDto.class);
+		return custEmployeeDto;
+	}
 
 
 	/*public CustUserModulesDto convertToCustUserModulesDto(Module module) {

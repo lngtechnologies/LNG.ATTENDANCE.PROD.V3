@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.masters.CustUserMgmtService;
+import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
+import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
+import com.lng.dto.masters.custUserMgmt.CustEmployeeResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
@@ -137,4 +140,13 @@ public class CustUserMgmtController {
 		CustLoginDto custLoginDto1 = custUserMgmtService.getLoginDetailsByLoginId(custLoginDto.getLoginId());
 		return new ResponseEntity<CustLoginDto>(custLoginDto1, HttpStatus.CREATED);	
 	}
+	
+	@PostMapping(value = "/findAllEmployeesByCustomerId")
+    public ResponseEntity<CustEmployeeResponseDto> findByCustomerId(@RequestBody CustEmployeeDtoTwo custEmployeeDtoTwo) {
+		CustEmployeeResponseDto custEmployeeListResponse = custUserMgmtService.getEmployeeByCustId(custEmployeeDtoTwo.getCustId());
+        if (custEmployeeListResponse !=null){
+            return new ResponseEntity<CustEmployeeResponseDto>(custEmployeeListResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
 }

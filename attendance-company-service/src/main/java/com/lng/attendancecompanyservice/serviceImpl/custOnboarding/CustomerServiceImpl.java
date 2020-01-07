@@ -34,6 +34,7 @@ import com.lng.attendancecompanyservice.entity.masters.Login;
 import com.lng.attendancecompanyservice.entity.masters.LoginDataRight;
 import com.lng.attendancecompanyservice.entity.masters.State;
 import com.lng.attendancecompanyservice.entity.masters.UserRight;
+import com.lng.attendancecompanyservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecompanyservice.repositories.custOnboarding.CustomerRepository;
 import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
@@ -44,6 +45,7 @@ import com.lng.attendancecompanyservice.repositories.masters.LoginDataRightRepos
 import com.lng.attendancecompanyservice.repositories.masters.LoginRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.repositories.masters.UserRightRepository;
+import com.lng.attendancecompanyservice.service.authentication.ILogin;
 import com.lng.attendancecompanyservice.service.custOnboarding.CustomerService;
 import com.lng.attendancecompanyservice.utils.AzureFaceListSubscriptionKey;
 import com.lng.attendancecompanyservice.utils.Encoder;
@@ -638,38 +640,58 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerResponse customerResponse = new CustomerResponse();
 		try {
 			Customer customer = customerRepository.findCustomerByCustId(customerDto.getCustId());
+			Login login = loginRepository.findByRefCustIdAndLoginMobile(customer.getCustId(), customer.getCustMobile());
 			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
 			State state = stateRepository.findByStateId(customerDto.getRefStateId());
 			IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(customerDto.getRefIndustryTypeId());
-			if(customer != null) {
-				customer.setCountry(country);
-				customer.setState(state);
-				customer.setIndustryType(industryType);
-				customer.setCustAddress(customerDto.getCustAddress());
-				customer.setCustCity(customerDto.getCustCity());
-				customer.setCustCode(customerDto.getCustCode());
-				customer.setCustCreatedDate(new Date());
-				customer.setCustEmail(customerDto.getCustEmail());
-				customer.setCustIsActive(true);
-				customer.setCustLandline(customerDto.getCustLandline());
-				customer.setCustMobile(customerDto.getCustMobile());
-				customer.setCustName(customerDto.getCustName());
-				customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
-				customer.setCustPincode(customerDto.getCustPincode());
-				customer.setCustValidityEnd(customerDto.getCustValidityEnd());
-				customer.setCustValidityStart(customerDto.getCustValidityStart());
-				if(customerDto.getCustLogoFile() == null) {
-					customer.setCustLogoFile(customer.getCustLogoFile());
-				} else {
-					customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));
-				}
+			Customer customer1 = customerRepository.getCustomerByCustMobile(customerDto.getCustMobile());
+			Customer customer2 = customerRepository.getCustomerByCustEmail(customerDto.getCustEmail());
+			if(customer1 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustMobile().equals(customerDto.getCustMobile()))) {
+				if(customer2 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustEmail().equals(customerDto.getCustEmail()))) {
+					if(customer != null) {
+						customer.setCountry(country);
+						customer.setState(state);
+						customer.setIndustryType(industryType);
+						customer.setCustAddress(customerDto.getCustAddress());
+						customer.setCustCity(customerDto.getCustCity());
+						customer.setCustCode(customerDto.getCustCode());
+						customer.setCustCreatedDate(new Date());
+						customer.setCustEmail(customerDto.getCustEmail());
+						customer.setCustIsActive(true);
+						customer.setCustLandline(customerDto.getCustLandline());
+						customer.setCustMobile(customerDto.getCustMobile());
+						customer.setCustName(customerDto.getCustName());
+						customer.setCustNoOfBranch(customerDto.getCustNoOfBranch());
+						customer.setCustPincode(customerDto.getCustPincode());
+						customer.setCustValidityEnd(customerDto.getCustValidityEnd());
+						customer.setCustValidityStart(customerDto.getCustValidityStart());
+						if(customerDto.getCustLogoFile() == null) {
+							customer.setCustLogoFile(customer.getCustLogoFile());
+						} else {
+							customer.setCustLogoFile(base64ToByte(customerDto.getCustLogoFile()));
+						}
 
-				customer.setCustGSTIN(customerDto.getCustGSTIN());
-				customerRepository.save(customer);
-				customerResponse.status = new Status(false, 200, "successfully updated");
-			}	else {
-				customerResponse.status = new Status(false, 400, "Customer not found");
+						customer.setCustGSTIN(customerDto.getCustGSTIN());
+						customerRepository.save(customer);
+
+						if(login != null) {
+							login.setLoginMobile(customerDto.getCustMobile());
+							loginRepository.save(login);
+						}
+
+						customerResponse.status = new Status(false, 200, "successfully updated");
+					} else {
+						customerResponse.status = new Status(false, 400, "Customer not found");
+					}
+				} else {
+					customerResponse.status = new Status(true, 400, "Customer email id already exist");
+				}
+				
+			} else {
+				customerResponse.status = new Status(true, 400, "Customer mobile number already exist");
 			}
+			
+
 
 		} catch (Exception e) {
 			customerResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
