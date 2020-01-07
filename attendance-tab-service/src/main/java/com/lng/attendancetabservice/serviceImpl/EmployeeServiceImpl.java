@@ -164,22 +164,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 		try {
 			Customer customer = customerRepository.findCustomerByCustId(custId);
 			if(customer != null) {
-
 				if(!customer.getCustIsActive()) { 
 					employeeResponse2.status = new Status(true, 400, "Customer subscription expired");
 					return employeeResponse2;
 				}
-
 				Employee employee = employeeRepository.findByempId(empId);
 				if(employee != null) {
 					if(!employee.getEmpInService()) { 
-						employeeResponse2.status = new Status(true, 400, "Employee subscription expired");
+						employeeResponse2.status = new Status(true, 400, "Employee not in service");
 						return employeeResponse2;
 					}
 					Shift shift = shiftRepository.findShiftDetailsByEmployee_EmpIdAndCustomer_CustId(empId,custId);
 					if(shift != null) {
 						String time = employeeRepository.getOutPermissibleTimeByEmployee_EmpIdAndCustomer_CustId(empId,custId);
-
+						
 						shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 						shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
 						if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {
