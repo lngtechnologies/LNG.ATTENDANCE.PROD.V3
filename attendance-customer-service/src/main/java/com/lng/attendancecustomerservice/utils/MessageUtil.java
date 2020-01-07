@@ -47,7 +47,7 @@ public class MessageUtil {
 			
 			// SMSVendorCust smsVendor = smsVendorRepository.getAllBySmsVndrIsActive();
 			
-			SMSVendorCust smsVendor = smsVendorRepository.findAllBySmsVndrIsActive(true);
+			//SMSVendorCust smsVendor = smsVendorRepository.findAllBySmsVndrIsActive(true);
 
 			// final  String uri = smsVendor.getSmsVndrURL();
 			
