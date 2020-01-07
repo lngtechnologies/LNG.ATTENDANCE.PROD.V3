@@ -154,6 +154,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		return otpResponseDto;
 	}
 
+
 	@Override
 	public EmployeeResponse2 getShiftDetailsByEmpIdAndCustId(Integer empId,Integer custId) {
 		EmployeeResponse2  employeeResponse2  =  new  EmployeeResponse2();
@@ -161,13 +162,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String shiftEndTime = null;
 		EmployeeDto3 employeeDto3 = new EmployeeDto3();
 		try {
-			Shift shift = shiftRepository.findShiftDetailsByEmployee_EmpIdAndCustomer_CustId(empId,custId);
-			Employee employee = employeeRepository.findByempId(empId);
 			Customer customer = customerRepository.findCustomerByCustId(custId);
-			String time = employeeRepository.getShiftByEmployee_EmpIdAndCustomer_CustId(empId,custId);
 			if(customer != null) {
+
+				if(!customer.getCustIsActive()) { 
+					employeeResponse2.status = new Status(true, 400, "Customer subscription expired");
+					return employeeResponse2;
+				}
+
+				Employee employee = employeeRepository.findByempId(empId);
 				if(employee != null) {
+					if(!employee.getEmpInService()) { 
+						employeeResponse2.status = new Status(true, 400, "Employee subscription expired");
+						return employeeResponse2;
+					}
+					Shift shift = shiftRepository.findShiftDetailsByEmployee_EmpIdAndCustomer_CustId(empId,custId);
 					if(shift != null) {
+						String time = employeeRepository.getOutPermissibleTimeByEmployee_EmpIdAndCustomer_CustId(empId,custId);
+
 						shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 						shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
 						if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {

@@ -1,12 +1,8 @@
 package com.lng.attendancetabservice.repositories;
 
-import java.sql.Time;
-
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.lng.attendancetabservice.entity.Employee;
 
@@ -16,8 +12,8 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	@Query(value = "call generateOtp()", nativeQuery = true)
 	int generateOtp();
 
-	@Query(value = "call getShiftDetailsByEmpIdAndCustId(?1,?2)", nativeQuery = true)
-	String getShiftByEmployee_EmpIdAndCustomer_CustId(Integer empId,Integer custId);
+	@Query(value = "call getOutPermisableTimeByEmpIdAndCustId(?1,?2)", nativeQuery = true)
+	String getOutPermissibleTimeByEmployee_EmpIdAndCustomer_CustId(Integer empId,Integer custId);
 	
 	
 	@Query(value = "SELECT emp.* FROM tmemployee emp WHERE refBrId =?1 AND refCustId =?2 AND empMobile=?3 AND empInService=TRUE", nativeQuery = true)
