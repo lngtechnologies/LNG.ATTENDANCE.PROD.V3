@@ -16,4 +16,6 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	
 	@Query(value = " CALL getCustBranchDetails(?1,?2)", nativeQuery = true)
 	List<Object[]> findCustomerByCustomer_CustCodeAndBranch_BrCode(String custCode,String brCode);
+	
+	Customer findCustomerByCustId(Integer custId);
 }

@@ -1,16 +1,21 @@
 package com.lng.attendancetabservice.serviceImpl;
 
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancetabservice.entity.Customer;
 import com.lng.attendancetabservice.entity.Employee;
 import com.lng.attendancetabservice.entity.EmployeePic;
 import com.lng.attendancetabservice.entity.Shift;
+import com.lng.attendancetabservice.repositories.CustomerRepository;
 import com.lng.attendancetabservice.repositories.EmployeePicRepository;
 import com.lng.attendancetabservice.repositories.EmployeeRepository;
 import com.lng.attendancetabservice.repositories.ShiftRepository;
@@ -31,6 +36,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	EmployeeRepository employeeRepository;
 	@Autowired
 	EmployeePicRepository employeePicRepository;
+
+	@Autowired
+	CustomerRepository customerRepository;
 
 	MessageUtil messageUtil = new MessageUtil();
 	@Autowired
@@ -147,33 +155,41 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeResponse2 getShiftDetailsByEmpId(Integer empId) {
+	public EmployeeResponse2 getShiftDetailsByEmpIdAndCustId(Integer empId,Integer custId) {
 		EmployeeResponse2  employeeResponse2  =  new  EmployeeResponse2();
 		String shiftStartTime = null;
 		String shiftEndTime = null;
-		String endTime = null;
-		String time = "2:00 PM";
-		EmployeeDto3 employeeDto2 = new EmployeeDto3();
+		EmployeeDto3 employeeDto3 = new EmployeeDto3();
 		try {
-			Shift shift = shiftRepository.findShiftByEmployee_EmpId(empId);
-			if(shift != null) {
-				shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
-				shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
-				endTime  = shift.getShiftEnd();
-				if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {
-					employeeDto2.setShiftType("D1D2");
+			Shift shift = shiftRepository.findShiftDetailsByEmployee_EmpIdAndCustomer_CustId(empId,custId);
+			Employee employee = employeeRepository.findByempId(empId);
+			Customer customer = customerRepository.findCustomerByCustId(custId);
+			String time = employeeRepository.getShiftByEmployee_EmpIdAndCustomer_CustId(empId,custId);
+			if(customer != null) {
+				if(employee != null) {
+					if(shift != null) {
+						shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
+						shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
+						if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {
+							employeeDto3.setShiftType("D1D2");
+						} else {
+							employeeDto3.setShiftType("D1D1");
+						}
+						employeeDto3.setEmpId(employee.getEmpId());
+						employeeDto3.setShiftStart(shift.getShiftStart());
+						employeeDto3.setShiftEnd(shift.getShiftEnd());
+						employeeDto3.setCustId(customer.getCustId());
+						employeeDto3.setOutPermissibleTime(time);
+						employeeResponse2.setData(employeeDto3);
+						employeeResponse2.status = new Status(false,200, "success");
+					} else {
+						employeeResponse2.status = new Status(true, 400, "Shift not found");
+					}
 				} else {
-					employeeDto2.setShiftType("D1D1");
+					employeeResponse2.status = new Status(true, 400, "Employee not found");
 				}
-				DateFormat sdf = new SimpleDateFormat("hh:mm aa");
-				Date date1 = sdf.parse(endTime);
-				Date date2 = sdf.parse(time);
-				long difference = date1.getTime() - date2.getTime(); 
-				employeeDto2.setOutPermisableTime(difference);
-				employeeResponse2.setData(employeeDto2);
-				employeeResponse2.status = new Status(false,200, "success");
 			} else {
-				employeeResponse2.status = new Status(true, 400, "Employee not found");
+				employeeResponse2.status = new Status(true, 400, "Customer not found");
 			}
 		}catch (Exception e){
 			employeeResponse2.status = new Status(true, 500, "Oops..! Something went wrong..");
