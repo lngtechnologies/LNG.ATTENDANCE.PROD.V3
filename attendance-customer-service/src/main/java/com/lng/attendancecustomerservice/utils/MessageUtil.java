@@ -67,7 +67,7 @@ public class MessageUtil {
 		return result;
 	}
 
-	//Send Only Email Without Attchments
+		//Send Only Email Without Attchments
 		public  void sendOnlyEmail(String host, String port,
 				final String userName, final String password, String toAddress,
 				String subject, String message)
