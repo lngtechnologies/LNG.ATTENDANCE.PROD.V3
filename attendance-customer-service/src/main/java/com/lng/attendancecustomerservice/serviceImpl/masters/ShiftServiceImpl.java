@@ -34,7 +34,6 @@ public class ShiftServiceImpl implements ShiftService {
 	public ShiftResponse saveShift(ShiftDto shiftDto) { 
 
 		ShiftResponse shiftResponse = new ShiftResponse();
-
 		Shift shift = new Shift();
 		try {
 			if(shiftDto.getShiftName() == null || shiftDto.getShiftName().isEmpty()) throw new Exception("Plz Enter Shift Name");
@@ -51,7 +50,6 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					shiftResponse.status = new Status(false,200, "successfully created");
-
 				}
 				else{ 
 					shiftResponse.status = new Status(true,400, "Branch not found");
@@ -79,14 +77,14 @@ public class ShiftServiceImpl implements ShiftService {
 			} else {
 				response.status = new Status(false,400, "Not found");
 			}
-			
+
 		}catch(Exception e) {
 			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
 	}
-	
+
 	@Override
 	public Status updateShiftByShiftId(ShiftDto shiftDto) {
 		Status status = null;
@@ -117,7 +115,6 @@ public class ShiftServiceImpl implements ShiftService {
 				else{ 
 
 					status = new Status(true,400,"Shift name already exists");
-
 				}
 			}
 
@@ -161,7 +158,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 	@Override
 	public ShiftResponse getShiftDetailsByRefBrId(Integer refBrId) {
-		//ShiftDto shiftDto = new ShiftDto();
 		ShiftResponse response = new ShiftResponse();
 		List<ShiftDto> shiftDtoList = new ArrayList<>();
 		try {
@@ -177,16 +173,13 @@ public class ShiftServiceImpl implements ShiftService {
 					shiftDto1.setShiftStart((p[1].toString()));
 					shiftDto1.setShiftEnd((p[2].toString()));
 					shiftDto1.setRefBrId(Integer.valueOf(p[3].toString()));
+					shiftDto1.setDefaultOutInhrs(Integer.valueOf(p[4].toString()));
 					shiftDtoList.add(shiftDto1);
 					response.status = new Status(false,200, "success");
 				}
-
 			}
-
 		}catch (Exception e){
 			response.status = new Status(true, 500, "Oops..! Something went wrong..");
-
-
 		}
 		response.setData1(shiftDtoList);
 		return response;
@@ -231,14 +224,14 @@ public class ShiftServiceImpl implements ShiftService {
 		}
 		return response;
 	}
-	
+
 	public ShiftDto convertToShiftDto(Shift shift) {
 		ShiftDto shiftDto = modelMapper.map(shift,ShiftDto.class);
 		shiftDto.setRefBrId(shift.getBranch().getBrId());
 		shiftDto.setBrName(shift.getBranch().getBrName());
 		return shiftDto;
 	}
-	
+
 	// Convert 24 hours time to 12 hours
 	/*public String TimeHourConvert(String time) {
 		String pattern = "h:mm:ss a";

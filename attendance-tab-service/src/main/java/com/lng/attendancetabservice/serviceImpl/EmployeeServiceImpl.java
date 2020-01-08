@@ -54,8 +54,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 			Employee	employee =  employeeRepository.findEmployee(empMobile);
 			Employee   employee1  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
-			Shift shift = shiftRepository.findShiftByEmployee_EmpMobile(empMobile);
 			if(employee != null && employee1 != null ) {
+				Shift shift = shiftRepository.findShiftByEmployee_EmpMobile(empMobile);
 				if(shift != null) {
 					shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 					shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
@@ -92,6 +92,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 		try {
 			Employee employee = employeeRepository.findByempId(employeeDto1.getEmpId());
 			if(employee != null){
+				if(!employee.getEmpInService()) { 
+					status = new Status(true, 400, "Employee not in service");
+					return status;
+				}
 				employee.setEmpPresistedFaceId(employeeDto1.getEmpPresistedFaceId());
 				employeeRepository.save(employee);
 
@@ -177,7 +181,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					Shift shift = shiftRepository.findShiftDetailsByEmployee_EmpIdAndCustomer_CustId(empId,custId);
 					if(shift != null) {
 						String time = employeeRepository.getOutPermissibleTimeByEmployee_EmpIdAndCustomer_CustId(empId,custId);
-						
+
 						shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 						shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
 						if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {
