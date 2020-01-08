@@ -128,7 +128,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			}
 
 			else {
-				status = new Status(false, 200, "Customer not found");
+				status = new Status(false, 400, "Customer not found");
 
 			}
 		}
@@ -185,7 +185,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				response.status = new Status(false,200, "Success");
 			}
 			else {
-				response.status = new Status(true, 4000, "Not found");
+				response.status = new Status(true, 400, "Not found");
 			}
 		}catch(Exception e) {
 			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 

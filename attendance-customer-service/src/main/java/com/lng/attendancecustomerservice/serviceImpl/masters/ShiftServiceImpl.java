@@ -60,7 +60,7 @@ public class ShiftServiceImpl implements ShiftService {
 				shiftResponse.status = new Status(true,400,"Shift name already exists");
 			}
 		} catch (Exception e) {
-			shiftResponse.status = new Status(true, 4000, e.getMessage());
+			shiftResponse.status = new Status(true, 500,"Oops..! Something went wrong..");
 		}
 
 		return shiftResponse;
