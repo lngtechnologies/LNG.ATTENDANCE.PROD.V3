@@ -9,6 +9,8 @@ public class ShiftDto {
 	private String    shiftEnd;
 	private String brName;
 	private Boolean shiftIsActive;
+	private Integer defaultOutInhrs;
+	
 	
 	public Integer getShiftId() {
 		return shiftId;
@@ -28,8 +30,6 @@ public class ShiftDto {
 	public void setShiftName(String shiftName) {
 		this.shiftName = shiftName;
 	}
-
-
 	public String getShiftStart() {
 		return shiftStart;
 	}
@@ -42,7 +42,6 @@ public class ShiftDto {
 	public void setShiftEnd(String shiftEnd) {
 		this.shiftEnd = shiftEnd;
 	}
-
 	public String getBrName() {
 		return brName;
 	}
@@ -60,6 +59,12 @@ public class ShiftDto {
 	}
 	public void setRefCustId(Integer refCustId) {
 		this.refCustId = refCustId;
+	}
+	public Integer getDefaultOutInhrs() {
+		return defaultOutInhrs;
+	}
+	public void setDefaultOutInhrs(Integer defaultOutInhrs) {
+		this.defaultOutInhrs = defaultOutInhrs;
 	}
 	
 }
