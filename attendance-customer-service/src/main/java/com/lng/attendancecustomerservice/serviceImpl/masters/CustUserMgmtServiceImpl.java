@@ -86,12 +86,11 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 		try {
 			if(customer != null) {
-				if(login3 != null) {
-					if(customer.getCustMobile().equals(login3.getLoginMobile())) {
+				if(login3 != null && customer.getCustMobile().equals(login3.getLoginMobile())) {
 						login3.setRefEmpId(custUserMgmtDto.getEmpId());
 						iLoginRepository.save(login3);
 						status = new Status(false, 200, "Admin has been linked to the selected employee");
-					}
+		
 				} else {
 					String userName = custUserMgmtDto.getUserName();
 					String custCode = customer.getCustCode();
@@ -139,6 +138,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			}
 
 		} catch (Exception e) {
+			
 			status = new Status(true, 400, "Oops..! Something went wrong..");
 		}
 		return status;

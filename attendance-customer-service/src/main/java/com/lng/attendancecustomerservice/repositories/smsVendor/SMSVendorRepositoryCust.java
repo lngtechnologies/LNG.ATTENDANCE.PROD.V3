@@ -11,4 +11,6 @@ public interface SMSVendorRepositoryCust extends PagingAndSortingRepository<SMSV
 
 	@Query(value = "CALL getAllSMSVendorIsActive()", nativeQuery = true)
 	SMSVendorCust getAllBySmsVndrIsActive();
+	
+	SMSVendorCust findAllBySmsVndrIsActive(Boolean isActive);
 }
