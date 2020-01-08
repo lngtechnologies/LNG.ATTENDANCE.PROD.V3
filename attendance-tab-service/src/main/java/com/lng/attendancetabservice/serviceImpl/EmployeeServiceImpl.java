@@ -190,7 +190,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 						employeeDto3.setShiftEnd(shift.getShiftEnd());
 						employeeDto3.setCustId(customer.getCustId());
 						employeeDto3.setOutPermissibleTime(time);
-						employeeResponse2.setData(employeeDto3);
+						employeeResponse2.setShiftData(employeeDto3);
 						employeeResponse2.status = new Status(false,200, "success");
 					} else {
 						employeeResponse2.status = new Status(true, 400, "Shift not found");
