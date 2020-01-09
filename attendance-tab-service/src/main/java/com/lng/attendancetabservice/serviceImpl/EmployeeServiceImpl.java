@@ -45,11 +45,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String shiftEndTime = null;
 		EmployeeDto2 employeeDto2 = new EmployeeDto2();
 		try {
-
-			Employee	employee =  employeeRepository.findEmployee(empMobile);
-			Employee   employee1  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
-			if(employee != null && employee1 != null ) {
-				Shift shift = shiftRepository.findShiftByEmployee_EmpMobile(empMobile);
+			Employee   employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
+			if(employee != null) {
+				Shift shift = shiftRepository.findShiftByEmployee_EmpMobileAndCustomer_custId(empMobile,refCustId);
 				if(shift != null) {
 					shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 					shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
@@ -121,18 +119,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public OtpResponseDto generateOtp(String empMobile) {
+	public OtpResponseDto generateOtp(String empMobile,Integer refCustId) {
 
 		OtpResponseDto otpResponseDto = new OtpResponseDto();
 		try {
 			// Generate random otp
 			int otp = employeeRepository.generateOtp();
+			Customer customer = customerRepository.findCustomerByCustId(refCustId);
+			if(customer != null) {
+				if(!customer.getCustIsActive()) { 
+					otpResponseDto.status = new Status(true, 400, "Customer subscription expired");
+					return otpResponseDto;
+				}
 
-			Employee employee = employeeRepository.findEmployeeByEmpMobile(empMobile);
+			Employee employee = employeeRepository.findEmployeeByEmpMobileAndCustomer_custId(empMobile,refCustId);
 
 			// Check if Employee exist or no
-			if(employee == null) throw new Exception("Invalid mobile number");
-
+			if(employee == null) {
+				otpResponseDto.status = new Status(true,400,"Invalid mobile number");
+				return otpResponseDto;
+			}
 			// If Employeee exist Triger otp to Employee mobile number
 			if(employee != null) {
 
@@ -145,6 +151,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 				}else {
 					otpResponseDto.status = new Status(true,400,"There is some problem with the message utility");
 				}
+			}
+			}else {
+				otpResponseDto.status = new Status(true,400,"Customer not found");
 			}
 		} catch(Exception ex) {
 			otpResponseDto.status = new Status(true,500,"Oops..! Something went wrong..");

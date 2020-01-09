@@ -164,7 +164,7 @@ public class ShiftServiceImpl implements ShiftService {
 
 			List<Object[]> shiftList = shiftRepository.findShiftDetailsByBranch_RefBrIdAndShiftIsActive(refBrId, true);
 			if(shiftList.isEmpty()) {
-				response.status = new Status(true,400, "Shift not found");
+				response.status = new Status(false,400, "Shift not found");
 			}else {
 				for (Object[] p : shiftList) {	
 
@@ -175,7 +175,7 @@ public class ShiftServiceImpl implements ShiftService {
 					shiftDto1.setRefBrId(Integer.valueOf(p[3].toString()));
 					shiftDto1.setDefaultOutInhrs(Integer.valueOf(p[4].toString()));
 					shiftDtoList.add(shiftDto1);
-					response.status = new Status(false,200, "success");
+					response.status = new Status(false,200, "Success");
 				}
 			}
 		}catch (Exception e){
@@ -216,7 +216,7 @@ public class ShiftServiceImpl implements ShiftService {
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not found"); 
 			}else {
-				response.status = new Status(false,200, "success");
+				response.status = new Status(false,200, "Success");
 			}
 		}catch(Exception e) {
 			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 

@@ -46,7 +46,7 @@ public class EmployeeController {
 
 	@PostMapping(value = "/generateOtp")
     public ResponseEntity<OtpResponseDto> generateOtp(@RequestBody EmployeeDto1 employeeDto1) {
-		OtpResponseDto otpResponseDto = employeeService.generateOtp(employeeDto1.getEmpMobile());
+		OtpResponseDto otpResponseDto = employeeService.generateOtp(employeeDto1.getEmpMobile(),employeeDto1.getRefCustId());
         if (otpResponseDto !=null){
             return new ResponseEntity<OtpResponseDto>(otpResponseDto, HttpStatus.OK);
         }
