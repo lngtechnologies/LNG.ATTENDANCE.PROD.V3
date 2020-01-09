@@ -59,7 +59,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department1.setDeptName(departmentDto.getDeptName());
 					department1.setDeptIsActive(true);
 					departmentRepository.save(department1);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "Successfully created");
 
 				}
 				else{ 

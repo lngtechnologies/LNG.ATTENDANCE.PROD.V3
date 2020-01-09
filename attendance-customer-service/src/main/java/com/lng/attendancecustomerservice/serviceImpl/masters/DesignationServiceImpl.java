@@ -44,7 +44,7 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesignationName(designationDto.getDesignationName());
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "Successfully created");
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
