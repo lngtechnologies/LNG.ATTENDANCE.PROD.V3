@@ -45,11 +45,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String shiftEndTime = null;
 		EmployeeDto2 employeeDto2 = new EmployeeDto2();
 		try {
-
-			Employee	employee =  employeeRepository.findEmployee(empMobile);
-			Employee   employee1  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
-			if(employee != null && employee1 != null ) {
-				Shift shift = shiftRepository.findShiftByEmployee_EmpMobile(empMobile);
+			Employee   employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
+			if(employee != null) {
+				Shift shift = shiftRepository.findShiftByEmployee_EmpMobileAndCustomer_custId(empMobile,refCustId);
 				if(shift != null) {
 					shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
 					shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
