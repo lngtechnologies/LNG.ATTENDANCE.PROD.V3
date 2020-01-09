@@ -13,7 +13,7 @@ public interface EmployeeService {
 	
 	  Status  updateEmployee(EmployeeDto1 employeeDto1);
 	  
-	  OtpResponseDto generateOtp(String  empMobile);
+	  OtpResponseDto generateOtp(String  empMobile,Integer refCustId);
 	  
 	  EmployeeResponse2  getShiftDetailsByEmpIdAndCustId(Integer empId,Integer custId);
 	  

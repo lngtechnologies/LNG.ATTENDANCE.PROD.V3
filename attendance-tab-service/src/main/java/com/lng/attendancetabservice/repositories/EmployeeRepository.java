@@ -24,8 +24,8 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	
 	Employee findByempId(Integer empId);
 	
-	@Query(value = "SELECT e.* FROM tmemployee e WHERE e.empMobile = ?1 AND e.empInService=TRUE", nativeQuery = true)
-	Employee findEmployeeByEmpMobile(String empMobile);
+	@Query(value = "SELECT e.* FROM tmemployee e WHERE e.empMobile = ?1 AND e.refCustId = ?2 AND e.empInService=TRUE", nativeQuery = true)
+	Employee findEmployeeByEmpMobileAndCustomer_custId(String empMobile,Integer refCustId);
 	
 	@Query(value = "SELECT e.* FROM tmemployee e WHERE e.empMobile = ?1 AND e.empInService=TRUE;", nativeQuery = true)
 	Employee findEmployee(String empMobile);

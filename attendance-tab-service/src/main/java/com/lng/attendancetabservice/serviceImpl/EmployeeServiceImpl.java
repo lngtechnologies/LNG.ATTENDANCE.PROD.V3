@@ -121,18 +121,20 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public OtpResponseDto generateOtp(String empMobile) {
+	public OtpResponseDto generateOtp(String empMobile,Integer refCustId) {
 
 		OtpResponseDto otpResponseDto = new OtpResponseDto();
 		try {
 			// Generate random otp
 			int otp = employeeRepository.generateOtp();
 
-			Employee employee = employeeRepository.findEmployeeByEmpMobile(empMobile);
+			Employee employee = employeeRepository.findEmployeeByEmpMobileAndCustomer_custId(empMobile,refCustId);
 
 			// Check if Employee exist or no
-			if(employee == null) throw new Exception("Invalid mobile number");
-
+			if(employee == null) {
+				otpResponseDto.status = new Status(true,400,"Invalid mobile number");
+				return otpResponseDto;
+			}
 			// If Employeee exist Triger otp to Employee mobile number
 			if(employee != null) {
 
