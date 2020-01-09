@@ -125,6 +125,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 		try {
 			// Generate random otp
 			int otp = employeeRepository.generateOtp();
+			Customer customer = customerRepository.findCustomerByCustId(refCustId);
+			if(customer != null) {
+				if(!customer.getCustIsActive()) { 
+					otpResponseDto.status = new Status(true, 400, "Customer subscription expired");
+					return otpResponseDto;
+				}
 
 			Employee employee = employeeRepository.findEmployeeByEmpMobileAndCustomer_custId(empMobile,refCustId);
 
@@ -145,6 +151,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 				}else {
 					otpResponseDto.status = new Status(true,400,"There is some problem with the message utility");
 				}
+			}
+			}else {
+				otpResponseDto.status = new Status(true,400,"Customer not found");
 			}
 		} catch(Exception ex) {
 			otpResponseDto.status = new Status(true,500,"Oops..! Something went wrong..");
