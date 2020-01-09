@@ -124,7 +124,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 									+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
 							String s = messageUtil.sms(mobileNo, mobileSmS);
 
-							status = new Status(false, 200, "successfully created");
+							status = new Status(false, 200, "Successfully created");
 
 						}else {
 							status = new Status(true, 400, "Mobile number already exist");
