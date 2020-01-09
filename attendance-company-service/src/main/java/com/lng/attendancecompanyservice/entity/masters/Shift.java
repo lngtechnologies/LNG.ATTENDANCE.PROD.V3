@@ -1,7 +1,5 @@
 package com.lng.attendancecompanyservice.entity.masters;
 
-import java.sql.Time;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,6 +30,10 @@ public class Shift {
 	
 	@Column(name = "shiftEnd")
 	private String shiftEnd;
+	
+
+	@Column(name = "defaultOutInhrs")
+	private Integer defaultOutInhrs;
 
 	public Integer getShiftId() {
 		return shiftId;
@@ -71,6 +73,14 @@ public class Shift {
 
 	public void setShiftEnd(String shiftEnd) {
 		this.shiftEnd = shiftEnd;
+	}
+
+	public Integer getDefaultOutInhrs() {
+		return defaultOutInhrs;
+	}
+
+	public void setDefaultOutInhrs(Integer defaultOutInhrs) {
+		this.defaultOutInhrs = defaultOutInhrs;
 	}
 
 	

@@ -157,7 +157,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 				custLeaveResponse.status = new Status(false,200, "Success");
 			}
 			else {
-				custLeaveResponse.status = new Status(true, 4000, "Not found");
+				custLeaveResponse.status = new Status(true, 400, "Not found");
 			}
 		}catch(Exception e) {
 			custLeaveResponse.status = new Status(true, 500, "Oops..! Something went wrong"); 

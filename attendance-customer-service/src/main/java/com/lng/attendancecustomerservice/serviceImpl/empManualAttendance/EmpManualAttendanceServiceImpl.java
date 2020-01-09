@@ -40,7 +40,6 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	@Autowired
 	EmployeeAttendanceRepository employeeAttendanceRepository;
 
-
 	@Autowired
 	UnmatchedEmployeeAttendanceRepository unmatchedEmpAttndRepo;
 
