@@ -7,7 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancetabservice.entity.Branch;
 import com.lng.attendancetabservice.entity.Customer;
+import com.lng.attendancetabservice.repositories.BranchRepository;
 import com.lng.attendancetabservice.repositories.CustomerRepository;
 import com.lng.attendancetabservice.repositories.EmployeeRepository;
 import com.lng.attendancetabservice.service.CustomerService;
@@ -27,6 +29,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	EmployeeRepository employeeRepository;
 
+	@Autowired
+	BranchRepository branchRepository;
+
 	MessageUtil messageUtil = new MessageUtil();
 
 	@Override
@@ -36,24 +41,32 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			// Generate random otp
 			int otp = employeeRepository.generateOtp();
-
-			Customer customer = customerRepository.findByCustomer_CustCodeAndBranch_BrCode(custCode, brCode);
-
-			// Check if Customer exist or no
-			if(customer == null) throw new Exception("Customer not found");
-
-			// If Customer exist Triger otp to Customer mobile number
+			Customer customer =	customerRepository.findByCustomer_CustCode(custCode);
 			if(customer != null) {
-
-				String mobileNo = customer.getCustMobile();
-				String mobileSmS = otp +" is OTP to verify your details";
-				String s = messageUtil.sms(mobileNo, mobileSmS);
-				if(s != null) {
-					otpResponseDto.status = new Status(false,200,"Successfully sent OTP");
-					otpResponseDto.otpDto = new OtpDto(otp);				
-				}else {
-					otpResponseDto.status = new Status(true,400,"There is some problem with the message utility");
+				if(!customer.getCustIsActive()) { 
+					otpResponseDto.status = new Status(true, 400, "Customer subscription expired");
+					return otpResponseDto;
 				}
+				Branch branch =branchRepository.findByBranch_BrCodeAndCustomer_CustId(brCode,customer.getCustId());
+				if(branch != null) {
+					if(!branch.getBrIsActive()) { 
+						otpResponseDto.status = new Status(true, 400, "Branch is not active");
+						return otpResponseDto;
+					}
+					String mobileNo = customer.getCustMobile();
+					String mobileSmS = otp +" is OTP to verify your details";
+					String s = messageUtil.sms(mobileNo, mobileSmS);
+					if(s != null) {
+						otpResponseDto.status = new Status(false,200,"Successfully sent OTP");
+						otpResponseDto.otpDto = new OtpDto(otp);				
+					}else {
+						otpResponseDto.status = new Status(true,400,"There is some problem with the message utility");
+					}
+				}else {
+					otpResponseDto.status = new Status(true,400,"Branch not found");
+				}
+			}else {
+				otpResponseDto.status = new Status(true,400,"Customer not found");
 			}
 		} catch(Exception ex) {
 			otpResponseDto.status = new Status(true,500,"Oops..! Something went wrong..");
