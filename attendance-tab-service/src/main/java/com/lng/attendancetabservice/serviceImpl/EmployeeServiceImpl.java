@@ -5,10 +5,12 @@ import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancetabservice.entity.Branch;
 import com.lng.attendancetabservice.entity.Customer;
 import com.lng.attendancetabservice.entity.Employee;
 import com.lng.attendancetabservice.entity.EmployeePic;
 import com.lng.attendancetabservice.entity.Shift;
+import com.lng.attendancetabservice.repositories.BranchRepository;
 import com.lng.attendancetabservice.repositories.CustomerRepository;
 import com.lng.attendancetabservice.repositories.EmployeePicRepository;
 import com.lng.attendancetabservice.repositories.EmployeeRepository;
@@ -34,6 +36,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	CustomerRepository customerRepository;
 
+	@Autowired
+	BranchRepository branchRepository;
+
 	MessageUtil messageUtil = new MessageUtil();
 	@Autowired
 	ShiftRepository shiftRepository;
@@ -45,31 +50,49 @@ public class EmployeeServiceImpl implements EmployeeService {
 		String shiftEndTime = null;
 		EmployeeDto2 employeeDto2 = new EmployeeDto2();
 		try {
-			Employee   employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
-			if(employee != null) {
-				Shift shift = shiftRepository.findShiftByEmployee_EmpMobileAndCustomer_custId(empMobile,refCustId);
-				if(shift != null) {
-					shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
-					shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
-					if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {
-						employeeDto2.setShiftType("D1D2");
-					} else {
-						employeeDto2.setShiftType("D1D1");
-					}
-					employeeDto2.setEmpId(employee.getEmpId());
-					employeeDto2.setEmpName(employee.getEmpName());
-					if(employee.getEmpPresistedFaceId() == null || employee.getEmpPresistedFaceId().isEmpty()) {
-						employeeDto2.setEmpPresistedFaceId("null");
-					}else {
-						employeeDto2.setEmpPresistedFaceId(employee.getEmpPresistedFaceId());
-					}
-					employeeResponse1.setData1(employeeDto2);
-					employeeResponse1.status = new Status(false,200, "success");
-				} else {
-					employeeResponse1.status = new Status(true, 400, "Shift not found for this employee");
+			Customer customer = customerRepository.findCustomerByCustId(refCustId);
+			if(customer != null) {
+				if(!customer.getCustIsActive()) { 
+					employeeResponse1.status = new Status(true, 400, "Customer subscription expired");
+					return employeeResponse1;
 				}
-			} else {
-				employeeResponse1.status = new Status(true, 400, "Invalid mobile number");
+				Branch branch = branchRepository.findByBrId(refBrId);
+				if(branch != null) {
+					if(!branch.getBrIsActive()) { 
+						employeeResponse1.status = new Status(true, 400, "Branch is not active");
+						return employeeResponse1;
+					}
+					Employee   employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
+					if(employee != null) {
+						Shift shift = shiftRepository.findShiftByEmployee_EmpMobileAndCustomer_custId(empMobile,refCustId);
+						if(shift != null) {
+							shiftStartTime = shift.getShiftStart().substring(5).trim().toUpperCase();
+							shiftEndTime = shift.getShiftEnd().substring(5).trim().toUpperCase();
+							if(shiftStartTime.equalsIgnoreCase("PM") && shiftEndTime.equalsIgnoreCase("AM")) {
+								employeeDto2.setShiftType("D1D2");
+							} else {
+								employeeDto2.setShiftType("D1D1");
+							}
+							employeeDto2.setEmpId(employee.getEmpId());
+							employeeDto2.setEmpName(employee.getEmpName());
+							if(employee.getEmpPresistedFaceId() == null || employee.getEmpPresistedFaceId().isEmpty()) {
+								employeeDto2.setEmpPresistedFaceId("null");
+							}else {
+								employeeDto2.setEmpPresistedFaceId(employee.getEmpPresistedFaceId());
+							}
+							employeeResponse1.setData1(employeeDto2);
+							employeeResponse1.status = new Status(false,200, "success");
+						} else {
+							employeeResponse1.status = new Status(true, 400, "Shift not found for this employee");
+						}
+					} else {
+						employeeResponse1.status = new Status(true, 400, "Invalid mobile number");
+					}
+				}else {
+					employeeResponse1.status = new Status(true, 400, "Branch not found");
+				}
+			}else {
+				employeeResponse1.status = new Status(true, 400, "Customer not found");
 			}
 		}catch (Exception e){
 			employeeResponse1.status = new Status(true, 500, "Oops..! Something went wrong..");
@@ -125,6 +148,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		try {
 			// Generate random otp
 			int otp = employeeRepository.generateOtp();
+			//Check Customer is Exist or Not
 			Customer customer = customerRepository.findCustomerByCustId(refCustId);
 			if(customer != null) {
 				if(!customer.getCustIsActive()) { 
@@ -132,26 +156,26 @@ public class EmployeeServiceImpl implements EmployeeService {
 					return otpResponseDto;
 				}
 
-			Employee employee = employeeRepository.findEmployeeByEmpMobileAndCustomer_custId(empMobile,refCustId);
+				Employee employee = employeeRepository.findEmployeeByEmpMobileAndCustomer_custId(empMobile,refCustId);
 
-			// Check if Employee exist or no
-			if(employee == null) {
-				otpResponseDto.status = new Status(true,400,"Invalid mobile number");
-				return otpResponseDto;
-			}
-			// If Employeee exist Triger otp to Employee mobile number
-			if(employee != null) {
-
-				String mobileNo = employee.getEmpMobile();
-				String mobileSmS = otp +" is OTP to verify your Employee details with "+ employee.getCustomer().getCustName();	
-				String s = messageUtil.sms(mobileNo, mobileSmS);
-				if(s != null) {
-					otpResponseDto.status = new Status(false,200,"Successfully sent OTP");
-					otpResponseDto.otpDto = new OtpDto(otp);				
-				}else {
-					otpResponseDto.status = new Status(true,400,"There is some problem with the message utility");
+				// Check if Employee exist or no
+				if(employee == null) {
+					otpResponseDto.status = new Status(true,400,"Invalid mobile number");
+					return otpResponseDto;
 				}
-			}
+				// If Employeee exist Triger otp to Employee mobile number
+				if(employee != null) {
+
+					String mobileNo = employee.getEmpMobile();
+					String mobileSmS = otp +" is OTP to verify your Employee details with "+ employee.getCustomer().getCustName();	
+					String s = messageUtil.sms(mobileNo, mobileSmS);
+					if(s != null) {
+						otpResponseDto.status = new Status(false,200,"Successfully sent OTP");
+						otpResponseDto.otpDto = new OtpDto(otp);				
+					}else {
+						otpResponseDto.status = new Status(true,400,"There is some problem with the message utility");
+					}
+				}
 			}else {
 				otpResponseDto.status = new Status(true,400,"Customer not found");
 			}
