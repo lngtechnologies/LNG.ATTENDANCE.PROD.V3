@@ -13,7 +13,7 @@ import com.lng.attendancecompanyservice.entity.masters.Country;
 @Repository
 public interface CountryRepository extends CrudRepository<Country,Integer> {
 
-	@Query(value = "SELECT * FROM tmcountry WHERE countryIsActive = TRUE  ORDER BY countryName ASC;", nativeQuery = true)
+	@Query(value = "SELECT * FROM tmcountry ORDER BY countryName ASC", nativeQuery = true)
 	List<Country> findAll();
 	Country findCountryByCountryId(Integer countryId);
 	// Country findCountry(Integer countryId, String CountryTelCode,String countryName);

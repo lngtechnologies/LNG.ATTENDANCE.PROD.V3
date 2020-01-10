@@ -90,7 +90,7 @@ public class StateServiceImpl implements StateService {
 	public StateResponse getAll() {
 		StateResponse response = new StateResponse();
 		try {
-			List<State> stateList=stateRepository.findAllByStateIsActive(true);
+			List<State> stateList=stateRepository.findAll();
 
 			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {

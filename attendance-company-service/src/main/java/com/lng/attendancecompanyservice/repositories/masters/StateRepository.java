@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import com.lng.attendancecompanyservice.entity.masters.Country;
 import com.lng.attendancecompanyservice.entity.masters.State;
 @Repository
 public interface StateRepository extends CrudRepository<State,Integer> {	
@@ -14,8 +15,10 @@ public interface StateRepository extends CrudRepository<State,Integer> {
 	State findByStateId(Integer stateId);
 
 	List<State> findStateByCountryCountryId(int countryId);
-
-	List<State> findAllByStateIsActive(Boolean stateIsActive);
+	
+	@Query(value = "SELECT * FROM tmstate ORDER BY stateName ASC", nativeQuery = true)
+	List<State> findAll();
+	
 	@Query(value = "select * from tmstate where stateName = ?1", nativeQuery = true)
 	State findByStateName(String stateName);
 	State findStateByStateId(Integer stateId);
