@@ -110,12 +110,8 @@ public class StateServiceImpl implements StateService {
 	public StateResponse getAll() {
 		StateResponse response = new StateResponse();
 		try {
-<<<<<<< HEAD
-			List<State> stateList=stateRepository.findAllByStateIsActive(true);
-=======
-			List<State> stateList=stateRepository.findAll();
 
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+			List<State> stateList=stateRepository.findAll();
 			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not found");
