@@ -110,7 +110,25 @@ public class CountryServiceImpl implements CountryService {
 		}
 		return response;
 	}
+	@Override
+	public CountryResponse getAllByCountryIsActive() {
+		CountryResponse response = new CountryResponse();
+		try {
+			List<Country> countryList=countryRepositary.findAllByCountryIsActive();
+			response.setData1(countryList.stream().map(country -> convertToCountryDto(country)).collect(Collectors.toList()));
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(false,400, "Not found");
 
+			}else {
+				response.status = new Status(false,200, "Success");
+			}
+
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+
+		}
+		return response;
+	}
 	@Override
 	public Status updateCountryByCountryId(CountryDto countryDto) {
 		Status status = null;

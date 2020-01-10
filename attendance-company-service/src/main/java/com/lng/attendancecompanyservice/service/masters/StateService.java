@@ -9,10 +9,11 @@ public interface StateService {
 
 	StateResponse saveState(StateDto stateDto);
 
-	StateResponse getAll();
+	StateResponse getAllByStateIsActive();
 	Status updateSateByStateId(StateDto stateDto); 
 	StateResponse deleteByStateId(Integer stateId);
 	StateResponse getStateDetailsByRefCountryId(Integer refCountryId);
 	StateResponse  getStateDetailsByStateId(Integer stateId);
+	StateResponse getAll();
 
 }

@@ -15,9 +15,12 @@ public interface IndustryTypeRepository extends PagingAndSortingRepository<Indus
 	
 	IndustryType findIndustryTypeByIndustryName(String industryName);
 	
-	@Query(value = "SELECT * FROM tmindustry ORDER BY industryName ASC", nativeQuery = true)
-	List<IndustryType> findAll();
+	@Query(value = "SELECT * FROM tmindustry WHERE industryIsActive = TRUE ORDER BY industryName ASC", nativeQuery = true)
+	List<IndustryType> findAllByIndustryIsActive();
 	
 	IndustryType findIndustryTypeByIndustryNameAndIndustryIsActive(String industryName, Boolean industryIsActive);
+	
+	@Query(value = "SELECT * FROM tmindustry ORDER BY industryName ASC", nativeQuery = true)
+	List<IndustryType> findAll();
 	
 }

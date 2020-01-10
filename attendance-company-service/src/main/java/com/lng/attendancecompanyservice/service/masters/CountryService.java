@@ -8,9 +8,10 @@ import status.Status;
 public interface CountryService {
 	
 	CountryResponse saveCountry(CountryDto countryDto);
-	CountryResponse getAll();
+	CountryResponse getAllByCountryIsActive();
 	Status updateCountryByCountryId(CountryDto countryDto);
 	CountryResponse deleteByCountryId(Integer countryId);
+	CountryResponse getAll();
 	
 
 }
