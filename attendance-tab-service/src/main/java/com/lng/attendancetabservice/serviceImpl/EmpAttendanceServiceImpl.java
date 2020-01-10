@@ -169,7 +169,7 @@ public class EmpAttendanceServiceImpl implements EmpAttendanceService {
 					unmatchedEmployeeAttendance.setEmpAttendanceOutConfidence(empAttendanceDto1.getEmpAttendanceOutConfidence());
 					unmatchedEmpAttndRepo.save(unmatchedEmployeeAttendance);
 
-					status = new Status(true, 400, "Un Matched attendance found, Please contact your manager to rectify the same.");
+					status = new Status(false, 200, "Un Matched attendance found, Please contact your manager to rectify the same.");
 				}
 			}else {
 				status = new Status(false, 400, "Employee not found");

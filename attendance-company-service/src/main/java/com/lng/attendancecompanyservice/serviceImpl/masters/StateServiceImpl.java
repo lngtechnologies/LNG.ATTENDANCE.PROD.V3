@@ -91,18 +91,14 @@ public class StateServiceImpl implements StateService {
 		StateResponse response = new StateResponse();
 		try {
 			List<State> stateList=stateRepository.findAllByStateIsActive(true);
-
 			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not found");
-
 			}else {
 				response.status = new Status(false,200, "Success");
 			}
-
 		}catch(Exception e) {
-			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
-
+			response.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 		return response;
 	}

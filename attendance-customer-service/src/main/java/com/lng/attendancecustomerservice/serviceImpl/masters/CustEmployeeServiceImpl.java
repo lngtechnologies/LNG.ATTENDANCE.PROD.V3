@@ -609,7 +609,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 							EmployeeReportingTo employeeReportingTo2 = employeeReportingToRepository.findByEmployee_EmpIdAndRefEmpReportingToIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmpReportingToId(), custEmployeeDto.getEmpReportingToFromDate());
 							if(employeeReportingTo2 == null) {
 								
-								EmployeeReportingTo employeeReportingTo1 = employeeReportingToRepository.findByEmpId(custEmployeeDto.getEmpId());
+								EmployeeReportingTo employeeReportingTo1 = employeeReportingToRepository.findByEmpIdAndReportingToDateNull(custEmployeeDto.getEmpId());
 								if(employeeReportingTo1 != null) {
 									Date empRetortingToDate = subtractDaysFromDate(custEmployeeDto.getEmpReportingToFromDate());
 									employeeReportingTo1.setEmpToDate(empRetortingToDate);
@@ -621,6 +621,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 								employeeReportingTo.setRefEmpReportingToId(custEmployeeDto.getEmpReportingToId());
 								employeeReportingTo.setEmpFromDate(custEmployeeDto.getEmpReportingToFromDate());
 								employeeReportingToRepository.save(employeeReportingTo);
+							} else {
+								employeeReportingTo2.setEmployee(employee1);
+								employeeReportingTo2.setRefEmpReportingToId(custEmployeeDto.getEmpReportingToId());
+								employeeReportingTo2.setEmpFromDate(custEmployeeDto.getEmpReportingToFromDate());
+								employeeReportingTo2.setEmpToDate(null);
+								employeeReportingToRepository.save(employeeReportingTo2);
 							}
 						} catch (Exception e) {
 							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
