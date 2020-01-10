@@ -169,11 +169,12 @@ public class ShiftServiceImpl implements ShiftService {
 				for (Object[] p : shiftList) {	
 
 					ShiftDto shiftDto1 = new ShiftDto();
-					shiftDto1.setShiftName(p[0].toString());
-					shiftDto1.setShiftStart((p[1].toString()));
-					shiftDto1.setShiftEnd((p[2].toString()));
-					shiftDto1.setRefBrId(Integer.valueOf(p[3].toString()));
-					shiftDto1.setDefaultOutInhrs(Integer.valueOf(p[4].toString()));
+					shiftDto1.setShiftId(Integer.valueOf(p[0].toString()));
+					shiftDto1.setShiftName(p[1].toString());
+					shiftDto1.setShiftStart((p[2].toString()));
+					shiftDto1.setShiftEnd((p[3].toString()));
+					shiftDto1.setRefBrId(Integer.valueOf(p[4].toString()));
+					shiftDto1.setDefaultOutInhrs(Integer.valueOf(p[5].toString()));
 					shiftDtoList.add(shiftDto1);
 					response.status = new Status(false,200, "Success");
 				}

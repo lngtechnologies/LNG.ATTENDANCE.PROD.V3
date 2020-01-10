@@ -7,8 +7,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
-import com.lng.dto.customer.CustomerDto;
-import com.lng.dto.customer.CustomerDtoTwo;
 
 @Repository
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer> {
