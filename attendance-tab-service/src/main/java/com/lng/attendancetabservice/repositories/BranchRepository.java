@@ -10,5 +10,8 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch,Inte
 	
 	@Query(value = " SELECT tb.* FROM tmbranch tb  LEFT JOIN tmcustomer tc ON tc.custId =tb.refCustomerId WHERE brCode = ?1 AND tc.custId =?2", nativeQuery = true)
 	Branch findByBranch_BrCodeAndCustomer_CustId(String brCode,Integer CustId);
+	
+	Branch findByBrId(Integer brId);
+	
 
 }

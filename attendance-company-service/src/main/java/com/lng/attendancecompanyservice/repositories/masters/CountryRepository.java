@@ -13,8 +13,8 @@ import com.lng.attendancecompanyservice.entity.masters.Country;
 @Repository
 public interface CountryRepository extends CrudRepository<Country,Integer> {
 
-	@Query(value = "SELECT * FROM tmcountry WHERE countryIsActive = TRUE  ORDER BY countryName ASC;", nativeQuery = true)
-	List<Country> findAll();
+	@Query(value = "SELECT * FROM tmcountry WHERE countryIsActive = TRUE  ORDER BY countryName ASC", nativeQuery = true)
+	List<Country> findAllByCountryIsActive();
 	Country findCountryByCountryId(Integer countryId);
 	// Country findCountry(Integer countryId, String CountryTelCode,String countryName);
 	@Query(value = "select * from tmcountry where countryName = ?1", nativeQuery = true)
@@ -25,6 +25,8 @@ public interface CountryRepository extends CrudRepository<Country,Integer> {
 	Country   getStateByCountryId(Integer countryId);
 	Country   getCoustomerByCountryId(Integer countryId );
 	Country  findCountryNameByCountryTelCode(String countryTelCode);
+	@Query(value = "SELECT * FROM tmcountry  ORDER BY countryName ASC", nativeQuery = true)
+	List<Country> findAll();
 	
 	@Transactional
 	@Modifying 

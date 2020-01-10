@@ -10,11 +10,13 @@ public interface IndustryTypeService {
 	
 	StatusDto saveIndustryType(IndustryTypeDto industryTypeDto);
 	
-	IndustryTypeListResponse findAllIndustryType();
+	IndustryTypeListResponse findAllIndustryTypeByIndustryIsActive();
 	
 	StatusDto updateIndustryType(IndustryTypeDto industryTypeDto);
 	
 	IndustryTypeResponse findIndustryByIndustryid(Integer industryId);
 	
 	StatusDto deleteIndustryByIndustryId(Integer industryId);
+	
+	IndustryTypeListResponse findAllIndustryType();
 }

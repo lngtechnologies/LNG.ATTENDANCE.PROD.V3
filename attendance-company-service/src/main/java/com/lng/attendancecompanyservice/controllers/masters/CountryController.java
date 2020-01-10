@@ -32,7 +32,7 @@ public class CountryController {
 
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<CountryResponse> getAll() {
-		CountryResponse countryDto =  countryService.getAll();
+		CountryResponse countryDto =  countryService.getAllByCountryIsActive();
 		if(countryDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
@@ -56,5 +56,12 @@ public class CountryController {
 		}
 		return new ResponseEntity<status.Status>(HttpStatus.NO_CONTENT);
 	}
-
+	@GetMapping(value = "/All")
+	public ResponseEntity<CountryResponse> All() {
+		CountryResponse countryDto =  countryService.getAll();
+		if(countryDto.getData1().isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<CountryResponse>(countryDto, HttpStatus.OK);
+	}
 }

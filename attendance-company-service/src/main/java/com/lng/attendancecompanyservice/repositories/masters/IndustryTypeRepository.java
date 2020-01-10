@@ -2,6 +2,7 @@ package com.lng.attendancecompanyservice.repositories.masters;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,8 +15,12 @@ public interface IndustryTypeRepository extends PagingAndSortingRepository<Indus
 	
 	IndustryType findIndustryTypeByIndustryName(String industryName);
 	
-	List<IndustryType> findAllByIndustryIsActive(Boolean industryIsActive);
+	@Query(value = "SELECT * FROM tmindustry WHERE industryIsActive = TRUE ORDER BY industryName ASC", nativeQuery = true)
+	List<IndustryType> findAllByIndustryIsActive();
 	
 	IndustryType findIndustryTypeByIndustryNameAndIndustryIsActive(String industryName, Boolean industryIsActive);
+	
+	@Query(value = "SELECT * FROM tmindustry ORDER BY industryName ASC", nativeQuery = true)
+	List<IndustryType> findAll();
 	
 }

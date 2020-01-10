@@ -33,7 +33,7 @@ public class StateController {
 
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<StateResponse> getAll() {
-		StateResponse stateDto =  stateService.getAll();
+		StateResponse stateDto =  stateService.getAllByStateIsActive();
 		if(stateDto.getData1().isEmpty()) {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
@@ -72,5 +72,13 @@ public class StateController {
 			return new ResponseEntity<StateResponse>(stateResponse, HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+	@GetMapping(value = "/All")
+	public ResponseEntity<StateResponse>All() {
+		StateResponse stateDto =  stateService.getAll();
+		if(stateDto.getData1().isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<StateResponse>(stateDto, HttpStatus.OK);
 	}
 }

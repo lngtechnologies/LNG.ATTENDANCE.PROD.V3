@@ -15,7 +15,8 @@ public interface StateRepository extends CrudRepository<State,Integer> {
 
 	List<State> findStateByCountryCountryId(int countryId);
 
-	List<State> findAllByStateIsActive(Boolean stateIsActive);
+	@Query(value = "SELECT * FROM tmstate WHERE stateIsActive = TRUE  ORDER BY stateName ASC", nativeQuery = true)
+	List<State> findAllByStateIsActive();
 	@Query(value = "select * from tmstate where stateName = ?1", nativeQuery = true)
 	State findByStateName(String stateName);
 	State findStateByStateId(Integer stateId);
@@ -32,6 +33,9 @@ public interface StateRepository extends CrudRepository<State,Integer> {
 	int  findByRefCountryIdAndStateName(Integer refCountryId,String stateName);
 	
 	State findByCountry_CountryIdAndStateNameAndStateIsActive(Integer refCountryId,String stateName, Boolean stateIsActive);
+	
+	@Query(value = "SELECT * FROM tmstate ORDER BY stateName ASC", nativeQuery = true)
+	List<State> findAll();
 	
 
 

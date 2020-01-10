@@ -37,7 +37,7 @@ public class IndustryTypeController {
 	
 	@GetMapping(value = "/findAll")
 	public ResponseEntity<IndustryTypeListResponse> findAll() {
-		IndustryTypeListResponse industryTypeListResponse = industryTypeService.findAllIndustryType(); 
+		IndustryTypeListResponse industryTypeListResponse = industryTypeService.findAllIndustryTypeByIndustryIsActive(); 
        if(industryTypeListResponse.getIndustryTypeDtoList().isEmpty()) {
            return new ResponseEntity(HttpStatus.NO_CONTENT);
        }
@@ -70,4 +70,12 @@ public class IndustryTypeController {
 	    }
 	    return new ResponseEntity(HttpStatus.NO_CONTENT);
 	  }
+	@GetMapping(value = "/All")
+	public ResponseEntity<IndustryTypeListResponse> All() {
+		IndustryTypeListResponse industryTypeListResponse = industryTypeService.findAllIndustryType(); 
+       if(industryTypeListResponse.getIndustryTypeDtoList().isEmpty()) {
+           return new ResponseEntity(HttpStatus.NO_CONTENT);
+       }
+       return new ResponseEntity<IndustryTypeListResponse>(industryTypeListResponse, HttpStatus.OK);
+   }
 }

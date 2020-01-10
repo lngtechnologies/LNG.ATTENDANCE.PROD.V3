@@ -71,11 +71,11 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 	}
 
 	@Override
-	public IndustryTypeListResponse findAllIndustryType() {
+	public IndustryTypeListResponse findAllIndustryTypeByIndustryIsActive() {
 
 		IndustryTypeListResponse industryTypeListResponse = new IndustryTypeListResponse();
 		try {
-			List<IndustryType> industryTypeDtoList =  industryTypeRepository.findAllByIndustryIsActive(true);
+			List<IndustryType> industryTypeDtoList =  industryTypeRepository.findAllByIndustryIsActive();
 
 			industryTypeListResponse.setIndustryTypeDtoList(industryTypeDtoList.stream().map(industryType -> convertToIndustryTypeDto(industryType)).collect(Collectors.toList()));
 
@@ -92,7 +92,28 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 		}
 		return industryTypeListResponse;
 	}	
+	@Override
+	public IndustryTypeListResponse findAllIndustryType() {
 
+		IndustryTypeListResponse industryTypeListResponse = new IndustryTypeListResponse();
+		try {
+			List<IndustryType> industryTypeDtoList =  industryTypeRepository.findAll();
+
+			industryTypeListResponse.setIndustryTypeDtoList(industryTypeDtoList.stream().map(industryType -> convertToIndustryTypeDto(industryType)).collect(Collectors.toList()));
+
+			if(industryTypeListResponse != null && industryTypeListResponse.getIndustryTypeDtoList() != null) {
+
+				industryTypeListResponse.status = new Status(false, 200, "Success");
+			}else {
+				industryTypeListResponse.status = new Status(false, 400, "Not found");
+			}
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			industryTypeListResponse.status = new Status(true,500, "Oops..! Something went wrong..");
+		}
+		return industryTypeListResponse;
+	}	
 	@Override
 	public IndustryTypeResponse findIndustryByIndustryid(Integer industryId) {
 		IndustryTypeResponse industryTypeResponse = new IndustryTypeResponse();

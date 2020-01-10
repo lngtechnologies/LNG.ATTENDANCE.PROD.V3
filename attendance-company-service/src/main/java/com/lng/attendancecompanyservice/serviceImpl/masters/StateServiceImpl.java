@@ -87,10 +87,35 @@ public class StateServiceImpl implements StateService {
 
 
 	@Override
+	public StateResponse getAllByStateIsActive() {
+		StateResponse response = new StateResponse();
+		try {
+			List<State> stateList=stateRepository.findAllByStateIsActive();
+
+			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(false,400, "Not found");
+
+			}else {
+				response.status = new Status(false,200, "Success");
+			}
+
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+
+		}
+		return response;
+	}
+	@Override
 	public StateResponse getAll() {
 		StateResponse response = new StateResponse();
 		try {
+<<<<<<< HEAD
 			List<State> stateList=stateRepository.findAllByStateIsActive(true);
+=======
+			List<State> stateList=stateRepository.findAll();
+
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 			response.setData1(stateList.stream().map(state -> convertToStateDto(state)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not found");
