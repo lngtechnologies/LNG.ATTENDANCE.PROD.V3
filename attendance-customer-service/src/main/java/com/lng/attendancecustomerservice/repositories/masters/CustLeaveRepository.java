@@ -23,5 +23,8 @@ public interface CustLeaveRepository extends PagingAndSortingRepository<CustLeav
 	CustLeave findCustLeaveBycustLeaveNameAndCustomer_custId(String custLeaveName, int custId);
 	
 	// CustLeave findByRefCustIdAndCustLeaveNameAnd(Integer refCustId,String custLeaveName);
+	
+	@Query(value = "SELECT cl.* FROM tmcustleave cl where cl.refCustId =1  ORDER BY cl.custLeaveName ASC",nativeQuery = true)
+	List<CustLeave> findAllByCustomer_CustId(Integer refCustId);
      
 }

@@ -11,6 +11,7 @@ import com.lng.attendancecustomerservice.entity.masters.HolidayCalendar;
 @Repository
 public interface HolidayCalendarRepository extends PagingAndSortingRepository<HolidayCalendar, Integer> {
 	
+	@Query(value = "SELECT cl.* FROM tmholidaycalendar cl WHERE cl.refCustId =?1  ORDER BY cl.holidayDate ASC",nativeQuery = true)
 	List<HolidayCalendar> findAllByRefCustId(Integer refCustId);
 	
 	@Query(value = "CALL CheckCustIsExistsForHolidayCalendar(?1, ?2)",nativeQuery = true)

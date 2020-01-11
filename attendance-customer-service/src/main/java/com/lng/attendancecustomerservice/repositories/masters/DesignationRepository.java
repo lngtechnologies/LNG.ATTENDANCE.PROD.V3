@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import com.lng.attendancecustomerservice.entity.masters.Department;
 import com.lng.attendancecustomerservice.entity.masters.Designation;
 @Repository
 public interface DesignationRepository extends CrudRepository<Designation,Integer> {
@@ -30,5 +31,8 @@ public interface DesignationRepository extends CrudRepository<Designation,Intege
 	List<Designation> findAllByCustomer_CustIdAndDesigIsActive(int custId, Boolean desigIsActive);
 	
 	Designation findByCustomer_CustIdAndDesignationNameAndDesigIsActive(Integer refCustId,String designationName, Boolean desigIsActive);
+	
+	@Query(value = "SELECT deg.* FROM tmdesignation deg where deg.refCustId =1 and deg.desigIsActive = true ORDER BY designationName ASC",nativeQuery = true)
+	List<Designation> findAllByCustomer_CustId(Integer refCustId);
 
 }

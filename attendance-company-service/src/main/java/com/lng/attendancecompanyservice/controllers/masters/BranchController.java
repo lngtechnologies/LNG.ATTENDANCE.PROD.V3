@@ -1,10 +1,8 @@
 package com.lng.attendancecompanyservice.controllers.masters;
 
-import org.hibernate.annotations.Synchronize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecompanyservice.service.masters.BranchService;
 import com.lng.dto.masters.branch.BranchDto;
 import com.lng.dto.masters.branch.BranchResponse;
-import com.lng.dto.masters.holidayCalendar.HolidayCalendarDto;
-import com.lng.dto.masters.holidayCalendar.HolidayCalendarResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)

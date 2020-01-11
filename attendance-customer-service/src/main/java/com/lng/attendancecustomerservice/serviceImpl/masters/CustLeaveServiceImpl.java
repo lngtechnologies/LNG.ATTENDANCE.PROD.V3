@@ -171,7 +171,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 		CustLeaveResponse custLeaveResponse =  new  CustLeaveResponse();
 
 		try {
-			List<CustLeave> custLeaveList=custLeaveRepository.findCustLeaveByCustomer_custId(custId);
+			List<CustLeave> custLeaveList=custLeaveRepository.findAllByCustomer_CustId(custId);
 			custLeaveResponse.setData1(custLeaveList.stream().map(custLeave -> convertTocustLeaveDto(custLeave)).collect(Collectors.toList()));
 
 			if(custLeaveResponse.getData1().isEmpty()) {

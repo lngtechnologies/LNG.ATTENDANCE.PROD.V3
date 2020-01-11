@@ -10,8 +10,9 @@ import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
 
 @Repository
 public interface CustomerRepository extends PagingAndSortingRepository<Customer, Integer> {
-
-	List<Customer> findAllCustomerByCustIsActive(Boolean custIsActive);
+	
+	@Query(value = "SELECT * FROM tmcustomer WHERE custIsActive = TRUE ORDER BY custName ASC", nativeQuery = true)
+	List<Customer> findAllCustomerByCustIsActive();
 	
 	Customer findCustomerByCustId(Integer custId);
 	@Query(value = "SELECT custNoOfBranch FROM tmCustomer  WHERE custId = ?1", nativeQuery = true)

@@ -198,7 +198,7 @@ public class DesignationServiceImpl implements DesignationService{
 	public DesignationResponse getAllByCustId(Integer custId) {
 		DesignationResponse response = new DesignationResponse();
 		try {
-			List<Designation> designationList=designationRepository.findAllByCustomer_CustIdAndDesigIsActive(custId, true);
+			List<Designation> designationList=designationRepository.findAllByCustomer_CustId(custId);
 			response.setData1(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
 
 			if(response.getData1().isEmpty()) {
