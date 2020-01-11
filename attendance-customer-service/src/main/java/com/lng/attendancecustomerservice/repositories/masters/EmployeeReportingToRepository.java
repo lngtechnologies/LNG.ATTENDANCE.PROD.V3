@@ -12,5 +12,5 @@ public interface EmployeeReportingToRepository extends PagingAndSortingRepositor
 	EmployeeReportingTo findByEmployee_EmpIdAndRefEmpReportingToIdAndEmpFromDate(Integer empId, Integer reportingToId, Date empFromDate);
 	
 	@Query(value = "SELECT MAX(ert.empFromDate) AS empFromDate,  ert.empReportingToId, ert.refEmpId, ert.refEmpReportingToId, ert.empToDate FROM ttempreportingto ert WHERE ert.refEmpId = ?1 AND ert.empToDate IS NULL", nativeQuery = true)
-	EmployeeReportingTo findByEmpId(Integer empId);
+	EmployeeReportingTo findByEmpIdAndReportingToDateNull(Integer empId);
 }

@@ -10,7 +10,8 @@ import com.lng.attendancecompanyservice.entity.masters.Login;
 
 @Repository
 public interface ILoginRepository extends JpaRepository<Login, Integer> {
-	Login findByLoginName(String loginName);
+	
+	Login findByLoginNameAndLoginIsActive(String loginName, boolean LoginIsActive);
 	
 	 @Query(value = "call generatePassword", nativeQuery = true)
 	 String generatePassword();

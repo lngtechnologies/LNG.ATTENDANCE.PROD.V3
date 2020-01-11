@@ -73,7 +73,7 @@ public class LoginServiceImpl implements ILogin {
 			if(isNullOrEmpty(loginDto.getLoginPassword())) throw new Exception("Please enter password");
 
 			// Get user by login name
-			Login user = accountRepository.findByLoginName(loginDto.getLoginName());
+			Login user = accountRepository.findByLoginNameAndLoginIsActive(loginDto.getLoginName(),true);
 			
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(loginDto.getLoginName() + " not found");
@@ -133,7 +133,7 @@ public class LoginServiceImpl implements ILogin {
 			if(isNullOrEmpty(loginDto.getUserName())) throw new Exception("Please enter user name");
 
 			// Get user by login name
-			Login user = accountRepository.findByLoginName(loginDto.getUserName());
+			Login user = accountRepository.findByLoginNameAndLoginIsActive(loginDto.getUserName(), true);
 
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(loginDto.getUserName() + " not found");
@@ -192,7 +192,7 @@ public class LoginServiceImpl implements ILogin {
 			if(isNullOrEmpty(changePasswordDto.getOldPassword())) throw new Exception("Please enter password");
 
 			// Get user by login name
-			Login user = accountRepository.findByLoginName(changePasswordDto.getUserName());
+			Login user = accountRepository.findByLoginNameAndLoginIsActive(changePasswordDto.getUserName(), true);
 			
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(changePasswordDto.getUserName() + " not found");
