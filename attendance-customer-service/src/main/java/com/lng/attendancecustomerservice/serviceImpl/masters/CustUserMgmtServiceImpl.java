@@ -41,6 +41,7 @@ import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModulesDto;
+import com.lng.dto.masters.custUserMgmt.CustUserResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.UserModuleDto;
 
@@ -78,8 +79,8 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 
 	@Override
-	public Status save(CustUserMgmtDto custUserMgmtDto) {
-		Status status = null;
+	public CustUserResponseDto save(CustUserMgmtDto custUserMgmtDto) {
+		CustUserResponseDto custUserResponseDto = new CustUserResponseDto();
 
 		Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
 		Login login3 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
@@ -89,8 +90,8 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				if(login3 != null && customer.getCustMobile().equals(login3.getLoginMobile())) {
 						login3.setRefEmpId(custUserMgmtDto.getEmpId());
 						iLoginRepository.save(login3);
-						status = new Status(false, 200, "Admin has been linked to the selected employee");
-		
+						custUserResponseDto.status = new Status(false, 200, "Admin has been linked to the selected employee");
+						custUserResponseDto.setLoginId(login3.getLoginId());
 				} else {
 					String userName = custUserMgmtDto.getUserName();
 					String custCode = customer.getCustCode();
@@ -124,24 +125,24 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 									+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
 							String s = messageUtil.sms(mobileNo, mobileSmS);
 
-							status = new Status(false, 200, "Successfully created");
-
+							custUserResponseDto.status = new Status(false, 200, "Successfully created");
+							custUserResponseDto.setLoginId(login.getLoginId());
 						}else {
-							status = new Status(true, 400, "Mobile number already exist");
+							custUserResponseDto.status = new Status(true, 400, "Mobile number already exist");
 						}
 					}else {
-						status = new Status(true, 400, "User name already exist");
+						custUserResponseDto.status = new Status(true, 400, "User name already exist");
 					}
 				}
 			} else {
-				status = new Status(true, 400, "Customer is not exist");
+				custUserResponseDto.status = new Status(true, 400, "Customer is not exist");
 			}
 
 		} catch (Exception e) {
 			
-			status = new Status(true, 400, "Oops..! Something went wrong..");
+			custUserResponseDto.status = new Status(true, 400, "Oops..! Something went wrong..");
 		}
-		return status;
+		return custUserResponseDto;
 	}
 
 	/*@Override

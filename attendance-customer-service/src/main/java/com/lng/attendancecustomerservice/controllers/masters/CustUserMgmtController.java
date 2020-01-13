@@ -21,6 +21,7 @@ import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
+import com.lng.dto.masters.custUserMgmt.CustUserResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserRightResponseDto;
 
 import status.Status;
@@ -34,10 +35,10 @@ public class CustUserMgmtController {
 	CustUserMgmtService custUserMgmtService;
 
 	@PostMapping(value = "/create")
-	public ResponseEntity<Status> save(@RequestBody CustUserMgmtDto custUserMgmtDto) {
-		Status status = custUserMgmtService.save(custUserMgmtDto);
-		if (status !=null){
-			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+	public ResponseEntity<CustUserResponseDto> save(@RequestBody CustUserMgmtDto custUserMgmtDto) {
+		CustUserResponseDto custUserResponseDto = custUserMgmtService.save(custUserMgmtDto);
+		if (custUserResponseDto !=null){
+			return new ResponseEntity<CustUserResponseDto>(custUserResponseDto, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}

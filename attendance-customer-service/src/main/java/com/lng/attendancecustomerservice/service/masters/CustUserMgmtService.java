@@ -7,13 +7,14 @@ import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
+import com.lng.dto.masters.custUserMgmt.CustUserResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserRightResponseDto;
 
 import status.Status;
 
 public interface CustUserMgmtService {
 
-	Status save(CustUserMgmtDto custUserMgmtDto);
+	CustUserResponseDto save(CustUserMgmtDto custUserMgmtDto);
 	
 	CustUserRightResponseDto getAssignedAndUnAssignedUserRights(Integer loginId, Integer custId);
 	
