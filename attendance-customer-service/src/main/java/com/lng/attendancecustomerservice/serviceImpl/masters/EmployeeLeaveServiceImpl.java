@@ -56,6 +56,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
 			if(!branchList.isEmpty()) {
 				branchListDto.setCustId(custId);
+				branchListDto.setLoginId(loginId);
 				branchListDto.setBranchList(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
 				branchListDto.status = new Status(false, 200, "Success");
 			}else {
