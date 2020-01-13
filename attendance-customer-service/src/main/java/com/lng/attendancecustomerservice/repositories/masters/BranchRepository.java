@@ -27,4 +27,7 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch,Inte
 	List<Object[]> findAllBranches(Integer loginId);
 
 	List<Branch> getBranchByCustomer_custIdAndBrIsActive(Integer custId, Boolean brIsActive);
+	
+	@Query(value = "call getBranchDetailsByCustIdAndLoginId(?1,?2)", nativeQuery = true)
+	List<Branch> getBranchByCustomer_custIdAndUser_loginId(Integer custId,Integer loginId);
 }

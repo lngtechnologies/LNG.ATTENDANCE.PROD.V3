@@ -47,11 +47,11 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	ModelMapper modelMapper = new ModelMapper();
 
 	@Override
-	public BranchListDto getBranchListByCustId(Integer custId) {
+	public BranchListDto getBranchListByCustIdAndLoginId(Integer custId,Integer loginId) {
 		BranchListDto branchListDto = new BranchListDto();
 
 		try {
-			List<Branch> branchList = branchRepository.getBranchByCustomer_custIdAndBrIsActive(custId, true);
+			List<Branch> branchList = branchRepository.getBranchByCustomer_custIdAndUser_loginId(custId,loginId);
 
 
 			if(!branchList.isEmpty()) {
