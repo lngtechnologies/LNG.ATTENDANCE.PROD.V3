@@ -198,7 +198,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public DepartmentResponse getAllByCustId(Integer custId) {
 		DepartmentResponse response = new DepartmentResponse();
 		try {
-			List<Department> departments = departmentRepository.findAllByCustomer_CustIdAndDeptIsActive(custId, true);
+			List<Department> departments = departmentRepository.findAllByCustomer_CustId(custId);
 			response.setData1(departments.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not found");

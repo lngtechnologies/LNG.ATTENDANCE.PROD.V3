@@ -31,4 +31,7 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 	List<Department> findAllByCustomer_CustIdAndDeptIsActive(int custId, Boolean deptIsActive);
 	
 	Department findByCustomer_CustIdAndDeptNameAndDeptIsActive(Integer refCustId,String deptName,Boolean deptIsActive);
+	
+	@Query(value = "SELECT de.* FROM tmdepartment de WHERE de.refCustId =?1 AND de.deptIsActive = TRUE ORDER BY de.deptName ASC",nativeQuery = true)
+	List<Department> findAllByCustomer_CustId(Integer refCustId);
 }

@@ -8,6 +8,8 @@ public class BranchListDto {
 
 	private Integer custId;
 	
+	private Integer loginId;
+	
 	private List<BranchDto> branchList;
 	
 	public Status status;
@@ -28,4 +30,20 @@ public class BranchListDto {
 		this.branchList = branchList;
 	}
 
+	public Integer getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(Integer loginId) {
+		this.loginId = loginId;
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+  
 }

@@ -197,7 +197,7 @@ public class ContractorServiceImpl implements ContractorService {
 	public ContractorResponse getAllByCustId(Integer custId) {
 		ContractorResponse response = new ContractorResponse();
 		try {
-			List<Contractor> contractorList = contractorRepository.findAllByCustomer_CustIdAndContractorIsActive(custId, true);
+			List<Contractor> contractorList = contractorRepository.findAllByCustomer_CustId(custId);
 			response.setData1(contractorList.stream().map(contractor -> convertToContractorDto(contractor)).collect(Collectors.toList()));
 
 			if(response.getData1().isEmpty()) {

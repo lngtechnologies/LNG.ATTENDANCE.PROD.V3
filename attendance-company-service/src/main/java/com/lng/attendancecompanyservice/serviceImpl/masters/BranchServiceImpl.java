@@ -184,7 +184,7 @@ public class BranchServiceImpl implements BranchService {
 	public BranchResponse getAll() {
 		BranchResponse response = new BranchResponse();
 		try {
-			List<Branch> branchList=branchRepository.findAllBranchByBrIsActive(true);
+			List<Branch> branchList=branchRepository.findAll();
 			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not found"); 
@@ -332,7 +332,7 @@ public class BranchServiceImpl implements BranchService {
 	public BranchResponse getAllByCustId(Integer custId) {
 		BranchResponse response = new BranchResponse();
 		try {
-			List<Branch> branchList=branchRepository.findAllByCustomer_CustIdAndBrIsActive(custId, true);
+			List<Branch> branchList=branchRepository.findAllByCustomer_CustId(custId);
 			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
 			if(response != null && response.getData1() != null) {
 				response.status = new Status(false,200, "Success");

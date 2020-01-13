@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.lng.attendancecustomerservice.entity.masters.Contractor;
+import com.lng.attendancecustomerservice.entity.masters.Department;
 @Repository
 public interface ContractorRepository extends CrudRepository<Contractor,Integer> {
 
@@ -29,4 +30,7 @@ public interface ContractorRepository extends CrudRepository<Contractor,Integer>
 	List<Contractor> findAllByCustomer_CustIdAndContractorIsActive(int custId, Boolean contractorIsActive);
 
 	Contractor findByCustomer_CustIdAndContractorNameAndContractorIsActive(Integer refCustId,String contractorName, Boolean contractorIsActive);
+	
+	@Query(value = "SELECT tc.* FROM tmcontractor tc WHERE tc.refCustId =1 AND tc.contractorIsActive = TRUE ORDER BY tc.contractorName ASC",nativeQuery = true)
+	List<Contractor> findAllByCustomer_CustId(Integer refCustId);
 }

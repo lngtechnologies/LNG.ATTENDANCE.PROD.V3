@@ -11,8 +11,9 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch, Int
 
 	@Query(value = "CALL generateBranchCodeForCustomer(?1)", nativeQuery = true)
 	String generateBranchForCustomer(Integer custId);
-
-	List<Branch> findAllBranchByBrIsActive(Boolean brIsActive);
+	
+	@Query(value = "SELECT * FROM tmbranch where brIsActive = true ORDER BY brName ASC", nativeQuery = true)
+	List<Branch> findAll();
 	
 	Branch findBranchByBrId(Integer brId);
 
@@ -23,7 +24,8 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch, Int
 	
 	List<Branch> findByState_StateId(Integer stateId);
 	
-	List<Branch> findAllByCustomer_CustIdAndBrIsActive(Integer custId, Boolean brIsActive);
+	@Query(value = "SELECT br.* FROM tmbranch br where br.brIsActive = true and br.refCustomerId =?1 ORDER BY brName ASC", nativeQuery = true)
+	List<Branch> findAllByCustomer_CustId(Integer custId);
 	
 	@Query(value = "CALL chechNoOfBranchesCreatedByCustomer(?1);",nativeQuery = true)
 	int chechNoOfBranchesCreatedByCustomer(int custId);
