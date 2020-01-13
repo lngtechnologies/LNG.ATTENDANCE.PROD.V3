@@ -14,6 +14,8 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	@Query(value = "SELECT * FROM tmcustomer WHERE custIsActive = TRUE ORDER BY custName ASC", nativeQuery = true)
 	List<Customer> findAllCustomerByCustIsActive();
 	
+	List<Customer> getAllCustomerByCustIsActive(Boolean isActive);
+	
 	Customer findCustomerByCustId(Integer custId);
 	
 	@Query(value = "SELECT custNoOfBranch FROM tmCustomer  WHERE custId = ?1", nativeQuery = true)

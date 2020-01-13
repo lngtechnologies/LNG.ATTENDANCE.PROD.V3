@@ -38,7 +38,7 @@ public class CustNotificationServiceImpl implements CustNotificationService {
 		CustSMSResponseDto custSMSResponseDto = new CustSMSResponseDto();
 		try {
 			
-			List<Customer> custList = customerRepository.findAllCustomerByCustIsActive(true);
+			List<Customer> custList = customerRepository.getAllCustomerByCustIsActive(true);
 			if(!custList.isEmpty()) {
 				custSMSResponseDto.setCustDto(custList.stream().map(customer -> convertToCustNotificationDto(customer)).collect(Collectors.toList()));
 				custSMSResponseDto.status = new Status(false, 200, "Success");
@@ -57,7 +57,7 @@ public class CustNotificationServiceImpl implements CustNotificationService {
 		CustSMSResponseDto custSMSResponseDto = new CustSMSResponseDto();
 		try {
 			
-			List<Customer> custList = customerRepository.findAllCustomerByCustIsActive(false);
+			List<Customer> custList = customerRepository.getAllCustomerByCustIsActive(false);
 			if(!custList.isEmpty()) {
 				custSMSResponseDto.setCustDto(custList.stream().map(customer -> convertToCustNotificationDto(customer)).collect(Collectors.toList()));
 				custSMSResponseDto.status = new Status(false, 200, "Success");
