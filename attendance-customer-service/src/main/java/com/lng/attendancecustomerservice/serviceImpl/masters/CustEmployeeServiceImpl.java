@@ -605,7 +605,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						}
 						
 						// Set emp Reporting To details and save to emp Reporting To table
-						try {
+						/*try {
 							EmployeeReportingTo employeeReportingTo2 = employeeReportingToRepository.findByEmployee_EmpIdAndRefEmpReportingToIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmpReportingToId(), custEmployeeDto.getEmpReportingToFromDate());
 							if(employeeReportingTo2 == null) {
 								
@@ -630,8 +630,33 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 							}
 						} catch (Exception e) {
 							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
+						}*/
+						try {
+							EmployeeReportingTo employeeReportingTo2 = employeeReportingToRepository.findByEmployee_EmpIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmpReportingToFromDate());
+							if(employeeReportingTo2 == null) {
+								
+								EmployeeReportingTo employeeReportingTo1 = employeeReportingToRepository.findByEmpIdAndReportingToDateNull(custEmployeeDto.getEmpId());
+								if(employeeReportingTo1 != null) {
+									Date empRetortingToDate = subtractDaysFromDate(custEmployeeDto.getEmpReportingToFromDate());
+									employeeReportingTo1.setEmpToDate(empRetortingToDate);
+									employeeReportingToRepository.save(employeeReportingTo1);
+								}
+								
+								EmployeeReportingTo employeeReportingTo = new EmployeeReportingTo();
+								employeeReportingTo.setEmployee(employee1);
+								employeeReportingTo.setRefEmpReportingToId(custEmployeeDto.getEmpReportingToId());
+								employeeReportingTo.setEmpFromDate(custEmployeeDto.getEmpReportingToFromDate());
+								employeeReportingToRepository.save(employeeReportingTo);
+							} else {
+								employeeReportingTo2.setEmployee(employee1);
+								employeeReportingTo2.setRefEmpReportingToId(custEmployeeDto.getEmpReportingToId());
+								employeeReportingTo2.setEmpFromDate(custEmployeeDto.getEmpReportingToFromDate());
+								employeeReportingTo2.setEmpToDate(null);
+								employeeReportingToRepository.save(employeeReportingTo2);
+							}
+						} catch (Exception e) {
+							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 						}
-						
 						
 						// Set emp branch details and save to emp branch table
 						try {
