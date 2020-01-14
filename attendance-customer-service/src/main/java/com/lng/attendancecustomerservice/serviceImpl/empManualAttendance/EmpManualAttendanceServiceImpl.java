@@ -175,7 +175,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							}
 
 							employeeAttendanceRepository.save(employeeAttendance1);
-							status = new Status(false, 200, "Attendance IN marked successfully");
+							status = new Status(false, 200, "Attendance IN marked");
 						} else {
 							//employeeAttendance1 = new EmployeeAttendance();
 							employeeAttendance1.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
@@ -222,7 +222,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							}
 
 							employeeAttendanceRepository.save(employeeAttendance1);
-							status = new Status(false, 200, "Attendance IN marked successfully");
+							status = new Status(false, 200, "Attendance IN marked");
 
 						}
 					} else {
@@ -270,7 +270,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						}
 
 						employeeAttendanceRepository.save(employeeAttendance2);
-						status = new Status(false, 200, "Attendance OUT marked successfully");
+						status = new Status(false, 200, "Attendance OUT marked");
 					}
 				}else {
 					status = new Status(false, 400, "Employee not found");
@@ -323,12 +323,12 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						}
 
 						employeeAttendanceRepository.save(employeeAttendance1);
-						status = new Status(false, 200, "Attendance marked successfully");
+						status = new Status(false, 200, "Attendance marked");
 					}else {
 						status = new Status(false, 400, "Employee not found");
 					}
 				} else {
-					status = new Status(false, 200, "Attendance marked successfully"); 
+					status = new Status(false, 200, "Attendance marked"); 
 				}
 			}
 
@@ -441,7 +441,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 					employeeAttendance.setEmpAttendanceConsiderOutDatetime(employeeAttendanceDto.getEmpAttendanceConsiderOutDatetime());
 
 					employeeAttendanceRepository.save(employeeAttendance);
-					status = new Status(false, 200, "Attendance marked successfully");
+					status = new Status(false, 200, "Attendance marked");
 				}
 
 			}else {

@@ -146,7 +146,7 @@ public class BranchServiceImpl implements BranchService {
 									e.printStackTrace();
 								}
 
-								response.status = new Status(false,200, "successfully created");
+								response.status = new Status(false,200, "created");
 
 							}
 							else{ 
@@ -230,7 +230,7 @@ public class BranchServiceImpl implements BranchService {
 							//branch.setBrIsBillable(true);
 							branch.setBrCreatedDate(new Date());
 							branchRepository.save(branch);
-							status = new Status(false, 200, "successfully updated");
+							status = new Status(false, 200, "updated");
 
 						} else {
 							status = new Status(true,400,"Branch name already exist"); 
@@ -294,7 +294,7 @@ public class BranchServiceImpl implements BranchService {
 
 				if(loginDataRight.isEmpty() && block.isEmpty() && employee.isEmpty() && shift.isEmpty() && employeeBranch.isEmpty()) {
 					branchRepository.delete(branch);
-					response.status = new Status(false, 200, "successfully deleted");
+					response.status = new Status(false, 200, "deleted");
 				}else {
 					branch.setBrIsActive(false);
 					branchRepository.save(branch);

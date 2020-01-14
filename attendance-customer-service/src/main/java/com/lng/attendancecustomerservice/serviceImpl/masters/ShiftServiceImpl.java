@@ -53,7 +53,7 @@ public class ShiftServiceImpl implements ShiftService {
 					}
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
-					shiftResponse.status = new Status(false,200, "successfully created");
+					shiftResponse.status = new Status(false,200, "created");
 				}
 				else{ 
 					shiftResponse.status = new Status(true,400, "Branch not found");
@@ -107,14 +107,14 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setBranch(branch);
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				} else if (sh.getShiftId() == shiftDto.getShiftId()) { 
 
 					shift = modelMapper.map(shiftDto,Shift.class);
 					shift.setBranch(branch);
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				}
 				else{ 
 
@@ -142,7 +142,7 @@ public class ShiftServiceImpl implements ShiftService {
 				if(b == 0) {
 
 					shiftRepository.delete(shift);	
-					shiftResponse.status = new Status(false,200, "successfully deleted");
+					shiftResponse.status = new Status(false,200, "deleted");
 				} else {
 					shift.setShiftIsActive(false);
 					shiftRepository.save(shift);

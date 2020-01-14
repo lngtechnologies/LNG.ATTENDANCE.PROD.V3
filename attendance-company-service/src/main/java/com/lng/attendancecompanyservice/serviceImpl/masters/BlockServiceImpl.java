@@ -54,7 +54,7 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkCreatedDate(new Date());
 					block.setBlkIsActive(true);
 					blockRepository.save(block);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "created");
 				}
 				else{ 
 					response.status = new Status(true,400, "Branch not found");
@@ -108,14 +108,14 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkCreatedDate(new Date());
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				} else if (bl.getBlkId() == blockDto.getBlkId()) { 
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
 					block.setBlkCreatedDate(new Date());
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				}
 				else{ 
 					status = new Status(true,400,"Block name already exist");
@@ -146,7 +146,7 @@ public class BlockServiceImpl implements BlockService {
 			if(block != null) {
 				if(a == 0 && b == 0) {
 					blockRepository.delete(block);					
-					response.status = new Status(false,200, "successfully deleted");
+					response.status = new Status(false,200, "deleted");
 
 				}else  {
 					block.setBlkIsActive(false);

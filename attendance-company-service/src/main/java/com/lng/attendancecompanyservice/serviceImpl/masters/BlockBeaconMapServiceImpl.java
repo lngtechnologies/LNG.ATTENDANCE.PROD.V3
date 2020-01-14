@@ -66,7 +66,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 						blockBeaconMapRepository.save(blockBeaconMap);
 						statusDto.setCode(200);
 						statusDto.setError(false);
-						msg = "successfully created";
+						msg = "created";
 						//statusDto.setMessage("Successfully saved");
 					}else {
 						statusDto.setCode(400);
@@ -262,7 +262,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				// msg = "Successfully Updates";
-				statusDto.setMessage("successfully updated");
+				statusDto.setMessage("updated");
 				//}
 
 			}else {
@@ -399,7 +399,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 				blockBeaconMapRepository.delete(blockBeaconMap);
 				statusDto.setError(false);
 				statusDto.setCode(200);					
-				statusDto.setMessage("successfully deleted");
+				statusDto.setMessage("deleted");
 			}else {
 				statusDto.setError(true);
 				statusDto.setCode(400);

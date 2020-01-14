@@ -17,6 +17,8 @@ import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
 import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
 
+import status.Status;
+
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
 @RequestMapping(value="/master/employee/")
@@ -95,4 +97,13 @@ public class CustEmplyeeController {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+	
+	@PostMapping(value = "/check/mobileNo")
+	  public ResponseEntity<Status> checkEmpMobileNo(@RequestBody CustEmployeeDto custEmployeeDto) {
+		Status status = custEmployeeService.checkEmpMobileNumExistOrNot(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
+	    if (status != null) {
+	      return new ResponseEntity<Status>(status, HttpStatus.OK);
+	    }
+	    return new ResponseEntity(HttpStatus.NO_CONTENT);
+	  }
 }

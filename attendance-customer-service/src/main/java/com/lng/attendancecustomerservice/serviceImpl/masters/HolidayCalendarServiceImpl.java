@@ -65,7 +65,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendar.setRefCustId(holidayCalendarDto.getRefCustId());
 					holidayCalendar.setHolidayName(holidayCalendarDto.getHolidayName());
 					holidayCalendarRepository.save(holidayCalendar);
-					holidayCalendarResponse.status = new Status(false,200, "successfully created");
+					holidayCalendarResponse.status = new Status(false,200, "created");
 				}
 				else{ 
 					holidayCalendarResponse.status = new Status(true,400,"Holiday name already exists");
@@ -97,13 +97,13 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
-					status = new Status(false, 200, "Successfully updated");
+					status = new Status(false, 200, "updated");
 
 				} else if ( he.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				}
 			}
 			else if(h != null && h.getHolidayId() == holidayCalendarDto.getHolidayId() ) {
@@ -112,12 +112,12 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				} else if (he1.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				}
 				else{ 
 
@@ -147,7 +147,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 				List<CustBrHoliday> custBrHoliday = custBrHolidayRepository.findByHolidayCalendar_HolidayId(holidayId);
 				if(custBrHoliday.isEmpty()) {
 					holidayCalendarRepository.delete(holidayCalendar);
-					holidayCalendarResponse.status = new Status(false, 200, "successfully deleted");
+					holidayCalendarResponse.status = new Status(false, 200, "deleted");
 				}else {
 					holidayCalendarRepository.save(holidayCalendar);
 					holidayCalendarResponse.status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");

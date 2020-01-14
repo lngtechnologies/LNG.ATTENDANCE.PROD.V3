@@ -46,7 +46,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeave.setCustomer(customer);
 					custLeave.setCustLeaveName(custLeaveDto.getCustLeaveName());
 					custLeaveRepository.save(custLeave);
-					custLeaveResponse.status = new Status(false,200, "successfully created");
+					custLeaveResponse.status = new Status(false,200, "created");
 
 				}
 				else{ 
@@ -98,13 +98,13 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
 					custLeave.setCustomer(customer);
 					custLeaveRepository.save(custLeave);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				} else if (cl.getCustLeaveId() == custLeaveDto.getCustLeaveId()) { 
 
 					custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
 					custLeave.setCustomer(customer);
 					custLeaveRepository.save(custLeave);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				}
 				else{ 
 					status = new Status(true,400,"Leave type already exist");
@@ -131,7 +131,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 				List<EmpLeave>  empLeave = empLeaveRepository.findByCustLeave_CustLeaveId(custLeaveId);
 				if(empLeave.isEmpty()) {
 					custLeaveRepository.delete(custLeave);
-					custLeaveResponse.status = new Status(false, 200, "successfully deleted");
+					custLeaveResponse.status = new Status(false, 200, "deleted");
 				}else {
 					custLeaveResponse.status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");
 				}

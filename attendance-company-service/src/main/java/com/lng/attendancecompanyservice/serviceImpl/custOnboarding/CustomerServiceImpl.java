@@ -182,7 +182,7 @@ public class CustomerServiceImpl implements CustomerService {
 				sendMailWithoutAttachments(customerDto, login.getLoginName());
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("successfully created");
+				statusDto.setMessage("created");
 
 			}else {
 				statusDto.setCode(400);
@@ -677,7 +677,7 @@ public class CustomerServiceImpl implements CustomerService {
 							loginRepository.save(login);
 						}
 
-						customerResponse.status = new Status(false, 200, "successfully updated");
+						customerResponse.status = new Status(false, 200, "updated");
 					} else {
 						customerResponse.status = new Status(false, 400, "Customer not found");
 					}
@@ -707,7 +707,7 @@ public class CustomerServiceImpl implements CustomerService {
 			if(customer != null) {
 				customer.setCustIsActive(false);
 				customerRepository.save(customer);
-				customerResponse.status = new Status(false, 200, "successfully deleted");
+				customerResponse.status = new Status(false, 200, "deleted");
 			} else {
 				customerResponse.status = new Status(true, 400, "Customer not found");
 			}

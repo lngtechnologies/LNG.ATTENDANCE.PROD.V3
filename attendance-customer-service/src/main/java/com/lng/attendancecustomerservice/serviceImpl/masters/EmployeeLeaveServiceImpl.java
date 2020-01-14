@@ -165,7 +165,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 						employeeLeave.setEmpLeaveAppliedDatetime(new Date());
 						employeeLeave.setEmpLeaveStatus("");
 						employeeLeaveRepository.save(employeeLeave);
-						status = new Status(false, 200, "Leave Applied for "+employee.getEmpName()+" successfully");
+						status = new Status(false, 200, "Leave Applied for "+employee.getEmpName());
 					} else {
 						status = new Status(true, 400, "Leave already applied for this date");
 					}	
