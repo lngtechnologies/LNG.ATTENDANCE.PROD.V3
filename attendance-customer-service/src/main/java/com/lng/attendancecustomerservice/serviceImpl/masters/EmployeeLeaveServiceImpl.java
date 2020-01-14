@@ -58,7 +58,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 				branchListDto.setBranchList(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
 				branchListDto.status = new Status(false, 200, "Success");
 			}else {
-				branchListDto.status = new Status(true, 400, "Not found");
+				branchListDto.status = new Status(false, 400, "Not found");
 			}
 
 		} catch (Exception e) {
@@ -81,7 +81,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 				branchListDto.setBranchList(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
 				branchListDto.status = new Status(false, 200, "Success");
 			}else {
-				branchListDto.status = new Status(true, 400, "Not found");
+				branchListDto.status = new Status(false, 400, "Not found");
 			}
 
 		} catch (Exception e) {
