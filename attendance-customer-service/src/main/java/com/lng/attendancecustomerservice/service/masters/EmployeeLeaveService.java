@@ -9,11 +9,13 @@ import status.Status;
 
 public interface EmployeeLeaveService {
 
-	BranchListDto getBranchListByCustIdAndLoginId(Integer custId,Integer loginId);
+	BranchListDto getBranchListByCustId(Integer custId);
 	
 	CustLeaveTrypeListDto getLeaveListByCustId(Integer custId);
 	
 	EmployeeDtatListDto getEmpDataByBrID(Integer brId);
 	
 	Status saveEmpLeave(EmployeeLeaveDto employeeLeaveDto);
+	
+	BranchListDto getBranchListByCustIdAndLoginId(Integer custId,Integer loginId);
 }

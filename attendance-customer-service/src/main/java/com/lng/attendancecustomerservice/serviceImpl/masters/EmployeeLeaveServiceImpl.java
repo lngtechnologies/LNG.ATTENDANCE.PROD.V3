@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.CustLeave;
-import com.lng.attendancecustomerservice.entity.masters.EmpLeave;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeLeave;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
@@ -40,12 +39,34 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
 	@Autowired
 	CustLeaveRepository custLeaveRepository;
-	
+
 	@Autowired
 	EmployeeRepository employeeRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
 
+	@Override
+	public BranchListDto getBranchListByCustId(Integer custId) {
+		BranchListDto branchListDto = new BranchListDto();
+
+		try {
+			List<Branch> branchList = branchRepository.getBranchByCustomer_custIdAndBrIsActive(custId,true);
+
+
+			if(!branchList.isEmpty()) {
+				branchListDto.setCustId(custId);
+				branchListDto.setBranchList(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+				branchListDto.status = new Status(false, 200, "Success");
+			}else {
+				branchListDto.status = new Status(true, 400, "Not found");
+			}
+
+		} catch (Exception e) {
+			branchListDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+
+		return branchListDto;
+	}
 	@Override
 	public BranchListDto getBranchListByCustIdAndLoginId(Integer custId,Integer loginId) {
 		BranchListDto branchListDto = new BranchListDto();
@@ -101,7 +122,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 			if(!employeeDataList.isEmpty()) {
 				for(Object[] p : employeeDataList) {
 					EmployeeDto employeeDto = new EmployeeDto();
-					
+
 					employeeDto.setEmpId(Integer.valueOf(p[0].toString()));
 					employeeDto.setEmpName(p[1].toString());
 					employeeDto.setDeptId(Integer.valueOf(p[2].toString()));
@@ -123,12 +144,12 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		return employeeDtatListDto;
 	}	
 
-	
+
 	@Override
 	public Status saveEmpLeave(EmployeeLeaveDto employeeLeaveDto) {
 		Status status = null;
 		try {
-			
+
 			Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 			Employee employee = employeeRepository.getByEmpId(employeeLeaveDto.getEmpId());
 			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveId(employeeLeaveDto.getCustLeaveId());
@@ -137,7 +158,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 				if(custLeave != null) {
 					if(empLeave == 0) {
 						EmployeeLeave employeeLeave = modelMapper.map(employeeLeaveDto, EmployeeLeave.class);
-						
+
 						employeeLeave.setEmployee(employee);
 						employeeLeave.setCustLeave(custLeave);
 						employeeLeave.setEmpLeaveDaysCount(countNoOfDays);
@@ -148,20 +169,20 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 					} else {
 						status = new Status(true, 400, "Leave already applied for this date");
 					}	
-				
+
 				}else {
 					status = new Status(true, 400, "Cust Leave not found");
 				}
 			} else {
 				status = new Status(true, 400, "Employee not found");
 			}
-			
+
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
-	
+
 	public BranchDto convertToBranchDto(Branch branch) {
 		BranchDto  branchDto = modelMapper.map(branch, BranchDto.class);
 		branchDto.setBrId(branch.getBrId());
@@ -175,7 +196,4 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		custLeaveTypeDto.setCustLeaveName(custLeave.getCustLeaveName());
 		return custLeaveTypeDto;
 	}
-
-	
-
 }
