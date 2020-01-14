@@ -46,7 +46,11 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftName(shiftDto.getShiftName());
 					shift.setShiftStart(shiftDto.getShiftStart());
 					shift.setShiftEnd(shiftDto.getShiftEnd());
-					shift.setDefaultOutInhrs(shiftDto.getDefaultOutInhrs());
+					if(shiftDto.getDefaultOutInhrs() == null) {
+						shift.setDefaultOutInhrs(0);
+					}else {
+						shift.setDefaultOutInhrs(shiftDto.getDefaultOutInhrs());
+					}
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					shiftResponse.status = new Status(false,200, "successfully created");

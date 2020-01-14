@@ -32,7 +32,7 @@ public interface DesignationRepository extends CrudRepository<Designation,Intege
 	
 	Designation findByCustomer_CustIdAndDesignationNameAndDesigIsActive(Integer refCustId,String designationName, Boolean desigIsActive);
 	
-	@Query(value = "SELECT deg.* FROM tmdesignation deg where deg.refCustId =1 and deg.desigIsActive = true ORDER BY designationName ASC",nativeQuery = true)
+	@Query(value = "SELECT deg.* FROM tmdesignation deg where deg.refCustId =?1 and deg.desigIsActive = true ORDER BY designationName ASC",nativeQuery = true)
 	List<Designation> findAllByCustomer_CustId(Integer refCustId);
 
 }
