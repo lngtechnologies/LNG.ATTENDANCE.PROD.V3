@@ -52,4 +52,6 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	@Query(value = "SELECT * FROM tmemployee WHERE refCustId = ?1 AND empId NOT IN(SELECT refEmpId FROM ttlogin WHERE refCustId = ?1)", nativeQuery = true)
 	List<Employee> findByCustomer_CustId(Integer custId);
+	
+	
 }

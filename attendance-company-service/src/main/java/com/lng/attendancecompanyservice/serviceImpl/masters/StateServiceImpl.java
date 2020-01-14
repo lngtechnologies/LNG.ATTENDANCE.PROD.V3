@@ -55,7 +55,7 @@ public class StateServiceImpl implements StateService {
 					state.setStateName(stateDto.getStateName());
 					state.setStateIsActive(true);
 					stateRepository.save(state);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "created");
 
 				}
 				else{ 
@@ -68,7 +68,7 @@ public class StateServiceImpl implements StateService {
 					state1.setStateName(stateDto.getStateName());
 					state1.setStateIsActive(true);
 					stateRepository.save(state1);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "created");
 
 				}
 				else{ 
@@ -141,14 +141,14 @@ public class StateServiceImpl implements StateService {
 					state.setCountry(country);
 					state.setStateIsActive(true);
 					stateRepository.save(state);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				} else if (st.getStateId() == stateDto.getStateId()) { 
 
 					state = modelMapper.map(stateDto,State.class);
 					state.setCountry(country);
 					state.setStateIsActive(true);
 					stateRepository.save(state);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				}
 				else{ 
 					status = new Status(true,400,"State name already exist");
@@ -176,7 +176,7 @@ public class StateServiceImpl implements StateService {
 			if(state!= null) {
 				if(a == 0 && customers.isEmpty()) {
 					stateRepository.delete(state);					
-					stateResponse.status = new Status(false,200, "successfully deleted");
+					stateResponse.status = new Status(false,200, "deleted");
 				}else {
 					state.setStateIsActive(false);
 					stateRepository.save(state);

@@ -274,7 +274,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						saveEmpMonthlyNoOfDays(empMonthlyNoOfDays);
 					}
 
-					custEmployeeStatus.status = new Status(false, 200, "Successfully created");
+					custEmployeeStatus.status = new Status(false, 200, "created");
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Cannot Save");
 				}
@@ -807,7 +807,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 					}
 
-					custEmployeeStatus.status = new Status(false, 200, "Successfully Updated");
+					custEmployeeStatus.status = new Status(false, 200, "updated");
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Employee not found or employee not in service");
 				}
@@ -879,7 +879,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			if(employee != null) {
 				employee.setEmpInService(false);
 				custEmployeeRepository.save(employee);
-				custEmployeeStatus.status = new Status(false, 200, "successfully deleted");
+				custEmployeeStatus.status = new Status(false, 200, "deleted");
 			} else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee not found");
 			}
@@ -1035,5 +1035,23 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		}
 		custEmployeeListResponse.setData1(EmployeeDtoList);
 		return custEmployeeListResponse;
+	}
+
+	@Override
+	public Status checkEmpMobileNumExistOrNot(String empMobile, Integer custId) {
+		Status status = null;
+		try {
+			List<Employee> employee = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustId(empMobile, custId);
+			
+			if(employee.isEmpty()) {
+				status = new Status(false, 200, "Not exist");
+			} else {
+				status = new Status(true, 400, "Exist");
+			}
+		} catch (Exception e) {
+			status = new Status(true, 500, "Opps...! Something went wrong");
+		}
+		
+		return status;
 	}
 }

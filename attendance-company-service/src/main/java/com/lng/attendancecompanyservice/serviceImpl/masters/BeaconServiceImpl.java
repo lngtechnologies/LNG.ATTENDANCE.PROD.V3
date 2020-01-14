@@ -44,14 +44,14 @@ public class BeaconServiceImpl implements BeaconService {
 				beaconRepository.save(beacon);
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("successfully created");
+				statusDto.setMessage("created");
 			}else if (beacon1!= null){
 				beacon1.setBeaconIsActive(true);
 				beacon1.setBeaconCreatedDate(new Date());
 				beaconRepository.save(beacon1);
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("successfully created");
+				statusDto.setMessage("created");
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
@@ -110,7 +110,7 @@ public class BeaconServiceImpl implements BeaconService {
 					
 					statusDto.setCode(200);
 					statusDto.setError(false);
-					statusDto.setMessage("successfully updated");
+					statusDto.setMessage("updated");
 				} else {
 					statusDto.setCode(400);
 					statusDto.setError(true);
@@ -141,7 +141,7 @@ public class BeaconServiceImpl implements BeaconService {
 		if(beacon != null) {
 			if(blockBeaconMap == null) {
 				beaconRepository.delete(beacon);
-				status = new Status(false, 200, "successfully deleted");
+				status = new Status(false, 200, "deleted");
 			}else {
 				status = new Status(true, 400, "The record has been disabled since it has been used in other transactions");
 			}

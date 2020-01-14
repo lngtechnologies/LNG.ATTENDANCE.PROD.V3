@@ -35,4 +35,7 @@ public interface ILoginRepository extends JpaRepository<Login, Integer> {
 	 
 	 @Query(value = "call getLoginDetailsByLoginId(?1)", nativeQuery = true)
 	 List<Object[]> findLogindDetailsByLoginId(Integer loginId);
+	 
+	 @Query(value = "SELECT * FROM ttlogin WHERE refEmpId != 0 AND loginIsActive = TRUE", nativeQuery = true)
+	 List<Login> findAllByLoginIsActive();
 }

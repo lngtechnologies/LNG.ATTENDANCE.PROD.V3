@@ -37,7 +37,8 @@ public class CustNotificationController {
 		return new ResponseEntity<CustSMSResponseDto>(custSMSResponseDto, HttpStatus.OK);
 	}
 	
-	@PostMapping(value = "/customerList/send/sms")
+	@PostMapping(value = "/customerList/send/sms"
+			+ "")
 	public ResponseEntity<Status> brSms(@RequestBody SMSNotificationDto smsNotificationDto) {
 		Status status = custNotificationService.sendSMSNotificationToAllCustomers(smsNotificationDto);
 		if (status !=null){

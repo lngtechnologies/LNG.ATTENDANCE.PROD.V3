@@ -47,7 +47,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				industryTypeRepository.save(industryType);
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("successfully created");
+				statusDto.setMessage("created");
 			}else if(industryType1 != null){
 				
 				industryType1 = modelMapper.map(industryTypeDto, IndustryType.class);
@@ -55,7 +55,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				industryTypeRepository.save(industryType1);
 				statusDto.setCode(200);
 				statusDto.setError(false);
-				statusDto.setMessage("successfully created");
+				statusDto.setMessage("created");
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
@@ -148,7 +148,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 					industryTypeRepository.save(industryType1);
 					statusDto.setCode(200);
 					statusDto.setError(false);
-					statusDto.setMessage("successfully updated");
+					statusDto.setMessage("updated");
 				}else {
 					statusDto.setCode(400);
 					statusDto.setError(true);
@@ -182,7 +182,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 					industryTypeRepository.delete(industryType);
 					statusDto.setCode(200);
 					statusDto.setError(false);
-					statusDto.setMessage("successfully deleted");
+					statusDto.setMessage("deleted");
 				
 				}else {
 					industryType.setIndustryIsActive(false);

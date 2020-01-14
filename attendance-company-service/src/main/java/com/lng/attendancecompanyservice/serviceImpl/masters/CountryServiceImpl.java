@@ -1,6 +1,8 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -26,13 +28,18 @@ public class CountryServiceImpl implements CountryService {
 	@Autowired
 	StateRepository stateRepository;
 
-
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public CountryResponse saveCountry(CountryDto countryDto) {
 
 		CountryResponse response = new CountryResponse();
 		try{
+			
+			final Lock displayLock = this.displayQueueLock; 
+			displayLock.lock();
+			Thread.sleep(3000L);
+			
 			if(countryDto.getCountryName() == null || countryDto.getCountryName().isEmpty()) throw new Exception("Please enter country name");
 			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country code");
 
@@ -46,7 +53,7 @@ public class CountryServiceImpl implements CountryService {
 				country1.setCountryTelCode(countryDto.getCountryTelCode());
 				country1.setCountryIsActive(true);
 				countryRepositary.save(country1);
-				response.status = new Status(false,200, "successfully created");
+				response.status = new Status(false,200, "created");
 			} else {
 				if(countryDto.getCountryName() != null) {
 
@@ -58,10 +65,10 @@ public class CountryServiceImpl implements CountryService {
 					country.setCountryTelCode(countryDto.getCountryTelCode());
 					country.setCountryIsActive(true);
 					countryRepositary.save(country);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "created");
 				}
 			}
-
+			displayLock.unlock();
 		}catch(Exception ex){
 			response.status = new Status(true,500, ex.getMessage()); 
 		}
@@ -146,14 +153,14 @@ public class CountryServiceImpl implements CountryService {
 						country = modelMapper.map(countryDto,Country.class);
 						country.setCountryIsActive(true);
 						countryRepositary.save(country);
-						status = new Status(false, 200, "successfully updated");
+						status = new Status(false, 200, "updated");
 
 					} else if ( cu2.getCountryId() == countryDto.getCountryId()) { 
 
 						country = modelMapper.map(countryDto,Country.class);
 						country.setCountryIsActive(true);
 						countryRepositary.save(country);
-						status = new Status(false, 200, "successfully updated");
+						status = new Status(false, 200, "updated");
 					}
 				}
 				else if( cu1!= null && cu1.getCountryId() == countryDto.getCountryId() ) {
@@ -162,12 +169,12 @@ public class CountryServiceImpl implements CountryService {
 						country = modelMapper.map(countryDto,Country.class);
 						country.setCountryIsActive(true);
 						countryRepositary.save(country);
-						status = new Status(false, 200, "successfully updated");
+						status = new Status(false, 200, "updated");
 					} else if (te1.getCountryId() == countryDto.getCountryId()) { 
 						country = modelMapper.map(countryDto,Country.class);
 						country.setCountryIsActive(true);
 						countryRepositary.save(country);
-						status = new Status(false, 200, "successfully updated");
+						status = new Status(false, 200, "updated");
 					}else{ 
 
 						status = new Status(true,400,"Country code already exists");
@@ -200,7 +207,7 @@ public class CountryServiceImpl implements CountryService {
 				if(state.size() == 0 || state == null) {
 
 					countryRepositary.delete(country);					
-					countryResponse.status = new Status(false,200, "successfully deleted");
+					countryResponse.status = new Status(false,200, "deleted");
 				}else {
 					country.setCountryIsActive(false);
 					countryRepositary. findByState_refCountryId(countryId);

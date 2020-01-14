@@ -45,7 +45,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setDeptName(departmentDto.getDeptName());
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "created");
 
 				}
 				else{ 
@@ -59,7 +59,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department1.setDeptName(departmentDto.getDeptName());
 					department1.setDeptIsActive(true);
 					departmentRepository.save(department1);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "created");
 
 				}
 				else{ 
@@ -111,14 +111,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setCustomer(customer);
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				} else if (de.getDeptId() == departmentDto.getDeptId()) { 
 
 					department = modelMapper.map(departmentDto,Department.class);
 					department.setCustomer(customer);
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				}
 				else{ 
 
@@ -149,7 +149,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 				if(a == 0) {
 
 					departmentRepository.delete(department);	
-					departmentResponse.status = new Status(false,200, "successfully deleted");
+					departmentResponse.status = new Status(false,200, "deleted");
 
 				} else {
 					department.setDeptIsActive(false);

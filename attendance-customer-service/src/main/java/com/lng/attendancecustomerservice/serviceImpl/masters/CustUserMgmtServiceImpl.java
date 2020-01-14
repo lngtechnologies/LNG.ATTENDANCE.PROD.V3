@@ -83,63 +83,69 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 		CustUserResponseDto custUserResponseDto = new CustUserResponseDto();
 
 		Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
-		Login login3 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
-
+		// Login login3 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
+		List<Login> loginData = iLoginRepository.findAllByLoginIsActive();
 		try {
 			if(customer != null) {
-				if(login3 != null && customer.getCustMobile().equals(login3.getLoginMobile())) {
+				for(int i=0; i<loginData.size(); i++) {
+					if(loginData.get(i).getRefEmpId() != custUserMgmtDto.getEmpId()) {
+
+						/*if(login3 != null && customer.getCustMobile().equals(login3.getLoginMobile())) {
 						login3.setRefEmpId(custUserMgmtDto.getEmpId());
 						iLoginRepository.save(login3);
 						custUserResponseDto.status = new Status(false, 200, "Admin has been linked to the selected employee");
 						custUserResponseDto.setLoginId(login3.getLoginId());
-				} else {
-					String userName = custUserMgmtDto.getUserName();
-					String custCode = customer.getCustCode();
+				} else {*/
+						String userName = custUserMgmtDto.getUserName();
+						String custCode = customer.getCustCode();
 
-					String loginUserName = userName+"@"+custCode;
+						String loginUserName = userName+"@"+custCode;
 
-					Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
-					Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
+						Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
+						Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
 
-					if(login1 == null) {
-						if(login2 == null) {
+						if(login1 == null) {
+							if(login2 == null) {
 
-							String newPassword = iLoginRepository.generatePassword();
-							Login login = new Login();
-							login.setLoginName(loginUserName);
-							login.setLoginMobile(custUserMgmtDto.getuMobileNumber());
-							login.setLoginPassword(encoder.getEncoder().encode(newPassword));
-							login.setLoginCreatedDate(new Date());
-							login.setLoginIsActive(true);
-							login.setRefCustId(customer.getCustId());
-							if(custUserMgmtDto.getEmpId() != null) {
-								login.setRefEmpId(custUserMgmtDto.getEmpId());
+								String newPassword = iLoginRepository.generatePassword();
+								Login login = new Login();
+								login.setLoginName(loginUserName);
+								login.setLoginMobile(custUserMgmtDto.getuMobileNumber());
+								login.setLoginPassword(encoder.getEncoder().encode(newPassword));
+								login.setLoginCreatedDate(new Date());
+								login.setLoginIsActive(true);
+								login.setRefCustId(customer.getCustId());
+								if(custUserMgmtDto.getEmpId() != null) {
+									login.setRefEmpId(custUserMgmtDto.getEmpId());
+								}else {
+									login.setRefEmpId(0);
+								}
+
+								iLoginRepository.save(login);
+
+								String mobileNo = login.getLoginMobile();
+								String mobileSmS = "User Id has been successfully created to access the Attendance System Web application."
+										+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
+								String s = messageUtil.sms(mobileNo, mobileSmS);
+
+								custUserResponseDto.status = new Status(false, 200, "created");
+								custUserResponseDto.setLoginId(login.getLoginId());
 							}else {
-								login.setRefEmpId(0);
+								custUserResponseDto.status = new Status(true, 400, "Mobile number already exist");
 							}
-
-							iLoginRepository.save(login);
-
-							String mobileNo = login.getLoginMobile();
-							String mobileSmS = "User Id has been successfully created to access the Attendance System Web application."
-									+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
-							String s = messageUtil.sms(mobileNo, mobileSmS);
-
-							custUserResponseDto.status = new Status(false, 200, "Successfully created");
-							custUserResponseDto.setLoginId(login.getLoginId());
 						}else {
-							custUserResponseDto.status = new Status(true, 400, "Mobile number already exist");
+							custUserResponseDto.status = new Status(true, 400, "User name already exist");
 						}
-					}else {
-						custUserResponseDto.status = new Status(true, 400, "User name already exist");
+					} else {
+						custUserResponseDto.status = new Status(true, 400, "The user has already been created for the selected Employee");
 					}
-				}
-			} else {
+				} 
+
+			}else {
 				custUserResponseDto.status = new Status(true, 400, "Customer is not exist");
 			}
-
 		} catch (Exception e) {
-			
+
 			custUserResponseDto.status = new Status(true, 400, "Oops..! Something went wrong..");
 		}
 		return custUserResponseDto;
@@ -240,7 +246,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 									+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
 							String s = messageUtil.sms(mobileNo, mobileSmS);*/
 
-							status = new Status(false, 200, "successfully updated");
+							status = new Status(false, 200, "updated");
 
 						}else {
 							status = new Status(true, 400, "Mobile number already exist");
@@ -363,7 +369,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				userRight.setRefLoginId(custUserModuleMapDto.getLoginId());
 				userRight.setRefModuleId(custUserModuleDto.getModuleId());
 				userRightRepository.save(userRight);
-				status = new Status(false, 200, "Modules added successfully");
+				status = new Status(false, 200, "Modules added");
 			}
 
 		} catch (Exception e) {
@@ -381,7 +387,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				loginDataRight.setRefLoginId(custUserBranchLoginMapDto.getLoginId());
 				loginDataRight.setRefBrId(custUserBranchDto.getBrId());
 				loginDataRightRepository.save(loginDataRight);
-				status = new Status(false, 200, "Branches successfully added");
+				status = new Status(false, 200, "Branches added");
 			}
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
@@ -438,7 +444,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 					}
 				}
 			}
-			status = new Status(false, 200, "Modules successfully updated");
+			status = new Status(false, 200, "Modules updated");
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
@@ -482,7 +488,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 					loginDataRightRepository.delete(loginDataRight);
 				}
 
-				status = new Status(false, 200, "Branches successfully updated");
+				status = new Status(false, 200, "Branches updated");
 
 			}
 
@@ -670,7 +676,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			if(login != null) {
 				login.setLoginIsActive(false);
 				iLoginRepository.save(login);
-				status = new Status(false, 200, "successfully deleted");
+				status = new Status(false, 200, "deleted");
 			}else {
 				status = new Status(true, 400, "Login id not found");
 			}
@@ -694,7 +700,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				String mobileSmS = "Password to access the Attendance System Web Application has been reset to : "+ newPassword;	
 				String s = messageUtil.sms(mobileNo, mobileSmS);
 
-				status = new Status(false, 200, "Password reset and sent successfully");
+				status = new Status(false, 200, "Password reset and sent");
 			} else {
 				status = new Status(true, 400, "Login id not found");
 			}

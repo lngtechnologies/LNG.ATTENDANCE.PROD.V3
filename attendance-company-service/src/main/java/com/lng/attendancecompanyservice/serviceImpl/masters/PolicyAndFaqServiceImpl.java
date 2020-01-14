@@ -30,7 +30,7 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 			if(policyAndFaq != null) {
 				PolicyAndFaq policyAndFaq1  = policyAndFaqRepository.findPolicyAndFaqByValue(policyAndFaqDto.getValue());
 				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
-				policyAndFaqResponse.status = new Status(false,200, "successfully created");
+				policyAndFaqResponse.status = new Status(false,200, "created");
 			}else {
 				policyAndFaqResponse.status = new Status(true,400, "Not found");
 			}
@@ -75,7 +75,7 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 			if(policyAndFaq != null) {
 				PolicyAndFaq policyAndFaq1  = policyAndFaqRepository.findPolicyAndFaqByValue(policyAndFaqDto.getValue());
 				policyAndFaqRepository.updatePolicyAndFaqByValueAndPageId(policyAndFaqDto.getValue(),policyAndFaqDto.getPageId());
-				status = new Status(false, 200, "successfully updated");
+				status = new Status(false, 200, "updated");
 			}else {
 				status = new Status(true, 400, " Not found");
 			}

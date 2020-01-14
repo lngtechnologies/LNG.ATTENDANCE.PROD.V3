@@ -45,7 +45,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHoliday1.setBranch(branch1);
 						custBrHoliday1.setHolidayCalendar(holidayCalendar);
 						custBrHolidayRepository.save(custBrHoliday1);
-						custBrHolidayResponse.status = new Status(false,200, "successfully created");
+						custBrHolidayResponse.status = new Status(false,200, "created");
 					}else {
 						custBrHolidayResponse.status = new Status(true,400, "Holiday name already exists");
 
@@ -69,7 +69,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			CustBrHoliday  custBrHoliday = custBrHolidayRepository.findCustBrHolidayByCustBrHolidayId(custBrHolidayId);
 			if(custBrHoliday != null) {
 				custBrHolidayRepository.delete(custBrHoliday);	
-				custBrHolidayResponse.status = new Status(false,200, "successfully deleted");
+				custBrHolidayResponse.status = new Status(false,200, "deleted");
 			}else {
 				custBrHolidayResponse.status = new Status(false,400, "Not found");	
 			}
@@ -149,7 +149,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 					CustBrHoliday.setBranch(branch);
 					CustBrHoliday.setHolidayCalendar(holidayCalendar);
 					custBrHolidayRepository.save(CustBrHoliday);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 
 				}else {
 					status = new Status(true,400,"Holiday already exists");

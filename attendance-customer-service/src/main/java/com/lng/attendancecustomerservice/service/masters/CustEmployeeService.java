@@ -5,6 +5,8 @@ import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
 import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
 
+import status.Status;
+
 public interface CustEmployeeService {
 
 	CustEmployeeStatus save(CustEmployeeDto custEmployeeDto);
@@ -22,4 +24,6 @@ public interface CustEmployeeService {
 	CustEmployeeListResponse searchEmployeeByEmpName(String empName);
 	
 	CustEmployeeListResponse FindEmployeeByRefLoginId(Integer refLoginId);
+	
+	Status checkEmpMobileNumExistOrNot(String empMobile, Integer custId);
 }

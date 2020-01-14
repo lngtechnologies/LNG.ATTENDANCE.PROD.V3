@@ -47,7 +47,7 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorName(contractorDto.getContractorName());
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "created");
 
 				}
 				else{ 
@@ -61,7 +61,7 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor1.setContractorName(contractorDto.getContractorName());
 					contractor1.setContractorIsActive(true);
 					contractorRepository.save(contractor1);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "created");
 
 				}
 				else{ 
@@ -111,14 +111,14 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setCustomer(customer);
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				} else if (ch.getContractorId() == contractorDto.getContractorId()) { 
 
 					contractor = modelMapper.map(contractorDto,Contractor.class);
 					contractor.setCustomer(customer);
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
-					status = new Status(false, 200, "successfully updated");
+					status = new Status(false, 200, "updated");
 				}
 				else{
 					status = new Status(true,400,"Contractor name already exists");
@@ -155,7 +155,7 @@ public class ContractorServiceImpl implements ContractorService {
 			if(contractor!= null) {
 				if(a == 0) {
 					contractorRepository.delete(contractor);	
-					scontractorResponse.status = new Status(false,200, "successfully deleted");
+					scontractorResponse.status = new Status(false,200, "deleted");
 				}else {
 					contractor.setContractorIsActive(false);
 					contractorRepository.save(contractor);

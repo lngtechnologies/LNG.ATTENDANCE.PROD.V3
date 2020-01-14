@@ -44,7 +44,7 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesignationName(designationDto.getDesignationName());
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
-					response.status = new Status(false,200, "Successfully created");
+					response.status = new Status(false,200, "created");
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
@@ -58,7 +58,7 @@ public class DesignationServiceImpl implements DesignationService{
 					designation1.setDesignationName(designationDto.getDesignationName());
 					designation1.setDesigIsActive(true);
 					designationRepository.save(designation1);
-					response.status = new Status(false,200, "successfully created");
+					response.status = new Status(false,200, "created");
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
@@ -85,7 +85,7 @@ public class DesignationServiceImpl implements DesignationService{
 		try {
 			List<Designation> designationList=designationRepository.findAllByDesigIsActive(true);
 			response.setData1(designationList.stream().map(designation -> convertToDesignationDto(designation)).collect(Collectors.toList()));
-			response.status = new Status(false,200, "successfully GetAll");
+			response.status = new Status(false,200, "Success");
 		}catch(Exception e) {
 			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
@@ -110,14 +110,14 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesignationName(designationDto.getDesignationName());
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
-					status = new Status(false,200, "successfully updated");
+					status = new Status(false,200, "updated");
 				} else if (de.getDesignationId() == designationDto.getDesignationId()) { 
 
 					designation.setCustomer(customer);
 					designation.setDesignationName(designationDto.getDesignationName());
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
-					status = new Status(false,200, "successfully updated");
+					status = new Status(false,200, "updated");
 
 				}
 				else{ 
@@ -156,7 +156,7 @@ public class DesignationServiceImpl implements DesignationService{
 				if(a == 0) {
 
 					designationRepository.delete(designation);	
-					designationResponse.status = new Status(false,200, "successfully deleted");
+					designationResponse.status = new Status(false,200, "deleted");
 				}else {
 					designation.setDesigIsActive(false);
 					designationRepository.save(designation);
