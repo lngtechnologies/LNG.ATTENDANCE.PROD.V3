@@ -31,6 +31,6 @@ public interface ContractorRepository extends CrudRepository<Contractor,Integer>
 
 	Contractor findByCustomer_CustIdAndContractorNameAndContractorIsActive(Integer refCustId,String contractorName, Boolean contractorIsActive);
 	
-	@Query(value = "SELECT tc.* FROM tmcontractor tc WHERE tc.refCustId =1 AND tc.contractorIsActive = TRUE ORDER BY tc.contractorName ASC",nativeQuery = true)
+	@Query(value = "SELECT tc.* FROM tmcontractor tc WHERE tc.refCustId =?1 AND tc.contractorIsActive = TRUE ORDER BY tc.contractorName ASC",nativeQuery = true)
 	List<Contractor> findAllByCustomer_CustId(Integer refCustId);
 }

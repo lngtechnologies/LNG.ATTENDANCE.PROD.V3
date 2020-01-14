@@ -32,8 +32,14 @@ public class EmployeeLeaveController {
 	EmpLeaveApproveOrCancelService EmpLeaveApproveOrCancelService;
 	
 	@PostMapping(value = "/getBranchListByCustIdAndLoginId")
-	public ResponseEntity<BranchListDto> findByCustId(@RequestBody BranchListDto branchListDto) {
+	public ResponseEntity<BranchListDto> findByCustIdAndLoginId(@RequestBody BranchListDto branchListDto) {
 		BranchListDto branchListDto1 = employeeLeaveService.getBranchListByCustIdAndLoginId(branchListDto.getCustId(),branchListDto.getLoginId());
+		return new ResponseEntity<BranchListDto>(branchListDto1, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/getBranchListByCustId")
+	public ResponseEntity<BranchListDto> findByCustId(@RequestBody BranchListDto branchListDto) {
+		BranchListDto branchListDto1 = employeeLeaveService.getBranchListByCustId(branchListDto.getCustId());
 		return new ResponseEntity<BranchListDto>(branchListDto1, HttpStatus.OK);
 	}
 	
