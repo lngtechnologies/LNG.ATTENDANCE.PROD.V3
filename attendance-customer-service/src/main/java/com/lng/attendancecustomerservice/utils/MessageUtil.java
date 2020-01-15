@@ -57,7 +57,7 @@ public class MessageUtil {
 			sb.replace(sb.indexOf("mobileNumbers"), sb.indexOf("mobileNumbers") + "mobileNumbers".length(), mobileNumbers);
 			sb.replace(sb.indexOf("textMessage"), sb.indexOf("textMessage") + "textMessage".length(), textMessage);
 			
-			result = restTemplate.getForObject(sb.toString(),String.class);
+			result = restTemplate.getForObject(uri,String.class);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
