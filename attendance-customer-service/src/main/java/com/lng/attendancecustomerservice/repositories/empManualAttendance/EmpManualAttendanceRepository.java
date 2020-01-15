@@ -31,4 +31,7 @@ public interface EmpManualAttendanceRepository extends PagingAndSortingRepositor
 	
 	@Query(value = "CALL getEmpManualAttndOutDetails(?1,?2)",nativeQuery = true)
 	List<Object[]> findEmpOutAttendanceByDeptAndDate(Integer deptId, String empAttendanceDate);
+	
+	@Query(value = "CALL SearchEmployeeByNameAndDateAndLoginIdAndCustId(?1,?2,?3,?4,?5)",nativeQuery = true)
+	List<Object[]>  SearchEmployeeByNameAndDateCustIdAndLoginId(String emp,Integer  refCustId,Date empAttendanceDatetime,Integer loginId,Integer custId);
 }

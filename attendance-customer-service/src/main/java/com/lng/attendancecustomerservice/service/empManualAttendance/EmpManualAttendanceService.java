@@ -30,4 +30,6 @@ public interface EmpManualAttendanceService {
 	
 	EmpAttendResponseDto getEmpAttendanceBydeptIdAndEmpAttendanceDate(Integer deptId , String empAttendanceDate);
 	
+	EmpAttendanceResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(String emp,Integer  refCustId,Date empAttendanceDatetime,Integer loginId);
+	
 }

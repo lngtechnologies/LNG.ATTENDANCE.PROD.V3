@@ -9,8 +9,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecustomerservice.entity.authentication.Login;
 import com.lng.attendancecustomerservice.entity.employeeAttendance.EmployeeAttendance;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
+import com.lng.attendancecustomerservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.empManualAttendance.EmpManualAttendanceRepository;
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.EmployeeAttendanceRepository;
@@ -43,7 +45,9 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	@Autowired
 	UnmatchedEmployeeAttendanceRepository unmatchedEmpAttndRepo;
 
-
+	@Autowired
+	ILoginRepository iLoginRepository;
+	
 	@Override
 	public EmpAttendanceResponse getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId, String empAttendanceDate) {
 		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
@@ -456,7 +460,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 		EmpManualAttendance empManualAttendanceDto = new EmpManualAttendance();
 		List<EmpAttendanceInDto> inList = new ArrayList<>();
 		List<EmpAttendaceOutDto> outList = new ArrayList<>();
-		
+
 		try {
 			List<Object[]> empInAttendance = empAttendanceRepository.findEmpInAttendanceByDeptAndDate(deptId, empAttendanceDate);
 			if(!empInAttendance.isEmpty()) {
@@ -476,7 +480,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 					empManualAttendanceDto.setAttendanceInDetails(inList);		
 				}
 			}
-			
+
 			List<Object[]> empoutAttendance = empAttendanceRepository.findEmpOutAttendanceByDeptAndDate(deptId, empAttendanceDate);
 			if(!empoutAttendance.isEmpty()) {
 				for(Object[] p : empoutAttendance) {
@@ -501,6 +505,52 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 			empAttendResponseDto.status = new Status(true, 500, "Oops..! Something went wrong");
 		}
 		return empAttendResponseDto;
+	}
+
+	@Override
+	public EmpAttendanceResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(String emp,
+			Integer refCustId, Date empAttendanceDatetime, Integer loginId) {
+
+		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
+		List<EmpAttendanceParamDto2> empAttendanceDtoList = new ArrayList<>();
+
+		try {
+			if(emp.length() >= 3) {
+				Login login = iLoginRepository.findByLoginId(loginId);
+				if(login != null) {
+				List<Object[]> empAttendance = empAttendanceRepository.SearchEmployeeByNameAndDateCustIdAndLoginId(emp, refCustId, empAttendanceDatetime,loginId,login.getRefEmpId());
+				if (empAttendance.isEmpty()) {
+
+					empAttendanceResponse.status = new Status(false, 400, "Records not found");
+
+				} else {
+					for (Object[] p : empAttendance) {
+						EmpAttendanceParamDto2 EmpAttendanceDto1 = new EmpAttendanceParamDto2();
+						EmpAttendanceDto1.setRefEmpId(Integer.valueOf(p[0].toString()));
+						EmpAttendanceDto1.setEmpName((p[1].toString()));
+						EmpAttendanceDto1.setEmpAttendanceDate((Date)p[2]);
+						EmpAttendanceDto1.setShiftStart((p[3].toString()));
+						EmpAttendanceDto1.setShiftEnd(p[4].toString());
+						EmpAttendanceDto1.setEmpAttendanceInDatetime((Date)p[5]);
+						EmpAttendanceDto1.setEmpAttendanceOutDatetime((Date)p[6]);
+						EmpAttendanceDto1.setEmpAttendanceConsiderInDatetime((Date)p[7]);
+						EmpAttendanceDto1.setEmpAttendanceConsiderOutDatetime((Date)p[8]);
+						EmpAttendanceDto1.setLoginId(Integer.valueOf(p[9].toString()));
+						empAttendanceDtoList.add(EmpAttendanceDto1);
+						empAttendanceResponse.status = new Status(false, 200, "success");
+					}
+				}
+			} else {
+				empAttendanceResponse.status = new Status(true, 400, "Login Id not found");
+			} 
+			}else {
+				empAttendanceResponse.status = new Status(true, 400, "Please enter more than 3 character");
+			}
+		} catch (Exception e) {
+			empAttendanceResponse.status = new Status(true, 500, "Opps..! Something went wrong..");
+		}
+		empAttendanceResponse.setData2(empAttendanceDtoList);
+		return empAttendanceResponse;
 	}
 
 	/*@Override

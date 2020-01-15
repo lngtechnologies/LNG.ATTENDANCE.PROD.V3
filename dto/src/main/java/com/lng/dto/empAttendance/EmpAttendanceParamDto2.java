@@ -3,28 +3,30 @@ package com.lng.dto.empAttendance;
 import java.util.Date;
 
 public class EmpAttendanceParamDto2 {
-	
+
 	private String  emp;
-	
+
 	private   Integer  refCustId;
-	
+
 	private Date empAttendanceDate;
-	
+
 	private  Integer refEmpId;
 
 	private  String  empName;
-	
+
 	private String shiftStart;
-	
+
 	private String shiftEnd;
-	
+
 	private  Date  empAttendanceInDatetime;
-	
+
 	private  Date  empAttendanceOutDatetime;
-	
+
 	private Date empAttendanceConsiderInDatetime;
-	
+
 	private Date empAttendanceConsiderOutDatetime;
+
+	private Integer  loginId;
 
 	public String getEmp() {
 		return emp;
@@ -112,6 +114,14 @@ public class EmpAttendanceParamDto2 {
 
 	public void setEmpAttendanceConsiderOutDatetime(Date empAttendanceConsiderOutDatetime) {
 		this.empAttendanceConsiderOutDatetime = empAttendanceConsiderOutDatetime;
+	}
+
+	public Integer getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(Integer loginId) {
+		this.loginId = loginId;
 	}
 
 }

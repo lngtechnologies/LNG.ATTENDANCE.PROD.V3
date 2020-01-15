@@ -121,4 +121,12 @@ public class EmpManualAttendanceController {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 
+	 @PostMapping(value = "/getEmployeeByNameAndDateAndCustomerAndLoginId")
+		public ResponseEntity<EmpAttendanceResponse> findEmployee(@RequestBody EmpAttendanceParamDto2 empAttendanceDto) {
+			EmpAttendanceResponse empAttendanceResponse = empAttendanceService.searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(empAttendanceDto.getEmp(), empAttendanceDto.getRefCustId(), empAttendanceDto.getEmpAttendanceDate(),empAttendanceDto.getLoginId());
+			if(empAttendanceResponse !=null){
+				return new ResponseEntity<EmpAttendanceResponse>(empAttendanceResponse, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
 }
