@@ -535,15 +535,16 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 						EmpAttendanceDto1.setEmpAttendanceOutDatetime((Date)p[6]);
 						EmpAttendanceDto1.setEmpAttendanceConsiderInDatetime((Date)p[7]);
 						EmpAttendanceDto1.setEmpAttendanceConsiderOutDatetime((Date)p[8]);
+						EmpAttendanceDto1.setLoginId(Integer.valueOf(p[9].toString()));
 						empAttendanceDtoList.add(EmpAttendanceDto1);
 						empAttendanceResponse.status = new Status(false, 200, "success");
 					}
 				}
 			} else {
-				empAttendanceResponse.status = new Status(true, 400, "Please enter more than 3 character");
+				empAttendanceResponse.status = new Status(true, 400, "Login Id not found");
 			} 
 			}else {
-				empAttendanceResponse.status = new Status(false, 400, "Login Id not found");
+				empAttendanceResponse.status = new Status(true, 400, "Please enter more than 3 character");
 			}
 		} catch (Exception e) {
 			empAttendanceResponse.status = new Status(true, 500, "Opps..! Something went wrong..");
