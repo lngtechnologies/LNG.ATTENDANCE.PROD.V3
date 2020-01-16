@@ -70,6 +70,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 	@Autowired
 	LoginDataRightRepository loginDataRightRepository;
+	
 
 	MessageUtil messageUtil = new MessageUtil();
 
@@ -84,11 +85,11 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 		Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
 		// Login login3 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
-		List<Login> loginData = iLoginRepository.findAllByLoginIsActive();
+		List<Login> loginData = iLoginRepository.findAllByLoginIsActiveAndRefEmpId(custUserMgmtDto.getEmpId());
 		try {
 			if(customer != null) {
-				for(int i=0; i<loginData.size(); i++) {
-					if(loginData.get(i).getRefEmpId() != custUserMgmtDto.getEmpId()) {
+				
+					if(loginData.isEmpty() || custUserMgmtDto.getEmpId() == 0) {
 
 						/*if(login3 != null && customer.getCustMobile().equals(login3.getLoginMobile())) {
 						login3.setRefEmpId(custUserMgmtDto.getEmpId());
@@ -102,11 +103,13 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						String loginUserName = userName+"@"+custCode;
 
 						Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
-						Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
-
+					//	Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
+						Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custUserMgmtDto.getEmpId(), true);
 						if(login1 == null) {
-							if(login2 == null) {
-
+							// if(login2 == null) {
+								if(employee != null) {
+									
+								
 								String newPassword = iLoginRepository.generatePassword();
 								Login login = new Login();
 								login.setLoginName(loginUserName);
@@ -123,30 +126,32 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 								iLoginRepository.save(login);
 
-								String mobileNo = login.getLoginMobile();
+								String mobileNo = employee.getEmpMobile();
 								String mobileSmS = "User Id has been successfully created to access the Attendance System Web application."
 										+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
 								String s = messageUtil.sms(mobileNo, mobileSmS);
 
 								custUserResponseDto.status = new Status(false, 200, "created");
 								custUserResponseDto.setLoginId(login.getLoginId());
-							}else {
+								}else {
+								}
+								/*}else {
 								custUserResponseDto.status = new Status(true, 400, "Mobile number already exist");
-							}
+							}*/
 						}else {
 							custUserResponseDto.status = new Status(true, 400, "User name already exist");
 						}
 					} else {
 						custUserResponseDto.status = new Status(true, 400, "The user has already been created for the selected Employee");
 					}
-				} 
+				
 
 			}else {
 				custUserResponseDto.status = new Status(true, 400, "Customer is not exist");
 			}
 		} catch (Exception e) {
 
-			custUserResponseDto.status = new Status(true, 400, "Oops..! Something went wrong..");
+			custUserResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return custUserResponseDto;
 	}
