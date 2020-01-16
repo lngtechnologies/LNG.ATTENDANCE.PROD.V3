@@ -525,18 +525,18 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 				} else {
 					for (Object[] p : empAttendance) {
-						EmpAttendanceParamDto2 EmpAttendanceDto1 = new EmpAttendanceParamDto2();
-						EmpAttendanceDto1.setRefEmpId(Integer.valueOf(p[0].toString()));
-						EmpAttendanceDto1.setEmpName((p[1].toString()));
-						EmpAttendanceDto1.setEmpAttendanceDate((Date)p[2]);
-						EmpAttendanceDto1.setShiftStart((p[3].toString()));
-						EmpAttendanceDto1.setShiftEnd(p[4].toString());
-						EmpAttendanceDto1.setEmpAttendanceInDatetime((Date)p[5]);
-						EmpAttendanceDto1.setEmpAttendanceOutDatetime((Date)p[6]);
-						EmpAttendanceDto1.setEmpAttendanceConsiderInDatetime((Date)p[7]);
-						EmpAttendanceDto1.setEmpAttendanceConsiderOutDatetime((Date)p[8]);
-						EmpAttendanceDto1.setLoginId(Integer.valueOf(p[9].toString()));
-						empAttendanceDtoList.add(EmpAttendanceDto1);
+						EmpAttendanceParamDto2 EmpAttendanceParamDto2 = new EmpAttendanceParamDto2();
+						EmpAttendanceParamDto2.setRefEmpId(Integer.valueOf(p[0].toString()));
+						EmpAttendanceParamDto2.setEmpName((p[1].toString()));
+						EmpAttendanceParamDto2.setEmpAttendanceDate((Date)p[2]);
+						EmpAttendanceParamDto2.setShiftStart((p[3].toString()));
+						EmpAttendanceParamDto2.setShiftEnd(p[4].toString());
+						EmpAttendanceParamDto2.setEmpAttendanceInDatetime((Date)p[5]);
+						EmpAttendanceParamDto2.setEmpAttendanceOutDatetime((Date)p[6]);
+						EmpAttendanceParamDto2.setEmpAttendanceConsiderInDatetime((Date)p[7]);
+						EmpAttendanceParamDto2.setEmpAttendanceConsiderOutDatetime((Date)p[8]);
+						EmpAttendanceParamDto2.setLoginId(Integer.valueOf(p[9].toString()));
+						empAttendanceDtoList.add(EmpAttendanceParamDto2);
 						empAttendanceResponse.status = new Status(false, 200, "success");
 					}
 				}
