@@ -535,13 +535,13 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							empManualAttendanceParamDto.setShiftEnd(p[4].toString());
 							//EmpAttendanceParamDto2.setEmpAttendanceInDatetime((Date)p[5]);
 							if(!p[5].toString().equals("NA")) {
-								empManualAttendanceParamDto.setEmpAttendanceInDatetime(p[7].toString());
+								empManualAttendanceParamDto.setEmpAttendanceInDatetime(p[5].toString());
 							} else {
 								empManualAttendanceParamDto.setEmpAttendanceInDatetime("NA");
 							}
 							//empManualAttendanceParamDto.setEmpAttendanceOutDatetime((Date)p[6]);
 							if(!p[6].toString().equals("NA")) {
-								empManualAttendanceParamDto.setEmpAttendanceOutDatetime(p[7].toString());
+								empManualAttendanceParamDto.setEmpAttendanceOutDatetime(p[6].toString());
 							} else {
 								empManualAttendanceParamDto.setEmpAttendanceOutDatetime("NA");
 							}
@@ -553,7 +553,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 							}
 							//empManualAttendanceParamDto.setEmpAttendanceConsiderOutDatetime((Date)p[8]);
 							if(!p[8].toString().equals("NA")) {
-								empManualAttendanceParamDto.setEmpAttendanceConsiderOutDatetime(p[7].toString());
+								empManualAttendanceParamDto.setEmpAttendanceConsiderOutDatetime(p[8].toString());
 							} else {
 								empManualAttendanceParamDto.setEmpAttendanceConsiderOutDatetime("NA");
 							}
