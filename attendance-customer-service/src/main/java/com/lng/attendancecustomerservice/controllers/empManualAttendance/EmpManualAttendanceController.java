@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
 import com.lng.dto.empAttendance.EmpAttendResponseDto;
-import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceInDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
+import com.lng.dto.empAttendance.EmpMannualAttendanceParamResponse;
+import com.lng.dto.empAttendance.EmpManualAttendanceParamDto;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
 
 import status.Status;
@@ -122,10 +123,10 @@ public class EmpManualAttendanceController {
 		}
 
 	 @PostMapping(value = "/getEmployeeByNameAndDateAndCustomerAndLoginId")
-		public ResponseEntity<EmpAttendanceResponse> findEmployee(@RequestBody EmpAttendanceParamDto2 empAttendanceDto) {
-			EmpAttendanceResponse empAttendanceResponse = empAttendanceService.searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(empAttendanceDto.getEmp(), empAttendanceDto.getRefCustId(), empAttendanceDto.getEmpAttendanceDate(),empAttendanceDto.getLoginId());
-			if(empAttendanceResponse !=null){
-				return new ResponseEntity<EmpAttendanceResponse>(empAttendanceResponse, HttpStatus.CREATED);
+		public ResponseEntity<EmpMannualAttendanceParamResponse> findEmployee(@RequestBody EmpManualAttendanceParamDto empManualAttendanceParamDto) {
+		 EmpMannualAttendanceParamResponse empMannualAttendanceParamResponse = empAttendanceService.searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(empManualAttendanceParamDto.getEmp(), empManualAttendanceParamDto.getRefCustId(), empManualAttendanceParamDto.getEmpAttendanceDate(),empManualAttendanceParamDto.getLoginId());
+			if(empMannualAttendanceParamResponse !=null){
+				return new ResponseEntity<EmpMannualAttendanceParamResponse>(empMannualAttendanceParamResponse, HttpStatus.CREATED);
 			}
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}

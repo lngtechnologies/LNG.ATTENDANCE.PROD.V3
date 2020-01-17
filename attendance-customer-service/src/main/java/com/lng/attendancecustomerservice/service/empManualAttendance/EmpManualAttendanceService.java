@@ -7,6 +7,7 @@ import com.lng.dto.empAttendance.EmpAttendResponseDto;
 import com.lng.dto.empAttendance.EmpAttendanceDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
+import com.lng.dto.empAttendance.EmpMannualAttendanceParamResponse;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
 
 import status.Status;
@@ -30,6 +31,6 @@ public interface EmpManualAttendanceService {
 	
 	EmpAttendResponseDto getEmpAttendanceBydeptIdAndEmpAttendanceDate(Integer deptId , String empAttendanceDate);
 	
-	EmpAttendanceResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(String emp,Integer  refCustId,Date empAttendanceDatetime,Integer loginId);
+	EmpMannualAttendanceParamResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(String emp,Integer  refCustId,String empAttendanceDatetime,Integer loginId);
 	
 }
