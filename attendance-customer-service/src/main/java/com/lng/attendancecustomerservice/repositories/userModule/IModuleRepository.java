@@ -35,6 +35,9 @@ public interface IModuleRepository extends JpaRepository<Module, Integer> {
 	@Query(value = "call getModules(?1)", nativeQuery = true)
 	List<Object[]> findAllModules(Integer loginId);
 	
+	@Query(value = "SELECT moduleId, moduleName, moduleURL, parentId FROM tmmodule WHERE moduleDefault != 1", nativeQuery = true)
+	List<Object[]> findAllModules();
+	
 	//List<Module> getAllByModuleId();
 
 }

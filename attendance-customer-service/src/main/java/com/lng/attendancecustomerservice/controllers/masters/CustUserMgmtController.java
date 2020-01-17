@@ -18,11 +18,14 @@ import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
+import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
 import com.lng.dto.masters.custUserMgmt.CustUserResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserRightResponseDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResponseDto;
 
 import status.Status;
 
@@ -150,4 +153,28 @@ public class CustUserMgmtController {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+	
+	@PostMapping(value = "/save/all/data")
+	public ResponseEntity<Status> saveAllData(@RequestBody CustUserLoginModuleBranchDto custUserLoginModuleBranchDto) {
+		Status status = custUserMgmtService.saveAllDetails(custUserLoginModuleBranchDto);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(value = "/check/userName")
+	public ResponseEntity<Status> checkUserName(@RequestBody CustUserMgmtDto custUserMgmtDto) {
+		Status status = custUserMgmtService.checkUserName(custUserMgmtDto);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping(value = "/findAllModules")
+	public ResponseEntity<UserModuleResDto> findAllModules() {
+		UserModuleResDto userModuleResponseDto = custUserMgmtService.findAllModules();
+		return new ResponseEntity<UserModuleResDto>(userModuleResponseDto, HttpStatus.CREATED);	
+	}
 }

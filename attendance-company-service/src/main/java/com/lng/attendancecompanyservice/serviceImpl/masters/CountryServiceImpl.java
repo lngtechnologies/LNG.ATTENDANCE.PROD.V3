@@ -38,7 +38,7 @@ public class CountryServiceImpl implements CountryService {
 			
 			final Lock displayLock = this.displayQueueLock; 
 			displayLock.lock();
-			Thread.sleep(3000L);
+			//Thread.sleep(3000L);
 			
 			if(countryDto.getCountryName() == null || countryDto.getCountryName().isEmpty()) throw new Exception("Please enter country name");
 			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country code");

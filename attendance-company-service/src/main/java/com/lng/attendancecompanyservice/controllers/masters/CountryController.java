@@ -3,6 +3,7 @@ package com.lng.attendancecompanyservice.controllers.masters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import com.lng.dto.masters.country.CountryResponse;
 @CrossOrigin(origins = "*", maxAge=3600)
 @RequestMapping(value="/master/country")
 public class CountryController {
+	
 	@Autowired
 	CountryService countryService;
 
@@ -29,6 +31,13 @@ public class CountryController {
 		}
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+	
+	/*@Async("asyncExecutor")
+	@PostMapping(value="/create")
+	public CompletableFuture<CountryResponse> save(@RequestBody CountryDto countryDto){
+		CountryResponse countryDto1 = countryService.saveCountry(countryDto);
+		return CompletableFuture.completedFuture(countryDto1);
+	}*/
 
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<CountryResponse> getAll() {
