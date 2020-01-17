@@ -24,7 +24,9 @@ import com.lng.dto.empAttendance.EmpAttendanceInDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto;
 import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
+import com.lng.dto.empAttendance.EmpMannualAttendanceParamResponse;
 import com.lng.dto.empAttendance.EmpManualAttendance;
+import com.lng.dto.empAttendance.EmpManualAttendanceParamDto;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
 
 import status.Status;
@@ -47,7 +49,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 	@Autowired
 	ILoginRepository iLoginRepository;
-	
+
 	@Override
 	public EmpAttendanceResponse getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId, String empAttendanceDate) {
 		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
@@ -508,49 +510,69 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	}
 
 	@Override
-	public EmpAttendanceResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(String emp,
-			Integer refCustId, Date empAttendanceDatetime, Integer loginId) {
+	public EmpMannualAttendanceParamResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(String emp,
+			Integer refCustId, String empAttendanceDatetime, Integer loginId) {
 
-		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
-		List<EmpAttendanceParamDto2> empAttendanceDtoList = new ArrayList<>();
+		EmpMannualAttendanceParamResponse empMannualAttendanceParamResponse = new EmpMannualAttendanceParamResponse();
+		List<EmpManualAttendanceParamDto> empAttendanceDtoList = new ArrayList<>();
 
 		try {
 			if(emp.length() >= 3) {
 				Login login = iLoginRepository.findByLoginId(loginId);
 				if(login != null) {
-				List<Object[]> empAttendance = empAttendanceRepository.SearchEmployeeByNameAndDateCustIdAndLoginId(emp, refCustId, empAttendanceDatetime,loginId,login.getRefEmpId());
-				if (empAttendance.isEmpty()) {
+					List<Object[]> empAttendance = empAttendanceRepository.SearchEmployeeByNameAndDateCustIdAndLoginId(emp, refCustId, empAttendanceDatetime,loginId,login.getRefEmpId());
+					if (empAttendance.isEmpty()) {
 
-					empAttendanceResponse.status = new Status(false, 400, "Records not found");
+						empMannualAttendanceParamResponse.status = new Status(false, 400, "Records not found");
 
-				} else {
-					for (Object[] p : empAttendance) {
-						EmpAttendanceParamDto2 EmpAttendanceParamDto2 = new EmpAttendanceParamDto2();
-						EmpAttendanceParamDto2.setRefEmpId(Integer.valueOf(p[0].toString()));
-						EmpAttendanceParamDto2.setEmpName((p[1].toString()));
-						EmpAttendanceParamDto2.setEmpAttendanceDate((Date)p[2]);
-						EmpAttendanceParamDto2.setShiftStart((p[3].toString()));
-						EmpAttendanceParamDto2.setShiftEnd(p[4].toString());
-						EmpAttendanceParamDto2.setEmpAttendanceInDatetime((Date)p[5]);
-						EmpAttendanceParamDto2.setEmpAttendanceOutDatetime((Date)p[6]);
-						EmpAttendanceParamDto2.setEmpAttendanceConsiderInDatetime((Date)p[7]);
-						EmpAttendanceParamDto2.setEmpAttendanceConsiderOutDatetime((Date)p[8]);
-						EmpAttendanceParamDto2.setLoginId(Integer.valueOf(p[9].toString()));
-						empAttendanceDtoList.add(EmpAttendanceParamDto2);
-						empAttendanceResponse.status = new Status(false, 200, "success");
+					} else {
+						for (Object[] p : empAttendance) {
+							EmpManualAttendanceParamDto empManualAttendanceParamDto = new EmpManualAttendanceParamDto();
+							empManualAttendanceParamDto.setRefEmpId(Integer.valueOf(p[0].toString()));
+							empManualAttendanceParamDto.setEmpName((p[1].toString()));
+							empManualAttendanceParamDto.setEmpAttendanceDate(p[2].toString());
+							empManualAttendanceParamDto.setShiftStart((p[3].toString()));
+							empManualAttendanceParamDto.setShiftEnd(p[4].toString());
+							//EmpAttendanceParamDto2.setEmpAttendanceInDatetime((Date)p[5]);
+							if(!p[5].toString().equals("NA")) {
+								empManualAttendanceParamDto.setEmpAttendanceInDatetime(p[7].toString());
+							} else {
+								empManualAttendanceParamDto.setEmpAttendanceInDatetime("NA");
+							}
+							//empManualAttendanceParamDto.setEmpAttendanceOutDatetime((Date)p[6]);
+							if(!p[6].toString().equals("NA")) {
+								empManualAttendanceParamDto.setEmpAttendanceOutDatetime(p[7].toString());
+							} else {
+								empManualAttendanceParamDto.setEmpAttendanceOutDatetime("NA");
+							}
+							//empManualAttendanceParamDto.setEmpAttendanceConsiderInDatetime((Date)p[7]);
+							if(!p[7].toString().equals("NA")) {
+								empManualAttendanceParamDto.setEmpAttendanceConsiderInDatetime(p[7].toString());
+							} else {
+								empManualAttendanceParamDto.setEmpAttendanceConsiderInDatetime("NA");
+							}
+							//empManualAttendanceParamDto.setEmpAttendanceConsiderOutDatetime((Date)p[8]);
+							if(!p[8].toString().equals("NA")) {
+								empManualAttendanceParamDto.setEmpAttendanceConsiderOutDatetime(p[7].toString());
+							} else {
+								empManualAttendanceParamDto.setEmpAttendanceConsiderOutDatetime("NA");
+							}
+							empManualAttendanceParamDto.setLoginId(Integer.valueOf(p[9].toString()));
+							empAttendanceDtoList.add(empManualAttendanceParamDto);
+							empMannualAttendanceParamResponse.status = new Status(false, 200, "success");
+						}
 					}
-				}
-			} else {
-				empAttendanceResponse.status = new Status(true, 400, "Login Id not found");
-			} 
+				} else {
+					empMannualAttendanceParamResponse.status = new Status(true, 400, "Login Id not found");
+				} 
 			}else {
-				empAttendanceResponse.status = new Status(true, 400, "Please enter more than 3 character");
+				empMannualAttendanceParamResponse.status = new Status(true, 400, "Please enter more than 3 character");
 			}
 		} catch (Exception e) {
-			empAttendanceResponse.status = new Status(true, 500, "Opps..! Something went wrong..");
+			empMannualAttendanceParamResponse.status = new Status(true, 500, "Opps..! Something went wrong..");
 		}
-		empAttendanceResponse.setData2(empAttendanceDtoList);
-		return empAttendanceResponse;
+		empMannualAttendanceParamResponse.setData2(empAttendanceDtoList);
+		return empMannualAttendanceParamResponse;
 	}
 
 	/*@Override
