@@ -117,18 +117,19 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackOn={Exception.class})
 	public StatusDto saveCustomer(CustomerDto customerDto) {
 
+		final Lock displayLock = this.displayQueueLock; 
 		StatusDto statusDto = new StatusDto();
 		Login login = new Login();
 
 		try {
-
+			displayLock.lock();
 			List<Customer> customerList1 = customerRepository.findCustomerByCustEmail(customerDto.getCustEmail());
 			List<Customer> customerList2 = customerRepository.findCustomerByCustMobile(customerDto.getCustMobile());
 			//List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
 
-			final Lock displayLock = this.displayQueueLock; 
-			displayLock.lock();
-			Thread.sleep(3000L);
+			
+			
+			//Thread.sleep(3000L);
 
 			if(customerList1.isEmpty() && customerList2.isEmpty()) {
 
@@ -193,7 +194,8 @@ public class CustomerServiceImpl implements CustomerService {
 		} catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Oops..! Something went wrong..");		
+			statusDto.setMessage("Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return statusDto;
 	}

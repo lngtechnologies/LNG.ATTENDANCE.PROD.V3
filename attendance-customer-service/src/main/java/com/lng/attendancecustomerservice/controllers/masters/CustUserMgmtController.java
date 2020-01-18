@@ -17,6 +17,7 @@ import com.lng.dto.masters.custUserMgmt.CustEmployeeResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
+import com.lng.dto.masters.custUserMgmt.CustUserBranchResDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
@@ -176,5 +177,11 @@ public class CustUserMgmtController {
 	public ResponseEntity<UserModuleResDto> findAllModules() {
 		UserModuleResDto userModuleResponseDto = custUserMgmtService.findAllModules();
 		return new ResponseEntity<UserModuleResDto>(userModuleResponseDto, HttpStatus.CREATED);	
+	}
+	
+	@PostMapping(value = "/findAllBranchesByCustId")
+	public ResponseEntity<CustUserBranchResDto> findAllBranchesByCustId(@RequestBody CustLoginDto custLoginDto) {
+		CustUserBranchResDto custLoginDto1 = custUserMgmtService.findAllBranchesByCustId(custLoginDto.getCustId());
+		return new ResponseEntity<CustUserBranchResDto>(custLoginDto1, HttpStatus.CREATED);	
 	}
 }

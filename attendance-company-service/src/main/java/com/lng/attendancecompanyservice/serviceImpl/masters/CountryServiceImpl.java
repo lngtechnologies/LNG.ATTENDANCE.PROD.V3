@@ -32,13 +32,13 @@ public class CountryServiceImpl implements CountryService {
 
 	@Override
 	public CountryResponse saveCountry(CountryDto countryDto) {
+		final Lock displayLock = this.displayQueueLock; 
 
 		CountryResponse response = new CountryResponse();
+		
 		try{
-			
-			final Lock displayLock = this.displayQueueLock; 
 			displayLock.lock();
-			//Thread.sleep(3000L);
+			// Thread.sleep(3000L);
 			
 			if(countryDto.getCountryName() == null || countryDto.getCountryName().isEmpty()) throw new Exception("Please enter country name");
 			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country code");
@@ -71,8 +71,9 @@ public class CountryServiceImpl implements CountryService {
 			displayLock.unlock();
 		}catch(Exception ex){
 			response.status = new Status(true,500, ex.getMessage()); 
+			displayLock.unlock();
 		}
-
+		
 		return response;
 	}
 

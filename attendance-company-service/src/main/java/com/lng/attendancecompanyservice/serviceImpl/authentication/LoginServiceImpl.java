@@ -172,7 +172,7 @@ public class LoginServiceImpl implements ILogin {
 			
 			// Send new password to registered mobile
 			String mobileNo = null;
-			if(user.getLoginMobile() != "0") {
+			if(user.getLoginMobile() != null) {
 				mobileNo = user.getLoginMobile();
 			} else {
 				// Get emp mobile no

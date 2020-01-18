@@ -24,6 +24,18 @@ public class CustLeave {
 
 	@Column(name = "custLeaveName")
 	private String custLeaveName;
+	
+	@Column(name = "custLeaveIsActive")
+	private Boolean custLeaveIsActive;
+
+	
+	public Boolean getCustLeaveIsActive() {
+		return custLeaveIsActive;
+	}
+
+	public void setCustLeaveIsActive(Boolean custLeaveIsActive) {
+		this.custLeaveIsActive = custLeaveIsActive;
+	}
 
 	public Integer getCustLeaveId() {
 		return custLeaveId;

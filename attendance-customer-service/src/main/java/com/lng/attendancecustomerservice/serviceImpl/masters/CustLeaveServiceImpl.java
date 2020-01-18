@@ -45,6 +45,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 				if(customer != null) {
 					custLeave.setCustomer(customer);
 					custLeave.setCustLeaveName(custLeaveDto.getCustLeaveName());
+					custLeave.setCustLeaveIsActive(true);
 					custLeaveRepository.save(custLeave);
 					custLeaveResponse.status = new Status(false,200, "created");
 
@@ -97,6 +98,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 				if(cl == null) {
 					custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
 					custLeave.setCustomer(customer);
+					custLeave.setCustLeaveIsActive(true);
 					custLeaveRepository.save(custLeave);
 					status = new Status(false, 200, "updated");
 				} else if (cl.getCustLeaveId() == custLeaveDto.getCustLeaveId()) { 
@@ -133,6 +135,8 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeaveRepository.delete(custLeave);
 					custLeaveResponse.status = new Status(false, 200, "deleted");
 				}else {
+					custLeave.setCustLeaveIsActive(false);
+					custLeaveRepository.save(custLeave);
 					custLeaveResponse.status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {

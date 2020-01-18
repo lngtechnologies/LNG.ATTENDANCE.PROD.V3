@@ -16,4 +16,6 @@ public interface EmployeeDepartmentRepository extends CrudRepository<EmployeeDep
 	EmployeeDepartment findByEmpId(Integer empId);
 	
 	EmployeeDepartment findByEmployee_EmpIdAndDepartment_DeptIdAndEmpFromDate(Integer empId, Integer deptId, Date empFromDate);
+	
+	EmployeeDepartment findByEmployee_EmpIdAndEmpFromDate(Integer empId, Date empFromDate);
 }

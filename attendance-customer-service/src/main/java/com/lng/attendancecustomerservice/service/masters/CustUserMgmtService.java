@@ -4,6 +4,7 @@ import com.lng.dto.masters.custUserMgmt.CustEmployeeResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
+import com.lng.dto.masters.custUserMgmt.CustUserBranchResDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
@@ -53,4 +54,6 @@ public interface CustUserMgmtService {
 	Status checkUserName(CustUserMgmtDto custUserMgmtDto);
 	
 	UserModuleResDto findAllModules();
+	
+	CustUserBranchResDto findAllBranchesByCustId(Integer custId);
 }

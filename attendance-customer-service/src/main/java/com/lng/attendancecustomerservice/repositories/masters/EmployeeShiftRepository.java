@@ -15,4 +15,6 @@ public interface EmployeeShiftRepository extends PagingAndSortingRepository<Empl
 	EmployeeShift findByEmpId(Integer empId);
 	
 	EmployeeShift findByEmployee_EmpIdAndShift_ShiftIdAndShiftFromDate(Integer empId, Integer shiftId, Date shiftFromDate);
+	
+	EmployeeShift findByEmployee_EmpIdAndShiftFromDate(Integer empId, Date shiftFromDate);
 }
