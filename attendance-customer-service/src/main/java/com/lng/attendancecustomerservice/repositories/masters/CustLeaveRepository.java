@@ -13,9 +13,9 @@ public interface CustLeaveRepository extends PagingAndSortingRepository<CustLeav
 	
 	List<CustLeave>  findAll();
 
-	CustLeave findCustLeaveByCustLeaveId(Integer custLeaveId);
+	CustLeave findCustLeaveByCustLeaveIdAndcustLeaveIsActive(Integer custLeaveId, Boolean custLeaveIsActive);
 
-	List<CustLeave>  findCustLeaveByCustomer_custId(Integer custId);
+	List<CustLeave>  findCustLeaveByCustomer_custIdAndcustLeaveIsActive(Integer custId, Boolean custLeaveIsActive);
 	
 	@Query(value = "CALL CheckCustLeaveIsExistForCustomer(?1, ?2)",nativeQuery = true)
 	int findByRefCustIdAndCustLeaveName(Integer refCustId,String custLeaveName);
@@ -24,7 +24,7 @@ public interface CustLeaveRepository extends PagingAndSortingRepository<CustLeav
 	
 	// CustLeave findByRefCustIdAndCustLeaveNameAnd(Integer refCustId,String custLeaveName);
 	
-	@Query(value = "SELECT cl.* FROM tmcustleave cl where cl.refCustId =1  ORDER BY cl.custLeaveName ASC",nativeQuery = true)
+	@Query(value = "SELECT cl.* FROM tmcustleave cl where cl.refCustId = ?1 and custLeaveIsActive = true ORDER BY cl.custLeaveName ASC",nativeQuery = true)
 	List<CustLeave> findAllByCustomer_CustId(Integer refCustId);
      
 }
