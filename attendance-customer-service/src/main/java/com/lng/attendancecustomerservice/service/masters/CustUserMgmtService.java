@@ -4,11 +4,18 @@ import com.lng.dto.masters.custUserMgmt.CustEmployeeResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
+import com.lng.dto.masters.custUserMgmt.CustUserBranchResDto;
+import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
+import com.lng.dto.masters.custUserMgmt.CustUserModuleDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
+import com.lng.dto.masters.custUserMgmt.CustUserModulesDto;
 import com.lng.dto.masters.custUserMgmt.CustUserResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserRightResponseDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResponseDto;
 
 import status.Status;
 
@@ -42,5 +49,15 @@ public interface CustUserMgmtService {
 	
 	CustEmployeeResponseDto getEmployeeByCustId(Integer custId);
 	
+<<<<<<< HEAD
 	CustUserLoginModuleBranchMapResponseDto getAllUserByCustId(Integer custId);
+=======
+	Status saveAllDetails(CustUserLoginModuleBranchDto custUserLoginModuleBranchDto);
+	
+	Status checkUserName(CustUserMgmtDto custUserMgmtDto);
+	
+	UserModuleResDto findAllModules();
+	
+	CustUserBranchResDto findAllBranchesByCustId(Integer custId);
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 }

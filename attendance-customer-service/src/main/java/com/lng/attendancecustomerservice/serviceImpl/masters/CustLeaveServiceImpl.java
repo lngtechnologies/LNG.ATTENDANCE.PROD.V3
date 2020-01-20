@@ -1,6 +1,8 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -31,33 +33,54 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 	@Autowired
 	EmpLeaveRepository empLeaveRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
 	public CustLeaveResponse saveCustLeave(custLeaveDto custLeaveDto) {
 		CustLeaveResponse custLeaveResponse =  new  CustLeaveResponse();
 		CustLeave custLeave  =  new CustLeave();
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			if(custLeaveDto.getCustLeaveName() == null || custLeaveDto.getCustLeaveName().isEmpty()) throw new Exception("Please enter CustLeave name");
 			int a =  custLeaveRepository.findByRefCustIdAndCustLeaveName(custLeaveDto.getRefCustId(), custLeaveDto.getCustLeaveName());
-			
-			
+			CustLeave custLeave1 = custLeaveRepository.findCustLeaveBycustLeaveNameAndCustomer_custIdAndCustLeaveIsActive(custLeaveDto.getCustLeaveName(),custLeaveDto.getRefCustId(), false);
+
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustId(custLeaveDto.getRefCustId());
 				if(customer != null) {
 					custLeave.setCustomer(customer);
 					custLeave.setCustLeaveName(custLeaveDto.getCustLeaveName());
+					custLeave.setCustLeaveIsActive(true);
 					custLeaveRepository.save(custLeave);
 					custLeaveResponse.status = new Status(false,200, "created");
-
+					displayLock.unlock();
 				}
 				else{ 
 					custLeaveResponse.status = new Status(true,400, "Customer not found");
+					displayLock.unlock();
+				}
+			} else if(custLeave1 != null) {
+				Customer customer = customerRepository.findCustomerByCustId(custLeaveDto.getRefCustId());
+				if(customer != null) {
+					custLeave1.setCustomer(customer);
+					custLeave1.setCustLeaveIsActive(true);
+					custLeaveRepository.save(custLeave1);
+					custLeaveResponse.status = new Status(false,200, "created");
+					displayLock.unlock();
+				}
+				else{ 
+					custLeaveResponse.status = new Status(true,400, "Customer not found");
+					displayLock.unlock();
 				}
 			}
 			else{ 
 				custLeaveResponse.status = new Status(true,400,"Leave type already exist");
+				displayLock.unlock();
 			}
 		}catch(Exception e) {
 			custLeaveResponse.status = new Status(true, 500, "Oops..! Something went wrong");
+			displayLock.unlock();
 		}
 		return custLeaveResponse;
 	}
@@ -85,39 +108,51 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 	@Override
 	public Status updateCustLeaveByCustLeaveId(custLeaveDto custLeaveDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			if(custLeaveDto.getCustLeaveName() == null || custLeaveDto.getCustLeaveName().isEmpty()) throw new Exception("Please enter CustLeave name");
 			if(custLeaveDto.getCustLeaveId() == null || custLeaveDto.getCustLeaveId() == 0) throw new Exception("CustLeave id is null or zero");
 			if(custLeaveDto.getRefCustId() == null || custLeaveDto.getRefCustId() == 0) throw new Exception("Customer id is null or zero");
 
-			CustLeave custLeave =  custLeaveRepository.findCustLeaveByCustLeaveId(custLeaveDto.getCustLeaveId());
+			CustLeave custLeave =  custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(custLeaveDto.getCustLeaveId(), true);
 			Customer customer = customerRepository.findCustomerByCustId(custLeaveDto.getRefCustId());
-			if(customer != null) {
-				CustLeave cl = 	custLeaveRepository.findCustLeaveBycustLeaveNameAndCustomer_custId(custLeaveDto.getCustLeaveName(), custLeaveDto.getRefCustId());
-				if(cl == null) {
-					custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
-					custLeave.setCustomer(customer);
-					custLeaveRepository.save(custLeave);
-					status = new Status(false, 200, "updated");
-				} else if (cl.getCustLeaveId() == custLeaveDto.getCustLeaveId()) { 
+			if(custLeave != null) {
+				if(customer != null) {
+					CustLeave cl = 	custLeaveRepository.findCustLeaveBycustLeaveNameAndCustomer_custIdAndCustLeaveIsActive(custLeaveDto.getCustLeaveName(), custLeaveDto.getRefCustId(), true);
+					if(cl == null) {
+						custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
+						custLeave.setCustomer(customer);
+						custLeave.setCustLeaveIsActive(true);
+						custLeaveRepository.save(custLeave);
+						status = new Status(false, 200, "updated");
+						displayLock.unlock();
+					} else if (cl.getCustLeaveId() == custLeaveDto.getCustLeaveId()) { 
 
-					custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
-					custLeave.setCustomer(customer);
-					custLeaveRepository.save(custLeave);
-					status = new Status(false, 200, "updated");
-				}
-				else{ 
-					status = new Status(true,400,"Leave type already exist");
+						custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
+						custLeave.setCustomer(customer);
+						custLeave.setCustLeaveIsActive(true);
+						custLeaveRepository.save(custLeave);
+						status = new Status(false, 200, "updated");
+						displayLock.unlock();
+					}
+					else{ 
+						status = new Status(true,400,"Leave type already exist");
+						displayLock.unlock();
+					}
+				} else {
+					status = new Status(true,400,"Leave not found");
+					displayLock.unlock();
 				}
 			}
-
 			else {
 				status = new Status(false, 200, "Customer not found");
-
+				displayLock.unlock();
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong");
+			displayLock.unlock();
 		}
 		return status;
 	}
@@ -126,17 +161,19 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 	public CustLeaveResponse deleteByCustLeaveId(Integer custLeaveId) {
 		CustLeaveResponse custLeaveResponse =  new  CustLeaveResponse();
 		try {
-			CustLeave custLeave =  custLeaveRepository.findCustLeaveByCustLeaveId(custLeaveId);
+			CustLeave custLeave =  custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(custLeaveId, true);
 			if(custLeave != null) {
 				List<EmpLeave>  empLeave = empLeaveRepository.findByCustLeave_CustLeaveId(custLeaveId);
 				if(empLeave.isEmpty()) {
 					custLeaveRepository.delete(custLeave);
 					custLeaveResponse.status = new Status(false, 200, "deleted");
 				}else {
+					custLeave.setCustLeaveIsActive(false);
+					custLeaveRepository.save(custLeave);
 					custLeaveResponse.status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {
-				custLeaveResponse.status = new Status(true, 400, "CustLeave  not found");
+				custLeaveResponse.status = new Status(true, 400, "Leave  not found");
 			}
 
 		}catch(Exception e) {
@@ -150,7 +187,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 		CustLeaveResponse custLeaveResponse =  new  CustLeaveResponse();
 
 		try {
-			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveId(custLeaveId);
+			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(custLeaveId, true);
 			if(custLeave != null) {
 				custLeaveDto custLeaveDto = convertTocustLeaveDto(custLeave);
 				custLeaveResponse.data = custLeaveDto;
@@ -161,7 +198,6 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 			}
 		}catch(Exception e) {
 			custLeaveResponse.status = new Status(true, 500, "Oops..! Something went wrong"); 
-
 		}
 		return custLeaveResponse;
 	}

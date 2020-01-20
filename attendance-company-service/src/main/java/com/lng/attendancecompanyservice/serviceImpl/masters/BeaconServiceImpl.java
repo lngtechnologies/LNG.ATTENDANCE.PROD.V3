@@ -2,6 +2,8 @@ package com.lng.attendancecompanyservice.serviceImpl.masters;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -30,13 +32,17 @@ public class BeaconServiceImpl implements BeaconService {
 	
 	ModelMapper modelMapper = new ModelMapper();
 	
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
 	public StatusDto saveBeacon(BeaconDto beaconDto) {
 		StatusDto statusDto = new StatusDto();
+		final Lock displayLock = this.displayQueueLock; 
 		
 		Beacon beacon = beaconRepository.findBeaconByBeaconCode(beaconDto.getBeaconCode());
 		Beacon beacon1 = beaconRepository.findBeaconByBeaconCodeAndBeaconIsActive(beaconDto.getBeaconCode(), false);
 		try {
+			displayLock.lock();
 			if(beacon == null) {
 				beacon = modelMapper.map(beaconDto, Beacon.class);
 				beacon.setBeaconCreatedDate(new Date());
@@ -45,6 +51,7 @@ public class BeaconServiceImpl implements BeaconService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
+				displayLock.unlock();
 			}else if (beacon1!= null){
 				beacon1.setBeaconIsActive(true);
 				beacon1.setBeaconCreatedDate(new Date());
@@ -52,15 +59,18 @@ public class BeaconServiceImpl implements BeaconService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
+				displayLock.unlock();
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Beacon code is already exist");
+				displayLock.unlock();
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Opps...! Something went wrong!");
+			displayLock.unlock();
 		}
 		
 		return statusDto;
@@ -93,11 +103,13 @@ public class BeaconServiceImpl implements BeaconService {
 	public StatusDto updateBeacon(BeaconDto beaconDto) {
 		
 		StatusDto statusDto = new StatusDto();
+		final Lock displayLock = this.displayQueueLock; 
 		
 		Beacon beacon1 = beaconRepository.findBeaconByBeaconId(beaconDto.getBeaconId());
 		Beacon beacon2 = beaconRepository.findBeaconByBeaconCode(beaconDto.getBeaconCode());
 		BlockBeaconMap blockBeaconMap = blockBeaconMapRepository.findByBeaconCodeAndBlkBeaconMapIsActive(beacon1.getBeaconCode(), true);
 		try {
+			displayLock.lock();
 			if(beacon1 != null){
 				if(beacon2 == null || (beacon1.getBeaconId() == beaconDto.getBeaconId() && beacon1.getBeaconCode().equals(beaconDto.getBeaconCode()))) {
 					beacon1.setBeaconCode(beaconDto.getBeaconCode());
@@ -111,21 +123,25 @@ public class BeaconServiceImpl implements BeaconService {
 					statusDto.setCode(200);
 					statusDto.setError(false);
 					statusDto.setMessage("updated");
+					displayLock.unlock();
 				} else {
 					statusDto.setCode(400);
 					statusDto.setError(true);
 					statusDto.setMessage("Beacon code already exist");
+					displayLock.unlock();
 				}
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Beacon not found");
+				displayLock.unlock();
 			}
 
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Opps...! Somenthing went wrong!");
+			displayLock.unlock();
 		}
 		return statusDto;
 	}

@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -115,13 +117,17 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	@Autowired
 	EmployeeReportingToRepository employeeReportingToRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
 	@Transactional(rollbackOn={Exception.class})
 	public CustEmployeeStatus save(CustEmployeeDto custEmployeeDto) {
 		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
 		Employee employee = new Employee();
-
+		final Lock displayLock = this.displayQueueLock; 
+		
 		try {
+			displayLock.lock();
 			List<Employee> employee1 = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
 
 			if(employee1.isEmpty()) {
@@ -275,15 +281,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 					custEmployeeStatus.status = new Status(false, 200, "created");
+					displayLock.unlock();
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Cannot Save");
+					displayLock.unlock();
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number already exists");
+				displayLock.unlock();
 			}
 
 		}catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 400, "Oops...! Something went wrong");
+			displayLock.unlock();
 		}
 
 		return custEmployeeStatus;
@@ -530,8 +540,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	@Override
 	public CustEmployeeStatus updateEmployee(CustEmployeeDto custEmployeeDto) {
 		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
-
+		final Lock displayLock = this.displayQueueLock;
 		try {
+			displayLock.lock();
 			Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custEmployeeDto.getEmpId(), true);
 			Customer customer =  customerRepository.findCustomerByCustId(custEmployeeDto.getCustId());
 			EmployeeType employeeType = employeeTypeRepository.findEmployeeTypeByEmpTypeId(custEmployeeDto.getEmpTypeId());
@@ -660,7 +671,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						
 						// Set emp branch details and save to emp branch table
 						try {
-							EmployeeBranch employeeBranch2 = employeeBranchRepositories.findByEmployee_EmpIdAndBranch_BrIdAndBranchFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getBrId(), custEmployeeDto.getEmployeeBranchFromDate());
+							//EmployeeBranch employeeBranch2 = employeeBranchRepositories.findByEmployee_EmpIdAndBranch_BrIdAndBranchFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getBrId(), custEmployeeDto.getEmployeeBranchFromDate());
+							EmployeeBranch employeeBranch2 = employeeBranchRepositories.findByEmployee_EmpIdAndBranchFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmployeeBranchFromDate());
+							Branch branch1 = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
 							if(employeeBranch2 == null) {
 								EmployeeBranch employeeBranch = employeeBranchRepositories.findByEmpId(custEmployeeDto.getEmpId());
 								if(employeeBranch != null) {
@@ -669,7 +682,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 									employeeBranchRepositories.save(employeeBranch);
 								}
 
-								Branch branch1 = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
+								
 								if(branch1 == null) throw new Exception("Cannot find branch id for Employee Department");
 
 								EmployeeBranch employeeBranch1 = new EmployeeBranch();
@@ -678,6 +691,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 								employeeBranch1.setBranchFromDate(custEmployeeDto.getEmployeeBranchFromDate());
 
 								employeeBranchRepositories.save(employeeBranch1);
+							} else {
+								employeeBranch2.setEmployee(employee);
+								employeeBranch2.setBranch(branch1);
+								employeeBranch2.setBranchToDate(null);
+								employeeBranch2.setBranchFromDate(custEmployeeDto.getEmployeeBranchFromDate());
+								employeeBranchRepositories.save(employeeBranch2);
 							}
 
 						}catch (Exception e) {	
@@ -687,16 +706,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						// Set emp dept details and save to emp dept table
 
 						try {
-							EmployeeDepartment employeeDepartment2 = employeeDepartmentRepository.findByEmployee_EmpIdAndDepartment_DeptIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getDepartmentId(), custEmployeeDto.getEmployeeDepartmentFromDate());
+							// EmployeeDepartment employeeDepartment2 = employeeDepartmentRepository.findByEmployee_EmpIdAndDepartment_DeptIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getDepartmentId(), custEmployeeDto.getEmployeeDepartmentFromDate());
+							EmployeeDepartment employeeDepartment2 = employeeDepartmentRepository.findByEmployee_EmpIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmployeeDepartmentFromDate());
+							Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
 							if(employeeDepartment2 == null) {
 
 								EmployeeDepartment employeeDepartment = employeeDepartmentRepository.findByEmpId(custEmployeeDto.getEmpId());
+								
 								if(employeeDepartment != null) {
 									Date empDeptToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
 									employeeDepartment.setEmpToDate(empDeptToDate);
 									employeeDepartmentRepository.save(employeeDepartment);
 								}
-								Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
+								
 								if(department == null) throw new Exception("Cannot find department id for Employee Department");
 
 								EmployeeDepartment employeeDepartment1 = new EmployeeDepartment();
@@ -705,6 +727,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 								employeeDepartment1.setEmpFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
 
 								employeeDepartmentRepository.save(employeeDepartment1);
+							} else {
+								employeeDepartment2.setEmployee(employee);
+								employeeDepartment2.setDepartment(department);
+								employeeDepartment2.setEmpFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
+								employeeDepartment2.setEmpToDate(null);
+								employeeDepartmentRepository.save(employeeDepartment2);
 							}
 
 
@@ -716,7 +744,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 						try {
 
-							EmployeeDesignation employeeDesignation2 = employeeDesignationRepository.findByEmployee_EmpIdAndDesignation_DesignationIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getDesignationId(), custEmployeeDto.getEmployeeDesignationFromDate()); 							
+							// EmployeeDesignation employeeDesignation2 = employeeDesignationRepository.findByEmployee_EmpIdAndDesignation_DesignationIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getDesignationId(), custEmployeeDto.getEmployeeDesignationFromDate()); 							
+							EmployeeDesignation employeeDesignation2 = employeeDesignationRepository.findByEmployee_EmpIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmployeeDesignationFromDate());
+							Designation designation = designationRepository.findDesignationByDesignationId(custEmployeeDto.getDesignationId());
 							if(employeeDesignation2 == null) {
 
 								EmployeeDesignation employeeDesignation1 = employeeDesignationRepository.findByEmpId(custEmployeeDto.getEmpId());
@@ -727,12 +757,18 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 								}
 
 								EmployeeDesignation employeeDesignation = new EmployeeDesignation();
-								Designation designation = designationRepository.findDesignationByDesignationId(custEmployeeDto.getDesignationId());
+								
 								if(designation == null) throw new Exception("Cannot find designation id for Employee Designation");
 								employeeDesignation.setEmployee(employee);
 								employeeDesignation.setDesignation(designation);
 								employeeDesignation.setEmpFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
 								employeeDesignationRepository.save(employeeDesignation);
+							} else {
+								employeeDesignation2.setEmployee(employee);
+								employeeDesignation2.setDesignation(designation);
+								employeeDesignation2.setEmpFromDate(custEmployeeDto.getEmployeeDesignationFromDate());
+								employeeDesignation2.setEmpToDate(null);
+								employeeDesignationRepository.save(employeeDesignation2);
 							}
 
 						}catch (Exception e) {	
@@ -742,7 +778,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						//set EmpId and ShiftId to empShift
 
 						try {
-							EmployeeShift employeeShift2 = employeeShiftRepository.findByEmployee_EmpIdAndShift_ShiftIdAndShiftFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getShiftId(), custEmployeeDto.getEmployeeShiftFromDate());
+							// EmployeeShift employeeShift2 = employeeShiftRepository.findByEmployee_EmpIdAndShift_ShiftIdAndShiftFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getShiftId(), custEmployeeDto.getEmployeeShiftFromDate());
+							EmployeeShift employeeShift2 = employeeShiftRepository.findByEmployee_EmpIdAndShiftFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmployeeShiftFromDate());
+							Shift shift1 = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
 							if(employeeShift2 == null) {
 
 								EmployeeShift employeeShift1 = employeeShiftRepository.findByEmpId(custEmployeeDto.getEmpId());
@@ -753,12 +791,18 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 								}
 
 								EmployeeShift employeeShift = new EmployeeShift();
-								Shift shift1 = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
+								
 								if(shift1 == null) throw new Exception("Cannot find shift for Employee");
 								employeeShift.setEmployee(employee);
 								employeeShift.setShift(shift1);
 								employeeShift.setShiftFromDate(custEmployeeDto.getEmployeeShiftFromDate());
 								employeeShiftRepository.save(employeeShift);
+							} else {
+								employeeShift2.setEmployee(employee);
+								employeeShift2.setShift(shift1);
+								employeeShift2.setShiftFromDate(custEmployeeDto.getEmployeeShiftFromDate());
+								employeeShift2.setShiftToDate(null);
+								employeeShiftRepository.save(employeeShift2);
 							}
 
 						}catch (Exception e) {	
@@ -769,7 +813,8 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						//set EmpId and WeekoffDay to empShift						
 						try {
 
-							EmpWeeklyOffDay empWeeklyOffDay2 = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpIdAndDayOfWeekAndFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getDayOfWeek(), custEmployeeDto.getEmpWeeklyOffDayFromDate());
+							// EmpWeeklyOffDay empWeeklyOffDay2 = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpIdAndDayOfWeekAndFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getDayOfWeek(), custEmployeeDto.getEmpWeeklyOffDayFromDate());
+							EmpWeeklyOffDay empWeeklyOffDay2 = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpIdAndFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmpWeeklyOffDayFromDate());
 							if(empWeeklyOffDay2 == null) {
 
 								EmpWeeklyOffDay empWeeklyOffDay1 = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmpId(custEmployeeDto.getEmpId());								
@@ -785,6 +830,13 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 								empWeeklyOffDay.setDayOfWeek(custEmployeeDto.getDayOfWeek());
 								empWeeklyOffDay.setFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
 								empWeeklyOffDayRepository.save(empWeeklyOffDay);
+							} else {
+								empWeeklyOffDay2.setEmployee(employee);
+								empWeeklyOffDay2.setYearMonth(new Date());
+								empWeeklyOffDay2.setDayOfWeek(custEmployeeDto.getDayOfWeek());
+								empWeeklyOffDay2.setFromDate(custEmployeeDto.getEmpWeeklyOffDayFromDate());
+								empWeeklyOffDay2.setToDate(null);
+								empWeeklyOffDayRepository.save(empWeeklyOffDay2);
 							}
 
 						}catch (Exception e) {
@@ -808,15 +860,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 					custEmployeeStatus.status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Employee not found or employee not in service");
+					displayLock.unlock();
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number aleady exist");
+				displayLock.unlock();
 			}
 
 		} catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 500, "Opps...! Something went wrong");
+			displayLock.unlock();
 		}
 		return custEmployeeStatus;
 	}

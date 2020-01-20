@@ -3,7 +3,11 @@ package com.lng.attendancecustomerservice.serviceImpl.masters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +38,10 @@ import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
+import com.lng.dto.masters.custUserMgmt.CustUserBranchResDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchesDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
+import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleDto;
@@ -44,6 +50,8 @@ import com.lng.dto.masters.custUserMgmt.CustUserModulesDto;
 import com.lng.dto.masters.custUserMgmt.CustUserResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.UserModuleDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResponseDto;
 
 import status.Status;
 
@@ -70,7 +78,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 	@Autowired
 	LoginDataRightRepository loginDataRightRepository;
-	
+
 
 	MessageUtil messageUtil = new MessageUtil();
 
@@ -78,80 +86,87 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 	Encoder encoder = new Encoder();
 
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public CustUserResponseDto save(CustUserMgmtDto custUserMgmtDto) {
 		CustUserResponseDto custUserResponseDto = new CustUserResponseDto();
-
+		final Lock displayLock = this.displayQueueLock; 
 		Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
 		// Login login3 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
 		List<Login> loginData = iLoginRepository.findAllByLoginIsActiveAndRefEmpId(custUserMgmtDto.getEmpId());
 		try {
+			displayLock.lock();
 			if(customer != null) {
-				
-					if(loginData.isEmpty() || custUserMgmtDto.getEmpId() == 0) {
 
-						/*if(login3 != null && customer.getCustMobile().equals(login3.getLoginMobile())) {
+				if(loginData.isEmpty() || custUserMgmtDto.getEmpId() == 0) {
+
+					/*if(login3 != null && customer.getCustMobile().equals(login3.getLoginMobile())) {
 						login3.setRefEmpId(custUserMgmtDto.getEmpId());
 						iLoginRepository.save(login3);
 						custUserResponseDto.status = new Status(false, 200, "Admin has been linked to the selected employee");
 						custUserResponseDto.setLoginId(login3.getLoginId());
 				} else {*/
-						String userName = custUserMgmtDto.getUserName();
-						String custCode = customer.getCustCode();
+					String userName = custUserMgmtDto.getUserName();
+					String custCode = customer.getCustCode();
 
-						String loginUserName = userName+"@"+custCode;
+					String loginUserName = userName+"@"+custCode;
 
-						Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
+					Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
 					//	Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
-						Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custUserMgmtDto.getEmpId(), true);
-						if(login1 == null) {
-							// if(login2 == null) {
-								if(employee != null) {
-									
-								
-								String newPassword = iLoginRepository.generatePassword();
-								Login login = new Login();
-								login.setLoginName(loginUserName);
-								login.setLoginMobile(custUserMgmtDto.getuMobileNumber());
-								login.setLoginPassword(encoder.getEncoder().encode(newPassword));
-								login.setLoginCreatedDate(new Date());
-								login.setLoginIsActive(true);
-								login.setRefCustId(customer.getCustId());
-								if(custUserMgmtDto.getEmpId() != null) {
-									login.setRefEmpId(custUserMgmtDto.getEmpId());
-								}else {
-									login.setRefEmpId(0);
-								}
+					Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custUserMgmtDto.getEmpId(), true);
+					if(login1 == null) {
+						// if(login2 == null) {
+						if(employee != null) {
 
-								iLoginRepository.save(login);
 
-								String mobileNo = employee.getEmpMobile();
-								String mobileSmS = "User Id has been successfully created to access the Attendance System Web application."
-										+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
-								String s = messageUtil.sms(mobileNo, mobileSmS);
+							String newPassword = iLoginRepository.generatePassword();
+							Login login = new Login();
+							login.setLoginName(loginUserName);
+							login.setLoginMobile(custUserMgmtDto.getuMobileNumber());
+							login.setLoginPassword(encoder.getEncoder().encode(newPassword));
+							login.setLoginCreatedDate(new Date());
+							login.setLoginIsActive(true);
+							login.setRefCustId(customer.getCustId());
+							if(custUserMgmtDto.getEmpId() != null) {
+								login.setRefEmpId(custUserMgmtDto.getEmpId());
+							}else {
+								login.setRefEmpId(0);
+							}
 
-								custUserResponseDto.status = new Status(false, 200, "created");
-								custUserResponseDto.setLoginId(login.getLoginId());
-								}else {
-								}
-								/*}else {
+							iLoginRepository.save(login);
+
+							String mobileNo = employee.getEmpMobile();
+							String mobileSmS = "User Id has been successfully created to access the Attendance System Web application."
+									+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
+							String s = messageUtil.sms(mobileNo, mobileSmS);
+
+							custUserResponseDto.status = new Status(false, 200, "created");
+							displayLock.unlock();
+							custUserResponseDto.setLoginId(login.getLoginId());
+						}else {
+						}
+						/*}else {
 								custUserResponseDto.status = new Status(true, 400, "Mobile number already exist");
 							}*/
-						}else {
-							custUserResponseDto.status = new Status(true, 400, "User name already exist");
-						}
-					} else {
-						custUserResponseDto.status = new Status(true, 400, "The user has already been created for the selected Employee");
+					}else {
+						custUserResponseDto.status = new Status(true, 400, "User name already exist");
+						displayLock.unlock();
 					}
-				
+				} else {
+					custUserResponseDto.status = new Status(true, 400, "The user has already been created for the selected Employee");
+					displayLock.unlock();
+				}
+
 
 			}else {
 				custUserResponseDto.status = new Status(true, 400, "Customer is not exist");
+				displayLock.unlock();
 			}
 		} catch (Exception e) {
 
 			custUserResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return custUserResponseDto;
 	}
@@ -219,7 +234,9 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	@Override
 	public Status updateUserDetails(CustUserMgmtDto custUserMgmtDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
 			Login login = iLoginRepository.findByLoginId(custUserMgmtDto.getLoginId());
 
@@ -252,23 +269,28 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 							String s = messageUtil.sms(mobileNo, mobileSmS);*/
 
 							status = new Status(false, 200, "updated");
-
+							displayLock.unlock();
 						}else {
 							status = new Status(true, 400, "Mobile number already exist");
+							displayLock.unlock();
 						}
 					}else {
 						status = new Status(true, 400, "User name already exist");
+						displayLock.unlock();
 					}
 				} else {
 					status = new Status(true, 400, "Login id not found");
+					displayLock.unlock();
 				}
 
 			} else {
 				status = new Status(true, 400, "Customer is not exist");
+				displayLock.unlock();
 			}
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}
@@ -402,9 +424,10 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 	@Override
 	public Status updateModules(CustUserModuleMapDto custUserModuleMapDto) {
+		final Lock displayLock = this.displayQueueLock; 
 		Status status = null;
 		try {
-
+			displayLock.lock();
 			List<UserRight> alreadyMapped = userRightRepository.getByRefLoginId(custUserModuleMapDto.getLoginId());
 
 			List<CustUserModuleDto> nonNullUserRightIds = custUserModuleMapDto.getModuleIds().stream().filter(e -> e.getUserRightId() != null).collect(Collectors.toList()); 
@@ -450,9 +473,11 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				}
 			}
 			status = new Status(false, 200, "Modules updated");
+			displayLock.unlock();
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}
@@ -460,7 +485,9 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	@Override
 	public Status updateBranchLoginDataRight(CustUserBranchLoginMapDto custUserBranchLoginMapDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			List<LoginDataRight> alreadyMapped = loginDataRightRepository.getByRefLoginId(custUserBranchLoginMapDto.getLoginId());
 
 			List<CustUserBranchDto> nonNullUserRightIds = custUserBranchLoginMapDto.getBranchIds().stream().filter(e -> e.getLoginDataRightId() != null).collect(Collectors.toList()); 
@@ -494,12 +521,12 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				}
 
 				status = new Status(false, 200, "Branches updated");
-
+				displayLock.unlock();
 			}
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
-
+			displayLock.unlock();
 		}
 		return status;
 	}
@@ -827,6 +854,197 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			custUserLoginModuleBranchMapResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return custUserLoginModuleBranchMapResponseDto;
+	}
+
+
+	@Override
+	@Transactional(rollbackOn={Exception.class})
+	public Status saveAllDetails(CustUserLoginModuleBranchDto custUserLoginModuleBranchDto) {
+		final Lock displayLock = this.displayQueueLock;
+		Status status = null;
+		String mobileNo = null;
+		Customer customer = customerRepository.findCustomerByCustId(custUserLoginModuleBranchDto.getUserDetails().getCustomerId());
+
+		List<Login> loginData = iLoginRepository.findAllByLoginIsActiveAndRefEmpId(custUserLoginModuleBranchDto.getUserDetails().getEmpId());
+		try {
+			displayLock.lock();
+			if(customer != null) {
+
+				if(loginData.isEmpty() || custUserLoginModuleBranchDto.getUserDetails().getEmpId() == 0) {
+
+					String userName = custUserLoginModuleBranchDto.getUserDetails().getUserName();
+					String custCode = customer.getCustCode();
+
+					String loginUserName = userName+"@"+custCode;
+
+					Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserLoginModuleBranchDto.getUserDetails().getCustomerId());
+
+
+					if(login1 == null) {
+
+
+
+
+						String newPassword = iLoginRepository.generatePassword();
+						Login login = new Login();
+						login.setLoginName(loginUserName);
+						login.setLoginMobile(custUserLoginModuleBranchDto.getUserDetails().getuMobileNumber());
+						login.setLoginPassword(encoder.getEncoder().encode(newPassword));
+						login.setLoginCreatedDate(new Date());
+						login.setLoginIsActive(true);
+						login.setRefCustId(customer.getCustId());
+						if(custUserLoginModuleBranchDto.getUserDetails().getEmpId() != null) {
+							login.setRefEmpId(custUserLoginModuleBranchDto.getUserDetails().getEmpId());
+						}else {
+							login.setRefEmpId(0);
+						}
+
+						iLoginRepository.save(login);
+
+						if(login.getLoginMobile() == null) {
+							Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custUserLoginModuleBranchDto.getUserDetails().getEmpId(), true);
+							if(employee != null) {
+								mobileNo = employee.getEmpMobile();
+							}else {
+								status = new Status(true, 400, "Employee not found");
+								displayLock.unlock();
+							}
+						} else {
+							mobileNo = login.getLoginMobile();
+						}
+
+						String mobileSmS = "User Id has been successfully created to access the Attendance System Web application."
+								+ "The login details are User Id: "+loginUserName+" and Password is : "+ newPassword;	
+						String s = messageUtil.sms(mobileNo, mobileSmS);
+
+						status = new Status(false, 200, "created");
+						displayLock.unlock();
+						try {
+							if(!custUserLoginModuleBranchDto.getModules().isEmpty()) {
+								for(CustUserModuleDto custUserModuleDto : custUserLoginModuleBranchDto.getModules()) {
+									UserRight userRight = new UserRight();
+									userRight.setRefLoginId(login.getLoginId());
+									userRight.setRefModuleId(custUserModuleDto.getModuleId());
+									userRightRepository.save(userRight);
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						try {
+							if(!custUserLoginModuleBranchDto.getBranches().isEmpty()) {
+								for(CustUserBranchDto custUserBranchDto : custUserLoginModuleBranchDto.getBranches()) {
+									LoginDataRight loginDataRight = new LoginDataRight();
+									loginDataRight.setRefLoginId(login.getLoginId());
+									loginDataRight.setRefBrId(custUserBranchDto.getBrId());
+									loginDataRightRepository.save(loginDataRight);
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}else {
+						status = new Status(true, 400, "User name already exist");
+						displayLock.unlock();
+					}
+				} else {
+					status = new Status(true, 400, "The user has already been created for the selected Employee");
+					displayLock.unlock();
+				}
+
+
+			}else {
+				status = new Status(true, 400, "Customer is not exist");
+				displayLock.unlock();
+			}
+		} catch (Exception e) {
+
+			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
+		}
+		return status;
+	}
+
+	@Override
+	public Status checkUserName(CustUserMgmtDto custUserMgmtDto) {
+		final Lock displayLock = this.displayQueueLock;
+		Status status = null;
+		try {
+			displayLock.lock();
+			Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
+			String userName = custUserMgmtDto.getUserName();
+			String custCode = customer.getCustCode();
+
+			String loginUserName = userName+"@"+custCode;
+			Login login = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
+			if(login == null) {
+				status = new Status(false, 200, "Not Exist");
+				displayLock.unlock();
+			} else {
+				status = new Status(true, 400, "Exist");
+				displayLock.unlock();
+			}
+		} catch (Exception e) {
+			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
+		}
+		return status;
+	}
+
+	@Override
+	public UserModuleResDto findAllModules() {
+
+		UserModuleResDto userModuleResDto = new UserModuleResDto();
+		List<UserModuleResponseDto> userModule = new ArrayList<UserModuleResponseDto>();
+		try {
+			List<Object[]> modules = iModuleRepository.findAllModules();
+			if(!modules.isEmpty()) {
+				for (Object[] p: modules) {
+					UserModuleResponseDto userModuleResponseDto = new UserModuleResponseDto();
+					userModuleResponseDto.setModuleId(Integer.valueOf(p[0].toString()));
+					userModuleResponseDto.setModuleName(p[1].toString());
+					userModuleResponseDto.setModuleURL(p[2].toString());
+					userModuleResponseDto.setParentId(Integer.valueOf(p[3].toString()));
+					userModule.add(userModuleResponseDto);
+					userModuleResDto.setModules(userModule);
+				}
+
+				userModuleResDto.status = new Status(false, 200, "Success");
+			} else {
+				userModuleResDto.status = new Status(false, 400, "Not found");
+			}
+
+
+		} catch (Exception e) {
+			userModuleResDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return userModuleResDto;
+	}
+
+	@Override
+	public CustUserBranchResDto findAllBranchesByCustId(Integer custId) {
+		CustUserBranchResDto custUserBranchResDto = new CustUserBranchResDto();
+		List<CustUserBranchDto> branchList = new ArrayList<CustUserBranchDto>();
+		try {
+			List<Object[]> braches = branchRepository.getAllBranchesByCustId(custId);
+			if(!braches.isEmpty()) {
+				for(Object[] p: braches) {
+					CustUserBranchDto custUserBranchDto = new CustUserBranchDto();
+					custUserBranchDto.setBrId(Integer.valueOf(p[0].toString()));
+					custUserBranchDto.setBrName(p[1].toString());
+					branchList.add(custUserBranchDto);
+				}
+
+				custUserBranchResDto.setBranches(branchList);
+				custUserBranchResDto.status = new Status(false, 200, "Success");
+			} else {
+				custUserBranchResDto.status = new Status(true, 400, "Not found");
+			}
+		} catch (Exception e) {
+			custUserBranchResDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return custUserBranchResDto;
 	}
 
 

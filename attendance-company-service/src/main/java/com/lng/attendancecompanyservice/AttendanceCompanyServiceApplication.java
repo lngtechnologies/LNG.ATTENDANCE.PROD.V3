@@ -8,6 +8,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,5 +36,20 @@ public class AttendanceCompanyServiceApplication extends SpringBootServletInitia
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(AttendanceCompanyServiceApplication.class);
 	}
+	
+	/**
+	 * THIS FOR ASYNCRONOUS PROCESS/METHOD
+	 * @return
+	 */
+	/*@Bean(name = "asyncExecutor")
+	public Executor asyncExecutor() {
+	    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+	    executor.setCorePoolSize(5);
+	    executor.setMaxPoolSize(5);
+	    executor.setQueueCapacity(500);
+	    executor.setThreadNamePrefix("Asynchronous Process-");
+	    executor.initialize();
+	    return executor;
+	}*/
 
 }

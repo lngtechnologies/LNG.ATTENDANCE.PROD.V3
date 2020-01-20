@@ -3,6 +3,8 @@ package com.lng.attendancecustomerservice.serviceImpl.masters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -44,6 +46,8 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	EmployeeRepository employeeRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
+	
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public BranchListDto getBranchListByCustId(Integer custId) {
@@ -95,7 +99,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	public CustLeaveTrypeListDto getLeaveListByCustId(Integer custId) {
 		CustLeaveTrypeListDto custLeaveTrypeListDto = new CustLeaveTrypeListDto();
 		try {
-			List<CustLeave> custLeaves = custLeaveRepository.findCustLeaveByCustomer_custId(custId);
+			List<CustLeave> custLeaves = custLeaveRepository.findCustLeaveByCustomer_custIdAndCustLeaveIsActive(custId, true);
 
 			if(!custLeaves.isEmpty()) {
 				custLeaveTrypeListDto.setCustId(custId);
@@ -148,11 +152,13 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 	@Override
 	public Status saveEmpLeave(EmployeeLeaveDto employeeLeaveDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock;
+		
 		try {
-
+			displayLock.lock();
 			Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 			Employee employee = employeeRepository.getByEmpId(employeeLeaveDto.getEmpId());
-			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveId(employeeLeaveDto.getCustLeaveId());
+			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(employeeLeaveDto.getCustLeaveId(), true);
 			int empLeave = employeeLeaveRepository.getEmpLeaveAlreadyApplied(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo(), employeeLeaveDto.getEmpId());
 			if(employee != null) {
 				if(custLeave != null) {
@@ -166,19 +172,25 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 						employeeLeave.setEmpLeaveStatus("");
 						employeeLeaveRepository.save(employeeLeave);
 						status = new Status(false, 200, "Leave Applied for "+employee.getEmpName());
+						displayLock.unlock();
 					} else {
 						status = new Status(true, 400, "Leave already applied for this date");
+						displayLock.unlock();
 					}	
 
 				}else {
 					status = new Status(true, 400, "Cust Leave not found");
+					displayLock.unlock();
 				}
+				
 			} else {
 				status = new Status(true, 400, "Employee not found");
+				displayLock.unlock();
 			}
 
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}

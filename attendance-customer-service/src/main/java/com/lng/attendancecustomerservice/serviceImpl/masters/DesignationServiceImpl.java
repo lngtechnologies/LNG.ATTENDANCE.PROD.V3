@@ -1,6 +1,8 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -24,10 +26,14 @@ public class DesignationServiceImpl implements DesignationService{
 	@Autowired
 	CustomerRepository customerRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
 	public DesignationResponse saveDesignation(DesignationDto designationDto) {
 		DesignationResponse response = new DesignationResponse();
+		final Lock displayLock = this.displayQueueLock;
 		try{
+			displayLock.lock();
 			if(designationDto.getDesignationName() == null || designationDto.getDesignationName().isEmpty()) throw new Exception("Please enter Designation name");
 
 			//if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation Name already exists");
@@ -45,9 +51,11 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					response.status = new Status(false,200, "created");
+					displayLock.unlock();
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
+					displayLock.unlock();
 				}
 			} else if(designation1 != null){
 
@@ -59,16 +67,19 @@ public class DesignationServiceImpl implements DesignationService{
 					designation1.setDesigIsActive(true);
 					designationRepository.save(designation1);
 					response.status = new Status(false,200, "created");
+					displayLock.unlock();
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
+					displayLock.unlock();
 				}
 			}else {
 				response.status = new Status(true,400,"Designation name already exists");
-
+				displayLock.unlock();
 			}
 		}catch(Exception e){
 			response.status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 
 		return response;
@@ -95,8 +106,10 @@ public class DesignationServiceImpl implements DesignationService{
 
 	@Override
 	public Status updateDesignationBydesignationId(DesignationDto designationDto) {
+		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		try {
+			displayLock.lock();
 			if(designationDto.getDesignationName() == null || designationDto.getDesignationName().isEmpty()) throw new Exception("Please enter Designation name");
 			if(designationDto.getDesignationId() == null || designationDto.getDesignationId() == 0) throw new Exception("Designation id is null or zero");
 			if(designationDto.getRefCustId() == null || designationDto.getRefCustId() == 0) throw new Exception("RefCustomerId id is null or zero");
@@ -111,6 +124,7 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					status = new Status(false,200, "updated");
+					displayLock.unlock();
 				} else if (de.getDesignationId() == designationDto.getDesignationId()) { 
 
 					designation.setCustomer(customer);
@@ -118,22 +132,23 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					status = new Status(false,200, "updated");
-
+					displayLock.unlock();
 				}
 				else{ 
 
 					status = new Status(true,400,"Designation name already exists");
-
+					displayLock.unlock();
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Customer not found");
-
+				displayLock.unlock();
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}

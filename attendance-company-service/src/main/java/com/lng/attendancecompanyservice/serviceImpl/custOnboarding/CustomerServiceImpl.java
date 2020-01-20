@@ -117,18 +117,19 @@ public class CustomerServiceImpl implements CustomerService {
 	@Transactional(rollbackOn={Exception.class})
 	public StatusDto saveCustomer(CustomerDto customerDto) {
 
+		final Lock displayLock = this.displayQueueLock; 
 		StatusDto statusDto = new StatusDto();
 		Login login = new Login();
 
 		try {
-
+			displayLock.lock();
 			List<Customer> customerList1 = customerRepository.findCustomerByCustEmail(customerDto.getCustEmail());
 			List<Customer> customerList2 = customerRepository.findCustomerByCustMobile(customerDto.getCustMobile());
 			//List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
 
-			final Lock displayLock = this.displayQueueLock; 
-			displayLock.lock();
-			Thread.sleep(3000L);
+			
+			
+			//Thread.sleep(3000L);
 
 			if(customerList1.isEmpty() && customerList2.isEmpty()) {
 
@@ -183,17 +184,19 @@ public class CustomerServiceImpl implements CustomerService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
-
+				displayLock.unlock();
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
-				statusDto.setMessage("Customer mobile number or email already exist");			
+				statusDto.setMessage("Customer mobile number or email already exist");		
+				displayLock.unlock();
 			}
-			displayLock.unlock();
+			
 		} catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Oops..! Something went wrong..");		
+			statusDto.setMessage("Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return statusDto;
 	}
@@ -636,7 +639,9 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public CustomerResponse updateCustomerByCustomerId(CustomerDto customerDto) {
 		CustomerResponse customerResponse = new CustomerResponse();
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			Customer customer = customerRepository.findCustomerByCustId(customerDto.getCustId());
 			Login login = loginRepository.findByRefCustIdAndLoginMobile(customer.getCustId(), customer.getCustMobile());
 			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
@@ -678,21 +683,26 @@ public class CustomerServiceImpl implements CustomerService {
 						}
 
 						customerResponse.status = new Status(false, 200, "updated");
+						displayLock.unlock();
 					} else {
 						customerResponse.status = new Status(false, 400, "Customer not found");
+						displayLock.unlock();
 					}
 				} else {
 					customerResponse.status = new Status(true, 400, "Customer email id already exist");
+					displayLock.unlock();
 				}
 				
 			} else {
 				customerResponse.status = new Status(true, 400, "Customer mobile number already exist");
+				displayLock.unlock();
 			}
 			
 
 
 		} catch (Exception e) {
 			customerResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return customerResponse;
 	}

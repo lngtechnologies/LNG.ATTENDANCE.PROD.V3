@@ -15,4 +15,6 @@ public interface EmployeeDesignationRepository extends PagingAndSortingRepositor
 	EmployeeDesignation findByEmpId(Integer empId);
 	
 	EmployeeDesignation findByEmployee_EmpIdAndDesignation_DesignationIdAndEmpFromDate(Integer empId, Integer designationId, Date empFromDate);
+	
+	EmployeeDesignation findByEmployee_EmpIdAndEmpFromDate(Integer empId, Date empFromDate);
 }

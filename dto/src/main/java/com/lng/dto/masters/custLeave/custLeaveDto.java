@@ -1,14 +1,24 @@
 package com.lng.dto.masters.custLeave;
 
 public class custLeaveDto {
-	
+
 	private Integer custLeaveId;
-	
+
 	private Integer refCustId;
-	
+
 	private String custLeaveName;
+
+	private String  custName;
 	
-	  private String  custName;
+	private String custLeaveIsActive;
+
+	public String getCustLeaveIsActive() {
+		return custLeaveIsActive;
+	}
+
+	public void setCustLeaveIsActive(String custLeaveIsActive) {
+		this.custLeaveIsActive = custLeaveIsActive;
+	}
 
 	public Integer getCustLeaveId() {
 		return custLeaveId;
@@ -42,8 +52,8 @@ public class custLeaveDto {
 		this.custName = custName;
 	}
 
-    
-	
-	
+
+
+
 }
 

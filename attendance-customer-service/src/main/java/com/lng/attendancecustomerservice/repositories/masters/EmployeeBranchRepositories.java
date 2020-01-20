@@ -15,4 +15,6 @@ public interface EmployeeBranchRepositories extends PagingAndSortingRepository<E
 	EmployeeBranch findByEmpId(Integer empId);
 	
 	EmployeeBranch findByEmployee_EmpIdAndBranch_BrIdAndBranchFromDate(Integer empId, Integer brId, Date branchFromDate);
+	
+	EmployeeBranch findByEmployee_EmpIdAndBranchFromDate(Integer empId, Date branchFromDate);
 }

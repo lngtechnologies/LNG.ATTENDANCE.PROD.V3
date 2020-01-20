@@ -1,6 +1,8 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -26,10 +28,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Autowired
 	CustomerRepository customerRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
 	public DepartmentResponse saveDepartment(DepartmentDto departmentDto) {
 		DepartmentResponse response = new DepartmentResponse();
+		final Lock displayLock = this.displayQueueLock;
 		try{
+			displayLock.lock();
 			if(departmentDto.getDeptName() == null || departmentDto.getDeptName().isEmpty()) throw new Exception("Please enter Department name");
 
 			int a = departmentRepository.findByRefCustIdAndDeptName(departmentDto.getRefCustId(), departmentDto.getDeptName());
@@ -46,10 +52,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
 					response.status = new Status(false,200, "created");
-
+					displayLock.unlock();
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
+					displayLock.unlock();
 				}
 			}else if(department1 != null){
 				Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
@@ -60,18 +67,21 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department1.setDeptIsActive(true);
 					departmentRepository.save(department1);
 					response.status = new Status(false,200, "created");
-
+					displayLock.unlock();
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
+					displayLock.unlock();
 				}
 			}else {
 				
 				response.status = new Status(true,400,"Department name already exists");
+				displayLock.unlock();
 			}
 
 		}catch(Exception ex){
 			response.status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 
 		return response;
@@ -96,7 +106,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 	@Override
 	public Status updateDepartmentByDepartmentId(DepartmentDto departmentDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock;
 		try {
+			displayLock.lock();
 			if(departmentDto.getDeptName() == null || departmentDto.getDeptName().isEmpty()) throw new Exception("Please enter Department name");
 			if(departmentDto.getDeptId() == null || departmentDto.getDeptId() == 0) throw new Exception("Department id is null or zero");
 			if(departmentDto.getRefCustId()	 == null || departmentDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
@@ -112,6 +124,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				} else if (de.getDeptId() == departmentDto.getDeptId()) { 
 
 					department = modelMapper.map(departmentDto,Department.class);
@@ -119,21 +132,23 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				}
 				else{ 
 
 					status = new Status(true,400,"Department name already exists");
-
+					displayLock.unlock();
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Customer not found");
-
+				displayLock.unlock();
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}

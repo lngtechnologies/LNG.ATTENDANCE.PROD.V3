@@ -16,4 +16,6 @@ public interface EmpWeeklyOffDayRepository extends PagingAndSortingRepository<Em
 	EmpWeeklyOffDay findEEmpWeeklyOffDayByEmpId(Integer empId);
 	
 	EmpWeeklyOffDay findEEmpWeeklyOffDayByEmployee_EmpIdAndDayOfWeekAndFromDate(Integer empId, String dayOfWeek, Date fromDate);
+	
+	EmpWeeklyOffDay findEEmpWeeklyOffDayByEmployee_EmpIdAndFromDate(Integer empId, Date fromDate);
 }

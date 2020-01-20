@@ -3,6 +3,8 @@ package com.lng.attendancecustomerservice.serviceImpl.masters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -27,6 +29,7 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 	@Autowired
 	CustBrHolidayRepository custBrHolidayRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public HolidayCalendarResponse getAllByRefCustId(Integer refCustId) {
@@ -52,8 +55,9 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 	@Override
 	public HolidayCalendarResponse save(HolidayCalendarDto holidayCalendarDto) {
 		HolidayCalendarResponse  holidayCalendarResponse  =  new  HolidayCalendarResponse();
-
+		final Lock displayLock = this.displayQueueLock;
 		try{
+			displayLock.lock();
 			if(holidayCalendarDto.getHolidayName() == null || holidayCalendarDto.getHolidayName().isEmpty()) throw new Exception("Please enter Holiday name");
 			int b = holidayCalendarRepository.findByRefCustIdAndHolidayDate(holidayCalendarDto.getRefCustId(), holidayCalendarDto.getHolidayDate());
 			if(b == 0) {
@@ -66,17 +70,21 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendar.setHolidayName(holidayCalendarDto.getHolidayName());
 					holidayCalendarRepository.save(holidayCalendar);
 					holidayCalendarResponse.status = new Status(false,200, "created");
+					displayLock.unlock();
 				}
 				else{ 
 					holidayCalendarResponse.status = new Status(true,400,"Holiday name already exists");
+					displayLock.unlock();
 				}
 			}
 			else{ 
 				holidayCalendarResponse.status = new Status(true,400,"Holiday date already exists");
+				displayLock.unlock();
 			}
 
 		}catch(Exception ex){
 			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 
 		return holidayCalendarResponse;
@@ -84,7 +92,9 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 	@Override
 	public Status updateHolidayCalendarByHolidayId(HolidayCalendarDto holidayCalendarDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock;
 		try {
+			displayLock.lock();
 			if(holidayCalendarDto.getHolidayName() == null || holidayCalendarDto.getHolidayName().isEmpty()) throw new Exception("Please enter Holiday name");
 			if(holidayCalendarDto.getHolidayId() == null || holidayCalendarDto.getHolidayId() == 0) throw new Exception("Holiday id is null or zero");
 			if(holidayCalendarDto.getRefCustId() == null || holidayCalendarDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
@@ -98,12 +108,13 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "updated");
-
+					displayLock.unlock();
 				} else if ( he.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				}
 			}
 			else if(h != null && h.getHolidayId() == holidayCalendarDto.getHolidayId() ) {
@@ -113,24 +124,28 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				} else if (he1.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				}
 				else{ 
 
 					status = new Status(true,400,"Holiday name already exists");
-
+					displayLock.unlock();
 				}
 			}
 			else{ 
 				status = new Status(true,400,"Holiday date already exists");
+				displayLock.unlock();
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}

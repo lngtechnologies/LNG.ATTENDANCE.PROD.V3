@@ -17,12 +17,16 @@ import com.lng.dto.masters.custUserMgmt.CustEmployeeResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDataRightResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchLoginMapDto;
+import com.lng.dto.masters.custUserMgmt.CustUserBranchResDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
+import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
 import com.lng.dto.masters.custUserMgmt.CustUserResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserRightResponseDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResponseDto;
 
 import status.Status;
 
@@ -151,10 +155,41 @@ public class CustUserMgmtController {
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 	
+<<<<<<< HEAD
 
 	@PostMapping(value = "/findAllUsersByCustId")
 	public ResponseEntity<CustUserLoginModuleBranchMapResponseDto> findAllUsersByCustId(@RequestBody CustUserLoginModuleBranchMapResponseDto custUserBranchLoginMapDto) {
 		CustUserLoginModuleBranchMapResponseDto status = custUserMgmtService.getAllUserByCustId(custUserBranchLoginMapDto.getCustId());
 		return new ResponseEntity<CustUserLoginModuleBranchMapResponseDto>(status, HttpStatus.CREATED);	
+=======
+	@PostMapping(value = "/save/all/data")
+	public ResponseEntity<Status> saveAllData(@RequestBody CustUserLoginModuleBranchDto custUserLoginModuleBranchDto) {
+		Status status = custUserMgmtService.saveAllDetails(custUserLoginModuleBranchDto);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(value = "/check/userName")
+	public ResponseEntity<Status> checkUserName(@RequestBody CustUserMgmtDto custUserMgmtDto) {
+		Status status = custUserMgmtService.checkUserName(custUserMgmtDto);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	@GetMapping(value = "/findAllModules")
+	public ResponseEntity<UserModuleResDto> findAllModules() {
+		UserModuleResDto userModuleResponseDto = custUserMgmtService.findAllModules();
+		return new ResponseEntity<UserModuleResDto>(userModuleResponseDto, HttpStatus.CREATED);	
+	}
+	
+	@PostMapping(value = "/findAllBranchesByCustId")
+	public ResponseEntity<CustUserBranchResDto> findAllBranchesByCustId(@RequestBody CustLoginDto custLoginDto) {
+		CustUserBranchResDto custLoginDto1 = custUserMgmtService.findAllBranchesByCustId(custLoginDto.getCustId());
+		return new ResponseEntity<CustUserBranchResDto>(custLoginDto1, HttpStatus.CREATED);	
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	}
 }

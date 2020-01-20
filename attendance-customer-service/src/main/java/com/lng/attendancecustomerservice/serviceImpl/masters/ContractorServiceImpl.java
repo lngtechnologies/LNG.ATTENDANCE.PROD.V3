@@ -1,6 +1,8 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -27,11 +29,15 @@ public class ContractorServiceImpl implements ContractorService {
 	EmployeeRepository employeeRepository;
 	@Autowired
 	CustomerRepository customerRepository;
+	
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
-
 	public ContractorResponse saveContractor(ContractorDto contractorDto) {
+		final Lock displayLock = this.displayQueueLock; 
 		ContractorResponse response = new ContractorResponse();
 		try{
+			displayLock.lock();
 			if(contractorDto.getContractorName() == null || contractorDto.getContractorName().isEmpty()) throw new Exception("Please enter Contractor name");
 
 
@@ -48,10 +54,11 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					response.status = new Status(false,200, "created");
-
+					displayLock.unlock();
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer Not Found");
+					displayLock.unlock();
 				}
 			} else if(contractor1 != null){
 				Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());
@@ -62,18 +69,22 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor1.setContractorIsActive(true);
 					contractorRepository.save(contractor1);
 					response.status = new Status(false,200, "created");
+					displayLock.unlock();
 
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer Not Found");
+					displayLock.unlock();
 				}
 
 			} else {
 				response.status = new Status(true,400,"Contractor name already exists");
+				displayLock.unlock();
 			}
 
 		}catch(Exception ex){
 			response.status = new Status(true,500, ex.getMessage()); 
+			displayLock.unlock();
 		}
 
 		return response;
@@ -95,8 +106,10 @@ public class ContractorServiceImpl implements ContractorService {
 
 	@Override
 	public Status updateContractorByContractorId(ContractorDto contractorDto) {
+		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		try {
+			displayLock.lock();
 			if(contractorDto.getContractorName() == null || contractorDto.getContractorName().isEmpty()) throw new Exception("Please enter Contractor name");
 			if(contractorDto.getContractorId() == null || contractorDto.getContractorId() == 0) throw new Exception("Contractor id is null or zero");
 
@@ -112,6 +125,7 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				} else if (ch.getContractorId() == contractorDto.getContractorId()) { 
 
 					contractor = modelMapper.map(contractorDto,Contractor.class);
@@ -119,20 +133,22 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				}
 				else{
 					status = new Status(true,400,"Contractor name already exists");
-
+					displayLock.unlock();
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Customer Not Found");
-
+				displayLock.unlock();
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true,500, "Oops..! Something went wrong");
+			displayLock.unlock();
 		}
 		return status;
 	}

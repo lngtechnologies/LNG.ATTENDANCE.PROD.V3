@@ -2,12 +2,15 @@ package com.lng.attendancecompanyservice.serviceImpl.authentication;
 
 import java.util.Base64;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
+import com.lng.attendancecompanyservice.entity.masters.Employee;
 import com.lng.attendancecompanyservice.entity.masters.Login;
 import com.lng.attendancecompanyservice.repositories.authentication.ICustomerRepository;
 import com.lng.attendancecompanyservice.repositories.authentication.ILoginRepository;
+import com.lng.attendancecompanyservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecompanyservice.security.JwtTokenService;
 import com.lng.attendancecompanyservice.service.authentication.ILogin;
 import com.lng.attendancecompanyservice.utils.Encoder;
@@ -53,7 +56,9 @@ public class LoginServiceImpl implements ILogin {
 		this.jwtTokenService = jwtTokenService;
 		this.custRepository = custRepository;
 	}
-
+	
+	@Autowired
+	CustEmployeeRepository custEmployeeRepository;
 	// Authenticated user
 
 	@Override
@@ -166,7 +171,15 @@ public class LoginServiceImpl implements ILogin {
 			accountRepository.save(user);
 			
 			// Send new password to registered mobile
-			String mobileNo = user.getLoginMobile();
+			String mobileNo = null;
+			if(user.getLoginMobile() != null) {
+				mobileNo = user.getLoginMobile();
+			} else {
+				// Get emp mobile no
+				Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(user.getRefEmpId(), true);
+				mobileNo = employee.getEmpMobile();
+			}
+			
 			String mobileSmS = "Password to access the Attendance System Web Application has been reset to : " + nPassword;	
 			String s = messageUtil.sms(mobileNo, mobileSmS);
 			
