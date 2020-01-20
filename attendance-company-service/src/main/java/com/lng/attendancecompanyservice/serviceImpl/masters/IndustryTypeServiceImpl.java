@@ -1,6 +1,8 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -29,10 +31,12 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 	CustomerRepository customerRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
+	
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public StatusDto saveIndustryType(IndustryTypeDto industryTypeDto) {
-
+		final Lock displayLock = this.displayQueueLock; 
 		StatusDto statusDto = new StatusDto();
 		// Check if industry type already exist or not
 		IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryName(industryTypeDto.getIndustryName());
@@ -40,6 +44,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 		IndustryType industryType1 = industryTypeRepository.findIndustryTypeByIndustryNameAndIndustryIsActive(industryTypeDto.getIndustryName(), false);
 		
 		try {
+			displayLock.lock();
 			if(industryType == null) {
 
 				industryType = modelMapper.map(industryTypeDto, IndustryType.class);
@@ -48,6 +53,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
+				displayLock.unlock();
 			}else if(industryType1 != null){
 				
 				industryType1 = modelMapper.map(industryTypeDto, IndustryType.class);
@@ -56,15 +62,18 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
+				displayLock.unlock();
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Industry type already exist");
+				displayLock.unlock();
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 
 		return statusDto;
@@ -135,12 +144,13 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 
 	@Override
 	public StatusDto updateIndustryType(IndustryTypeDto industryTypeDto) {
-
+		final Lock displayLock = this.displayQueueLock; 
 		StatusDto statusDto = new StatusDto();
 
 		IndustryType industryType1 = industryTypeRepository.findIndustryTypeByIndustryId(industryTypeDto.getIndustryId());
 		IndustryType industryType2 = industryTypeRepository.findIndustryTypeByIndustryName(industryTypeDto.getIndustryName());
 		try {
+			displayLock.lock();
 			if(industryType1 != null) {
 				if(industryType2 == null || (industryTypeDto.getIndustryId() == industryType1.getIndustryId() && industryTypeDto.getIndustryName().equals(industryType1.getIndustryName()))) {
 					industryType1.setIndustryName(industryTypeDto.getIndustryName());
@@ -149,21 +159,25 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 					statusDto.setCode(200);
 					statusDto.setError(false);
 					statusDto.setMessage("updated");
+					displayLock.unlock();
 				}else {
 					statusDto.setCode(400);
 					statusDto.setError(true);
 					statusDto.setMessage("Industry already exist");
+					displayLock.unlock();
 				}
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Industry not found");
+				displayLock.unlock();
 			}
 
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 
 		return statusDto;

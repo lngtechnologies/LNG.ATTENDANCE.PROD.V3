@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -115,13 +117,17 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	@Autowired
 	EmployeeReportingToRepository employeeReportingToRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
 	@Transactional(rollbackOn={Exception.class})
 	public CustEmployeeStatus save(CustEmployeeDto custEmployeeDto) {
 		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
 		Employee employee = new Employee();
-
+		final Lock displayLock = this.displayQueueLock; 
+		
 		try {
+			displayLock.lock();
 			List<Employee> employee1 = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
 
 			if(employee1.isEmpty()) {
@@ -275,15 +281,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 					custEmployeeStatus.status = new Status(false, 200, "created");
+					displayLock.unlock();
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Cannot Save");
+					displayLock.unlock();
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number already exists");
+				displayLock.unlock();
 			}
 
 		}catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 400, "Oops...! Something went wrong");
+			displayLock.unlock();
 		}
 
 		return custEmployeeStatus;
@@ -530,8 +540,9 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	@Override
 	public CustEmployeeStatus updateEmployee(CustEmployeeDto custEmployeeDto) {
 		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
-
+		final Lock displayLock = this.displayQueueLock;
 		try {
+			displayLock.lock();
 			Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custEmployeeDto.getEmpId(), true);
 			Customer customer =  customerRepository.findCustomerByCustId(custEmployeeDto.getCustId());
 			EmployeeType employeeType = employeeTypeRepository.findEmployeeTypeByEmpTypeId(custEmployeeDto.getEmpTypeId());
@@ -849,15 +860,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 					custEmployeeStatus.status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Employee not found or employee not in service");
+					displayLock.unlock();
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number aleady exist");
+				displayLock.unlock();
 			}
 
 		} catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 500, "Opps...! Something went wrong");
+			displayLock.unlock();
 		}
 		return custEmployeeStatus;
 	}

@@ -23,6 +23,8 @@ public class PolicyAndFaqServiceImpl implements PolicyAndFaqService {
 	@Autowired
 	PolicyAndFaqRepository policyAndFaqRepository;
 	@Override
+	
+	
 	public PolicyAndFaqResponse save(PolicyAndFaqDto policyAndFaqDto) {
 		PolicyAndFaqResponse  policyAndFaqResponse = new PolicyAndFaqResponse();
 		try {

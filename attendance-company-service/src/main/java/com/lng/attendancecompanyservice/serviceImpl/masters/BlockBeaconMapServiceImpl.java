@@ -3,6 +3,8 @@ package com.lng.attendancecompanyservice.serviceImpl.masters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -46,13 +48,17 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 	CustomerRepository customerRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
+	
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public StatusDto saveBlkBeaconMap(BlockBeaconMapList blockBeaconMapList) {
 		StatusDto statusDto = new StatusDto();	
+		final Lock displayLock = this.displayQueueLock; 
 		String msg = null;
 		String beacons ="";
 		try {
+			displayLock.lock();
 			Block block = blockRepository.findBlockByblkId(blockBeaconMapList.getRefBlkId());
 			if(block != null) {
 				for(BlockBeaconMapDto BlockBeaconMapList : blockBeaconMapList.getBeacons()) {
@@ -67,27 +73,31 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 						statusDto.setCode(200);
 						statusDto.setError(false);
 						msg = "created";
+						displayLock.unlock();
 						//statusDto.setMessage("Successfully saved");
 					}else {
 						statusDto.setCode(400);
 						statusDto.setError(true);
 						msg = "Beacon already mapped";
-						beacons += BlockBeaconMapList.getBeaconCode() + ","; 
+						beacons += BlockBeaconMapList.getBeaconCode() + ",";
+						displayLock.unlock();
 						//statusDto.setMessage("Beacon already mapped");
 					}
 				}
 				statusDto.setMessage(msg + " " + beacons);
+				displayLock.unlock();
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Block not found");
-
+				displayLock.unlock();
 			}
 
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Opps...! Something went wrong!");
+			displayLock.unlock();
 		}
 		return statusDto;
 	}
@@ -225,8 +235,10 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 
 	@Override
 	public StatusDto update(BlockBeaconMapList blockBeaconMapList) {
-		StatusDto statusDto = new StatusDto();	
+		StatusDto statusDto = new StatusDto();
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			Block block = blockRepository.findBlockByblkId(blockBeaconMapList.getRefBlkId());
 			if(block != null) {
 
@@ -264,16 +276,18 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 				// msg = "Successfully Updates";
 				statusDto.setMessage("updated");
 				//}
-
+				displayLock.unlock();
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Block not found");
+				displayLock.unlock();
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Opps...! Something went wrong!");
+			displayLock.unlock();
 		}
 		return statusDto;
 	}

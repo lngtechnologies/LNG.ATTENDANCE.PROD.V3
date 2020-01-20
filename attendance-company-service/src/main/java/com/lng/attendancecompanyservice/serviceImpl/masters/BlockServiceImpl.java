@@ -3,6 +3,8 @@ package com.lng.attendancecompanyservice.serviceImpl.masters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -34,12 +36,15 @@ public class BlockServiceImpl implements BlockService {
 	@Autowired
 	CustomerRepository customerRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public BlockResponse saveBlock(BlockDto blockDto) {
 		BlockResponse response = new BlockResponse();
+		final Lock displayLock = this.displayQueueLock; 
 		Block  block = new Block();
 		try{
+			displayLock.lock();
 			if(blockDto.getBlkLogicalName() == null || blockDto.getBlkLogicalName().isEmpty()) throw new Exception("Please enter Block name");
 			int b = blockRepository.findByRefBranchIdAndBlkLogicalName(blockDto.getRefBranchId(), blockDto.getBlkLogicalName());
 			if(b == 0) {
@@ -55,17 +60,21 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkIsActive(true);
 					blockRepository.save(block);
 					response.status = new Status(false,200, "created");
+					displayLock.unlock();
 				}
 				else{ 
 					response.status = new Status(true,400, "Branch not found");
+					displayLock.unlock();
 				}
 			}
 			else{ 
 				response.status = new Status(true,400,"Block name already exist");
+				displayLock.unlock();
 			}
 
 		}catch(Exception ex){
-			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+			response.status = new Status(true,500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 
 		return response;
@@ -94,7 +103,9 @@ public class BlockServiceImpl implements BlockService {
 	@Override
 	public Status updateBlockByBlkId(BlockDto blockDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			if(blockDto.getBlkLogicalName() == null || blockDto.getBlkLogicalName().isEmpty()) throw new Exception("Please enter Block name");
 			if(blockDto.getBlkId() == null || blockDto.getBlkId() == 0) throw new Exception("Block id is null or zero");
 			if(blockDto.getRefBranchId() == null || blockDto.getRefBranchId() == 0) throw new Exception("RefCoustomerId id is null or zero");
@@ -109,6 +120,7 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				} else if (bl.getBlkId() == blockDto.getBlkId()) { 
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
@@ -116,19 +128,23 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 				}
 				else{ 
 					status = new Status(true,400,"Block name already exist");
+					displayLock.unlock();
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Branch not found");
+				displayLock.unlock();
 
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true,500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}

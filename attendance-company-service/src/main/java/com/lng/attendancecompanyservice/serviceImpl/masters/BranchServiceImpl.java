@@ -85,8 +85,11 @@ public class BranchServiceImpl implements BranchService {
 	@Override
 	public BranchResponse saveBranch(BranchDto branchDto) {
 		BranchResponse response = new BranchResponse();
-
+		final Lock displayLock = this.displayQueueLock; 
+		
 		try{
+			
+			displayLock.lock();
 			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
 			
 			int chechNoOfBranches = branchRepository.chechNoOfBranchesCreatedByCustomer(branchDto.getRefCustomerId());
@@ -104,9 +107,6 @@ public class BranchServiceImpl implements BranchService {
 							if(state != null) {
 								String brnchCode = "";
 								Branch branch = new Branch();
-								final Lock displayLock = this.displayQueueLock; 
-								displayLock.lock();
-								Thread.sleep(3000L);
 								brnchCode = branchRepository.generateBranchForCustomer(customer.getCustId());
 								branch.setState(state);
 								branch.setCustomer(customer);
@@ -147,33 +147,40 @@ public class BranchServiceImpl implements BranchService {
 								}
 
 								response.status = new Status(false,200, "created");
+								displayLock.unlock();
 
 							}
 							else{ 
 								response.status = new Status(true,400, "State not found");
+								displayLock.unlock();
 							}
 						}
 						else{ 
 							response.status = new Status(true,400, "Country not found");
+							displayLock.unlock();
 						}
 					}
 					else{ 
 						response.status = new Status(true,400, "Customer not found");
+						displayLock.unlock();
 					}
 				}
 				/*response.status = new Status(true,400, " Branch Can't Create");
 				}*/
 				else{ 
 					response.status = new Status(true,400,"Branch name already exist");
+					displayLock.unlock();
 				}
 
 			}else {
 				response.status = new Status(true,400,"Number of Branches allowed exceeds, Contact LNG Technologies Admin for the resolution.");
+				displayLock.unlock();
 			}
 
 
 		}catch(Exception ex){
-			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+			response.status = new Status(true,500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 
 		return response;
@@ -201,7 +208,9 @@ public class BranchServiceImpl implements BranchService {
 	@Override
 	public Status updateBranchByBrId(BranchDto branchDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			if(branchDto.getBrName() == null || branchDto.getBrName().isEmpty()) throw new Exception("Please enter Branch name");
 			if(branchDto.getBrId() == null || branchDto.getBrId() == 0) throw new Exception("Branch id is null or zero");
 			if(branchDto.getRefCustomerId() == null || branchDto.getRefCustomerId() == 0) throw new Exception("RefCoustomerId id is null or zero");
@@ -231,26 +240,32 @@ public class BranchServiceImpl implements BranchService {
 							branch.setBrCreatedDate(new Date());
 							branchRepository.save(branch);
 							status = new Status(false, 200, "updated");
+							displayLock.unlock();
 
 						} else {
 							status = new Status(true,400,"Branch name already exist"); 
+							displayLock.unlock();
 						}
 					}
 
 					else{ 
 						status = new Status(true,400, "State not found");
+						displayLock.unlock();
 					}
 				}
 				else{ 
 					status = new Status(true,400, "Country not found");
+					displayLock.unlock();
 				}
 			}
 			else{ 
 				status = new Status(true,400, "Customer Not Found");
+				displayLock.unlock();
 			}
 
 		}catch(Exception e) {
 			status = new Status(true,500,e.getMessage());
+			displayLock.unlock();
 		}
 		return status;
 	}

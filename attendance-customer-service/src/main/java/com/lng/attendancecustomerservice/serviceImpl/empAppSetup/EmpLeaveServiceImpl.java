@@ -44,7 +44,7 @@ public class EmpLeaveServiceImpl implements EmpLeaveService {
 	public CustLeaveTrypeListDto getLeaveListByCustId(Integer custId) {
 		CustLeaveTrypeListDto custLeaveTrypeListDto = new CustLeaveTrypeListDto();
 		try {
-			List<CustLeave> custLeaves = custLeaveRepository.findCustLeaveByCustomer_custIdAndcustLeaveIsActive(custId, true);
+			List<CustLeave> custLeaves = custLeaveRepository.findCustLeaveByCustomer_custIdAndCustLeaveIsActive(custId, true);
 
 			if(!custLeaves.isEmpty()) {
 				custLeaveTrypeListDto.setCustId(custId);
@@ -68,7 +68,7 @@ public class EmpLeaveServiceImpl implements EmpLeaveService {
 		try {	
 			Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 			Employee employee = employeeRepository.getByEmpId(employeeLeaveDto.getEmpId());
-			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveIdAndcustLeaveIsActive(employeeLeaveDto.getCustLeaveId(), true);
+			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(employeeLeaveDto.getCustLeaveId(), true);
 			int empLeave = employeeLeaveRepository.getEmpLeaveAlreadyApplied(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo(), employeeLeaveDto.getEmpId());
 
 			if(employee != null) {

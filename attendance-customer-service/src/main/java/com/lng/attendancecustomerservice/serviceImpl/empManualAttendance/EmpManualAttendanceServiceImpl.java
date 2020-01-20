@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,8 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	@Autowired
 	ILoginRepository iLoginRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
 	public EmpAttendanceResponse getEmpAttendanceByDepartment_deptIdAndEmpAttendanceDatetime(Integer deptId, String empAttendanceDate) {
 		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
@@ -121,10 +125,12 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 	@Override
 	public Status saveEmpAttnd(List<EmployeeAttendanceDto> employeeAttendanceDtos) {
+		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		BigDecimal bd = new BigDecimal(100.100);
 		EmployeeAttendance employeeAttendance1 = new EmployeeAttendance();
 		try {
+			displayLock.lock();
 			for(EmployeeAttendanceDto employeeAttendanceDto : employeeAttendanceDtos) {
 				employeeAttendance1 = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceDate(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceDate());
 				EmployeeAttendance employeeAttendance2 = employeeAttendanceRepository.findByEmpAttendanceId(employeeAttendanceDto.getEmpAttendanceId());
@@ -178,6 +184,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 							employeeAttendanceRepository.save(employeeAttendance1);
 							status = new Status(false, 200, "Attendance IN marked");
+							displayLock.unlock();
 						} else {
 							//employeeAttendance1 = new EmployeeAttendance();
 							employeeAttendance1.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
@@ -225,7 +232,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 							employeeAttendanceRepository.save(employeeAttendance1);
 							status = new Status(false, 200, "Attendance IN marked");
-
+							displayLock.unlock();
 						}
 					} else {
 						employeeAttendance2.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
@@ -273,15 +280,18 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 						employeeAttendanceRepository.save(employeeAttendance2);
 						status = new Status(false, 200, "Attendance OUT marked");
+						displayLock.unlock();
 					}
 				}else {
 					status = new Status(false, 400, "Employee not found");
+					displayLock.unlock();
 				}
 			}
 
 		} catch (Exception e) {
 
 			status = new Status(true, 500,"Opps..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}
@@ -290,8 +300,9 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 	public Status saveSignOut(List<EmployeeAttendanceDto> employeeAttendanceDtos) {
 		Status status = null;
 		BigDecimal bd = new BigDecimal(100.100);
-
+		final Lock displayLock = this.displayQueueLock;
 		try {
+			displayLock.lock();
 			for(EmployeeAttendanceDto employeeAttendanceDto : employeeAttendanceDtos) {
 				EmployeeAttendance employeeAttendance = employeeAttendanceRepository.findByEmployee_EmpIdAndEmpAttendanceDateAndEmpAttendanceOutModeAndEmpAttendanceOutDatetimeAndEmpAttendanceOutLatLong
 						(employeeAttendanceDto.getRefEmpId(), employeeAttendanceDto.getEmpAttendanceDate(),employeeAttendanceDto.getEmpAttendanceOutMode(), employeeAttendanceDto.getEmpAttendanceOutDatetime(), employeeAttendanceDto.getEmpAttendanceOutLatLong());
@@ -326,17 +337,21 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 						employeeAttendanceRepository.save(employeeAttendance1);
 						status = new Status(false, 200, "Attendance marked");
+						displayLock.unlock();
 					}else {
 						status = new Status(false, 400, "Employee not found");
+						displayLock.unlock();
 					}
 				} else {
 					status = new Status(false, 200, "Attendance marked"); 
+					displayLock.unlock();
 				}
 			}
 
 		} catch (Exception e) {
 
 			status = new Status(true, 500, "Opps..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}

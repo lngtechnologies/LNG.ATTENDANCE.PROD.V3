@@ -139,8 +139,10 @@ public class CountryServiceImpl implements CountryService {
 	}
 	@Override
 	public Status updateCountryByCountryId(CountryDto countryDto) {
+		final Lock displayLock = this.displayQueueLock; 
 		Status status = null;
 		try {
+			displayLock.lock();
 			if(countryDto.getCountryName() == null || countryDto.getCountryName().isEmpty()) throw new Exception("Please enter country name");
 			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country code");
 			if(countryDto.getCountryId() == null || countryDto.getCountryId() == 0) throw new Exception("Country id is null or zero");
@@ -176,24 +178,28 @@ public class CountryServiceImpl implements CountryService {
 						country.setCountryIsActive(true);
 						countryRepositary.save(country);
 						status = new Status(false, 200, "updated");
+						displayLock.unlock();
 					}else{ 
 
 						status = new Status(true,400,"Country code already exists");
-
+						displayLock.unlock();
 					}
 				}
 				else{ 
 
 					status = new Status(true,400,"Country already exists");
+					displayLock.unlock();
 				}
 			}
 			else{ 
 				status = new Status(false,400,"Country not found");
+				displayLock.unlock();
 			}
 		}
 
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}

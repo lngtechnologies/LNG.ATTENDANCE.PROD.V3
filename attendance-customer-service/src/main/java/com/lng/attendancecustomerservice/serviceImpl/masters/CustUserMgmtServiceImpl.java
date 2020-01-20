@@ -3,6 +3,8 @@ package com.lng.attendancecustomerservice.serviceImpl.masters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -84,15 +86,17 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 	Encoder encoder = new Encoder();
 
+	private final Lock displayQueueLock = new ReentrantLock();
 
 	@Override
 	public CustUserResponseDto save(CustUserMgmtDto custUserMgmtDto) {
 		CustUserResponseDto custUserResponseDto = new CustUserResponseDto();
-
+		final Lock displayLock = this.displayQueueLock; 
 		Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
 		// Login login3 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
 		List<Login> loginData = iLoginRepository.findAllByLoginIsActiveAndRefEmpId(custUserMgmtDto.getEmpId());
 		try {
+			displayLock.lock();
 			if(customer != null) {
 
 				if(loginData.isEmpty() || custUserMgmtDto.getEmpId() == 0) {
@@ -138,6 +142,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 							String s = messageUtil.sms(mobileNo, mobileSmS);
 
 							custUserResponseDto.status = new Status(false, 200, "created");
+							displayLock.unlock();
 							custUserResponseDto.setLoginId(login.getLoginId());
 						}else {
 						}
@@ -146,18 +151,22 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 							}*/
 					}else {
 						custUserResponseDto.status = new Status(true, 400, "User name already exist");
+						displayLock.unlock();
 					}
 				} else {
 					custUserResponseDto.status = new Status(true, 400, "The user has already been created for the selected Employee");
+					displayLock.unlock();
 				}
 
 
 			}else {
 				custUserResponseDto.status = new Status(true, 400, "Customer is not exist");
+				displayLock.unlock();
 			}
 		} catch (Exception e) {
 
 			custUserResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return custUserResponseDto;
 	}
@@ -225,7 +234,9 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	@Override
 	public Status updateUserDetails(CustUserMgmtDto custUserMgmtDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
 			Login login = iLoginRepository.findByLoginId(custUserMgmtDto.getLoginId());
 
@@ -258,23 +269,28 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 							String s = messageUtil.sms(mobileNo, mobileSmS);*/
 
 							status = new Status(false, 200, "updated");
-
+							displayLock.unlock();
 						}else {
 							status = new Status(true, 400, "Mobile number already exist");
+							displayLock.unlock();
 						}
 					}else {
 						status = new Status(true, 400, "User name already exist");
+						displayLock.unlock();
 					}
 				} else {
 					status = new Status(true, 400, "Login id not found");
+					displayLock.unlock();
 				}
 
 			} else {
 				status = new Status(true, 400, "Customer is not exist");
+				displayLock.unlock();
 			}
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}
@@ -408,9 +424,10 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 	@Override
 	public Status updateModules(CustUserModuleMapDto custUserModuleMapDto) {
+		final Lock displayLock = this.displayQueueLock; 
 		Status status = null;
 		try {
-
+			displayLock.lock();
 			List<UserRight> alreadyMapped = userRightRepository.getByRefLoginId(custUserModuleMapDto.getLoginId());
 
 			List<CustUserModuleDto> nonNullUserRightIds = custUserModuleMapDto.getModuleIds().stream().filter(e -> e.getUserRightId() != null).collect(Collectors.toList()); 
@@ -456,9 +473,11 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				}
 			}
 			status = new Status(false, 200, "Modules updated");
+			displayLock.unlock();
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}
@@ -466,7 +485,9 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	@Override
 	public Status updateBranchLoginDataRight(CustUserBranchLoginMapDto custUserBranchLoginMapDto) {
 		Status status = null;
+		final Lock displayLock = this.displayQueueLock; 
 		try {
+			displayLock.lock();
 			List<LoginDataRight> alreadyMapped = loginDataRightRepository.getByRefLoginId(custUserBranchLoginMapDto.getLoginId());
 
 			List<CustUserBranchDto> nonNullUserRightIds = custUserBranchLoginMapDto.getBranchIds().stream().filter(e -> e.getLoginDataRightId() != null).collect(Collectors.toList()); 
@@ -500,12 +521,12 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				}
 
 				status = new Status(false, 200, "Branches updated");
-
+				displayLock.unlock();
 			}
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
-
+			displayLock.unlock();
 		}
 		return status;
 	}
@@ -769,12 +790,14 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	@Override
 	@Transactional(rollbackOn={Exception.class})
 	public Status saveAllDetails(CustUserLoginModuleBranchDto custUserLoginModuleBranchDto) {
+		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		String mobileNo = null;
 		Customer customer = customerRepository.findCustomerByCustId(custUserLoginModuleBranchDto.getUserDetails().getCustomerId());
 
 		List<Login> loginData = iLoginRepository.findAllByLoginIsActiveAndRefEmpId(custUserLoginModuleBranchDto.getUserDetails().getEmpId());
 		try {
+			displayLock.lock();
 			if(customer != null) {
 
 				if(loginData.isEmpty() || custUserLoginModuleBranchDto.getUserDetails().getEmpId() == 0) {
@@ -814,6 +837,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 								mobileNo = employee.getEmpMobile();
 							}else {
 								status = new Status(true, 400, "Employee not found");
+								displayLock.unlock();
 							}
 						} else {
 							mobileNo = login.getLoginMobile();
@@ -824,6 +848,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						String s = messageUtil.sms(mobileNo, mobileSmS);
 
 						status = new Status(false, 200, "created");
+						displayLock.unlock();
 						try {
 							if(!custUserLoginModuleBranchDto.getModules().isEmpty()) {
 								for(CustUserModuleDto custUserModuleDto : custUserLoginModuleBranchDto.getModules()) {
@@ -851,26 +876,32 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						}
 					}else {
 						status = new Status(true, 400, "User name already exist");
+						displayLock.unlock();
 					}
 				} else {
 					status = new Status(true, 400, "The user has already been created for the selected Employee");
+					displayLock.unlock();
 				}
 
 
 			}else {
 				status = new Status(true, 400, "Customer is not exist");
+				displayLock.unlock();
 			}
 		} catch (Exception e) {
 
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}
 
 	@Override
 	public Status checkUserName(CustUserMgmtDto custUserMgmtDto) {
+		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		try {
+			displayLock.lock();
 			Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
 			String userName = custUserMgmtDto.getUserName();
 			String custCode = customer.getCustCode();
@@ -879,11 +910,14 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			Login login = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
 			if(login == null) {
 				status = new Status(false, 200, "Not Exist");
+				displayLock.unlock();
 			} else {
 				status = new Status(true, 400, "Exist");
+				displayLock.unlock();
 			}
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}

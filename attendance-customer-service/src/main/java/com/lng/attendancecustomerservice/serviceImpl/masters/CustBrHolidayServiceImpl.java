@@ -1,6 +1,8 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,14 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 	@Autowired
 	HolidayCalendarRepository   holidayCalendarRepository;
 
+	private final Lock displayQueueLock = new ReentrantLock();
+	
 	@Override
 	public CustBrHolidayResponse saveCustBrHoliday(List<CustBrHolidayDto> custBrHolidayDtos) {
 		CustBrHolidayResponse  custBrHolidayResponse  =  new  CustBrHolidayResponse();
+		final Lock displayLock = this.displayQueueLock;
 		try {
+			displayLock.lock();
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 
 				Branch branch1 =branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
@@ -46,17 +52,20 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHoliday1.setHolidayCalendar(holidayCalendar);
 						custBrHolidayRepository.save(custBrHoliday1);
 						custBrHolidayResponse.status = new Status(false,200, "created");
+						displayLock.unlock();
 					}else {
 						custBrHolidayResponse.status = new Status(true,400, "Holiday name already exists");
-
+						displayLock.unlock();
 					}
 				}else {
 					custBrHolidayResponse.status = new Status(false,400, "Not found");
+					displayLock.unlock();
 				}
 			}
 
 		}catch(Exception ex){
-			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
+			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 
 		return custBrHolidayResponse;
@@ -83,8 +92,10 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 	@Override
 	public CustBrHolidayResponse save(List<CustBrHolidayDto> custBrHolidayDtos) {
 		CustBrHolidayResponse  custBrHolidayResponse  =  new  CustBrHolidayResponse();
+		final Lock displayLock = this.displayQueueLock;
 		//CustBrHoliday  custBrHoliday = new CustBrHoliday();
 		try {
+			displayLock.lock();
 			for(CustBrHolidayDto custBrHolidayDto : custBrHolidayDtos) {
 				int  b = custBrHolidayRepository.findCustBrHolidayByRefbrId(custBrHolidayDto.getRefbrId());
 				//if(b == 0 || b == 1) {
@@ -98,12 +109,15 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHoliday1.setBranch(branch1);		
 						custBrHoliday1.setHolidayCalendar(holidayCalendar);
 						custBrHolidayRepository.save(custBrHoliday1);
-						custBrHolidayResponse.status = new Status(false,200, "success"); 
+						custBrHolidayResponse.status = new Status(false,200, "success");
+						displayLock.unlock();
 					}else if(cust == 1) {
-						custBrHolidayResponse.status = new Status(false,200, "success"); 
+						custBrHolidayResponse.status = new Status(false,200, "success");
+						displayLock.unlock();
 					}
 					else {
 						custBrHolidayResponse.status = new Status(true,400, "Customer and branch misMatch");
+						displayLock.unlock();
 					}
 				}
 
@@ -121,6 +135,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 							custBrHoliday1.setHolidayCalendar(holidayCalendar);
 							custBrHolidayRepository.save(custBrHoliday1);
 							custBrHolidayResponse.status = new Status(false,200, "success");
+							displayLock.unlock();
 						}
 					}
 
@@ -128,6 +143,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			}
 		}catch(Exception ex){
 			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
+			displayLock.unlock();
 		}
 
 		return custBrHolidayResponse;
@@ -135,10 +151,10 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 
 	@Override
 	public Status updateCustBrHoliday(CustBrHolidayDto custBrHolidayDto) {
-
+		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		try {
-
+			displayLock.lock();
 			CustBrHoliday CustBrHoliday = custBrHolidayRepository.findCustBrHolidayByCustBrHolidayId(custBrHolidayDto.getCustBrHolidayId());
 			Branch branch = branchRepository.findBranchByBrId(custBrHolidayDto.getRefbrId());
 			HolidayCalendar holidayCalendar  =  holidayCalendarRepository.findHolidayCalendarByHolidayId(custBrHolidayDto.getRefHolidayId());
@@ -150,19 +166,21 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 					CustBrHoliday.setHolidayCalendar(holidayCalendar);
 					custBrHolidayRepository.save(CustBrHoliday);
 					status = new Status(false, 200, "updated");
+					displayLock.unlock();
 
 				}else {
 					status = new Status(true,400,"Holiday already exists");
-
+					displayLock.unlock();
 				}
 			}
 			else {
 				status = new Status(false, 400, "Not Found");
-
+				displayLock.unlock();
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			displayLock.unlock();
 		}
 		return status;
 	}
