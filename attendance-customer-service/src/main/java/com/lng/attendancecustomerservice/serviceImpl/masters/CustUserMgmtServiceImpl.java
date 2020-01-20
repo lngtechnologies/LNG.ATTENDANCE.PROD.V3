@@ -142,7 +142,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 							String s = messageUtil.sms(mobileNo, mobileSmS);
 
 							custUserResponseDto.status = new Status(false, 200, "created");
-							displayLock.unlock();
+							
 							custUserResponseDto.setLoginId(login.getLoginId());
 						}else {
 						}
@@ -151,22 +151,22 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 							}*/
 					}else {
 						custUserResponseDto.status = new Status(true, 400, "User name already exist");
-						displayLock.unlock();
+						
 					}
 				} else {
 					custUserResponseDto.status = new Status(true, 400, "The user has already been created for the selected Employee");
-					displayLock.unlock();
+					
 				}
 
 
 			}else {
 				custUserResponseDto.status = new Status(true, 400, "Customer is not exist");
-				displayLock.unlock();
+				
 			}
 		} catch (Exception e) {
 
 			custUserResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
-			displayLock.unlock();
+			
 		}
 		return custUserResponseDto;
 	}
@@ -269,27 +269,30 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 							String s = messageUtil.sms(mobileNo, mobileSmS);*/
 
 							status = new Status(false, 200, "updated");
-							displayLock.unlock();
+							
 						}else {
 							status = new Status(true, 400, "Mobile number already exist");
-							displayLock.unlock();
+							
 						}
 					}else {
 						status = new Status(true, 400, "User name already exist");
-						displayLock.unlock();
+						
 					}
 				} else {
 					status = new Status(true, 400, "Login id not found");
-					displayLock.unlock();
+					
 				}
 
 			} else {
 				status = new Status(true, 400, "Customer is not exist");
-				displayLock.unlock();
+				
 			}
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;
@@ -473,10 +476,13 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				}
 			}
 			status = new Status(false, 200, "Modules updated");
-			displayLock.unlock();
+			
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;
@@ -521,11 +527,14 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				}
 
 				status = new Status(false, 200, "Branches updated");
-				displayLock.unlock();
+				
 			}
 
 		} catch (Exception e) {
 			status = new Status(true, 400, "Opps...! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;
@@ -907,7 +916,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 								mobileNo = employee.getEmpMobile();
 							}else {
 								status = new Status(true, 400, "Employee not found");
-								displayLock.unlock();
+								
 							}
 						} else {
 							mobileNo = login.getLoginMobile();
@@ -918,7 +927,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						String s = messageUtil.sms(mobileNo, mobileSmS);
 
 						status = new Status(false, 200, "created");
-						displayLock.unlock();
+						
 						try {
 							if(!custUserLoginModuleBranchDto.getModules().isEmpty()) {
 								for(CustUserModuleDto custUserModuleDto : custUserLoginModuleBranchDto.getModules()) {
@@ -946,21 +955,24 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						}
 					}else {
 						status = new Status(true, 400, "User name already exist");
-						displayLock.unlock();
+						
 					}
 				} else {
 					status = new Status(true, 400, "The user has already been created for the selected Employee");
-					displayLock.unlock();
+					
 				}
 
 
 			}else {
 				status = new Status(true, 400, "Customer is not exist");
-				displayLock.unlock();
+				
 			}
 		} catch (Exception e) {
 
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;
@@ -980,13 +992,16 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			Login login = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
 			if(login == null) {
 				status = new Status(false, 200, "Not Exist");
-				displayLock.unlock();
+				
 			} else {
 				status = new Status(true, 400, "Exist");
-				displayLock.unlock();
+				
 			}
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

@@ -52,22 +52,24 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHoliday1.setHolidayCalendar(holidayCalendar);
 						custBrHolidayRepository.save(custBrHoliday1);
 						custBrHolidayResponse.status = new Status(false,200, "created");
-						displayLock.unlock();
+						
 					}else {
 						custBrHolidayResponse.status = new Status(true,400, "Holiday name already exists");
-						displayLock.unlock();
+						
 					}
 				}else {
 					custBrHolidayResponse.status = new Status(false,400, "Not found");
-					displayLock.unlock();
+					
 				}
 			}
 
 		}catch(Exception ex){
 			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return custBrHolidayResponse;
 	}
 
@@ -110,14 +112,14 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 						custBrHoliday1.setHolidayCalendar(holidayCalendar);
 						custBrHolidayRepository.save(custBrHoliday1);
 						custBrHolidayResponse.status = new Status(false,200, "success");
-						displayLock.unlock();
+						
 					}else if(cust == 1) {
 						custBrHolidayResponse.status = new Status(false,200, "success");
-						displayLock.unlock();
+						
 					}
 					else {
 						custBrHolidayResponse.status = new Status(true,400, "Customer and branch misMatch");
-						displayLock.unlock();
+						
 					}
 				}
 
@@ -135,7 +137,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 							custBrHoliday1.setHolidayCalendar(holidayCalendar);
 							custBrHolidayRepository.save(custBrHoliday1);
 							custBrHolidayResponse.status = new Status(false,200, "success");
-							displayLock.unlock();
+							
 						}
 					}
 
@@ -143,7 +145,7 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 			}
 		}catch(Exception ex){
 			custBrHolidayResponse.status = new Status(true,500, "Oops..! Something went wrong.."); 
-			displayLock.unlock();
+			
 		}
 
 		return custBrHolidayResponse;
@@ -166,20 +168,23 @@ public class CustBrHolidayServiceImpl implements CustBrHolidayService {
 					CustBrHoliday.setHolidayCalendar(holidayCalendar);
 					custBrHolidayRepository.save(CustBrHoliday);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 
 				}else {
 					status = new Status(true,400,"Holiday already exists");
-					displayLock.unlock();
+					
 				}
 			}
 			else {
 				status = new Status(false, 400, "Not Found");
-				displayLock.unlock();
+				
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

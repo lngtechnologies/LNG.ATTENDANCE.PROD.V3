@@ -184,7 +184,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 							employeeAttendanceRepository.save(employeeAttendance1);
 							status = new Status(false, 200, "Attendance IN marked");
-							displayLock.unlock();
+							
 						} else {
 							//employeeAttendance1 = new EmployeeAttendance();
 							employeeAttendance1.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
@@ -232,7 +232,7 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 							employeeAttendanceRepository.save(employeeAttendance1);
 							status = new Status(false, 200, "Attendance IN marked");
-							displayLock.unlock();
+							
 						}
 					} else {
 						employeeAttendance2.setEmpAttendanceDate(employeeAttendanceDto.getEmpAttendanceDate());
@@ -280,17 +280,20 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 						employeeAttendanceRepository.save(employeeAttendance2);
 						status = new Status(false, 200, "Attendance OUT marked");
-						displayLock.unlock();
+						
 					}
 				}else {
 					status = new Status(false, 400, "Employee not found");
-					displayLock.unlock();
+					
 				}
 			}
 
 		} catch (Exception e) {
 
 			status = new Status(true, 500,"Opps..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;
@@ -337,20 +340,23 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 
 						employeeAttendanceRepository.save(employeeAttendance1);
 						status = new Status(false, 200, "Attendance marked");
-						displayLock.unlock();
+						
 					}else {
 						status = new Status(false, 400, "Employee not found");
-						displayLock.unlock();
+						
 					}
 				} else {
 					status = new Status(false, 200, "Attendance marked"); 
-					displayLock.unlock();
+					
 				}
 			}
 
 		} catch (Exception e) {
 
 			status = new Status(true, 500, "Opps..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

@@ -51,11 +51,11 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					response.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
-					displayLock.unlock();
+					
 				}
 			} else if(designation1 != null){
 
@@ -67,21 +67,23 @@ public class DesignationServiceImpl implements DesignationService{
 					designation1.setDesigIsActive(true);
 					designationRepository.save(designation1);
 					response.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
-					displayLock.unlock();
+					
 				}
 			}else {
 				response.status = new Status(true,400,"Designation name already exists");
-				displayLock.unlock();
+				
 			}
 		}catch(Exception e){
 			response.status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return response;
 	}
 
@@ -124,7 +126,7 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					status = new Status(false,200, "updated");
-					displayLock.unlock();
+					
 				} else if (de.getDesignationId() == designationDto.getDesignationId()) { 
 
 					designation.setCustomer(customer);
@@ -132,22 +134,25 @@ public class DesignationServiceImpl implements DesignationService{
 					designation.setDesigIsActive(true);
 					designationRepository.save(designation);
 					status = new Status(false,200, "updated");
-					displayLock.unlock();
+					
 				}
 				else{ 
 
 					status = new Status(true,400,"Designation name already exists");
-					displayLock.unlock();
+					
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Customer not found");
-				displayLock.unlock();
+				
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

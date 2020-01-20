@@ -57,23 +57,25 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					shiftResponse.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					shiftResponse.status = new Status(true,400, "Branch not found");
-					displayLock.unlock();
+					
 				}
 			}
 			else{ 
 
 				shiftResponse.status = new Status(true,400,"Shift name already exists");
-				displayLock.unlock();
+				
 			}
 		} catch (Exception e) {
 			shiftResponse.status = new Status(true, 500,"Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return shiftResponse;
 	}
 
@@ -117,7 +119,7 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				} else if (sh.getShiftId() == shiftDto.getShiftId()) { 
 
 					shift = modelMapper.map(shiftDto,Shift.class);
@@ -125,22 +127,25 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				}
 				else{ 
 
 					status = new Status(true,400,"Shift name already exists");
-					displayLock.unlock();
+					
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Branch not found");
-				displayLock.unlock();
+				
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

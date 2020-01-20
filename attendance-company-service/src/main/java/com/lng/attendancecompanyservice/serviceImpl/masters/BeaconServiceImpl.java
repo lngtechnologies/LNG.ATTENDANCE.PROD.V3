@@ -26,19 +26,19 @@ public class BeaconServiceImpl implements BeaconService {
 
 	@Autowired
 	BeaconRepository beaconRepository;
-	
+
 	@Autowired
 	BlockBeaconMapRepository blockBeaconMapRepository;
-	
+
 	ModelMapper modelMapper = new ModelMapper();
-	
+
 	private final Lock displayQueueLock = new ReentrantLock();
-	
+
 	@Override
 	public StatusDto saveBeacon(BeaconDto beaconDto) {
 		StatusDto statusDto = new StatusDto();
 		final Lock displayLock = this.displayQueueLock; 
-		
+
 		Beacon beacon = beaconRepository.findBeaconByBeaconCode(beaconDto.getBeaconCode());
 		Beacon beacon1 = beaconRepository.findBeaconByBeaconCodeAndBeaconIsActive(beaconDto.getBeaconCode(), false);
 		try {
@@ -51,7 +51,7 @@ public class BeaconServiceImpl implements BeaconService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
-				displayLock.unlock();
+
 			}else if (beacon1!= null){
 				beacon1.setBeaconIsActive(true);
 				beacon1.setBeaconCreatedDate(new Date());
@@ -59,23 +59,22 @@ public class BeaconServiceImpl implements BeaconService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
-				displayLock.unlock();
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Beacon code is already exist");
-				displayLock.unlock();
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Opps...! Something went wrong!");
+		}
+		finally {
 			displayLock.unlock();
 		}
-		
 		return statusDto;
 	}
-	
+
 	@Override
 	public BeaconListResponseDto findAll() {
 		BeaconListResponseDto beaconListResponseDto = new BeaconListResponseDto();
@@ -97,14 +96,14 @@ public class BeaconServiceImpl implements BeaconService {
 		}
 		return beaconListResponseDto;
 	}
-	
+
 	@SuppressWarnings("unused")
 	@Override
 	public StatusDto updateBeacon(BeaconDto beaconDto) {
-		
+
 		StatusDto statusDto = new StatusDto();
 		final Lock displayLock = this.displayQueueLock; 
-		
+
 		Beacon beacon1 = beaconRepository.findBeaconByBeaconId(beaconDto.getBeaconId());
 		Beacon beacon2 = beaconRepository.findBeaconByBeaconCode(beaconDto.getBeaconCode());
 		BlockBeaconMap blockBeaconMap = blockBeaconMapRepository.findByBeaconCodeAndBlkBeaconMapIsActive(beacon1.getBeaconCode(), true);
@@ -119,60 +118,62 @@ public class BeaconServiceImpl implements BeaconService {
 						blockBeaconMap.setBeaconCode(beaconDto.getBeaconCode());
 						blockBeaconMapRepository.save(blockBeaconMap);
 					}
-					
+
 					statusDto.setCode(200);
 					statusDto.setError(false);
 					statusDto.setMessage("updated");
-					displayLock.unlock();
+
 				} else {
 					statusDto.setCode(400);
 					statusDto.setError(true);
 					statusDto.setMessage("Beacon code already exist");
-					displayLock.unlock();
+
 				}
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Beacon not found");
-				displayLock.unlock();
+
 			}
 
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
-			statusDto.setMessage("Opps...! Somenthing went wrong!");
+			statusDto.setMessage("Opps...! Somenthing went wrong!");	
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return statusDto;
 	}
-	
+
 	@SuppressWarnings("unused")
 	@Override
 	public Status deleteById(Integer beaconId) {
 		Status status = null;
 		try {
-		Beacon beacon = beaconRepository.findBeaconByBeaconId(beaconId);
-		BlockBeaconMap blockBeaconMap = blockBeaconMapRepository.findByBeaconCodeAndBlkBeaconMapIsActive(beacon.getBeaconCode(), true);
-		
-		if(beacon != null) {
-			if(blockBeaconMap == null) {
-				beaconRepository.delete(beacon);
-				status = new Status(false, 200, "deleted");
+			Beacon beacon = beaconRepository.findBeaconByBeaconId(beaconId);
+			BlockBeaconMap blockBeaconMap = blockBeaconMapRepository.findByBeaconCodeAndBlkBeaconMapIsActive(beacon.getBeaconCode(), true);
+
+			if(beacon != null) {
+				if(blockBeaconMap == null) {
+					beaconRepository.delete(beacon);
+					status = new Status(false, 200, "deleted");
+				}else {
+					status = new Status(true, 400, "The record has been disabled since it has been used in other transactions");
+				}
 			}else {
-				status = new Status(true, 400, "The record has been disabled since it has been used in other transactions");
+				status = new Status(true, 400, "Beacon not found");
 			}
-		}else {
-			status = new Status(true, 400, "Beacon not found");
-		}
-			
+
 		} catch (Exception e) {
 			status = new Status(true, 500, "Opps..! Something went wrong");
 		}	
 		return status;
 	}
 
-	
-	
+
+
 	public BeaconDto convertToBeaconDto(Beacon beacon) {
 		BeaconDto  beaconDto = modelMapper.map(beacon, BeaconDto.class);
 		return beaconDto;

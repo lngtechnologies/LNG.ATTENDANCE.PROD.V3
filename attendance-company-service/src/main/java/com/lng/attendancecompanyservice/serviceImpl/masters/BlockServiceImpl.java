@@ -60,20 +60,24 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkIsActive(true);
 					blockRepository.save(block);
 					response.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					response.status = new Status(true,400, "Branch not found");
-					displayLock.unlock();
+					
 				}
 			}
 			else{ 
 				response.status = new Status(true,400,"Block name already exist");
-				displayLock.unlock();
+				
 			}
 
 		}catch(Exception ex){
 			response.status = new Status(true,500, "Oops..! Something went wrong..");
+			
+		}
+		
+		finally {
 			displayLock.unlock();
 		}
 
@@ -120,7 +124,7 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				} else if (bl.getBlkId() == blockDto.getBlkId()) { 
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
@@ -128,22 +132,25 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkIsActive(false);
 					blockRepository.save(block);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					status = new Status(true,400,"Block name already exist");
-					displayLock.unlock();
+					
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Branch not found");
-				displayLock.unlock();
+				
 
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true,500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

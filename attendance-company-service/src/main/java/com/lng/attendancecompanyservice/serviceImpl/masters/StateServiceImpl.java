@@ -61,11 +61,11 @@ public class StateServiceImpl implements StateService {
 					state.setStateIsActive(true);
 					stateRepository.save(state);
 					response.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					response.status = new Status(true,400, "Country not found");
-					displayLock.unlock();
+					
 				}
 			} else if(state1 != null){
 				Country country = countryRepository.findCountryByCountryId(stateDto.getRefCountryId());
@@ -75,22 +75,24 @@ public class StateServiceImpl implements StateService {
 					state1.setStateIsActive(true);
 					stateRepository.save(state1);
 					response.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					response.status = new Status(true,400, "Country not found");
-					displayLock.unlock();
+					
 				}
 			}else {
 				response.status = new Status(true,400,"State name already exists");
-				displayLock.unlock();
+				
 
 			}
 		} catch (Exception e) {
 			response.status = new Status(true,500, e.getMessage());
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return response;
 	}
 
@@ -138,7 +140,7 @@ public class StateServiceImpl implements StateService {
 		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		try {
-			displayLock.unlock();
+			
 			if(stateDto.getStateName() == null || stateDto.getStateName().isEmpty()) throw new Exception("Please enter State name");
 			if(stateDto.getStateId() == null || stateDto.getStateId() == 0) throw new Exception("State id is null or zero");
 			if(stateDto.getRefCountryId() == null || stateDto.getRefCountryId() == 0) throw new Exception("RefCountryId id is null or zero");
@@ -153,7 +155,7 @@ public class StateServiceImpl implements StateService {
 					state.setStateIsActive(true);
 					stateRepository.save(state);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				} else if (st.getStateId() == stateDto.getStateId()) { 
 
 					state = modelMapper.map(stateDto,State.class);
@@ -161,21 +163,24 @@ public class StateServiceImpl implements StateService {
 					state.setStateIsActive(true);
 					stateRepository.save(state);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					status = new Status(true,400,"State name already exist");
-					displayLock.unlock();
+					
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Country not found");
-				displayLock.unlock();
+				
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true,500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

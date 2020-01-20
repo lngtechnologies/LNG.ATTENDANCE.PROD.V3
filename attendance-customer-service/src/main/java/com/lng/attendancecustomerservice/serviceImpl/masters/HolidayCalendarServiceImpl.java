@@ -70,23 +70,25 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendar.setHolidayName(holidayCalendarDto.getHolidayName());
 					holidayCalendarRepository.save(holidayCalendar);
 					holidayCalendarResponse.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					holidayCalendarResponse.status = new Status(true,400,"Holiday name already exists");
-					displayLock.unlock();
+					
 				}
 			}
 			else{ 
 				holidayCalendarResponse.status = new Status(true,400,"Holiday date already exists");
-				displayLock.unlock();
+				
 			}
 
 		}catch(Exception ex){
 			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return holidayCalendarResponse;
 	}
 	@Override
@@ -108,13 +110,13 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				} else if ( he.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				}
 			}
 			else if(h != null && h.getHolidayId() == holidayCalendarDto.getHolidayId() ) {
@@ -124,27 +126,30 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				} else if (he1.getHolidayId() == holidayCalendarDto.getHolidayId()) { 
 
 					holidayCalendar = modelMapper.map(holidayCalendarDto,HolidayCalendar.class);
 					holidayCalendarRepository.save(holidayCalendar);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				}
 				else{ 
 
 					status = new Status(true,400,"Holiday name already exists");
-					displayLock.unlock();
+					
 				}
 			}
 			else{ 
 				status = new Status(true,400,"Holiday date already exists");
-				displayLock.unlock();
+				
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

@@ -184,18 +184,21 @@ public class CustomerServiceImpl implements CustomerService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
-				displayLock.unlock();
+				
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Customer mobile number or email already exist");		
-				displayLock.unlock();
+				
 			}
 			
 		} catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return statusDto;
@@ -683,25 +686,28 @@ public class CustomerServiceImpl implements CustomerService {
 						}
 
 						customerResponse.status = new Status(false, 200, "updated");
-						displayLock.unlock();
+						
 					} else {
 						customerResponse.status = new Status(false, 400, "Customer not found");
-						displayLock.unlock();
+						
 					}
 				} else {
 					customerResponse.status = new Status(true, 400, "Customer email id already exist");
-					displayLock.unlock();
+					
 				}
 				
 			} else {
 				customerResponse.status = new Status(true, 400, "Customer mobile number already exist");
-				displayLock.unlock();
+				
 			}
 			
 
 
 		} catch (Exception e) {
 			customerResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return customerResponse;
