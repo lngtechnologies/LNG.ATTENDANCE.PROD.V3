@@ -150,4 +150,11 @@ public class CustUserMgmtController {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+	
+
+	@PostMapping(value = "/findAllUsersByCustId")
+	public ResponseEntity<CustUserLoginModuleBranchMapResponseDto> findAllUsersByCustId(@RequestBody CustUserLoginModuleBranchMapResponseDto custUserBranchLoginMapDto) {
+		CustUserLoginModuleBranchMapResponseDto status = custUserMgmtService.getAllUserByCustId(custUserBranchLoginMapDto.getCustId());
+		return new ResponseEntity<CustUserLoginModuleBranchMapResponseDto>(status, HttpStatus.CREATED);	
+	}
 }

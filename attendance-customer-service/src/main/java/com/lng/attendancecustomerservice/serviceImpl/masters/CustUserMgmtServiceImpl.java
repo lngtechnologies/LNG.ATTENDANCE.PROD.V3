@@ -759,6 +759,76 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 		return custEmployeeDto;
 	}
 
+	@Override
+	public CustUserLoginModuleBranchMapResponseDto getAllUserByCustId(Integer custId) {
+		CustUserLoginModuleBranchMapResponseDto custUserLoginModuleBranchMapResponseDto = new CustUserLoginModuleBranchMapResponseDto();
+
+		List<CustUserLoginDto> custUserLoginDtoList = new ArrayList<>();
+
+		try {
+
+			List<Object[]> loginList = iLoginRepository.findAllUsersByCustId(custId);
+			for(Object[] p : loginList) {
+				CustUserLoginDto custUserLoginDto = new CustUserLoginDto();
+
+				List<CustUserModulesDto> custUserModulesDtoList = new ArrayList<>();
+				List<CustUserBranchesDto> custUserBranchesDtolist = new ArrayList<>();
+
+				custUserLoginDto.setLoginId(Integer.valueOf(p[0].toString()));
+				custUserLoginDto.setLoginName(p[1].toString());
+				custUserLoginDto.setLoginMobile(p[2].toString());
+				custUserLoginDto.setCustId(Integer.valueOf(p[3].toString()));
+				custUserLoginDto.setCustName(p[4].toString());
+				custUserLoginDto.setCustCode(p[5].toString());
+
+				custUserLoginDtoList.add(custUserLoginDto);
+				custUserLoginModuleBranchMapResponseDto.setLoginDetails(custUserLoginDtoList);
+
+				List<Object[]> moduleList = iModuleRepository.findByCustomer_CustIdAndLogin_LoginId(custId, custUserLoginDto.getLoginId());
+				// custUserLoginModuleBranchMapResponseDto.setModules(moduleList.stream().map(module -> convertToCustUserModulesDto(module)).collect(Collectors.toList()));
+				for(Object[] m : moduleList) {
+					if(custUserLoginDto.getLoginId() == Integer.valueOf(m[0].toString())) {
+						CustUserModulesDto custUserModulesDto = new CustUserModulesDto();
+
+						custUserModulesDto.setLoginId(Integer.valueOf(m[0].toString()));
+						custUserModulesDto.setModuleId(Integer.valueOf(m[1].toString()));
+						custUserModulesDto.setModuleName(m[2].toString());
+
+						custUserModulesDtoList.add(custUserModulesDto);
+
+					}
+				}	
+				custUserLoginDto.setModules(custUserModulesDtoList);
+
+				List<Object[]> branchList = branchRepository.findByCustId(custId, custUserLoginDto.getLoginId());
+				//custUserLoginModuleBranchMapResponseDto.setBranches(branchList.stream().map(branch -> convertToCustUserBranchesDto(branch)).collect(Collectors.toList()));
+				for(Object[] b : branchList) {
+					if(custUserLoginDto.getLoginId() == Integer.valueOf(b[0].toString())) {
+						CustUserBranchesDto custUserBranchesDto = new CustUserBranchesDto();
+
+						custUserBranchesDto.setLoginId(Integer.valueOf(b[0].toString()));
+						custUserBranchesDto.setBrId(Integer.valueOf(b[1].toString()));
+						custUserBranchesDto.setBrName(b[2].toString());
+
+						custUserBranchesDtolist.add(custUserBranchesDto);
+					}
+				}
+				custUserLoginDto.setBranches(custUserBranchesDtolist);
+
+			}
+
+			if(loginList.isEmpty()) {
+				custUserLoginModuleBranchMapResponseDto.status = new Status(false, 200, "Success and there is no login details exist for this customer");
+			}else {
+				custUserLoginModuleBranchMapResponseDto.status = new Status(false, 200, "Success");
+			}
+
+		} catch (Exception e) {
+			custUserLoginModuleBranchMapResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return custUserLoginModuleBranchMapResponseDto;
+	}
+
 
 	/*public CustUserModulesDto convertToCustUserModulesDto(Module module) {
 		CustUserModulesDto  custUserModulesDto = modelMapper.map(module, CustUserModulesDto.class);

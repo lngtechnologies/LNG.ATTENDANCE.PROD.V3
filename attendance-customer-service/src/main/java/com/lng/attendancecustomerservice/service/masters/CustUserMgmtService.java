@@ -41,4 +41,6 @@ public interface CustUserMgmtService {
 	CustLoginDto getLoginDetailsByLoginId(Integer loginId);
 	
 	CustEmployeeResponseDto getEmployeeByCustId(Integer custId);
+	
+	CustUserLoginModuleBranchMapResponseDto getAllUserByCustId(Integer custId);
 }
