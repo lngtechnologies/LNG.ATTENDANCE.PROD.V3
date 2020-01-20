@@ -155,13 +155,13 @@ public class CustUserMgmtController {
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 	
-<<<<<<< HEAD
 
 	@PostMapping(value = "/findAllUsersByCustId")
 	public ResponseEntity<CustUserLoginModuleBranchMapResponseDto> findAllUsersByCustId(@RequestBody CustUserLoginModuleBranchMapResponseDto custUserBranchLoginMapDto) {
 		CustUserLoginModuleBranchMapResponseDto status = custUserMgmtService.getAllUserByCustId(custUserBranchLoginMapDto.getCustId());
 		return new ResponseEntity<CustUserLoginModuleBranchMapResponseDto>(status, HttpStatus.CREATED);	
-=======
+	}
+
 	@PostMapping(value = "/save/all/data")
 	public ResponseEntity<Status> saveAllData(@RequestBody CustUserLoginModuleBranchDto custUserLoginModuleBranchDto) {
 		Status status = custUserMgmtService.saveAllDetails(custUserLoginModuleBranchDto);
@@ -190,6 +190,5 @@ public class CustUserMgmtController {
 	public ResponseEntity<CustUserBranchResDto> findAllBranchesByCustId(@RequestBody CustLoginDto custLoginDto) {
 		CustUserBranchResDto custLoginDto1 = custUserMgmtService.findAllBranchesByCustId(custLoginDto.getCustId());
 		return new ResponseEntity<CustUserBranchResDto>(custLoginDto1, HttpStatus.CREATED);	
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	}
 }

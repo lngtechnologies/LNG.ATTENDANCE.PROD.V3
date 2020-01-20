@@ -49,9 +49,9 @@ public interface CustUserMgmtService {
 	
 	CustEmployeeResponseDto getEmployeeByCustId(Integer custId);
 	
-<<<<<<< HEAD
+
 	CustUserLoginModuleBranchMapResponseDto getAllUserByCustId(Integer custId);
-=======
+
 	Status saveAllDetails(CustUserLoginModuleBranchDto custUserLoginModuleBranchDto);
 	
 	Status checkUserName(CustUserMgmtDto custUserMgmtDto);
@@ -59,5 +59,4 @@ public interface CustUserMgmtService {
 	UserModuleResDto findAllModules();
 	
 	CustUserBranchResDto findAllBranchesByCustId(Integer custId);
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 }
