@@ -54,11 +54,11 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					response.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer Not Found");
-					displayLock.unlock();
+					
 				}
 			} else if(contractor1 != null){
 				Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());
@@ -69,24 +69,26 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor1.setContractorIsActive(true);
 					contractorRepository.save(contractor1);
 					response.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer Not Found");
-					displayLock.unlock();
+					
 				}
 
 			} else {
 				response.status = new Status(true,400,"Contractor name already exists");
-				displayLock.unlock();
+				
 			}
 
 		}catch(Exception ex){
 			response.status = new Status(true,500, ex.getMessage()); 
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return response;
 	}
 
@@ -125,7 +127,7 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				} else if (ch.getContractorId() == contractorDto.getContractorId()) { 
 
 					contractor = modelMapper.map(contractorDto,Contractor.class);
@@ -133,21 +135,24 @@ public class ContractorServiceImpl implements ContractorService {
 					contractor.setContractorIsActive(true);
 					contractorRepository.save(contractor);
 					status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				}
 				else{
 					status = new Status(true,400,"Contractor name already exists");
-					displayLock.unlock();
+					
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Customer Not Found");
-				displayLock.unlock();
+				
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true,500, "Oops..! Something went wrong");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

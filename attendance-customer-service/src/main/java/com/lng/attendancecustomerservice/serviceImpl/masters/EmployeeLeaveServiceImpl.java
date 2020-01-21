@@ -172,24 +172,27 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 						employeeLeave.setEmpLeaveStatus("");
 						employeeLeaveRepository.save(employeeLeave);
 						status = new Status(false, 200, "Leave Applied for "+employee.getEmpName());
-						displayLock.unlock();
+						
 					} else {
 						status = new Status(true, 400, "Leave already applied for this date");
-						displayLock.unlock();
+						
 					}	
 
 				}else {
 					status = new Status(true, 400, "Cust Leave not found");
-					displayLock.unlock();
+					
 				}
 				
 			} else {
 				status = new Status(true, 400, "Employee not found");
-				displayLock.unlock();
+				
 			}
 
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

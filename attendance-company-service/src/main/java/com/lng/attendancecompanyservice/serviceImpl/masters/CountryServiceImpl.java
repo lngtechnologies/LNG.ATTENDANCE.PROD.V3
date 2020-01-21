@@ -35,11 +35,11 @@ public class CountryServiceImpl implements CountryService {
 		final Lock displayLock = this.displayQueueLock; 
 
 		CountryResponse response = new CountryResponse();
-		
+
 		try{
 			displayLock.lock();
 			// Thread.sleep(3000L);
-			
+
 			if(countryDto.getCountryName() == null || countryDto.getCountryName().isEmpty()) throw new Exception("Please enter country name");
 			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country code");
 
@@ -68,12 +68,14 @@ public class CountryServiceImpl implements CountryService {
 					response.status = new Status(false,200, "created");
 				}
 			}
-			displayLock.unlock();
 		}catch(Exception ex){
 			response.status = new Status(true,500, ex.getMessage()); 
+		}
+
+		finally {
 			displayLock.unlock();
 		}
-		
+
 		return response;
 	}
 
@@ -178,27 +180,26 @@ public class CountryServiceImpl implements CountryService {
 						country.setCountryIsActive(true);
 						countryRepositary.save(country);
 						status = new Status(false, 200, "updated");
-						displayLock.unlock();
+
 					}else{ 
 
 						status = new Status(true,400,"Country code already exists");
-						displayLock.unlock();
+
 					}
 				}
 				else{ 
 
 					status = new Status(true,400,"Country already exists");
-					displayLock.unlock();
 				}
 			}
 			else{ 
 				status = new Status(false,400,"Country not found");
-				displayLock.unlock();
 			}
 		}
-
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

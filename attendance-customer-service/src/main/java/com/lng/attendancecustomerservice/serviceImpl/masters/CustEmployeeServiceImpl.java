@@ -281,21 +281,23 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 					custEmployeeStatus.status = new Status(false, 200, "created");
-					displayLock.unlock();
+					
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Cannot Save");
-					displayLock.unlock();
+					
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number already exists");
-				displayLock.unlock();
+				
 			}
 
 		}catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 400, "Oops...! Something went wrong");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return custEmployeeStatus;
 	}
 
@@ -860,18 +862,21 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 					custEmployeeStatus.status = new Status(false, 200, "updated");
-					displayLock.unlock();
+					
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Employee not found or employee not in service");
-					displayLock.unlock();
+					
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number aleady exist");
-				displayLock.unlock();
+				
 			}
 
 		} catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 500, "Opps...! Something went wrong");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return custEmployeeStatus;

@@ -73,30 +73,33 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 						statusDto.setCode(200);
 						statusDto.setError(false);
 						msg = "created";
-						displayLock.unlock();
+						
 						//statusDto.setMessage("Successfully saved");
 					}else {
 						statusDto.setCode(400);
 						statusDto.setError(true);
 						msg = "Beacon already mapped";
 						beacons += BlockBeaconMapList.getBeaconCode() + ",";
-						displayLock.unlock();
+						
 						//statusDto.setMessage("Beacon already mapped");
 					}
 				}
 				statusDto.setMessage(msg + " " + beacons);
-				displayLock.unlock();
+				
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Block not found");
-				displayLock.unlock();
+				
 			}
 
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Opps...! Something went wrong!");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return statusDto;
@@ -230,6 +233,7 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 
 			blockAndBeaconCodeMapDto.status = new Status(true, 5000, "Oops...! Something went wrong!");
 		}
+		
 		return blockAndBeaconCodeMapDto;
 	}
 
@@ -276,17 +280,20 @@ public class BlockBeaconMapServiceImpl implements BlockBeaconMapService {
 				// msg = "Successfully Updates";
 				statusDto.setMessage("updated");
 				//}
-				displayLock.unlock();
+				
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Block not found");
-				displayLock.unlock();
+				
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Opps...! Something went wrong!");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return statusDto;

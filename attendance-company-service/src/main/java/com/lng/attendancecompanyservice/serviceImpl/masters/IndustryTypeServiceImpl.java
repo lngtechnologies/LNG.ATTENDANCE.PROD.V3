@@ -53,7 +53,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
-				displayLock.unlock();
+				
 			}else if(industryType1 != null){
 				
 				industryType1 = modelMapper.map(industryTypeDto, IndustryType.class);
@@ -62,20 +62,22 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				statusDto.setCode(200);
 				statusDto.setError(false);
 				statusDto.setMessage("created");
-				displayLock.unlock();
+				
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Industry type already exist");
-				displayLock.unlock();
+				
 			}
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return statusDto;
 	}
 
@@ -159,24 +161,27 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 					statusDto.setCode(200);
 					statusDto.setError(false);
 					statusDto.setMessage("updated");
-					displayLock.unlock();
+					
 				}else {
 					statusDto.setCode(400);
 					statusDto.setError(true);
 					statusDto.setMessage("Industry already exist");
-					displayLock.unlock();
+					
 				}
 			}else {
 				statusDto.setCode(400);
 				statusDto.setError(true);
 				statusDto.setMessage("Industry not found");
-				displayLock.unlock();
+				
 			}
 
 		}catch (Exception e) {
 			statusDto.setCode(500);
 			statusDto.setError(true);
 			statusDto.setMessage("Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 

@@ -54,11 +54,11 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeave.setCustLeaveIsActive(true);
 					custLeaveRepository.save(custLeave);
 					custLeaveResponse.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					custLeaveResponse.status = new Status(true,400, "Customer not found");
-					displayLock.unlock();
+					
 				}
 			} else if(custLeave1 != null) {
 				Customer customer = customerRepository.findCustomerByCustId(custLeaveDto.getRefCustId());
@@ -67,19 +67,22 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					custLeave1.setCustLeaveIsActive(true);
 					custLeaveRepository.save(custLeave1);
 					custLeaveResponse.status = new Status(false,200, "created");
-					displayLock.unlock();
+					
 				}
 				else{ 
 					custLeaveResponse.status = new Status(true,400, "Customer not found");
-					displayLock.unlock();
+					
 				}
 			}
 			else{ 
 				custLeaveResponse.status = new Status(true,400,"Leave type already exist");
-				displayLock.unlock();
+				
 			}
 		}catch(Exception e) {
 			custLeaveResponse.status = new Status(true, 500, "Oops..! Something went wrong");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return custLeaveResponse;
@@ -126,7 +129,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 						custLeave.setCustLeaveIsActive(true);
 						custLeaveRepository.save(custLeave);
 						status = new Status(false, 200, "updated");
-						displayLock.unlock();
+						
 					} else if (cl.getCustLeaveId() == custLeaveDto.getCustLeaveId()) { 
 
 						custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
@@ -134,24 +137,27 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 						custLeave.setCustLeaveIsActive(true);
 						custLeaveRepository.save(custLeave);
 						status = new Status(false, 200, "updated");
-						displayLock.unlock();
+						
 					}
 					else{ 
 						status = new Status(true,400,"Leave type already exist");
-						displayLock.unlock();
+						
 					}
 				} else {
 					status = new Status(true,400,"Leave not found");
-					displayLock.unlock();
+					
 				}
 			}
 			else {
 				status = new Status(false, 200, "Customer not found");
-				displayLock.unlock();
+				
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;

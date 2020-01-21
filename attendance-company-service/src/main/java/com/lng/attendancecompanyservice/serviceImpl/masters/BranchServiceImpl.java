@@ -127,7 +127,7 @@ public class BranchServiceImpl implements BranchService {
 								branch.setBrValidityEnd(branchDto.getBrValidityEnd());
 								branch.setBrValidityStart(branchDto.getBrValidityStart());
 								branchRepository.save(branch);
-								displayLock.unlock();
+								
 								try {
 									// Create faceList in Azure
 									createBranchFaceListId(branch.getBrCode());
@@ -147,42 +147,44 @@ public class BranchServiceImpl implements BranchService {
 								}
 
 								response.status = new Status(false,200, "created");
-								displayLock.unlock();
+								
 
 							}
 							else{ 
 								response.status = new Status(true,400, "State not found");
-								displayLock.unlock();
+								
 							}
 						}
 						else{ 
 							response.status = new Status(true,400, "Country not found");
-							displayLock.unlock();
+							
 						}
 					}
 					else{ 
 						response.status = new Status(true,400, "Customer not found");
-						displayLock.unlock();
+						
 					}
 				}
 				/*response.status = new Status(true,400, " Branch Can't Create");
 				}*/
 				else{ 
 					response.status = new Status(true,400,"Branch name already exist");
-					displayLock.unlock();
+					
 				}
 
 			}else {
 				response.status = new Status(true,400,"Number of Branches allowed exceeds, Contact LNG Technologies Admin for the resolution.");
-				displayLock.unlock();
+				
 			}
 
 
 		}catch(Exception ex){
 			response.status = new Status(true,500, "Oops..! Something went wrong..");
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
-
 		return response;
 	}
 
@@ -240,31 +242,34 @@ public class BranchServiceImpl implements BranchService {
 							branch.setBrCreatedDate(new Date());
 							branchRepository.save(branch);
 							status = new Status(false, 200, "updated");
-							displayLock.unlock();
+							
 
 						} else {
 							status = new Status(true,400,"Branch name already exist"); 
-							displayLock.unlock();
+							
 						}
 					}
 
 					else{ 
 						status = new Status(true,400, "State not found");
-						displayLock.unlock();
+						
 					}
 				}
 				else{ 
 					status = new Status(true,400, "Country not found");
-					displayLock.unlock();
+					
 				}
 			}
 			else{ 
 				status = new Status(true,400, "Customer Not Found");
-				displayLock.unlock();
+				
 			}
 
 		}catch(Exception e) {
 			status = new Status(true,500,e.getMessage());
+			
+		}
+		finally {
 			displayLock.unlock();
 		}
 		return status;
