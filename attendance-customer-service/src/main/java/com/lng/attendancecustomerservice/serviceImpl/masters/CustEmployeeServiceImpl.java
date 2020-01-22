@@ -113,19 +113,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 	@Autowired
 	EmployeeBlockRepository employeeBlockRepository;
-	
+
 	@Autowired
 	EmployeeReportingToRepository employeeReportingToRepository;
 
 	private final Lock displayQueueLock = new ReentrantLock();
-	
+
 	@Override
 	@Transactional(rollbackOn={Exception.class})
 	public CustEmployeeStatus save(CustEmployeeDto custEmployeeDto) {
 		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
 		Employee employee = new Employee();
 		final Lock displayLock = this.displayQueueLock; 
-		
+
 		try {
 			displayLock.lock();
 			List<Employee> employee1 = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
@@ -168,13 +168,13 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						}else {
 							employeeReportingTo.setEmpFromDate(null);
 						}
-						
+
 						employeeReportingToRepository.save(employeeReportingTo);
-						
+
 					} catch (Exception e) {
 						custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 					}
-					
+
 					//set EmpId and Branch Id to empBranch
 					EmployeeBranch employeeBranch = new EmployeeBranch();
 					try {
@@ -281,19 +281,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 					custEmployeeStatus.status = new Status(false, 200, "created");
-					
+
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Cannot Save");
-					
+
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number already exists");
-				
+
 			}
 
 		}catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 400, "Oops...! Something went wrong");
-			
+
 		}
 		finally {
 			displayLock.unlock();
@@ -573,7 +573,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					custEmployeeRepository.save(employee);
 
 					if(employee != null) {
-						
+
 						try {
 							List<EmployeeBlock> alreadyMappedBlocks = employeeBlockRepository.findByEmployee_EmpId(custEmployeeDto.getEmpId());
 
@@ -616,19 +616,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						} catch (Exception e) {
 							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 						}
-						
+
 						// Set emp Reporting To details and save to emp Reporting To table
 						/*try {
 							EmployeeReportingTo employeeReportingTo2 = employeeReportingToRepository.findByEmployee_EmpIdAndRefEmpReportingToIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmpReportingToId(), custEmployeeDto.getEmpReportingToFromDate());
 							if(employeeReportingTo2 == null) {
-								
+
 								EmployeeReportingTo employeeReportingTo1 = employeeReportingToRepository.findByEmpIdAndReportingToDateNull(custEmployeeDto.getEmpId());
 								if(employeeReportingTo1 != null) {
 									Date empRetortingToDate = subtractDaysFromDate(custEmployeeDto.getEmpReportingToFromDate());
 									employeeReportingTo1.setEmpToDate(empRetortingToDate);
 									employeeReportingToRepository.save(employeeReportingTo1);
 								}
-								
+
 								EmployeeReportingTo employeeReportingTo = new EmployeeReportingTo();
 								employeeReportingTo.setEmployee(employee1);
 								employeeReportingTo.setRefEmpReportingToId(custEmployeeDto.getEmpReportingToId());
@@ -647,14 +647,14 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						try {
 							EmployeeReportingTo employeeReportingTo2 = employeeReportingToRepository.findByEmployee_EmpIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmpReportingToFromDate());
 							if(employeeReportingTo2 == null) {
-								
+
 								EmployeeReportingTo employeeReportingTo1 = employeeReportingToRepository.findByEmpIdAndReportingToDateNull(custEmployeeDto.getEmpId());
 								if(employeeReportingTo1 != null) {
 									Date empRetortingToDate = subtractDaysFromDate(custEmployeeDto.getEmpReportingToFromDate());
 									employeeReportingTo1.setEmpToDate(empRetortingToDate);
 									employeeReportingToRepository.save(employeeReportingTo1);
 								}
-								
+
 								EmployeeReportingTo employeeReportingTo = new EmployeeReportingTo();
 								employeeReportingTo.setEmployee(employee1);
 								employeeReportingTo.setRefEmpReportingToId(custEmployeeDto.getEmpReportingToId());
@@ -670,7 +670,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						} catch (Exception e) {
 							custEmployeeStatus.status = new Status(true, 400, e.getMessage());
 						}
-						
+
 						// Set emp branch details and save to emp branch table
 						try {
 							//EmployeeBranch employeeBranch2 = employeeBranchRepositories.findByEmployee_EmpIdAndBranch_BrIdAndBranchFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getBrId(), custEmployeeDto.getEmployeeBranchFromDate());
@@ -684,7 +684,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 									employeeBranchRepositories.save(employeeBranch);
 								}
 
-								
+
 								if(branch1 == null) throw new Exception("Cannot find branch id for Employee Department");
 
 								EmployeeBranch employeeBranch1 = new EmployeeBranch();
@@ -714,13 +714,13 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 							if(employeeDepartment2 == null) {
 
 								EmployeeDepartment employeeDepartment = employeeDepartmentRepository.findByEmpId(custEmployeeDto.getEmpId());
-								
+
 								if(employeeDepartment != null) {
 									Date empDeptToDate = subtractDaysFromDate(custEmployeeDto.getEmployeeDepartmentFromDate());
 									employeeDepartment.setEmpToDate(empDeptToDate);
 									employeeDepartmentRepository.save(employeeDepartment);
 								}
-								
+
 								if(department == null) throw new Exception("Cannot find department id for Employee Department");
 
 								EmployeeDepartment employeeDepartment1 = new EmployeeDepartment();
@@ -759,7 +759,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 								}
 
 								EmployeeDesignation employeeDesignation = new EmployeeDesignation();
-								
+
 								if(designation == null) throw new Exception("Cannot find designation id for Employee Designation");
 								employeeDesignation.setEmployee(employee);
 								employeeDesignation.setDesignation(designation);
@@ -793,7 +793,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 								}
 
 								EmployeeShift employeeShift = new EmployeeShift();
-								
+
 								if(shift1 == null) throw new Exception("Cannot find shift for Employee");
 								employeeShift.setEmployee(employee);
 								employeeShift.setShift(shift1);
@@ -862,19 +862,19 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 					custEmployeeStatus.status = new Status(false, 200, "updated");
-					
+
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Employee not found or employee not in service");
-					
+
 				}
 			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee mobile number aleady exist");
-				
+
 			}
 
 		} catch (Exception e) {
 			custEmployeeStatus.status = new Status(true, 500, "Opps...! Something went wrong");
-			
+
 		}
 		finally {
 			displayLock.unlock();
@@ -1103,7 +1103,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		Status status = null;
 		try {
 			List<Employee> employee = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustId(empMobile, custId);
-			
+
 			if(employee.isEmpty()) {
 				status = new Status(false, 200, "Not exist");
 			} else {
@@ -1112,7 +1112,31 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		} catch (Exception e) {
 			status = new Status(true, 500, "Opps...! Something went wrong");
 		}
-		
+
 		return status;
+	}
+
+	@Override
+	public CustEmployeeStatus deleteEmployeeByEmpId(Integer empId) {
+		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
+		try {
+			Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(empId, true);
+			if(employee != null) {
+				EmployeeReportingTo employeeReportingTo = employeeReportingToRepository.findEmployeeByEmployee_EmpId(empId);
+				if(employeeReportingTo.getRefEmpReportingToId() != 0) {
+					employeeReportingToRepository.updateEmpReportingToTopManagerAfterDeleteByEmployee_EmpId(empId);
+					employee.setEmpInService(false);
+					custEmployeeRepository.save(employee);
+					custEmployeeStatus.status = new Status(false, 200, "deleted");
+				} else {
+					custEmployeeStatus.status = new Status(true, 400, "You can't delete because this is the first employee");
+				}
+			}else {
+				custEmployeeStatus.status = new Status(true, 400, "Employee not found");
+			}
+		} catch (Exception e) {
+			custEmployeeStatus.status = new Status(true, 5000, "Opps...! Something went wrong");
+		}
+		return custEmployeeStatus;
 	}
 }

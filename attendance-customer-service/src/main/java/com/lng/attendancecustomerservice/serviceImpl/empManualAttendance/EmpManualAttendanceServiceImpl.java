@@ -1,9 +1,11 @@
 package com.lng.attendancecustomerservice.serviceImpl.empManualAttendance;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -20,6 +22,7 @@ import com.lng.attendancecustomerservice.repositories.empManualAttendance.EmpMan
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.EmployeeAttendanceRepository;
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.UnmatchedEmployeeAttendanceRepository;
 import com.lng.attendancecustomerservice.service.empManualAttendance.EmpManualAttendanceService;
+import com.lng.dto.empAttendance.CurrentDateDto;
 import com.lng.dto.empAttendance.EmpAttendResponseDto;
 import com.lng.dto.empAttendance.EmpAttendaceOutDto;
 import com.lng.dto.empAttendance.EmpAttendanceInDto;
@@ -596,6 +599,27 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 		return empMannualAttendanceParamResponse;
 	}
 
+	@Override
+	public CurrentDateDto getCurrentDate() {
+		
+		CurrentDateDto currentDateDto = new CurrentDateDto();
+		try {
+
+			String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+
+			Date date = new Date();
+			String sysDate = dateFormat.format(date);
+			currentDateDto.setDate(sysDate);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return currentDateDto;
+	}
+}
+
 	/*@Override
 	public EmpAttendanceResponse updateEmpOverRideAttendance(EmpAttendanceParamDto2 empAttendanceParamDto2)  {
 		EmpAttendanceResponse empAttendanceResponse = new EmpAttendanceResponse();
@@ -622,4 +646,3 @@ public class EmpManualAttendanceServiceImpl implements EmpManualAttendanceServic
 		}
 		return empAttendanceResponse;
 	}*/
-} 

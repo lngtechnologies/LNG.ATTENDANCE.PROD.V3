@@ -106,4 +106,13 @@ public class CustEmplyeeController {
 	    }
 	    return new ResponseEntity(HttpStatus.NO_CONTENT);
 	  }
+	
+	@PostMapping(value = "/delete")
+	  public ResponseEntity<CustEmployeeStatus> delete(@RequestBody CustEmployeeDto custEmployeeDto) {
+		CustEmployeeStatus custEmployeeStatus = custEmployeeService.deleteEmployeeByEmpId(custEmployeeDto.getEmpId());
+	    if (custEmployeeStatus != null) {
+	      return new ResponseEntity<CustEmployeeStatus>(custEmployeeStatus, HttpStatus.OK);
+	    }
+	    return new ResponseEntity(HttpStatus.NO_CONTENT);
+	  }
 }

@@ -15,6 +15,8 @@ public class CustUserLoginDto {
 	private String custName;
 
 	private String custCode;
+	
+	private  String  empName;
 
 	private List<CustUserModulesDto> modules;
 
@@ -82,6 +84,14 @@ public class CustUserLoginDto {
 
 	public void setCustCode(String custCode) {
 		this.custCode = custCode;
+	}
+
+	public String getEmpName() {
+		return empName;
+	}
+
+	public void setEmpName(String empName) {
+		this.empName = empName;
 	}
 
 }

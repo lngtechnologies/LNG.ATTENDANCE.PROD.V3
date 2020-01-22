@@ -816,6 +816,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 				custUserLoginDto.setCustId(Integer.valueOf(p[3].toString()));
 				custUserLoginDto.setCustName(p[4].toString());
 				custUserLoginDto.setCustCode(p[5].toString());
+				custUserLoginDto.setEmpName(p[6].toString());
 
 				custUserLoginDtoList.add(custUserLoginDto);
 				custUserLoginModuleBranchMapResponseDto.setLoginDetails(custUserLoginDtoList);
