@@ -15,4 +15,10 @@ public interface EmployeeReportingToRepository extends PagingAndSortingRepositor
 	
 	@Query(value = "SELECT MAX(ert.empFromDate) AS empFromDate,  ert.empReportingToId, ert.refEmpId, ert.refEmpReportingToId, ert.empToDate FROM ttempreportingto ert WHERE ert.refEmpId = ?1 AND ert.empToDate IS NULL", nativeQuery = true)
 	EmployeeReportingTo findByEmpIdAndReportingToDateNull(Integer empId);
+	
+	@Query(value = "select  erpt.* from  ttempreportingto erpt where  erpt.refEmpId = ?1 and erpt.empToDate is null", nativeQuery = true)
+	EmployeeReportingTo findEmployeeByEmployee_EmpId(Integer refEmpId);
+	
+	@Query(value = "call updateEmpReportingToTopManagerAfterDelete(?1)", nativeQuery = true)
+	EmployeeReportingTo updateEmpReportingToTopManagerAfterDeleteByEmployee_EmpId(Integer refEmpId);
 }

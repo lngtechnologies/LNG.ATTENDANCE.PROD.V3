@@ -26,4 +26,6 @@ public interface CustEmployeeService {
 	CustEmployeeListResponse FindEmployeeByRefLoginId(Integer refLoginId);
 	
 	Status checkEmpMobileNumExistOrNot(String empMobile, Integer custId);
+	
+	CustEmployeeStatus deleteEmployeeByEmpId(Integer empId);
 }
