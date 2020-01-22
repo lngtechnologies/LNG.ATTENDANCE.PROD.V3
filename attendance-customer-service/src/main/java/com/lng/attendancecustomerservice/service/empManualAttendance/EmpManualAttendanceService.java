@@ -3,9 +3,8 @@ package com.lng.attendancecustomerservice.service.empManualAttendance;
 import java.util.Date;
 import java.util.List;
 
+import com.lng.dto.empAttendance.CurrentDateDto;
 import com.lng.dto.empAttendance.EmpAttendResponseDto;
-import com.lng.dto.empAttendance.EmpAttendanceDto;
-import com.lng.dto.empAttendance.EmpAttendanceParamDto2;
 import com.lng.dto.empAttendance.EmpAttendanceResponse;
 import com.lng.dto.empAttendance.EmpMannualAttendanceParamResponse;
 import com.lng.dto.employeeAttendance.EmployeeAttendanceDto;
@@ -32,5 +31,7 @@ public interface EmpManualAttendanceService {
 	EmpAttendResponseDto getEmpAttendanceBydeptIdAndEmpAttendanceDate(Integer deptId , String empAttendanceDate);
 	
 	EmpMannualAttendanceParamResponse searchEmployeeByNameAndRefCustIdAndEmpAttendanceDatetimeAndLoginId(String emp,Integer  refCustId,String empAttendanceDatetime,Integer loginId);
+	
+	CurrentDateDto getCurrentDate();
 	
 }
