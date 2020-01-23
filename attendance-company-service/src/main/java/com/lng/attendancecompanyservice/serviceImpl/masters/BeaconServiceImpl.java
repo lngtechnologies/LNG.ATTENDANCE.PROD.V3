@@ -162,11 +162,7 @@ public class BeaconServiceImpl implements BeaconService {
 				}else {
 					beacon.setBeaconIsActive(false);
 					beaconRepository.save(beacon);
-<<<<<<< HEAD
-					status = new Status(true, 400, "The record has been disabled since it has been used in other transactions");
-=======
 					status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 				}
 			}else {
 				status = new Status(true, 400, "Beacon not found");
