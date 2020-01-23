@@ -15,6 +15,7 @@ import com.lng.dto.customer.CustomerDto;
 import com.lng.dto.customer.CustomerListResponse;
 import com.lng.dto.customer.CustomerResponse;
 import com.lng.dto.customer.StatusDto;
+import com.lng.dto.masters.country.CountryResponse;
 
 
 /**
@@ -45,10 +46,7 @@ public class CustomerController {
 	@GetMapping(value = "/findAll")
 	public ResponseEntity<CustomerListResponse> findAll() {
 		CustomerListResponse customerListResponse = customerService.findAll(); 
-       if(customerListResponse.getDataList().isEmpty()) {
-           return new ResponseEntity(HttpStatus.NO_CONTENT);
-       }
-       return new ResponseEntity<CustomerListResponse>(customerListResponse, HttpStatus.OK);
+		return new ResponseEntity<CustomerListResponse>(customerListResponse, HttpStatus.OK);
    }
 	
 	@PostMapping(value = "/findByCustomerId")
