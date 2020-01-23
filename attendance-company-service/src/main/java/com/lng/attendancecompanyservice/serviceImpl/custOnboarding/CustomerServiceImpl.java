@@ -700,9 +700,6 @@ public class CustomerServiceImpl implements CustomerService {
 				customerResponse.status = new Status(true, 400, "Customer mobile number already exist");
 				
 			}
-			
-
-
 		} catch (Exception e) {
 			customerResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 			
