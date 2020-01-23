@@ -92,7 +92,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 	public CustUserResponseDto save(CustUserMgmtDto custUserMgmtDto) {
 		CustUserResponseDto custUserResponseDto = new CustUserResponseDto();
 		final Lock displayLock = this.displayQueueLock; 
-		Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
+		Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custUserMgmtDto.getCustomerId(), true);
 		// Login login3 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
 		List<Login> loginData = iLoginRepository.findAllByLoginIsActiveAndRefEmpId(custUserMgmtDto.getEmpId());
 		try {
@@ -237,7 +237,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 		final Lock displayLock = this.displayQueueLock; 
 		try {
 			displayLock.lock();
-			Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custUserMgmtDto.getCustomerId(), true);
 			Login login = iLoginRepository.findByLoginId(custUserMgmtDto.getLoginId());
 
 			if(customer != null) {
@@ -873,7 +873,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		String mobileNo = null;
-		Customer customer = customerRepository.findCustomerByCustId(custUserLoginModuleBranchDto.getUserDetails().getCustomerId());
+		Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custUserLoginModuleBranchDto.getUserDetails().getCustomerId(), true);
 
 		List<Login> loginData = iLoginRepository.findAllByLoginIsActiveAndRefEmpId(custUserLoginModuleBranchDto.getUserDetails().getEmpId());
 		try {
@@ -985,7 +985,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 		Status status = null;
 		try {
 			displayLock.lock();
-			Customer customer = customerRepository.findCustomerByCustId(custUserMgmtDto.getCustomerId());
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custUserMgmtDto.getCustomerId(), true);
 			String userName = custUserMgmtDto.getUserName();
 			String custCode = customer.getCustCode();
 

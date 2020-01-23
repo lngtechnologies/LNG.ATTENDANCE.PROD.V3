@@ -45,7 +45,7 @@ public class ContractorServiceImpl implements ContractorService {
 			Contractor contractor1 = contractorRepository.findByCustomer_CustIdAndContractorNameAndContractorIsActive(contractorDto.getRefCustId(), contractorDto.getContractorName(), false);
 
 			if(a == 0) {
-				Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(contractorDto.getRefCustId(), true);
 				if(customer != null) {
 
 					Contractor contractor = new Contractor();
@@ -61,7 +61,7 @@ public class ContractorServiceImpl implements ContractorService {
 					
 				}
 			} else if(contractor1 != null){
-				Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(contractorDto.getRefCustId(), true);
 				if(customer != null) {
 					
 					contractor1.setCustomer(customer);
@@ -117,7 +117,7 @@ public class ContractorServiceImpl implements ContractorService {
 
 			Contractor contractor = contractorRepository.findContractorByContractorId(contractorDto.getContractorId())	;	
 
-			Customer customer = customerRepository.findCustomerByCustId(contractorDto.getRefCustId());
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(contractorDto.getRefCustId(), true);
 			if(customer != null) {
 				Contractor ch = contractorRepository.findContractorBycontractorNameAndCustomer_custId(contractorDto.getContractorName(), contractorDto.getRefCustId());
 				if(ch == null) {

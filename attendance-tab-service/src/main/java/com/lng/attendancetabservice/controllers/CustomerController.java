@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancetabservice.service.CustomerService;
-import com.lng.dto.employee.OtpResponseDto;
+import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.tabService.CustomerDto1;
 import com.lng.dto.tabService.CustomerResponse1;
 

@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.repositories.masters;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +11,8 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 
 	Customer getByCustCode(String custCode);
 	
-	Customer findCustomerByCustId(Integer custId);
+	Customer findCustomerByCustIdAndCustIsActive(Integer custId, Boolean isActive);
+	
+	@Query(value = "SELECT COUNT(*) AS cunt FROM tmcustomer WHERE custValidityEnd > CURDATE() AND custId = ?1", nativeQuery = true)
+	int checkCustValidationByCustId(Integer custId);
 }

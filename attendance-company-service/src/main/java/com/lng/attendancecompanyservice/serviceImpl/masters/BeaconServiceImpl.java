@@ -160,6 +160,8 @@ public class BeaconServiceImpl implements BeaconService {
 					beaconRepository.delete(beacon);
 					status = new Status(false, 200, "deleted");
 				}else {
+					beacon.setBeaconIsActive(false);
+					beaconRepository.save(beacon);
 					status = new Status(true, 400, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {

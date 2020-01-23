@@ -113,6 +113,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 				} else {
 					unmatchedEmployeeAttendance.setEmployee(employee);
 					unmatchedEmployeeAttendance.setEmpAttendanceDate(new Date());
+					unmatchedEmployeeAttendance.setEmpAttendanceOutDatetime(new Date());
 					unmatchedEmpAttndRepo.save(unmatchedEmployeeAttendance);
 					empSignOutResponse.status = new Status(false, 400, "Un Matched attendance found, Please contact your manager to rectify the same.");
 				}

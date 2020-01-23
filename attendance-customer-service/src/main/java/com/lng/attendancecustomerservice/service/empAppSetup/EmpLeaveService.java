@@ -14,4 +14,5 @@ public interface EmpLeaveService {
 	
 	EmpLeaveResponseDto getEmpLeaveByEmpId(Integer empId);
 	
+	Status cancelLeave(Integer custId, Integer empLeaveId);
 }

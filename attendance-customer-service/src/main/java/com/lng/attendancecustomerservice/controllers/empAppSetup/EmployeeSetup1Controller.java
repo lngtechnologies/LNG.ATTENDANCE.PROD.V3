@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
-import com.lng.dto.employee.EmployeeDto;
-import com.lng.dto.employee.OtpResponseDto;
-import com.lng.dto.employee.ResponseDto;
+import com.lng.dto.employeeAppSetup.EmployeeDto;
+import com.lng.dto.employeeAppSetup.OtpResponseDto;
+import com.lng.dto.employeeAppSetup.ResponseDto;
 
 import status.StatusDto;
 

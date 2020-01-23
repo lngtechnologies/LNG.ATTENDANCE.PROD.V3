@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empAppSetup.EmpLeaveService;
 import com.lng.dto.masters.employeeLeave.CustLeaveTrypeListDto;
+import com.lng.dto.masters.employeeLeave.EmpCancelLeaveDto;
 import com.lng.dto.masters.employeeLeave.EmpLeaveResponseDto;
 import com.lng.dto.masters.employeeLeave.EmployeeLeaveDto;
 
@@ -43,5 +44,14 @@ public class EmpLeaveController {
 	public ResponseEntity<EmpLeaveResponseDto> findByEmpId(@RequestBody EmployeeLeaveDto empLeaveDto) {
 		EmpLeaveResponseDto empLeaveResponseDto = empLeaveService.getEmpLeaveByEmpId(empLeaveDto.getEmpId());
 		return new ResponseEntity<EmpLeaveResponseDto>(empLeaveResponseDto, HttpStatus.OK);
+	}
+	
+	@PostMapping(value = "/cancel")
+	public ResponseEntity<Status> cancelEmpLeave(@RequestBody EmpCancelLeaveDto empCancelLeaveDto) {
+		Status status = empLeaveService.cancelLeave(empCancelLeaveDto.getCustId(), empCancelLeaveDto.getEmpLeaveId());
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 }

@@ -17,11 +17,11 @@ import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository
 import com.lng.attendancecustomerservice.repositories.masters.EmployeePicRepository;
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
 import com.lng.attendancecustomerservice.utils.MessageUtil;
-import com.lng.dto.employee.EmployeeDataDto;
-import com.lng.dto.employee.EmployeeDto;
-import com.lng.dto.employee.OtpDto;
-import com.lng.dto.employee.OtpResponseDto;
-import com.lng.dto.employee.ResponseDto;
+import com.lng.dto.employeeAppSetup.EmployeeDataDto;
+import com.lng.dto.employeeAppSetup.EmployeeDto;
+import com.lng.dto.employeeAppSetup.OtpDto;
+import com.lng.dto.employeeAppSetup.OtpResponseDto;
+import com.lng.dto.employeeAppSetup.ResponseDto;
 
 import status.Status;
 import status.StatusDto;

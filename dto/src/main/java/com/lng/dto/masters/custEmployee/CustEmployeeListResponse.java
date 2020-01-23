@@ -2,8 +2,8 @@ package com.lng.dto.masters.custEmployee;
 
 import java.util.List;
 
-import com.lng.dto.employee.EmployeeDto;
-import com.lng.dto.employee.EmployeeDto2;
+import com.lng.dto.employeeAppSetup.EmployeeDto;
+import com.lng.dto.employeeAppSetup.EmployeeDto2;
 
 import status.Status;
 
