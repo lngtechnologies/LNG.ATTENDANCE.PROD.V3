@@ -83,7 +83,7 @@ public class BeaconServiceImpl implements BeaconService {
 
 			beaconListResponseDto.setBeaconDtoList(beaconDtoList.stream().map(beacon -> convertToBeaconDto(beacon)).collect(Collectors.toList()));
 
-			if(beaconListResponseDto != null && beaconListResponseDto.getBeaconDtoList() != null) {
+			if(!beaconDtoList.isEmpty() && beaconListResponseDto.getBeaconDtoList() != null) {
 
 				beaconListResponseDto.status = new Status(false, 200, "Success");
 			}else {
@@ -160,7 +160,9 @@ public class BeaconServiceImpl implements BeaconService {
 					beaconRepository.delete(beacon);
 					status = new Status(false, 200, "deleted");
 				}else {
-					status = new Status(true, 400, "The record has been disabled since it has been used in other transactions");
+					beacon.setBeaconIsActive(false);
+					beaconRepository.save(beacon);
+					status = new Status(false, 200, "The record has been disabled since it has been used in other transactions");
 				}
 			}else {
 				status = new Status(true, 400, "Beacon not found");
