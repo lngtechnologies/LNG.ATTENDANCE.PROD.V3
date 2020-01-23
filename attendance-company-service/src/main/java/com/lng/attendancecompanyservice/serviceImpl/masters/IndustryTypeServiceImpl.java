@@ -55,8 +55,6 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 				statusDto.setMessage("created");
 				
 			}else if(industryType1 != null){
-				
-				industryType1 = modelMapper.map(industryTypeDto, IndustryType.class);
 				industryType1.setIndustryIsActive(true);
 				industryTypeRepository.save(industryType1);
 				statusDto.setCode(200);
@@ -90,7 +88,7 @@ public class IndustryTypeServiceImpl implements IndustryTypeService {
 
 			industryTypeListResponse.setIndustryTypeDtoList(industryTypeDtoList.stream().map(industryType -> convertToIndustryTypeDto(industryType)).collect(Collectors.toList()));
 
-			if(industryTypeListResponse != null && industryTypeListResponse.getIndustryTypeDtoList() != null) {
+			if(!industryTypeDtoList.isEmpty()) {
 
 				industryTypeListResponse.status = new Status(false, 200, "Success");
 			}else {

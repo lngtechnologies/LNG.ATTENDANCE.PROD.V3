@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.StateService;
+import com.lng.dto.masters.country.CountryResponse;
 import com.lng.dto.masters.state.StateDto;
 import com.lng.dto.masters.state.StateResponse;
 
@@ -34,10 +35,7 @@ public class StateController {
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<StateResponse> getAll() {
 		StateResponse stateDto =  stateService.getAllByStateIsActive();
-		if(stateDto.getData1().isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<StateResponse>(stateDto, HttpStatus.OK);
+	return new ResponseEntity<StateResponse>(stateDto, HttpStatus.OK);
 	}
 
 	@PostMapping(value="/updateByStateId")

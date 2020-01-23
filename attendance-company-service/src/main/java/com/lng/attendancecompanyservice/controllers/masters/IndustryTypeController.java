@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.masters.IndustryTypeService;
+import com.lng.dto.masters.country.CountryResponse;
 import com.lng.dto.masters.industryType.IndustryTypeDto;
 import com.lng.dto.masters.industryType.IndustryTypeListResponse;
 import com.lng.dto.masters.industryType.IndustryTypeResponse;
@@ -25,57 +26,54 @@ public class IndustryTypeController {
 
 	@Autowired
 	IndustryTypeService industryTypeService;
-	
+
 	@PostMapping(value = "/create")
-    public ResponseEntity<StatusDto> save(@RequestBody IndustryTypeDto industryTypeDto) {
+	public ResponseEntity<StatusDto> save(@RequestBody IndustryTypeDto industryTypeDto) {
 		StatusDto statusDto = industryTypeService.saveIndustryType(industryTypeDto);
-        if (statusDto !=null){
-            return new ResponseEntity<StatusDto>(statusDto, HttpStatus.CREATED);
-        }
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-    }
-	
+		if (statusDto !=null){
+			return new ResponseEntity<StatusDto>(statusDto, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
 	@GetMapping(value = "/findAll")
 	public ResponseEntity<IndustryTypeListResponse> findAll() {
 		IndustryTypeListResponse industryTypeListResponse = industryTypeService.findAllIndustryTypeByIndustryIsActive(); 
-       if(industryTypeListResponse.getIndustryTypeDtoList().isEmpty()) {
-           return new ResponseEntity(HttpStatus.NO_CONTENT);
-       }
-       return new ResponseEntity<IndustryTypeListResponse>(industryTypeListResponse, HttpStatus.OK);
-   }
-	
+		return new ResponseEntity<IndustryTypeListResponse>(industryTypeListResponse, HttpStatus.OK);
+	}
+
 	@PostMapping(value = "/findByIndustryId")
-    public ResponseEntity<IndustryTypeResponse> findByIndustryId(@RequestBody IndustryTypeDto industryTypeDto) {
+	public ResponseEntity<IndustryTypeResponse> findByIndustryId(@RequestBody IndustryTypeDto industryTypeDto) {
 		IndustryTypeResponse industryTypeResponse = industryTypeService.findIndustryByIndustryid(industryTypeDto.getIndustryId());
-        if (industryTypeResponse !=null){
-            return new ResponseEntity<IndustryTypeResponse>(industryTypeResponse, HttpStatus.OK);
-        }
-        return new ResponseEntity(HttpStatus.NOT_FOUND);
-    }
-	
+		if (industryTypeResponse !=null){
+			return new ResponseEntity<IndustryTypeResponse>(industryTypeResponse, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NOT_FOUND);
+	}
+
 	@PostMapping(value = "/update")
-	  public ResponseEntity<StatusDto> updateCustomer(@RequestBody IndustryTypeDto industryTypeDto) {
+	public ResponseEntity<StatusDto> updateCustomer(@RequestBody IndustryTypeDto industryTypeDto) {
 		StatusDto statusDto = industryTypeService.updateIndustryType(industryTypeDto);
-	    if (statusDto != null) {
-	      return new ResponseEntity<StatusDto>(statusDto, HttpStatus.OK);
-	    }
-	    return new ResponseEntity(HttpStatus.NO_CONTENT);
-	  }
-	
+		if (statusDto != null) {
+			return new ResponseEntity<StatusDto>(statusDto, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
 	@PostMapping(value = "/delete")
-	  public ResponseEntity<StatusDto> deleteCustomer(@RequestBody IndustryTypeDto industryTypeDto) {
+	public ResponseEntity<StatusDto> deleteCustomer(@RequestBody IndustryTypeDto industryTypeDto) {
 		StatusDto statusDto = industryTypeService.deleteIndustryByIndustryId(industryTypeDto.getIndustryId());
-	    if (statusDto != null) {
-	      return new ResponseEntity<StatusDto>(statusDto, HttpStatus.OK);
-	    }
-	    return new ResponseEntity(HttpStatus.NO_CONTENT);
-	  }
+		if (statusDto != null) {
+			return new ResponseEntity<StatusDto>(statusDto, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 	@GetMapping(value = "/All")
 	public ResponseEntity<IndustryTypeListResponse> All() {
 		IndustryTypeListResponse industryTypeListResponse = industryTypeService.findAllIndustryType(); 
-       if(industryTypeListResponse.getIndustryTypeDtoList().isEmpty()) {
-           return new ResponseEntity(HttpStatus.NO_CONTENT);
-       }
-       return new ResponseEntity<IndustryTypeListResponse>(industryTypeListResponse, HttpStatus.OK);
-   }
+		if(industryTypeListResponse.getIndustryTypeDtoList().isEmpty()) {
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<IndustryTypeListResponse>(industryTypeListResponse, HttpStatus.OK);
+	}
 }

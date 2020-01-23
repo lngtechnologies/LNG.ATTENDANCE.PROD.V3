@@ -1,6 +1,5 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -934,18 +933,21 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	public CustEmployeeStatus deleteEmployeeByEmpIdId(Integer empId) {
 
 		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
-
-		Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(empId, true);
 		try {
+			Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(empId, true);
 			if(employee != null) {
-				employee.setEmpInService(false);
-				custEmployeeRepository.save(employee);
-				custEmployeeStatus.status = new Status(false, 200, "deleted");
-			} else {
+				EmployeeReportingTo employeeReportingTo = employeeReportingToRepository.findEmployeeByEmployee_EmpId(empId);
+				if(employeeReportingTo.getRefEmpReportingToId() != 0) {
+					employee.setEmpInService(false);
+					custEmployeeRepository.save(employee);
+					custEmployeeStatus.status = new Status(false, 200, "deleted");
+				} else {
+					custEmployeeStatus.status = new Status(true, 400, "Head of the organization can't be deleted..!");
+				}
+			}else {
 				custEmployeeStatus.status = new Status(true, 400, "Employee not found");
 			}
 		} catch (Exception e) {
-			e.printStackTrace(); 
 			custEmployeeStatus.status = new Status(true, 5000, "Opps...! Something went wrong");
 		}
 		return custEmployeeStatus;
@@ -1116,7 +1118,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		return status;
 	}
 
-	@Override
+	/*@Override
 	public CustEmployeeStatus deleteEmployeeByEmpId(Integer empId) {
 		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
 		try {
@@ -1138,5 +1140,6 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			custEmployeeStatus.status = new Status(true, 5000, "Opps...! Something went wrong");
 		}
 		return custEmployeeStatus;
-	}
+	}*/
+
 }
