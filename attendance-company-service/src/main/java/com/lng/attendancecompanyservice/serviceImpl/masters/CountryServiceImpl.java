@@ -126,11 +126,10 @@ public class CountryServiceImpl implements CountryService {
 		try {
 			List<Country> countryList=countryRepositary.findAllByCountryIsActive();
 			response.setData1(countryList.stream().map(country -> convertToCountryDto(country)).collect(Collectors.toList()));
-			if(response.getData1().isEmpty()) {
-				response.status = new Status(false,400, "Not found");
-
-			}else {
+			if(!countryList.isEmpty()) {
 				response.status = new Status(false,200, "Success");
+			}else {
+				response.status = new Status(false,400, "Not found");
 			}
 
 		}catch(Exception e) {
@@ -220,7 +219,7 @@ public class CountryServiceImpl implements CountryService {
 					country.setCountryIsActive(false);
 					countryRepositary. findByState_refCountryId(countryId);
 					countryRepositary.save(country);
-					countryResponse.status = new Status(true,400, "The record has been disabled since it has been used in other transactions");
+					countryResponse.status = new Status(false,200, "The record has been disabled since it has been used in other transactions");
 				}
 			} else  {
 				countryResponse.status = new Status(true,400, "Country not found");

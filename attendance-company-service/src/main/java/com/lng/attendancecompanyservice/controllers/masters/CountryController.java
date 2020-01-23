@@ -42,9 +42,6 @@ public class CountryController {
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<CountryResponse> getAll() {
 		CountryResponse countryDto =  countryService.getAllByCountryIsActive();
-		if(countryDto.getData1().isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
-		}
 		return new ResponseEntity<CountryResponse>(countryDto, HttpStatus.OK);
 	}
 

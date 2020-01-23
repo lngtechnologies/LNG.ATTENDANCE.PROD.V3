@@ -37,9 +37,6 @@ public class BeaconController {
 	@GetMapping(value = "/findAll")
 	public ResponseEntity<BeaconListResponseDto> findAll() {
 		BeaconListResponseDto beaconListResponseDto = beaconService.findAll(); 
-		if(beaconListResponseDto.getBeaconDtoList().isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
-		}
 		return new ResponseEntity<BeaconListResponseDto>(beaconListResponseDto, HttpStatus.OK);
 	}
 

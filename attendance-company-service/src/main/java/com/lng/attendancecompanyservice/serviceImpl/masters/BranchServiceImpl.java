@@ -354,7 +354,7 @@ public class BranchServiceImpl implements BranchService {
 		try {
 			List<Branch> branchList=branchRepository.findAllByCustomer_CustId(custId);
 			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
-			if(response != null && response.getData1() != null) {
+			if(!branchList.isEmpty()) {
 				response.status = new Status(false,200, "Success");
 			}else {
 				response.status = new Status(false,400, "Not found"); 

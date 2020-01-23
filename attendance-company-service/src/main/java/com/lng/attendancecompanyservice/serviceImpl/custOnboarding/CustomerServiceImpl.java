@@ -602,7 +602,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 			customerListResponse.setDataList(customerDtoList.stream().map(customer -> convertToCustomerDtoTwo(customer)).collect(Collectors.toList()));
 
-			if(customerListResponse != null && customerListResponse.getDataList() != null) {
+			if(!customerDtoList.isEmpty() && customerListResponse.getDataList() != null) {
 				customerListResponse.status = new Status(false, 200, "Success");
 			}else {
 				customerListResponse.status = new Status(false, 400, "Not found");

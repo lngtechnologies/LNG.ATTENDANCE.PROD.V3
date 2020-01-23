@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecompanyservice.service.masters.BranchService;
 import com.lng.dto.masters.branch.BranchDto;
 import com.lng.dto.masters.branch.BranchResponse;
+import com.lng.dto.masters.country.CountryResponse;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
@@ -68,11 +69,10 @@ public class BranchController {
 	
 	@PostMapping(value = "/getAllByCustId")
 	public ResponseEntity<BranchResponse> getAllByCustId(@RequestBody BranchDto branchDto) {
-		BranchResponse branchResponse = branchService.getAllByCustId(branchDto.getRefCustomerId());
-		if(branchResponse.getData1().isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<BranchResponse>(branchResponse, HttpStatus.OK);
+		BranchResponse branchDto2 = branchService.getAllByCustId(branchDto.getRefCustomerId());
+		if(branchDto!=null){
+			return new ResponseEntity<BranchResponse>(branchDto2,HttpStatus.OK);
+		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
 	/*@PostMapping(value = "/getBranchByCustId")
 	public ResponseEntity<BranchResponse> findBranchByCustId(@RequestBody BranchDto branchDto) {

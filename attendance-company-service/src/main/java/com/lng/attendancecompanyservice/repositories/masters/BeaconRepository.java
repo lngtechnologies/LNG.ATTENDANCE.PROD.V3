@@ -15,7 +15,11 @@ public interface BeaconRepository extends PagingAndSortingRepository<Beacon, Int
 	
 	Beacon findBeaconByBeaconId(Integer beaconId);
 	
+<<<<<<< HEAD
 	@Query(value = "SELECT be.* FROM tmbeacon be where beaconIsActive = true ORDER BY beaconCode ASC", nativeQuery = true)
+=======
+	@Query(value = "SELECT be.* FROM tmbeacon be where be.beaconIsActive = true ORDER BY beaconCode ASC", nativeQuery = true)
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	List<Beacon> findAll();
 	
 	@Query(value = "CALL getAvailableBeaconCode()", nativeQuery = true)
