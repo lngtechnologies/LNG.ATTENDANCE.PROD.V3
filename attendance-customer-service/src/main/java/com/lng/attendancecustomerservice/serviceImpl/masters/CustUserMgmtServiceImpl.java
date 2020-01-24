@@ -112,7 +112,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 					String loginUserName = userName+"@"+custCode;
 
-					Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
+					Login login1 = iLoginRepository.findByLoginNameAndRefCustIdAndLoginIsActive(loginUserName, custUserMgmtDto.getCustomerId(), true);
 					//	Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
 					Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custUserMgmtDto.getEmpId(), true);
 					if(login1 == null) {
@@ -247,7 +247,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 				String loginUserName = userName+"@"+custCode;
 
-				Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
+				Login login1 = iLoginRepository.findByLoginNameAndRefCustIdAndLoginIsActive(loginUserName, custUserMgmtDto.getCustomerId(), true);
 				Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(), custUserMgmtDto.getCustomerId());
 				if(login != null) {
 					if(login1 == null ||(login.getLoginId() == custUserMgmtDto.getLoginId() && login.getLoginName().equals(loginUserName))) {
@@ -887,7 +887,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 					String loginUserName = userName+"@"+custCode;
 
-					Login login1 = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserLoginModuleBranchDto.getUserDetails().getCustomerId());
+					Login login1 = iLoginRepository.findByLoginNameAndRefCustIdAndLoginIsActive(loginUserName, custUserLoginModuleBranchDto.getUserDetails().getCustomerId(), true);
 
 
 					if(login1 == null) {
@@ -990,7 +990,7 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 			String custCode = customer.getCustCode();
 
 			String loginUserName = userName+"@"+custCode;
-			Login login = iLoginRepository.findByLoginNameAndRefCustId(loginUserName, custUserMgmtDto.getCustomerId());
+			Login login = iLoginRepository.findByLoginNameAndRefCustIdAndLoginIsActive(loginUserName, custUserMgmtDto.getCustomerId(), true);
 			if(login == null) {
 				status = new Status(false, 200, "Not Exist");
 				

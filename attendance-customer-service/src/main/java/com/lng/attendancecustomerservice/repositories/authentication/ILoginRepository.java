@@ -17,7 +17,7 @@ public interface ILoginRepository extends JpaRepository<Login, Integer> {
 	 
 	 List<Login> findByRefCustId(Integer custId);
 	 
-	 Login findByLoginNameAndRefCustId(String loginName, Integer custId);
+	 Login findByLoginNameAndRefCustIdAndLoginIsActive(String loginName, Integer custId, Boolean loginIsActive);
 	 
 	 Login findByLoginMobileAndRefCustId(String mobileNumber, Integer custId);
 	 
