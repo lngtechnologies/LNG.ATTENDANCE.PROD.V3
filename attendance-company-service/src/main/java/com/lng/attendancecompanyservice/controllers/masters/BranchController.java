@@ -22,7 +22,7 @@ public class BranchController {
 	@Autowired
 	BranchService branchService;
 
-	
+
 	@PostMapping(value = "/create")
 	public ResponseEntity<BranchResponse> save(@RequestBody BranchDto branchDto) {
 		BranchResponse branchDto1 = branchService.saveBranch(branchDto);
@@ -34,9 +34,6 @@ public class BranchController {
 	@GetMapping(value = "/getAll")
 	public ResponseEntity<BranchResponse> getAll() {
 		BranchResponse branchDto = branchService.getAll();
-		if(branchDto.getData1().isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
-		}
 		return new ResponseEntity<BranchResponse>(branchDto, HttpStatus.OK);
 	}
 
@@ -66,7 +63,7 @@ public class BranchController {
 		}
 		return new ResponseEntity(HttpStatus.NOT_FOUND);
 	}
-	
+
 	@PostMapping(value = "/getAllByCustId")
 	public ResponseEntity<BranchResponse> getAllByCustId(@RequestBody BranchDto branchDto) {
 		BranchResponse branchDto2 = branchService.getAllByCustId(branchDto.getRefCustomerId());
