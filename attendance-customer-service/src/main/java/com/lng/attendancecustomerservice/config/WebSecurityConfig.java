@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .httpBasic().disable()
 		.authorizeRequests().antMatchers("/users/**", "/employee/setup/**", "/employee/welcome/screen/**", "/employee/mark/attendance/**",
 										"/mobile/app/employee/leave/**", "/employee/movement/**", "/mobile/app/policyandfaq/**",
-										"/push/notification/token/save").permitAll()
+										"/push/notification/token/save", "/mobile/app/dashboard/**").permitAll()
 
 		.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 

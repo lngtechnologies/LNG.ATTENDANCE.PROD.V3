@@ -49,7 +49,7 @@ import com.lng.attendancecustomerservice.repositories.masters.EmployeeTypeReposi
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
 import com.lng.attendancecustomerservice.service.masters.CustEmployeeService;
 import com.lng.attendancecustomerservice.utils.Encoder;
-import com.lng.dto.employee.EmployeeDto2;
+import com.lng.dto.employeeAppSetup.EmployeeDto2;
 import com.lng.dto.masters.custEmployee.CustEmployeeDto;
 import com.lng.dto.masters.custEmployee.CustEmployeeDtoTwo;
 import com.lng.dto.masters.custEmployee.CustEmployeeListResponse;
@@ -306,7 +306,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 		try {
 			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
-			Customer customer = customerRepository.findCustomerByCustId(custEmployeeDto.getCustId());
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custEmployeeDto.getCustId(), true);
 
 			if(custEmployeeDto.getContractorId() == null) {
 				employee.setRefContractorId(0);
@@ -545,7 +545,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 		try {
 			displayLock.lock();
 			Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custEmployeeDto.getEmpId(), true);
-			Customer customer =  customerRepository.findCustomerByCustId(custEmployeeDto.getCustId());
+			Customer customer =  customerRepository.findCustomerByCustIdAndCustIsActive(custEmployeeDto.getCustId(), true);
 			EmployeeType employeeType = employeeTypeRepository.findEmployeeTypeByEmpTypeId(custEmployeeDto.getEmpTypeId());
 			Shift shift = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
 			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
@@ -989,7 +989,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 		try {
 
-			Customer customer = customerRepository.findCustomerByCustId(custId);
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custId, true);
 
 			if(customer != null) {
 				List<Object[]> employeeList = custEmployeeRepository.findByCustomer_CustIdAndEmpInService(custId);

@@ -43,7 +43,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			Department department1 = departmentRepository.findByCustomer_CustIdAndDeptNameAndDeptIsActive(departmentDto.getRefCustId(), departmentDto.getDeptName(), false);
 			
 			if(a == 0) {
-				Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(departmentDto.getRefCustId(), true);
 				if(customer != null) {
 
 					Department department = new Department();
@@ -59,7 +59,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 					
 				}
 			}else if(department1 != null){
-				Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(departmentDto.getRefCustId(), true);
 				if(customer != null) {
 
 					department1.setCustomer(customer);
@@ -116,7 +116,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			if(departmentDto.getRefCustId()	 == null || departmentDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
 
 			Department department = departmentRepository.findDepartmentByDeptId(departmentDto.getDeptId());	
-			Customer customer = customerRepository.findCustomerByCustId(departmentDto.getRefCustId());
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(departmentDto.getRefCustId(), true);
 			if(customer != null) {
 				Department de = departmentRepository.findDepartmentBydeptNameAndCustomer_custId(departmentDto.getDeptName(), departmentDto.getRefCustId());
 				if(de == null) {

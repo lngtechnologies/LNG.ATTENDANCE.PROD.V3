@@ -46,6 +46,8 @@ public class WelcomeScreenServiceImpl implements WelcomeScreenService {
 		
 	}
 
+	
+	
 	public BlockBeaconMapDto convertToBlockBeaconMapDto(BlockBeaconMap blockBeaconMap) {
 		BlockBeaconMapDto blockBeaconMapDto = modelMapper.map(blockBeaconMap,BlockBeaconMapDto.class);
 		blockBeaconMapDto.setRefBlkId(blockBeaconMap.getBlock().getBlkId());

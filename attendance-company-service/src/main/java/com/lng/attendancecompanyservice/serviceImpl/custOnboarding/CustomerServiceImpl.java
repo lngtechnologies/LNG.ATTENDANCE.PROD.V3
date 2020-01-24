@@ -646,7 +646,8 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			displayLock.lock();
 			Customer customer = customerRepository.findCustomerByCustId(customerDto.getCustId());
-			Login login = loginRepository.findByRefCustIdAndLoginMobile(customer.getCustId(), customer.getCustMobile());
+			// Login login = loginRepository.findByRefCustIdAndLoginMobileAndLoginIsActiveAndEmployee_EmpId(customer.getCustId(), customer.getCustMobile(), true, 0);
+			Login login = loginRepository.findByLoginName(customer.getCustId(), "admin@"+customer.getCustCode());
 			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
 			State state = stateRepository.findByStateId(customerDto.getRefStateId());
 			IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(customerDto.getRefIndustryTypeId());
@@ -716,11 +717,21 @@ public class CustomerServiceImpl implements CustomerService {
 		CustomerResponse customerResponse = new CustomerResponse();
 
 		Customer customer = customerRepository.findCustomerByCustId(custId);
+		List<Branch> branches = branchRepository.findAllByCustomer_CustId(custId);
+		
 		try {
 			if(customer != null) {
-				customer.setCustIsActive(false);
-				customerRepository.save(customer);
-				customerResponse.status = new Status(false, 200, "deleted");
+				if(!branches.isEmpty()) {
+					customer.setCustIsActive(false);
+					customerRepository.save(customer);
+					for(Branch branch: branches) {
+						branch.setBrIsActive(false);
+						branchRepository.save(branch);
+					}
+					customerResponse.status = new Status(false, 200, "deleted");
+				} else {
+					customerResponse.status = new Status(true, 400, "Branch not found");
+				}	
 			} else {
 				customerResponse.status = new Status(true, 400, "Customer not found");
 			}

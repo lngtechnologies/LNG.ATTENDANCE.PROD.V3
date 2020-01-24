@@ -11,11 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.CustLeave;
+import com.lng.attendancecustomerservice.entity.masters.Customer;
 import com.lng.attendancecustomerservice.entity.masters.EmpLeave;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeLeave;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustLeaveRepository;
+import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmployeeLeaveRepository;
 import com.lng.attendancecustomerservice.service.empAppSetup.EmpLeaveService;
 import com.lng.dto.masters.employeeLeave.CustLeaveTrypeListDto;
@@ -39,6 +41,9 @@ public class EmpLeaveServiceImpl implements EmpLeaveService {
 	EmployeeRepository employeeRepository;	
 
 	ModelMapper modelMapper = new ModelMapper();
+	
+	@Autowired
+	CustomerRepository customerRepository;
 
 	@Override
 	public CustLeaveTrypeListDto getLeaveListByCustId(Integer custId) {
@@ -204,6 +209,29 @@ public class EmpLeaveServiceImpl implements EmpLeaveService {
 		employeeLeaveDto.setEmpId(employeeLeave.getEmployee().getEmpId());
 		employeeLeaveDto.setCustLeaveId(employeeLeave.getCustLeave().getCustLeaveId());
 		return employeeLeaveDto;
+	}
+
+
+	@Override
+	public Status cancelLeave(Integer custId, Integer empLeaveId) {
+		Status status = null;
+		try {
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custId, true);
+			if(customer != null) {
+				EmployeeLeave employeeLeave = employeeLeaveRepository.findByEmpLeaveId(empLeaveId);
+				if(employeeLeave != null) {
+					employeeLeaveRepository.delete(employeeLeave);
+					status = new Status(false, 200, "Success");
+				} else {
+					status = new Status(true, 400, "Employee leave not found");
+				}
+			} else {
+				status = new Status(true, 400, "Customer not found");
+			}
+		} catch (Exception e) {
+			status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return status;
 	}
 
 }

@@ -14,8 +14,8 @@ import com.lng.attendancetabservice.repositories.CustomerRepository;
 import com.lng.attendancetabservice.repositories.EmployeeRepository;
 import com.lng.attendancetabservice.service.CustomerService;
 import com.lng.attendancetabservice.utils.MessageUtil;
-import com.lng.dto.employee.OtpDto;
-import com.lng.dto.employee.OtpResponseDto;
+import com.lng.dto.employeeAppSetup.OtpDto;
+import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.tabService.CustomerDto1;
 import com.lng.dto.tabService.CustomerResponse1;
 

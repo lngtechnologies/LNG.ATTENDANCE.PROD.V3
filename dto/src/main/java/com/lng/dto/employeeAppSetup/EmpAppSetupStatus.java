@@ -1,4 +1,4 @@
-package com.lng.dto.employee;
+package com.lng.dto.employeeAppSetup;
 
 public enum EmpAppSetupStatus {
 	NSTP,ESTP,FSTP;

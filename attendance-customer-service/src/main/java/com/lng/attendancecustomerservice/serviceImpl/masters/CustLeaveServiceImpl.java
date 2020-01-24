@@ -47,7 +47,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 			CustLeave custLeave1 = custLeaveRepository.findCustLeaveBycustLeaveNameAndCustomer_custIdAndCustLeaveIsActive(custLeaveDto.getCustLeaveName(),custLeaveDto.getRefCustId(), false);
 
 			if(a == 0) {
-				Customer customer = customerRepository.findCustomerByCustId(custLeaveDto.getRefCustId());
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custLeaveDto.getRefCustId(), true);
 				if(customer != null) {
 					custLeave.setCustomer(customer);
 					custLeave.setCustLeaveName(custLeaveDto.getCustLeaveName());
@@ -61,7 +61,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 					
 				}
 			} else if(custLeave1 != null) {
-				Customer customer = customerRepository.findCustomerByCustId(custLeaveDto.getRefCustId());
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custLeaveDto.getRefCustId(), true);
 				if(customer != null) {
 					custLeave1.setCustomer(customer);
 					custLeave1.setCustLeaveIsActive(true);
@@ -119,7 +119,7 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 			if(custLeaveDto.getRefCustId() == null || custLeaveDto.getRefCustId() == 0) throw new Exception("Customer id is null or zero");
 
 			CustLeave custLeave =  custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(custLeaveDto.getCustLeaveId(), true);
-			Customer customer = customerRepository.findCustomerByCustId(custLeaveDto.getRefCustId());
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custLeaveDto.getRefCustId(), true);
 			if(custLeave != null) {
 				if(customer != null) {
 					CustLeave cl = 	custLeaveRepository.findCustLeaveBycustLeaveNameAndCustomer_custIdAndCustLeaveIsActive(custLeaveDto.getCustLeaveName(), custLeaveDto.getRefCustId(), true);

@@ -1,8 +1,8 @@
 package com.lng.attendancecustomerservice.service.empAppSetup;
 
-import com.lng.dto.employee.EmployeeDto;
-import com.lng.dto.employee.OtpResponseDto;
-import com.lng.dto.employee.ResponseDto;
+import com.lng.dto.employeeAppSetup.EmployeeDto;
+import com.lng.dto.employeeAppSetup.OtpResponseDto;
+import com.lng.dto.employeeAppSetup.ResponseDto;
 
 import status.StatusDto;
 

@@ -1,6 +1,6 @@
 package com.lng.attendancetabservice.service;
 
-import com.lng.dto.employee.OtpResponseDto;
+import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.tabService.CustomerResponse1;
 
 public interface CustomerService {

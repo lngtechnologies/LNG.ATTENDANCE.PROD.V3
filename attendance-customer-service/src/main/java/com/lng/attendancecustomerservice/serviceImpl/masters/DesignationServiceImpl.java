@@ -42,7 +42,7 @@ public class DesignationServiceImpl implements DesignationService{
 			Designation designation1 = designationRepository.findByCustomer_CustIdAndDesignationNameAndDesigIsActive(designationDto.getRefCustId(), designationDto.getDesignationName(), false);
 
 			if(a == 0) {
-				Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(designationDto.getRefCustId(), true);
 				if(customer != null) {
 
 					Designation designation = new Designation();
@@ -59,7 +59,7 @@ public class DesignationServiceImpl implements DesignationService{
 				}
 			} else if(designation1 != null){
 
-				Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(designationDto.getRefCustId(), true);
 				if(customer != null) {
 
 					designation1.setCustomer(customer);
@@ -117,7 +117,7 @@ public class DesignationServiceImpl implements DesignationService{
 			if(designationDto.getRefCustId() == null || designationDto.getRefCustId() == 0) throw new Exception("RefCustomerId id is null or zero");
 			Designation designation = designationRepository.findDesignationByDesignationId(designationDto.getDesignationId())	;	
 			//if(CheckDesignationExists(designationDto.getDesignationName())) throw new Exception("Designation already exists");
-			Customer customer = customerRepository.findCustomerByCustId(designationDto.getRefCustId());
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(designationDto.getRefCustId(), true);
 			if(customer != null) {
 				Designation de = designationRepository.findDesignationBydesignationNameAndCustomer_custId(designationDto.getDesignationName(), designationDto.getRefCustId());
 				if(de == null) {
