@@ -14,5 +14,5 @@ public interface LoginRepository extends PagingAndSortingRepository<Login, Integ
 	 
 	// Login findByRefCustIdAndLoginMobileAndLoginIsActiveAndEmployee_EmpId(Integer custId, String mobileNo, Boolean isActive, Integer empId);
 	 
-	 Login findByLoginName(Integer custId, String loginName);
+	 Login findByRefCustIdAndLoginName(Integer custId, String loginName);
 }

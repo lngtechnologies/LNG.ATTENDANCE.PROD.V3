@@ -37,6 +37,9 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	@Query(value = "SELECT 	MIN(empAttendanceDate) AS DATE FROM ttempattendance WHERE empAttendanceDate LIKE %?1% AND refEmpId = ?2", nativeQuery = true)
 	Date getRecentAttndDate(String attndDate, Integer empId);
 	
+	@Query(value = "call getOutPermisableTimeByEmpIdAndCustId(?1,?2)", nativeQuery = true)
+	String getOutPermissibleTimeByEmployee_EmpIdAndCustomer_CustId(Integer empId,Integer custId);
+	
 	/*
 	 * @Query(value =
 	 * "UPDATE tmemployee SET empAppSetupStatus=:empAppSetupStatus WHERE empId=:empId"

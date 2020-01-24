@@ -13,13 +13,15 @@ public class LoginDto {
 	private String loginName;
 	private String token;
 	private String custLogo;
+	private Integer refEmpId;
 	
-	public LoginDto(Integer id, Integer custId, String name, String token, String logo) {
+	public LoginDto(Integer id, Integer custId, String name, String token, String logo, Integer refEmpId) {
 		this.loginId = id;
 		this.refCustId = custId;
 		this.loginName = name;
 		this.token = token;
 		this.custLogo = logo;
+		this.refEmpId = refEmpId;
 	}
 	
 	public Integer getRefCustId() {

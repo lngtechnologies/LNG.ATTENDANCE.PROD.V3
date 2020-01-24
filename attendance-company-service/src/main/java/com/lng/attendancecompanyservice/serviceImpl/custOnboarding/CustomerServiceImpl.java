@@ -639,6 +639,7 @@ public class CustomerServiceImpl implements CustomerService {
 
 
 	//Updates the Customer details
+	@SuppressWarnings("unused")
 	@Override
 	public CustomerResponse updateCustomerByCustomerId(CustomerDto customerDto) {
 		CustomerResponse customerResponse = new CustomerResponse();
@@ -647,7 +648,7 @@ public class CustomerServiceImpl implements CustomerService {
 			displayLock.lock();
 			Customer customer = customerRepository.findCustomerByCustId(customerDto.getCustId());
 			// Login login = loginRepository.findByRefCustIdAndLoginMobileAndLoginIsActiveAndEmployee_EmpId(customer.getCustId(), customer.getCustMobile(), true, 0);
-			Login login = loginRepository.findByLoginName(customer.getCustId(), "admin@"+customer.getCustCode());
+			Login login = loginRepository.findByRefCustIdAndLoginName(customer.getCustId(), "admin@"+customer.getCustCode());
 			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
 			State state = stateRepository.findByStateId(customerDto.getRefStateId());
 			IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(customerDto.getRefIndustryTypeId());

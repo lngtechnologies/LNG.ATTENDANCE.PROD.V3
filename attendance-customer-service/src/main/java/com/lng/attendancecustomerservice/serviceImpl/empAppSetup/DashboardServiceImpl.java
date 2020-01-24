@@ -16,6 +16,7 @@ import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.Shift;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.WelcomeScreenRepository;
+import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustLeaveRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmployeeLeaveRepository;
@@ -131,7 +132,7 @@ public class DashboardServiceImpl implements DashboardService {
 		String shiftEndTime = null;
 
 		try {
-
+			String time = employeeRepository.getOutPermissibleTimeByEmployee_EmpIdAndCustomer_CustId(empId,custId);
 			Shift shift = shiftRepository.getByEmpId(empId);
 			Employee employee = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
 			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custId, true);
@@ -149,6 +150,7 @@ public class DashboardServiceImpl implements DashboardService {
 						shiftDetailsDto.setShiftStartTime(shift.getShiftStart());
 						shiftDetailsDto.setShiftEndTime(shift.getShiftEnd());
 						shiftDetailsDto.setEmpId(employee.getEmpId());
+						shiftDetailsDto.setOutPermissibleTime(time);
 						shiftResponseDto.setDetailsDto(shiftDetailsDto);
 						shiftResponseDto.status = new Status(false, 200, "Success");
 					} else {

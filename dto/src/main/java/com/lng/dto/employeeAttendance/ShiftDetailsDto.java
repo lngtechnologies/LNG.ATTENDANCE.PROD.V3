@@ -9,8 +9,18 @@ public class ShiftDetailsDto {
 	private String shiftEndTime;
 	
 	private String shiftType;
+	
+	private String outPermissibleTime;
 
 	
+	public String getOutPermissibleTime() {
+		return outPermissibleTime;
+	}
+
+	public void setOutPermissibleTime(String outPermissibleTime) {
+		this.outPermissibleTime = outPermissibleTime;
+	}
+
 	public Integer getEmpId() {
 		return empId;
 	}
