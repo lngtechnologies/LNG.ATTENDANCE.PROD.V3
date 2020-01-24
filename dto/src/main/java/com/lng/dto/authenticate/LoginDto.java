@@ -10,18 +10,20 @@ public class LoginDto {
 
 	private Integer loginId;
 	private Integer refCustId;
+	private Integer refEmpId;
 	private String loginName;
 	private String token;
 	private String custLogo;
-	private Integer refEmpId;
+	
 	
 	public LoginDto(Integer id, Integer custId, String name, String token, String logo, Integer refEmpId) {
 		this.loginId = id;
 		this.refCustId = custId;
+		this.refEmpId = refEmpId;
 		this.loginName = name;
 		this.token = token;
 		this.custLogo = logo;
-		this.refEmpId = refEmpId;
+		
 	}
 	
 	public Integer getRefCustId() {
@@ -31,9 +33,6 @@ public class LoginDto {
 	public void setRefCustId(Integer refCustId) {
 		this.refCustId = refCustId;
 	}
-
-
-
 	public String getCustLogo() {
 		return custLogo;
 	}
@@ -64,6 +63,14 @@ public class LoginDto {
 
 	public void setLoginId(Integer loginId) {
 		this.loginId = loginId;
+	}
+
+	public Integer getRefEmpId() {
+		return refEmpId;
+	}
+
+	public void setRefEmpId(Integer refEmpId) {
+		this.refEmpId = refEmpId;
 	}
 
 }
