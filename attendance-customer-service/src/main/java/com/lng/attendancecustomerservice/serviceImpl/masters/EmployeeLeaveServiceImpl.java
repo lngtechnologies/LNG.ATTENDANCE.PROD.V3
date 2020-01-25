@@ -156,15 +156,16 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		
 		try {
 			displayLock.lock();
-			Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 			Employee employee = employeeRepository.getByEmpId(employeeLeaveDto.getEmpId());
-			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(employeeLeaveDto.getCustLeaveId(), true);
-			int empLeave = employeeLeaveRepository.getEmpLeaveAlreadyApplied(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo(), employeeLeaveDto.getEmpId());
-			if(employee != null) {
+			if(employeeLeaveDto.getEmpLeaveFrom().compareTo(employee.getEmpJoiningDate()) < 0) {
+				status = new Status(true, 400, "Employee can't apply leave before joining date");
+			} else if(employee != null) {
+				CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(employeeLeaveDto.getCustLeaveId(), true);
 				if(custLeave != null) {
+					int empLeave = employeeLeaveRepository.getEmpLeaveAlreadyApplied(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo(), employeeLeaveDto.getEmpId());
 					if(empLeave == 0) {
 						EmployeeLeave employeeLeave = modelMapper.map(employeeLeaveDto, EmployeeLeave.class);
-
+						Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 						employeeLeave.setEmployee(employee);
 						employeeLeave.setCustLeave(custLeave);
 						employeeLeave.setEmpLeaveDaysCount(countNoOfDays);

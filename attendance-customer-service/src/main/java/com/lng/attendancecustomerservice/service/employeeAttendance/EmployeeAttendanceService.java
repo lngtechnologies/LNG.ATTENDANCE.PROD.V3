@@ -19,9 +19,13 @@ public interface EmployeeAttendanceService {
 	
 	EmpSignOutResponse getOfficeSignOutDetailsByEmpId(Integer empId);
 	
-	Status saveSignIn(List<EmployeeAttendanceDto> employeeAttendanceDtos);
+	//Status saveSignIn(List<EmployeeAttendanceDto> employeeAttendanceDtos);
 	
-	Status saveSignOut(List<EmployeeAttendanceDto> employeeAttendanceDtos);
+	//Status saveSignOut(List<EmployeeAttendanceDto> employeeAttendanceDtos);
 	
 	CurrentDateDto getCurrentDate();
+	
+	Status saveSignInDetails(List<EmployeeAttendanceDto> employeeAttendanceDtos);
+	
+	Status saveSignOutDetails(List<EmployeeAttendanceDto> employeeAttendanceDtos);
 }

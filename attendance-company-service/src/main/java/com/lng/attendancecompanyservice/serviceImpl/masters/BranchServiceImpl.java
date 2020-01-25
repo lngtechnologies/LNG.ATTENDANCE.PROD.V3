@@ -1,7 +1,6 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -47,8 +46,6 @@ import com.lng.dto.customer.CustomerDto;
 import com.lng.dto.masters.branch.BranchDto;
 import com.lng.dto.masters.branch.BranchResponse;
 import com.lng.dto.masters.country.CountryDto;
-import com.lng.dto.masters.holidayCalendar.HolidayCalendarDto;
-import com.lng.dto.masters.holidayCalendar.HolidayCalendarResponse;
 import com.lng.dto.masters.state.StateDto;
 
 import status.Status;

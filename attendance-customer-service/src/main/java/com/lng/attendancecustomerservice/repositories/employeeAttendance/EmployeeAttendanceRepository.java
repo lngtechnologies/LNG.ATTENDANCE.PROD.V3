@@ -14,25 +14,28 @@ public interface EmployeeAttendanceRepository extends PagingAndSortingRepository
 
 	/*EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceModeAndEmpAttendanceDatetimeAndEmpAttendanceLatitudeAndEmpAttendanceLongitude
 							(Integer refEmpId, String empAttendanceMode, Date empAttendanceDatetime, Double empAttendanceLatitude, Double empAttendanceLongitude);*/
-	
+
 	@Query(value = "call getMaxAttndDateAndHrsByEmpId(?1)", nativeQuery = true)
 	List<Object[]> getSignOutDetailsByEmpId(Integer empId);
-	
+
 	EmployeeAttendance findEmployeeByEmpAttendanceDate(Date empAttendanceDate);
-	
+
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceInModeAndEmpAttendanceInDatetimeAndEmpAttendanceInLatLong(Integer refEmpId, String empAttendanceInMode, Date empAttendanceInDatetime,String empAttendanceInLatLong);
-	
+
 	//@Query(value = "call CheckAttendanceDateIsExistForEmployeeOrNot(?1,?2)", nativeQuery = true)
 	//EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceInDatetime( Date empAttendanceInDatetime,Integer refEmpId);
-	
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDate(Integer refEmpId, Date empAttendanceDate);
+<<<<<<< HEAD
 	
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDateAndEmpAttendanceId(Integer refEmpId, Date empAttendanceDate, Integer empAttendanceId);
 	
+=======
+
+>>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDateAndEmpAttendanceOutModeAndEmpAttendanceOutDatetimeAndEmpAttendanceOutLatLong(Integer refEmpId, Date empAttendanceDate, String empAttendanceOutMode, Date empAttendanceOutDatetime,String empAttendanceOutLatLong);
 
 	EmployeeAttendance findByEmpAttendanceId(Integer empAttendanceId);
-	
+
 	List<EmployeeAttendance> findAllByEmployee_EmpIdAndEmpAttendanceDate(Integer refEmpId, Date empAttendanceDate);
-	
+
 }

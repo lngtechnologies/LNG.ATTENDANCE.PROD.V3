@@ -38,6 +38,23 @@ public class EmployeeAttendanceController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}*/
+	 @PostMapping(value = "/signIn")
+		public ResponseEntity<Status> saveSignInDetails(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
+			Status status = employeeAttendanceService.saveSignInDetails(employeeAttendanceDto);
+			if (status !=null){
+				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
+	 
+	 @PostMapping(value = "/signOut")
+		public ResponseEntity<Status> saveSignOutDetails(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
+			Status status = employeeAttendanceService.saveSignOutDetails(employeeAttendanceDto);
+			if (status !=null){
+				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+			}
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
 
 	@GetMapping(value = "/getCurrentDate")
 	public ResponseEntity<CurrentDateDto> getCurrentDate() {
@@ -63,7 +80,7 @@ public class EmployeeAttendanceController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
-	 @PostMapping(value = "/signIn")
+	/* @PostMapping(value = "/signIn")
 		public ResponseEntity<Status> saveSignIn(@RequestBody List<EmployeeAttendanceDto> employeeAttendanceDto) {
 			Status status = employeeAttendanceService.saveSignIn(employeeAttendanceDto);
 			if (status !=null){
@@ -79,5 +96,5 @@ public class EmployeeAttendanceController {
 				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
 			}
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
-		}
+		}*/
 }
