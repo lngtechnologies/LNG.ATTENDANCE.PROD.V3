@@ -234,10 +234,10 @@ public class DashboardServiceImpl implements DashboardService {
 						empLeaveResponseDto.status = new Status(false, 400, "Employee not applied for leave");
 					}
 				} else {
-					empLeaveResponseDto.status = new Status(false, 400, "Employee not found or not in service");
+					empLeaveResponseDto.status = new Status(true, 400, "Employee not found or not in service");
 				}
 			} else {
-				empLeaveResponseDto.status = new Status(false, 400, "Customer not found");
+				empLeaveResponseDto.status = new Status(true, 400, "Customer not found");
 			}
 
 		} catch (Exception e) {

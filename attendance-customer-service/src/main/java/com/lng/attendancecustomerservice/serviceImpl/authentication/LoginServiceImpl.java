@@ -167,7 +167,8 @@ public class LoginServiceImpl implements ILogin {
 			
 			// Send new password to registered mobile
 			String mobileNo = user.getLoginMobile();
-			String mobileSmS = "Dear " + loginDto.getUserName() +" \n, Your new login password is " + nPassword;	
+			//String mobileSmS = "Dear " + loginDto.getUserName() +" \n, Your new login password is " + nPassword;
+			String mobileSmS = "Password to access the Smart Attendance System has been reset to: " + nPassword +" for "+ user.getLoginName();	
 			String s = messageUtil.sms(mobileNo, mobileSmS);
 			
 			//Set msg

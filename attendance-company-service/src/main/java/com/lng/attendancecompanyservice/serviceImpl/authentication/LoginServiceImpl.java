@@ -2,6 +2,8 @@ package com.lng.attendancecompanyservice.serviceImpl.authentication;
 
 import java.util.Base64;
 
+import javax.swing.JTextPane;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -181,7 +183,7 @@ public class LoginServiceImpl implements ILogin {
 				mobileNo = employee.getEmpMobile();
 			}
 			
-			String mobileSmS = "Password to access the Attendance System Web Application has been reset to : " + nPassword;	
+			String mobileSmS = "Password to access the Smart Attendance System has been reset to: " + nPassword +" for "+ user.getLoginName();	
 			String s = messageUtil.sms(mobileNo, mobileSmS);
 			
 			//Set msg

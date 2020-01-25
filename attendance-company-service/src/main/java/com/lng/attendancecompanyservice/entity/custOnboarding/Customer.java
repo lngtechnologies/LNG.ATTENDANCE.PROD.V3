@@ -41,51 +41,41 @@ public class Customer {
 	private IndustryType industryType;
 
 	@Column(name = "custName")
-	@NotNull(message = "This field should not be an empty")
 	private String custName;
 
 	
 	@Column(name = "custAddress")
-	@NotNull(message = "This field should not be an empty")
 	private String custAddress;
 
 	
-	@NotNull(message = "This field should not be an empty")
 	@Column(name = "custCity")
 	private String custCity;
 
 	@Column(name = "custPincode")
-	@NotNull(message = "This field should not be an empty")
 	private String custPincode;
 
 	@Column(name = "custCode")
-	@NotNull(message = "This field should not be an empty")
 	private String custCode;
 
 	@Column(name = "custMobile")
-	@NotNull(message = "This field should not be an empty")
 	private String custMobile;
 
 	@Column(name = "custLandline")
 	private String custLandline;
 
 	@Column(name = "custEmail")
-	@NotNull(message = "This field should not be an empty")
 	private String custEmail;
 
 	@Column(name = "custNoOfBranch")
-	@NotNull(message = "This field should not be an empty")
 	private Integer custNoOfBranch;
 
 	@Column(name = "custIsActive")
 	private Boolean custIsActive;
 
 	@Column(name = "custValidityStart")
-	@NotNull(message = "This field should not be an empty")
 	private Date custValidityStart;
 
 	@Column(name = "custValidityEnd")
-	@NotNull(message = "This field should not be an empty")
 	private Date custValidityEnd;
 
 	@Column(name = "custCreatedDate")

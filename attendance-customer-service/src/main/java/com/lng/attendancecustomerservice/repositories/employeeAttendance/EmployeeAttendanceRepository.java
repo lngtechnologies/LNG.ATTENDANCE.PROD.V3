@@ -27,6 +27,8 @@ public interface EmployeeAttendanceRepository extends PagingAndSortingRepository
 	
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDate(Integer refEmpId, Date empAttendanceDate);
 	
+	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDateAndEmpAttendanceId(Integer refEmpId, Date empAttendanceDate, Integer empAttendanceId);
+	
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDateAndEmpAttendanceOutModeAndEmpAttendanceOutDatetimeAndEmpAttendanceOutLatLong(Integer refEmpId, Date empAttendanceDate, String empAttendanceOutMode, Date empAttendanceOutDatetime,String empAttendanceOutLatLong);
 
 	EmployeeAttendance findByEmpAttendanceId(Integer empAttendanceId);
