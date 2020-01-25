@@ -25,13 +25,11 @@ public interface EmployeeAttendanceRepository extends PagingAndSortingRepository
 	//@Query(value = "call CheckAttendanceDateIsExistForEmployeeOrNot(?1,?2)", nativeQuery = true)
 	//EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceInDatetime( Date empAttendanceInDatetime,Integer refEmpId);
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDate(Integer refEmpId, Date empAttendanceDate);
-<<<<<<< HEAD
+
 	
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDateAndEmpAttendanceId(Integer refEmpId, Date empAttendanceDate, Integer empAttendanceId);
 	
-=======
 
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
 	EmployeeAttendance findByEmployee_EmpIdAndEmpAttendanceDateAndEmpAttendanceOutModeAndEmpAttendanceOutDatetimeAndEmpAttendanceOutLatLong(Integer refEmpId, Date empAttendanceDate, String empAttendanceOutMode, Date empAttendanceOutDatetime,String empAttendanceOutLatLong);
 
 	EmployeeAttendance findByEmpAttendanceId(Integer empAttendanceId);
