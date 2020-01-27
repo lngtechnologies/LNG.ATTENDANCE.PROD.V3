@@ -35,7 +35,6 @@ public class Login {
 	@JsonIgnore
 	private String loginPassword;
 
-	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginIsActive")
 	private Boolean loginIsActive;
 

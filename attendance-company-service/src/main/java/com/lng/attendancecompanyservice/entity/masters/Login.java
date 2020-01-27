@@ -28,27 +28,21 @@ public class Login {
 	@Column(name = "refCustId")
 	private Integer refCustId;
 
-	@Size(max = 50)
-	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginName")
 	private String loginName;
 
-	@Size(max = 10)
-	@NotNull(message = "This field should not be an empty")
+	
 	@Column(name = "loginMobile")
 	private String loginMobile;
 
-	@Size(max = 100)
-	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginPassword")
 	@JsonIgnore
 	private String loginPassword;
 
-	@NotNull(message = "This field should not be an empty")
+	
 	@Column(name = "loginIsActive")
 	private Boolean loginIsActive;
 
-	@NotNull(message = "This field should not be an empty")
 	@Column(name = "loginCreatedDate")
 	private Date loginCreatedDate;
 	
