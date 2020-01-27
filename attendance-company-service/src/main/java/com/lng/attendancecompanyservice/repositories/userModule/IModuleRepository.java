@@ -17,5 +17,13 @@ public interface IModuleRepository extends JpaRepository<Module, Integer> {
 	
 	@Query(value = "call Sp_getUserSubModuleMap(?1)", nativeQuery = true)
 	List<Module> getUserSubModuleMap(int loginId);
+	
+	List<Module> findByModuleId(Integer moduleId);
+	
+	Module findModuleByModuleId(Integer moduleId);
+	
+	
+	@Query(value = "call getModuleDetailsByLoginId(?1)", nativeQuery = true)
+	List<Object[]> findByLogin_LoginId(Integer loginId);
 
 }

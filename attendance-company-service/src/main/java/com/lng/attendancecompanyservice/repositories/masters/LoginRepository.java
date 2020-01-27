@@ -1,5 +1,7 @@
 package com.lng.attendancecompanyservice.repositories.masters;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -15,4 +17,18 @@ public interface LoginRepository extends PagingAndSortingRepository<Login, Integ
 	// Login findByRefCustIdAndLoginMobileAndLoginIsActiveAndEmployee_EmpId(Integer custId, String mobileNo, Boolean isActive, Integer empId);
 	 
 	 Login findByRefCustIdAndLoginName(Integer custId, String loginName);
+	 
+	 @Query(value = "SELECT * FROM ttlogin WHERE refEmpId =?1 AND loginIsActive = TRUE", nativeQuery = true)
+	 List<Login> findAllByLoginIsActiveAndRefEmpId(Integer empId);
+	 
+	 
+	 Login findByLoginNameAndRefCustIdAndLoginIsActive(String loginName, Integer custId, Boolean loginIsActive);
+	 
+	 Login findByLoginId(Integer loginId);
+	 
+	 Login findByLoginMobileAndRefCustId(String mobileNumber, Integer custId);
+	 
+	 
+	 @Query(value = "call getLoginDetailsByLoginId(?1)", nativeQuery = true)
+	 List<Object[]> findAllUsersByloginId(Integer loginId);
 }

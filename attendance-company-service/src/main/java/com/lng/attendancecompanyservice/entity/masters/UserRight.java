@@ -17,16 +17,11 @@ public class UserRight {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "userRightId")
 	private Integer userRightId;
-	
-	@ManyToOne
-	@JoinColumn(name = "refLoginId")
-	private Login login;
-	
-	@ManyToOne
-	@JoinColumn(name = "refModuleId")
-	private Module module;
+
+	private Integer refLoginId;
+
+	private Integer refModuleId;
 
 	public Integer getUserRightId() {
 		return userRightId;
@@ -36,20 +31,20 @@ public class UserRight {
 		this.userRightId = userRightId;
 	}
 
-	public Login getLogin() {
-		return login;
+	public Integer getRefLoginId() {
+		return refLoginId;
 	}
 
-	public void setLogin(Login login) {
-		this.login = login;
+	public void setRefLoginId(Integer refLoginId) {
+		this.refLoginId = refLoginId;
 	}
 
-	public Module getModule() {
-		return module;
+	public Integer getRefModuleId() {
+		return refModuleId;
 	}
 
-	public void setModule(Module module) {
-		this.module = module;
+	public void setRefModuleId(Integer refModuleId) {
+		this.refModuleId = refModuleId;
 	}
 
 }
