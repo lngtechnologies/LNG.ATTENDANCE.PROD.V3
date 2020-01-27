@@ -1,6 +1,7 @@
 package com.lng.attendancecustomerservice.serviceImpl.empAppSetup;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -12,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.BlockBeaconMap;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
+import com.lng.attendancecustomerservice.entity.masters.CustomerConfig;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.Shift;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.WelcomeScreenRepository;
-import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
+import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustLeaveRepository;
+import com.lng.attendancecustomerservice.repositories.masters.CustomerConfigRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmployeeLeaveRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ShiftRepository;
@@ -29,6 +32,8 @@ import com.lng.dto.employeeAttendance.ShiftDetailsDto;
 import com.lng.dto.employeeAttendance.ShiftResponseDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
+import com.lng.dto.masters.customerConfig.DashboardCustConfigDto;
+import com.lng.dto.masters.customerConfig.DashboardCustConfigResponse;
 import com.lng.dto.masters.employeeLeave.EmpAppLeaveDto;
 import com.lng.dto.masters.employeeLeave.EmpLeaveResponseDto;
 
@@ -54,18 +59,91 @@ public class DashboardServiceImpl implements DashboardService {
 
 	@Autowired
 	CustomerRepository customerRepository;
+	
+	@Autowired
+	CustomerConfigRepository customerConfigRepository;
+	
+	@Autowired
+	BranchRepository branchRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
 
+	@SuppressWarnings("unused")
 	@Override
 	public DashboardDto getEmployeeDetails(Integer custId, Integer empId) {
 		DashboardDto dashboardDto = new DashboardDto();
 		try {
-			dashboardDto.setCustomerValidity(checkValidationByCustId(custId));
-			dashboardDto.setEmpAttendanceStatus(getAttndStatusByEmployee(empId, custId));
-			dashboardDto.setEmpShiftDetails(getShiftDetailsByEmpIdAndCustId(empId, custId));
-			dashboardDto.setEmpBeacons(getBeaconsByEmpId(empId, custId));
-			dashboardDto.setEmpLeaveData(getEmpLeaveByEmpIdAndCustId(empId, custId));
+			int custValidityFlag = customerRepository.checkCustValidationByCustId(custId);
+			if(custValidityFlag == 1) {
+				dashboardDto.setIsValidCustomer(true);
+				
+				Employee employee = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
+				
+				int branchValidity = branchRepository.checkBranchValidity(employee.getBranch().getBrId());
+				if(branchValidity == 1) {
+					dashboardDto.setIsValidBranch(true);
+					
+					if(employee != null) {
+						dashboardDto.setIsEmployeeInService(true);
+						
+						Employee employee1 = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
+						if(employee1.getEmpPresistedFaceId() != null ) {
+							dashboardDto.setIsFaceregistered(true);
+							
+							//dashboardDto.setCustomerValidity(checkValidationByCustId(custId));
+							dashboardDto.setConfig(getConfigDetails(empId, custId));
+							dashboardDto.setEmpAttendanceStatus(getAttndStatusByEmployee(empId, custId));
+							dashboardDto.setEmpShiftDetails(getShiftDetailsByEmpIdAndCustId(empId, custId));
+							dashboardDto.setEmpBeacons(getBeaconsByEmpId(empId, custId));
+							dashboardDto.setEmpLeaveData(getEmpLeaveByEmpIdAndCustId(empId, custId));
+							
+							Shift shift = shiftRepository.getByEmpId(empId);
+							if(shift != null) {
+								dashboardDto.setIsShiftAllotted(true);
+								dashboardDto.status = new Status(false, 200, "Success");
+							} else {
+								dashboardDto.setIsValidCustomer(true);
+								dashboardDto.setIsValidBranch(true);
+								dashboardDto.setIsEmployeeInService(true);
+								dashboardDto.setIsFaceregistered(true);
+								dashboardDto.setIsShiftAllotted(false);
+								dashboardDto.status = new Status(true, 400, "Shif not found");
+							}
+							
+						} else {
+							dashboardDto.setIsValidCustomer(true);
+							dashboardDto.setIsValidBranch(true);
+							dashboardDto.setIsEmployeeInService(true);
+							dashboardDto.setIsFaceregistered(false);
+							dashboardDto.setIsShiftAllotted(false);
+							dashboardDto.status = new Status(true, 400, "Employee face not registered");
+						}
+					} else {
+						dashboardDto.setIsValidCustomer(true);
+						dashboardDto.setIsValidBranch(true);
+						dashboardDto.setIsEmployeeInService(false);
+						dashboardDto.setIsFaceregistered(false);
+						dashboardDto.setIsShiftAllotted(false);
+						dashboardDto.status = new Status(true, 400, "Employee not in service");
+					}
+				} else {
+					
+					dashboardDto.setIsValidCustomer(true);
+					dashboardDto.setIsValidBranch(false);
+					dashboardDto.setIsEmployeeInService(false);
+					dashboardDto.setIsFaceregistered(false);
+					dashboardDto.setIsShiftAllotted(false);
+					dashboardDto.status = new Status(true, 400, "Subscription expired, please contact admin");
+				}
+			
+			} else {
+				dashboardDto.setIsValidCustomer(false);
+				dashboardDto.setIsEmployeeInService(false);
+				dashboardDto.setIsFaceregistered(false);
+				dashboardDto.setIsShiftAllotted(false);
+				dashboardDto.status = new Status(true, 400, "Subscription expired, please contact admin");
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -310,6 +388,34 @@ public class DashboardServiceImpl implements DashboardService {
 		}
 
 		return empAttndStatusDto;
+	}
+	
+	public DashboardCustConfigResponse getConfigDetails(Integer empId, Integer custId){
+		List<DashboardCustConfigDto> dashboardCustConfigList = new ArrayList<DashboardCustConfigDto>();
+		DashboardCustConfigResponse dashboardCustConfigResponse = new DashboardCustConfigResponse();
+		try {
+			Employee employee = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
+			if(employee != null) {
+				List<CustomerConfig> configList = customerConfigRepository.findByCustomer_CustIdAndBranch_BrId(employee.getCustomer().getCustId(), employee.getBranch().getBrId());
+				if(!configList.isEmpty()) {
+					for(CustomerConfig customerConfig: configList) {
+						DashboardCustConfigDto dashboardCustConfigDto = new DashboardCustConfigDto();
+						dashboardCustConfigDto.setConfigValue(customerConfig.getConfig());
+						dashboardCustConfigDto.setStatusFlag(customerConfig.getStatusFlag());
+						dashboardCustConfigList.add(dashboardCustConfigDto);
+					}
+					dashboardCustConfigResponse.setConfigList(dashboardCustConfigList);
+					dashboardCustConfigResponse.status = new Status(false, 200, "Success");
+				} else {
+					dashboardCustConfigResponse.status = new Status(true, 400, "Configurations not found");
+				}
+			} else {
+				dashboardCustConfigResponse.status = new Status(true, 400, "Employee not found");
+			}
+		} catch (Exception e) {
+			dashboardCustConfigResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return dashboardCustConfigResponse;
 	}
 
 	public BlockBeaconMapDto convertToBlockBeaconMapDto(BlockBeaconMap blockBeaconMap) {
