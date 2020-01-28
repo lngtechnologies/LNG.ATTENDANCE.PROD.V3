@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import com.lng.dto.masters.custUserMgmt.CompanyUserLoginModuleMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResDto;
 import com.lng.dto.masters.custUserMgmt.custUserParam;
 
 import status.Status;
@@ -74,6 +76,14 @@ public class CompanyUserMgmtController {
 		CompanyUserLoginModuleMapResponseDto status = companyUserMgmtService.getAllUserByLoginId(companyUserLoginModuleMapResponseDto.getLoginId());
 		return new ResponseEntity<CompanyUserLoginModuleMapResponseDto>(status, HttpStatus.CREATED);	
 	}
-
-
+	@PostMapping(value = "/findAllUsersByCustId")
+	public ResponseEntity<CompanyUserLoginModuleMapResponseDto> findAllUsersByCustId(@RequestBody CompanyUserLoginModuleMapResponseDto custUserBranchLoginMapDto) {
+		CompanyUserLoginModuleMapResponseDto status = companyUserMgmtService.getAllUserByCustId(custUserBranchLoginMapDto.getCustId());
+		return new ResponseEntity<CompanyUserLoginModuleMapResponseDto>(status, HttpStatus.CREATED);	
+	}
+	@GetMapping(value = "/findAllModules")
+	public ResponseEntity<UserModuleResDto> findAllModules() {
+		UserModuleResDto userModuleResponseDto = companyUserMgmtService.findAllModules();
+		return new ResponseEntity<UserModuleResDto>(userModuleResponseDto, HttpStatus.CREATED);	
+	}
 }

@@ -4,32 +4,34 @@ import java.util.Date;
 
 public class EmployeeLeaveDto {
 
-	
+
 	private Integer empLeaveId;
-	
+
 	private Integer empId;
-	
+
 	private Integer custLeaveId;
-	
+
 	private Date empLeaveAppliedDatetime;
-	
+
 	private Date empLeaveFrom;
-	
+
 	private Date empLeaveTo;
-	
+
 	private Integer empLeaveDaysCount;
 
 	private String empLeaveRemarks;
-	
+
 	private String empLeaveStatus;
-	
+
 	private String empLeaveRejectionRemarks;
-	
+
 	private Integer empLeaveAppRejBy;
-		
+
 	private Date empLeaveStatusUpdatedDatetime;
-	
+
 	private Boolean empLeaveRequestForCancellation;
+
+	private  Integer  loginId;
 
 	public Integer getEmpLeaveId() {
 		return empLeaveId;
@@ -132,6 +134,14 @@ public class EmployeeLeaveDto {
 
 	public void setEmpLeaveRequestForCancellation(Boolean empLeaveRequestForCancellation) {
 		this.empLeaveRequestForCancellation = empLeaveRequestForCancellation;
+	}
+
+	public Integer getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(Integer loginId) {
+		this.loginId = loginId;
 	}
 
 }

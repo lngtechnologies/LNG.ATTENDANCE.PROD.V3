@@ -85,9 +85,15 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 
 			EmployeeLeave employeeLeave = employeeLeaveRepository.findByEmpLeaveId(employeeLeaveDto.getEmpLeaveId());
 			if(employeeLeave != null) {
-				employeeLeave.setEmpLeaveStatus("App");
-				employeeLeaveRepository.save(employeeLeave);
-				status = new Status(false, 200, "Leave Approved for "+ employeeLeave.getEmployee().getEmpName());
+				Login login = iLoginRepository.findByLoginId(employeeLeaveDto.getLoginId());
+				if(login != null) {
+					employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+					employeeLeave.setEmpLeaveStatus("App");
+					employeeLeaveRepository.save(employeeLeave);
+					status = new Status(false, 200, "Leave Approved for "+ employeeLeave.getEmployee().getEmpName());
+				} else {
+					status = new Status(true, 400, "Login id not found");
+				}
 			} else {
 				status = new Status(false, 400, "Not found");
 			}
@@ -105,10 +111,16 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 
 			EmployeeLeave employeeLeave = employeeLeaveRepository.findByEmpLeaveId(employeeLeaveDto.getEmpLeaveId());
 			if(employeeLeave != null) {
-				employeeLeave.setEmpLeaveStatus("Rej");
-				employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
-				employeeLeaveRepository.save(employeeLeave);
-				status = new Status(false, 200, "Leave Rejected for "+ employeeLeave.getEmployee().getEmpName());
+				Login login = iLoginRepository.findByLoginId(employeeLeaveDto.getLoginId());
+				if(login != null) {
+					employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+					employeeLeave.setEmpLeaveStatus("Rej");
+					employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
+					employeeLeaveRepository.save(employeeLeave);
+					status = new Status(false, 200, "Leave Rejected for "+ employeeLeave.getEmployee().getEmpName());
+				} else {
+					status = new Status(true, 400, "Login id not found");
+				}
 			} else {
 				status = new Status(false, 400, "Not found");
 			}
@@ -164,10 +176,16 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 
 			EmployeeLeave employeeLeave = employeeLeaveRepository.findByEmpLeaveId(employeeLeaveDto.getEmpLeaveId());
 			if(employeeLeave != null) {
-				employeeLeave.setEmpLeaveStatus("AppCan");
-				employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
-				employeeLeaveRepository.save(employeeLeave);
-				status = new Status(false, 200, "Leave Cancelled for "+ employeeLeave.getEmployee().getEmpName());
+				Login login = iLoginRepository.findByLoginId(employeeLeaveDto.getLoginId());
+				if(login != null) {
+					employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+					employeeLeave.setEmpLeaveStatus("AppCan");
+					employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
+					employeeLeaveRepository.save(employeeLeave);
+					status = new Status(false, 200, "Leave Cancelled for "+ employeeLeave.getEmployee().getEmpName());
+				} else {
+					status = new Status(true, 400, "Login id not found");
+				}
 			} else {
 				status = new Status(false, 400, "Not found");
 			}

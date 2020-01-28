@@ -9,6 +9,8 @@ public class CompanyUserLoginDto {
 	private String loginName;
 
 	private String loginMobile;
+	
+	private Integer custId;
 
 	private List<CustUserModulesDto> modules;
 
@@ -43,7 +45,13 @@ public class CompanyUserLoginDto {
 	public void setModules(List<CustUserModulesDto> modules) {
 		this.modules = modules;
 	}
-	
-	
+
+	public Integer getCustId() {
+		return custId;
+	}
+
+	public void setCustId(Integer custId) {
+		this.custId = custId;
+	}
 
 }
