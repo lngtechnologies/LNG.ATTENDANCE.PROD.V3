@@ -120,7 +120,7 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 		Notification notification = new Notification();
 		try {
 			for(DepartmentDto departmentDto: deptNotificationDto.getDepartmentDtoList()) {
-				Department department = departmentRepository.findDepartmentByDeptId(departmentDto.getDeptId());
+				Department department = departmentRepository.findDepartmentByDeptIdAndDeptIsActive(departmentDto.getDeptId(), true);
 				if(department != null) {
 					List<EmpToken> tokenList = empTokensRepository.findByDeptId(department.getDeptId());
 					if(!tokenList.isEmpty()) {

@@ -14,7 +14,7 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 	@Query(value = "select * from tmdepartment where deptName = ?1", nativeQuery = true)
 	Department findByDepartmentName(String stateName);
 	
-	Department findDepartmentByDeptId(Integer deptId);
+	Department findDepartmentByDeptIdAndDeptIsActive(Integer deptId, Boolean isActive);
 
 	@Query(value = "CALL DepartmentIdIsExistOrNot(?1)",nativeQuery = true)
 	int  findEmployeeDepartmentByDepartmentDeptId(int deptId);

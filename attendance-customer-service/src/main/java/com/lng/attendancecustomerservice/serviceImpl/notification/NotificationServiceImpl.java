@@ -139,7 +139,7 @@ public class NotificationServiceImpl implements NotificationService {
 		
 		try {
 			for(DepartmentDto departmentDto: deptNotificationDto.getDepartmentDtoList()) {
-				Department department = departmentRepository.findDepartmentByDeptId(departmentDto.getDeptId());
+				Department department = departmentRepository.findDepartmentByDeptIdAndDeptIsActive(departmentDto.getDeptId(), true);
 				if(department != null) {
 
 					List<Employee> employeeList = custEmployeeRepository.findByDeptId(department.getDeptId());

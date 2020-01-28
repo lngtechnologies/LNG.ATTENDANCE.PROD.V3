@@ -34,4 +34,7 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch, Int
 	
 	@Query(value = "select  br.brId,br.brName from  tmbranch br where br.refCustomerId = ?1",nativeQuery = true)
 	List<Object[]>  findBranchByRefCustomerId(Integer refCustomerId);
+	
+	@Query(value = "call checkBranchValidityByLoginId(?1)", nativeQuery = true)
+	int checkBranchValidity(Integer brId);
 }

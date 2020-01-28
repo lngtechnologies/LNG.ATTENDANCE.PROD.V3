@@ -73,76 +73,96 @@ public class DashboardServiceImpl implements DashboardService {
 	public DashboardDto getEmployeeDetails(Integer custId, Integer empId) {
 		DashboardDto dashboardDto = new DashboardDto();
 		try {
-			int custValidityFlag = customerRepository.checkCustValidationByCustId(custId);
-			if(custValidityFlag == 1) {
-				dashboardDto.setIsValidCustomer(true);
-				
-				Employee employee = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
-				
-				int branchValidity = branchRepository.checkBranchValidity(employee.getBranch().getBrId());
-				if(branchValidity == 1) {
-					dashboardDto.setIsValidBranch(true);
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custId, true);
+			if(customer != null) {
+				int custValidityFlag = customerRepository.checkCustValidationByCustId(custId);
+				if(custValidityFlag == 1) {
+					dashboardDto.setIsValidCustomer(true);
 					
+					Employee employee = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
 					if(employee != null) {
-						dashboardDto.setIsEmployeeInService(true);
-						
-						Employee employee1 = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
-						if(employee1.getEmpPresistedFaceId() != null ) {
-							dashboardDto.setIsFaceregistered(true);
+						int branchValidity = branchRepository.checkBranchValidity(employee.getBranch().getBrId());
+						if(branchValidity == 1) {
+							dashboardDto.setIsValidBranch(true);
 							
-							//dashboardDto.setCustomerValidity(checkValidationByCustId(custId));
-							dashboardDto.setConfig(getConfigDetails(empId, custId));
-							dashboardDto.setEmpAttendanceStatus(getAttndStatusByEmployee(empId, custId));
-							dashboardDto.setEmpShiftDetails(getShiftDetailsByEmpIdAndCustId(empId, custId));
-							dashboardDto.setEmpBeacons(getBeaconsByEmpId(empId, custId));
-							dashboardDto.setEmpLeaveData(getEmpLeaveByEmpIdAndCustId(empId, custId));
-							
-							Shift shift = shiftRepository.getByEmpId(empId);
-							if(shift != null) {
-								dashboardDto.setIsShiftAllotted(true);
-								dashboardDto.status = new Status(false, 200, "Success");
+							if(employee != null) {
+								dashboardDto.setIsEmployeeInService(true);
+								
+								Employee employee1 = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
+								if(employee1.getEmpPresistedFaceId() != null ) {
+									dashboardDto.setIsFaceregistered(true);
+									
+									//dashboardDto.setCustomerValidity(checkValidationByCustId(custId));
+									dashboardDto.setConfig(getConfigDetails(empId, custId));
+									dashboardDto.setEmpAttendanceStatus(getAttndStatusByEmployee(empId, custId));
+									dashboardDto.setEmpShiftDetails(getShiftDetailsByEmpIdAndCustId(empId, custId));
+									dashboardDto.setEmpBeacons(getBeaconsByEmpId(empId, custId));
+									dashboardDto.setEmpLeaveData(getEmpLeaveByEmpIdAndCustId(empId, custId));
+									
+									Shift shift = shiftRepository.getByEmpId(empId);
+									if(shift != null) {
+										dashboardDto.setIsShiftAllotted(true);
+										dashboardDto.status = new Status(false, 200, "Success");
+									} else {
+										dashboardDto.setIsValidCustomer(true);
+										dashboardDto.setIsValidBranch(true);
+										dashboardDto.setIsEmployeeInService(true);
+										dashboardDto.setIsFaceregistered(true);
+										dashboardDto.setIsShiftAllotted(false);
+										dashboardDto.status = new Status(true, 400, "Shif not found");
+									}
+									
+								} else {
+									dashboardDto.setIsValidCustomer(true);
+									dashboardDto.setIsValidBranch(true);
+									dashboardDto.setIsEmployeeInService(true);
+									dashboardDto.setIsFaceregistered(false);
+									dashboardDto.setIsShiftAllotted(false);
+									dashboardDto.status = new Status(true, 400, "Employee face not registered");
+								}
 							} else {
 								dashboardDto.setIsValidCustomer(true);
 								dashboardDto.setIsValidBranch(true);
-								dashboardDto.setIsEmployeeInService(true);
-								dashboardDto.setIsFaceregistered(true);
+								dashboardDto.setIsEmployeeInService(false);
+								dashboardDto.setIsFaceregistered(false);
 								dashboardDto.setIsShiftAllotted(false);
-								dashboardDto.status = new Status(true, 400, "Shif not found");
+								dashboardDto.status = new Status(true, 400, "Employee not in service");
 							}
-							
 						} else {
+							
 							dashboardDto.setIsValidCustomer(true);
-							dashboardDto.setIsValidBranch(true);
-							dashboardDto.setIsEmployeeInService(true);
+							dashboardDto.setIsValidBranch(false);
+							dashboardDto.setIsEmployeeInService(false);
 							dashboardDto.setIsFaceregistered(false);
 							dashboardDto.setIsShiftAllotted(false);
-							dashboardDto.status = new Status(true, 400, "Employee face not registered");
+							dashboardDto.status = new Status(true, 400, "Subscription expired, please contact admin");
 						}
 					} else {
 						dashboardDto.setIsValidCustomer(true);
-						dashboardDto.setIsValidBranch(true);
+						dashboardDto.setIsValidBranch(false);
 						dashboardDto.setIsEmployeeInService(false);
 						dashboardDto.setIsFaceregistered(false);
 						dashboardDto.setIsShiftAllotted(false);
-						dashboardDto.status = new Status(true, 400, "Employee not in service");
+						dashboardDto.status = new Status(true, 400, "Employee not found");
 					}
+			
 				} else {
-					
-					dashboardDto.setIsValidCustomer(true);
+					dashboardDto.setIsValidCustomer(false);
 					dashboardDto.setIsValidBranch(false);
 					dashboardDto.setIsEmployeeInService(false);
 					dashboardDto.setIsFaceregistered(false);
 					dashboardDto.setIsShiftAllotted(false);
 					dashboardDto.status = new Status(true, 400, "Subscription expired, please contact admin");
 				}
-			
 			} else {
 				dashboardDto.setIsValidCustomer(false);
+				dashboardDto.setIsValidBranch(false);
 				dashboardDto.setIsEmployeeInService(false);
 				dashboardDto.setIsFaceregistered(false);
 				dashboardDto.setIsShiftAllotted(false);
-				dashboardDto.status = new Status(true, 400, "Subscription expired, please contact admin");
+				dashboardDto.status = new Status(true, 400, "Customer not found");
 			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

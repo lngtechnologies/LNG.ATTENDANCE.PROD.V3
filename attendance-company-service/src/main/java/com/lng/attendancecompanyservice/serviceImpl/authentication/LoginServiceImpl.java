@@ -1,6 +1,7 @@
 package com.lng.attendancecompanyservice.serviceImpl.authentication;
 
 import java.util.Base64;
+import java.util.List;
 
 import javax.swing.JTextPane;
 
@@ -8,11 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
+import com.lng.attendancecompanyservice.entity.masters.Branch;
 import com.lng.attendancecompanyservice.entity.masters.Employee;
 import com.lng.attendancecompanyservice.entity.masters.Login;
+import com.lng.attendancecompanyservice.entity.masters.LoginDataRight;
 import com.lng.attendancecompanyservice.repositories.authentication.ICustomerRepository;
 import com.lng.attendancecompanyservice.repositories.authentication.ILoginRepository;
+import com.lng.attendancecompanyservice.repositories.masters.BranchRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CustEmployeeRepository;
+import com.lng.attendancecompanyservice.repositories.masters.LoginDataRightRepository;
 import com.lng.attendancecompanyservice.security.JwtTokenService;
 import com.lng.attendancecompanyservice.service.authentication.ILogin;
 import com.lng.attendancecompanyservice.utils.Encoder;
@@ -42,32 +47,39 @@ public class LoginServiceImpl implements ILogin {
 	private ILoginRepository accountRepository;
 	private ICustomerRepository custRepository;
 	private JwtTokenService jwtTokenService;
-	
+
 	MessageUtil messageUtil = new MessageUtil();
-	
+
 	Encoder encoder = new Encoder();
-	
+
 	/*
 	 * @Bean public BCryptPasswordEncoder getEncoder() { return new
 	 * BCryptPasswordEncoder(); }
 	 */
-	
+
 
 	public LoginServiceImpl(ILoginRepository accountRepository, JwtTokenService jwtTokenService, ICustomerRepository custRepository) {
 		this.accountRepository = accountRepository;
 		this.jwtTokenService = jwtTokenService;
 		this.custRepository = custRepository;
 	}
-	
+
 	@Autowired
 	CustEmployeeRepository custEmployeeRepository;
+
+	@Autowired
+	BranchRepository branchRepository;
+
+	@Autowired
+	LoginDataRightRepository loginDataRightRepository;
+
 	// Authenticated user
 
 	@Override
 	public LoginResponse AuthenticateUser(LoginParamDto loginDto) {
 		// Object to hold response
 		LoginResponse response = new LoginResponse();
-		
+
 		String logo = null;
 
 		try {
@@ -81,7 +93,7 @@ public class LoginServiceImpl implements ILogin {
 
 			// Get user by login name
 			Login user = accountRepository.findByLoginNameAndLoginIsActive(loginDto.getLoginName(),true);
-			
+
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(loginDto.getLoginName() + " not found");
 
@@ -96,10 +108,19 @@ public class LoginServiceImpl implements ILogin {
 
 				//
 				if(!cust.getCustIsActive()) throw new Exception("Subscription expired, please contact admin");
-				
+
+				// Check customer validity
+				int custValidity = custRepository.checkCustValidationByCustId(cust.getCustId());
+				if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
+
+				// Check Branch validity
+				int branchValidity = branchRepository.checkBranchValidity(user.getLoginId());
+				if(branchValidity == 0) throw new Exception("Subscription expired, please contact admin");
+
+
 				// convert byte to base64
 				if(cust != null)
-				logo = Base64.getEncoder().encodeToString(cust.getCustLogoFile());
+					logo = Base64.getEncoder().encodeToString(cust.getCustLogoFile());
 
 			}
 
@@ -110,7 +131,7 @@ public class LoginServiceImpl implements ILogin {
 			//if(matches(loginDto.getLoginPassword(), user.loginPassword)) {
 			if(encoder.getEncoder().matches(loginDto.getLoginPassword(), user.getLoginPassword())) {
 
-				
+
 				// Generate token and send user details to client 
 				response.data = new LoginDto(user.getLoginId(), user.getRefCustId(), user.getLoginName(), jwtTokenService.generateToken(user.getLoginName()).toString(), logo, user.getRefEmpId());
 				response.status = new Status(false,200,"success");
@@ -145,13 +166,21 @@ public class LoginServiceImpl implements ILogin {
 
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(loginDto.getUserName() + " not found");
-			
+
 			// Check user is active
 			if(user.getLoginIsActive()== false) throw new Exception("Please contact admin "+loginDto.getUserName() + "is not active");
-			
+
+			// Check customer validity
+			int custValidity = custRepository.checkCustValidationByCustId(user.getRefCustId());
+			if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
+
+			// Check Branch validity
+			int branchValidity = branchRepository.checkBranchValidity(user.getLoginId());
+			if(branchValidity == 0) throw new Exception("Subscription expired, please contact admin");
+
 			// Check mobile exist
 			if(user.getLoginMobile() == null) throw new Exception("Mobile no doesn't exists. Unable to reset password.");
-			
+
 			// Check customer validity
 			if(user != null && user.getRefCustId() != 0) {
 
@@ -167,12 +196,12 @@ public class LoginServiceImpl implements ILogin {
 
 			// Generate new password
 			String nPassword = accountRepository.generatePassword();
-			
+
 			// set new password
 			String hashedPassword = encoder.getEncoder().encode(nPassword);
 			user.setLoginPassword(hashedPassword);
 			accountRepository.save(user);
-			
+
 			// Send new password to registered mobile
 			String mobileNo = null;
 			if(user.getLoginMobile() != null) {
@@ -182,10 +211,10 @@ public class LoginServiceImpl implements ILogin {
 				Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(user.getRefEmpId(), true);
 				mobileNo = employee.getEmpMobile();
 			}
-			
+
 			String mobileSmS = "Password to access the Smart Attendance System has been reset to: " + nPassword +" for "+ user.getLoginName();	
 			String s = messageUtil.sms(mobileNo, mobileSmS);
-			
+
 			//Set msg
 			response = new Status(false, 200, "Your new password has been sent to your registered Mobile no.");
 
@@ -209,15 +238,24 @@ public class LoginServiceImpl implements ILogin {
 
 			// Get user by login name
 			Login user = accountRepository.findByLoginNameAndLoginIsActive(changePasswordDto.getUserName(), true);
-			
+
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(changePasswordDto.getUserName() + " not found");
-			
+
+
 			// Check user is active
 			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+changePasswordDto.getUserName() + "is not active");
 
 			// Check customer validity
 			if(user != null && user.getRefCustId() != 0) {
+
+				// Check customer validity
+				int custValidity = custRepository.checkCustValidationByCustId(user.getRefCustId());
+				if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
+
+				// Check Branch validity
+				int branchValidity = branchRepository.checkBranchValidity(user.getLoginId());
+				if(branchValidity == 0) throw new Exception("Subscription expired, please contact admin");
 
 				// Get customer details by customer id
 				Customer cust = custRepository.findByCustId(user.getRefCustId());
