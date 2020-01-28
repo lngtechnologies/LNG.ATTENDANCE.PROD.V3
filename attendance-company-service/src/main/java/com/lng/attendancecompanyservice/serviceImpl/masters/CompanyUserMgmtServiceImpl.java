@@ -337,8 +337,10 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 				companyUserLoginDto.setLoginId(Integer.valueOf(p[0].toString()));
 				companyUserLoginDto.setLoginName(p[1].toString());
 				companyUserLoginDto.setLoginMobile(p[2].toString());
+				companyUserLoginDto.setCustId(Integer.valueOf(p[3].toString()));
 
 				companyUserLoginDtoList.add(companyUserLoginDto);
+				companyUserLoginModuleMapResponseDto.setCustId(Integer.valueOf(p[3].toString()));
 				companyUserLoginModuleMapResponseDto.setLoginDetails(companyUserLoginDtoList);
 
 				List<Object[]> moduleList = iModuleRepository.findModulesByLogin_LoginId(companyUserLoginDto.getLoginId());
