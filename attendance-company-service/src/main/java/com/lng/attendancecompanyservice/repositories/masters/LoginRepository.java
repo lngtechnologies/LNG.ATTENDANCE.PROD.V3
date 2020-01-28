@@ -31,4 +31,7 @@ public interface LoginRepository extends PagingAndSortingRepository<Login, Integ
 	 
 	 @Query(value = "call getLoginDetailsByLoginId(?1)", nativeQuery = true)
 	 List<Object[]> findAllUsersByloginId(Integer loginId);
+	 
+	 @Query(value = "call getUserDetailsByCustomerId(?1)", nativeQuery = true)
+	 List<Object[]> findAllUsersByCustId(Integer custId);
 }

@@ -6,6 +6,8 @@ import status.Status;
 
 public class CompanyUserLoginModuleMapResponseDto {
 	
+	private Integer custId;
+	
     private Integer loginId;
 	
 	private List<CompanyUserLoginDto> loginDetails;
@@ -27,5 +29,15 @@ public class CompanyUserLoginModuleMapResponseDto {
 	public void setLoginDetails(List<CompanyUserLoginDto> loginDetails) {
 		this.loginDetails = loginDetails;
 	}
+
+	public Integer getCustId() {
+		return custId;
+	}
+
+	public void setCustId(Integer custId) {
+		this.custId = custId;
+	}
+	
+	
 	
 }

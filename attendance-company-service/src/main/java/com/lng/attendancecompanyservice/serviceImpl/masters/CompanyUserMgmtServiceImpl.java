@@ -27,10 +27,13 @@ import com.lng.dto.masters.custUserMgmt.CompanyUserLoginModuleDto;
 import com.lng.dto.masters.custUserMgmt.CompanyUserLoginModuleMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserBranchesDto;
 import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
+import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModulesDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResDto;
+import com.lng.dto.masters.custUserMgmt.UserModuleResponseDto;
 
 import status.Status;
 @Service
@@ -130,7 +133,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 				status = new Status(true, 400, "Login id not found");
 			}
 		} catch (Exception e) {
-			status = new Status(true, 400, "Oops..! Something went wrong..");
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return status;
 	}
@@ -176,7 +179,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 
 
 		} catch (Exception e) {
-			status = new Status(true, 400, "Oops..! Something went wrong..");
+			status = new Status(true, 500, "Oops..! Something went wrong..");
 
 		}
 		finally {
@@ -234,7 +237,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 
 
 		} catch (Exception e) {
-			status = new Status(true, 400, "Opps...! Something went wrong..");
+			status = new Status(true, 500, "Opps...! Something went wrong..");
 
 		}
 		finally {
@@ -267,11 +270,11 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 				for(Object[] m : moduleList) {
 					CustUserModulesDto custUserModulesDto = new CustUserModulesDto();
 
-						custUserModulesDto.setLoginId(Integer.valueOf(m[0].toString()));
-						custUserModulesDto.setModuleId(Integer.valueOf(m[1].toString()));
-						custUserModulesDto.setModuleName(m[2].toString());
+					custUserModulesDto.setLoginId(Integer.valueOf(m[0].toString()));
+					custUserModulesDto.setModuleId(Integer.valueOf(m[1].toString()));
+					custUserModulesDto.setModuleName(m[2].toString());
 
-						custUserModulesDtoList.add(custUserModulesDto);
+					custUserModulesDtoList.add(custUserModulesDto);
 
 				}	
 				companyUserLoginDto.setModules(custUserModulesDtoList);
@@ -282,6 +285,81 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success");
 			}
 
+		} catch (Exception e) {
+			companyUserLoginModuleMapResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return companyUserLoginModuleMapResponseDto;
+	}
+
+	@Override
+	public UserModuleResDto findAllModules() {
+		UserModuleResDto userModuleResDto = new UserModuleResDto();
+		List<UserModuleResponseDto> userModule = new ArrayList<UserModuleResponseDto>();
+		try {
+			List<Object[]> modules = iModuleRepository.findAllModules();
+			if(!modules.isEmpty()) {
+				for (Object[] p: modules) {
+					UserModuleResponseDto userModuleResponseDto = new UserModuleResponseDto();
+					userModuleResponseDto.setModuleId(Integer.valueOf(p[0].toString()));
+					userModuleResponseDto.setModuleName(p[1].toString());
+					userModuleResponseDto.setModuleURL(p[2].toString());
+					userModuleResponseDto.setParentId(Integer.valueOf(p[3].toString()));
+					userModule.add(userModuleResponseDto);
+					userModuleResDto.setModules(userModule);
+				}
+
+				userModuleResDto.status = new Status(false, 200, "Success");
+			} else {
+				userModuleResDto.status = new Status(false, 400, "Not found");
+			}
+
+
+		} catch (Exception e) {
+			userModuleResDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return userModuleResDto;
+	}
+
+	@Override
+	public CompanyUserLoginModuleMapResponseDto getAllUserByCustId(Integer custId) {
+		CompanyUserLoginModuleMapResponseDto companyUserLoginModuleMapResponseDto = new CompanyUserLoginModuleMapResponseDto();
+
+		List<CompanyUserLoginDto> companyUserLoginDtoList = new ArrayList<>();
+
+		try {
+
+			List<Object[]> loginList = iLoginRepository.findAllUsersByCustId(0);
+			for(Object[] p : loginList) {
+				CompanyUserLoginDto companyUserLoginDto = new CompanyUserLoginDto();
+
+				List<CustUserModulesDto> custUserModulesDtoList = new ArrayList<>();
+
+				companyUserLoginDto.setLoginId(Integer.valueOf(p[0].toString()));
+				companyUserLoginDto.setLoginName(p[1].toString());
+				companyUserLoginDto.setLoginMobile(p[2].toString());
+
+				companyUserLoginDtoList.add(companyUserLoginDto);
+				companyUserLoginModuleMapResponseDto.setLoginDetails(companyUserLoginDtoList);
+
+				List<Object[]> moduleList = iModuleRepository.findModulesByLogin_LoginId(companyUserLoginDto.getLoginId());
+				// custUserLoginModuleBranchMapResponseDto.setModules(moduleList.stream().map(module -> convertToCustUserModulesDto(module)).collect(Collectors.toList()));
+				for(Object[] m : moduleList) {
+					CustUserModulesDto custUserModulesDto = new CustUserModulesDto();
+
+					custUserModulesDto.setLoginId(Integer.valueOf(m[0].toString()));
+					custUserModulesDto.setModuleId(Integer.valueOf(m[1].toString()));
+					custUserModulesDto.setModuleName(m[2].toString());
+
+					custUserModulesDtoList.add(custUserModulesDto);
+
+				}	
+				companyUserLoginDto.setModules(custUserModulesDtoList);
+			}
+			if(loginList.isEmpty()) {
+				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success and there is no login details exist for this customer");
+			}else {
+				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success");
+			}
 		} catch (Exception e) {
 			companyUserLoginModuleMapResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
