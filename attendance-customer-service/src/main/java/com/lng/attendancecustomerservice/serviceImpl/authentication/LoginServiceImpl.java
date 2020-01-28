@@ -83,11 +83,15 @@ public class LoginServiceImpl implements ILogin {
 
 				// Get customer details by customer id
 				Customer cust = custRepository.findByCustId(user.getRefCustId());
-
+				
 				// Customer not exist
 				if(cust == null) throw new Exception("Customer doesn't exist");
 
-				//
+				// Check customer validity
+				int custValidity = custRepository.checkCustValidationByCustId(cust.getCustId());
+				if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
+				
+				// Check customer validity
 				if(!cust.getCustIsActive()) throw new Exception("Subscription expired, please contact admin");
 				
 				// convert byte to base64
@@ -137,6 +141,10 @@ public class LoginServiceImpl implements ILogin {
 
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(loginDto.getUserName() + " not found");
+			
+			// Check customer validity
+			int custValidity = custRepository.checkCustValidationByCustId(user.getRefCustId());
+			if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
 			
 			// Check user is active
 			if(user.getLoginIsActive()== false) throw new Exception("Please contact admin "+loginDto.getUserName() + "is not active");
@@ -198,12 +206,18 @@ public class LoginServiceImpl implements ILogin {
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(changePasswordDto.getUserName() + " not found");
 			
+			
+			
 			// Check user is active
 			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+changePasswordDto.getUserName() + "is not active");
 
 			// Check customer validity
 			if(user != null && user.getRefCustId() != 0) {
 
+				// Check customer validity
+				int custValidity = custRepository.checkCustValidationByCustId(user.getRefCustId());
+				if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
+				
 				// Get customer details by customer id
 				Customer cust = custRepository.findByCustId(user.getRefCustId());
 

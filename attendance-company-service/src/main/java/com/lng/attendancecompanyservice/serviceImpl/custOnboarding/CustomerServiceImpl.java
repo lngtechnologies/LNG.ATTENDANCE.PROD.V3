@@ -231,7 +231,7 @@ public class CustomerServiceImpl implements CustomerService {
 		 * socialMediaIconUrl =
 		 * "C:/Users/Admin/Desktop/Welcome/images/social-media-icon.png";
 		 */
-		String subject = "Smart Attendance System Welcome Kit";
+		String subject = "Smart Attendance System";
 		String mailFrom = mailProperties.getUsername();
 		String password = mailProperties.getPassword();
 		String port = mailProperties.getPort().toString();

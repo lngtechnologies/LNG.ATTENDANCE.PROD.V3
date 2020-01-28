@@ -11,6 +11,8 @@ import com.lng.attendancecustomerservice.entity.masters.Branch;
 public interface BranchRepository extends PagingAndSortingRepository<Branch,Integer> {
 
 	Branch findBranchByBrId(Integer brId);
+	
+	Branch findBranchByBrIdAndBrIsActive(Integer brId, Boolean isActive);
 
 	Branch findBranchByCustomer_custId(Integer custId);
 
@@ -33,4 +35,7 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch,Inte
 	
 	@Query(value = "SELECT brId, brName FROM tmbranch br LEFT JOIN tmcustomer c ON c.custId = br.refCustomerId WHERE br.refCustomerId = ?1 AND br.brIsActive = TRUE AND c.custIsActive = TRUE", nativeQuery = true)
 	List<Object[]> getAllBranchesByCustId(Integer custId);
+	
+	@Query(value = "SELECT COUNT(*) AS cunt FROM tmbranch WHERE brValidityEnd > CURDATE() AND brId = ?1 AND brIsActive = TRUE", nativeQuery = true)
+	int checkBranchValidity(Integer brId);
 }
