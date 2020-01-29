@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecustomerservice.entity.authentication.Login;
 import com.lng.attendancecustomerservice.entity.masters.Block;
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.Contractor;
@@ -30,6 +31,7 @@ import com.lng.attendancecustomerservice.entity.masters.EmployeeReportingTo;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeShift;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeType;
 import com.lng.attendancecustomerservice.entity.masters.Shift;
+import com.lng.attendancecustomerservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecustomerservice.repositories.masters.BlockRepository;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ContractorRepository;
@@ -115,6 +117,10 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 	@Autowired
 	EmployeeReportingToRepository employeeReportingToRepository;
+
+	@Autowired
+	ILoginRepository loginRepository;
+
 
 	private final Lock displayQueueLock = new ReentrantLock();
 
@@ -938,9 +944,18 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			if(employee != null) {
 				EmployeeReportingTo employeeReportingTo = employeeReportingToRepository.findEmployeeByEmployee_EmpId(empId);
 				if(employeeReportingTo.getRefEmpReportingToId() != 0) {
-					employee.setEmpInService(false);
-					custEmployeeRepository.save(employee);
-					custEmployeeStatus.status = new Status(false, 200, "deleted");
+					Login login = loginRepository.findByRefEmpIdAndLoginIsActive(empId,true);
+					if(login == null) {
+						employee.setEmpInService(false);
+						custEmployeeRepository.save(employee);
+						custEmployeeStatus.status = new Status(false, 200, "deleted");
+					}else {
+						login.setLoginIsActive(false);
+						loginRepository.save(login);
+						employee.setEmpInService(false);
+						custEmployeeRepository.save(employee);
+						custEmployeeStatus.status = new Status(false, 200, "deleted");
+					}
 				} else {
 					custEmployeeStatus.status = new Status(true, 400, "Head of the organization can't be deleted..!");
 				}
@@ -948,7 +963,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 				custEmployeeStatus.status = new Status(true, 400, "Employee not found");
 			}
 		} catch (Exception e) {
-			custEmployeeStatus.status = new Status(true, 5000, "Opps...! Something went wrong");
+			custEmployeeStatus.status = new Status(true, 500, "Opps...! Something went wrong");
 		}
 		return custEmployeeStatus;
 	}
