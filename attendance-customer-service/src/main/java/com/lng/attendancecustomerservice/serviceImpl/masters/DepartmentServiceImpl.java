@@ -115,7 +115,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 			if(departmentDto.getDeptId() == null || departmentDto.getDeptId() == 0) throw new Exception("Department id is null or zero");
 			if(departmentDto.getRefCustId()	 == null || departmentDto.getRefCustId() == 0) throw new Exception("RefCustId id is null or zero");
 
-			Department department = departmentRepository.findDepartmentByDeptId(departmentDto.getDeptId());	
+			Department department = departmentRepository.findDepartmentByDeptIdAndDeptIsActive(departmentDto.getDeptId(), true);	
 			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(departmentDto.getRefCustId(), true);
 			if(customer != null) {
 				Department de = departmentRepository.findDepartmentBydeptNameAndCustomer_custId(departmentDto.getDeptName(), departmentDto.getRefCustId());
@@ -163,7 +163,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public DepartmentResponse deleteByDeptId(Integer deptId) {
 		DepartmentResponse departmentResponse=new DepartmentResponse(); 
 		try {
-			Department department = departmentRepository.findDepartmentByDeptId(deptId);
+			Department department = departmentRepository.findDepartmentByDeptIdAndDeptIsActive(deptId, true);
 			int a = departmentRepository.findEmployeeDepartmentByDepartmentDeptId(deptId);
 			if(department!= null) {
 				if(a == 0) {
@@ -198,7 +198,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	public DepartmentResponse getDepartmentByDeptId(Integer deptId) {
 		DepartmentResponse response=new DepartmentResponse();
 		try {
-			Department department = departmentRepository.findDepartmentByDeptId(deptId);
+			Department department = departmentRepository.findDepartmentByDeptIdAndDeptIsActive(deptId, true);
 			if(department != null) {
 				DepartmentDto departmentDto = convertToDepartmentDto(department);
 				response.data = departmentDto;

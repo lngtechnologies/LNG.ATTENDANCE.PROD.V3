@@ -203,7 +203,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					//set EmpId and DeptId to empDept
 					EmployeeDepartment employeeDepartment = new EmployeeDepartment();
 					try {
-						Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
+						Department department = departmentRepository.findDepartmentByDeptIdAndDeptIsActive(custEmployeeDto.getDepartmentId(), true);
 						if(department == null) throw new Exception("Cannot find department for Employee");
 						employeeDepartment.setEmployee(employee);
 						employeeDepartment.setDepartment(department);
@@ -239,7 +239,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					//set EmpId and ShiftId to empShift
 					EmployeeShift employeeShift = new EmployeeShift();
 					try {
-						Shift shift = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
+						Shift shift = shiftRepository.findShiftByShiftIdAndShiftIsActive(custEmployeeDto.getShiftId(), true);
 						if(shift == null) throw new Exception("Cannot find shift for Employee");
 						employeeShift.setEmployee(employee);
 						employeeShift.setShift(shift);
@@ -465,10 +465,12 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 		CustEmployeeListResponse custEmployeeListResponse = new CustEmployeeListResponse();
 		List<CustEmployeeDtoTwo> custEmployeeDtoTwoList = new ArrayList<>();
+		Integer deptId = null;
 
 		try {
 			List<Object[]> employeeList = custEmployeeRepository.findAllEmployeeByEmpIdAndEmpInService(empId);
 			Employee employee = custEmployeeRepository.findEmpReportingToByEmpId(empId);
+			
 			//EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmployee_EmpId(employee.getEmpId());
 			if(employeeList.isEmpty()) {
 				custEmployeeListResponse.status = new Status(true, 4000, "Employee not found");
@@ -478,10 +480,24 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 					CustEmployeeDtoTwo custEmployeeDto = new CustEmployeeDtoTwo();
 					custEmployeeDto.setEmpId(Integer.valueOf(p[0].toString()));
-					custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
+					
+					Branch branch = branchRepository.findBranchByBrIdAndBrIsActive(Integer.valueOf(p[1].toString()), true);
+					if(branch == null) {
+						custEmployeeDto.setBrId(null);
+					} else {
+						custEmployeeDto.setBrId(Integer.valueOf(p[1].toString()));
+					}
+				
 					custEmployeeDto.setCustId(Integer.valueOf(p[2].toString()));
 					custEmployeeDto.setContractorId(Integer.valueOf(p[3].toString()));
-					custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
+					
+					Shift shift = shiftRepository.findShiftByShiftIdAndShiftIsActive(Integer.valueOf(p[4].toString()), true);
+					if(shift == null) {
+						custEmployeeDto.setShiftId(null);
+					} else {
+						custEmployeeDto.setShiftId(Integer.valueOf(p[4].toString()));
+					}
+					
 					custEmployeeDto.setEmpTypeId(Integer.valueOf(p[5].toString()));
 					custEmployeeDto.setEmpName(p[6].toString());
 					custEmployeeDto.setEmpMobile(p[7].toString());
@@ -496,8 +512,21 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					custEmployeeDto.setDesignationName(p[16].toString());
 					custEmployeeDto.setContractorName(p[17].toString());
 					custEmployeeDto.setEmpType(p[18].toString());
-					custEmployeeDto.setDepartmentId(Integer.valueOf(p[19].toString()));
-					custEmployeeDto.setDesignationId(Integer.valueOf(p[20].toString()));
+					
+					Department department = departmentRepository.findDepartmentByDeptIdAndDeptIsActive(Integer.valueOf(p[19].toString()), true);
+					if(department == null) {
+						custEmployeeDto.setDepartmentId(deptId);
+					} else {
+						custEmployeeDto.setDepartmentId(Integer.valueOf(p[19].toString()));
+					}
+					
+					Designation designation = designationRepository.findDesignationByDesignationIdAndDesigIsActive(Integer.valueOf(p[20].toString()), true);
+					if(designation == null) {
+						custEmployeeDto.setDesignationId(null);
+					} else {
+						custEmployeeDto.setDesignationId(Integer.valueOf(p[20].toString()));
+					}
+					
 					if(employee != null) {
 						custEmployeeDto.setEmpReportingTo(employee.getEmpName());
 					}else {
@@ -534,8 +563,6 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 					}
 
 				}
-
-
 			}
 
 		} catch (Exception e) {
@@ -553,7 +580,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(custEmployeeDto.getEmpId(), true);
 			Customer customer =  customerRepository.findCustomerByCustIdAndCustIsActive(custEmployeeDto.getCustId(), true);
 			EmployeeType employeeType = employeeTypeRepository.findEmployeeTypeByEmpTypeId(custEmployeeDto.getEmpTypeId());
-			Shift shift = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
+			Shift shift = shiftRepository.findShiftByShiftIdAndShiftIsActive(custEmployeeDto.getShiftId(), true);
 			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
 			Employee employee1 = custEmployeeRepository.findByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
 
@@ -715,7 +742,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						try {
 							// EmployeeDepartment employeeDepartment2 = employeeDepartmentRepository.findByEmployee_EmpIdAndDepartment_DeptIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getDepartmentId(), custEmployeeDto.getEmployeeDepartmentFromDate());
 							EmployeeDepartment employeeDepartment2 = employeeDepartmentRepository.findByEmployee_EmpIdAndEmpFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmployeeDepartmentFromDate());
-							Department department = departmentRepository.findDepartmentByDeptId(custEmployeeDto.getDepartmentId());
+							Department department = departmentRepository.findDepartmentByDeptIdAndDeptIsActive(custEmployeeDto.getDepartmentId(), true);
 							if(employeeDepartment2 == null) {
 
 								EmployeeDepartment employeeDepartment = employeeDepartmentRepository.findByEmpId(custEmployeeDto.getEmpId());
@@ -787,7 +814,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 						try {
 							// EmployeeShift employeeShift2 = employeeShiftRepository.findByEmployee_EmpIdAndShift_ShiftIdAndShiftFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getShiftId(), custEmployeeDto.getEmployeeShiftFromDate());
 							EmployeeShift employeeShift2 = employeeShiftRepository.findByEmployee_EmpIdAndShiftFromDate(custEmployeeDto.getEmpId(), custEmployeeDto.getEmployeeShiftFromDate());
-							Shift shift1 = shiftRepository.findShiftByShiftId(custEmployeeDto.getShiftId());
+							Shift shift1 = shiftRepository.findShiftByShiftIdAndShiftIsActive(custEmployeeDto.getShiftId(), true);
 							if(employeeShift2 == null) {
 
 								EmployeeShift employeeShift1 = employeeShiftRepository.findByEmpId(custEmployeeDto.getEmpId());

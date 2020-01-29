@@ -16,6 +16,9 @@ public interface ShiftRepository extends CrudRepository<Shift,Integer> {
 	Shift findByShiftName(String shiftName);
 
 	Shift findShiftByShiftId(Integer shiftId);
+	
+	Shift findShiftByShiftIdAndShiftIsActive(Integer shiftId, Boolean isActive);
+	
 	@Query(value = "SELECT ts.shiftId,ts.shiftName,ts.shiftStart,ts.shiftEnd,ts.refBrId,IFNULL(ts.defaultOutInhrs ,0) AS defaultOutInhrs FROM  tmshift ts WHERE  refBrId = ?1 and ts.shiftIsActive = true", nativeQuery = true)
 	List<Object[]>  findShiftDetailsByBranch_RefBrIdAndShiftIsActive(int refBrId, Boolean shiftIsActive);
 

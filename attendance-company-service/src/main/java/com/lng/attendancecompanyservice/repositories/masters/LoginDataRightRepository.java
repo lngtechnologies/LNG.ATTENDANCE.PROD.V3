@@ -11,4 +11,6 @@ import com.lng.attendancecompanyservice.entity.masters.LoginDataRight;
 public interface LoginDataRightRepository extends PagingAndSortingRepository<LoginDataRight, Integer> {
 
 	List<LoginDataRight> findByBranch_BrId(Integer brId);
+	
+	List<LoginDataRight> findAllByLogin_LoginId(Integer loginId);
 }

@@ -12,6 +12,10 @@ import com.lng.attendancecustomerservice.entity.masters.Designation;
 public interface DesignationRepository extends CrudRepository<Designation,Integer> {
 	List<Designation> findAllByDesigIsActive(Boolean desigIsActive);
 	Designation findDesignationByDesignationId(Integer designationId);
+	
+	Designation findDesignationByDesignationIdAndDesigIsActive(Integer designationId, Boolean isActive);
+	
+	
 	@Query(value = "select * from tmdesignation where designationName = ?1", nativeQuery = true)
 	Designation findByDesignationName(String designationName);
 

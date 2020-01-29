@@ -39,7 +39,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	EmployeePicRepository employeePicRepository;
-	
+
 	@Autowired
 	BranchRepository branchRepository;
 
@@ -55,42 +55,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 		try {
 			Customer customer = customerRepository.getByCustCode(custCode);
 
-			
-			
 			// Check customer exist else throw exception	
-			if(customer == null || !customer.getCustIsActive()) throw new Exception("Invalid Data");
+			if(customer == null || !customer.getCustIsActive()) throw new Exception("Customet not found or Invalid Data");
 
 			// Check customer validity
 			int custValidity = customerRepository.checkCustValidationByCustId(customer.getCustId());
 			if(custValidity == 0)  throw new Exception("Subscription expired, please contact admin");
-			
+
 			// Check customer validity
 			if(customer.getCustIsActive() == true) {
-				
-				// Get Employee details by customer id, customer code, employee mobile number
+
+				//Get Employee details by customer id, customer code, employee mobile number
 				employee = employeeRepository.getEmployeeDetailsByCustomer_CustCodeAndEmployee_EmpMobile(custCode, empMobile, customer.getCustId());
-				
-				Branch branch = branchRepository.findBranchByBrIdAndBrIsActive(employee.getBranch().getBrId(), true);
-				if(branch == null) throw new Exception("Branch does not exist or is not active");
-				
-				int branchValidity = branchRepository.checkBranchValidity(employee.getBranch().getBrId());
-				if(branchValidity == 0)  throw new Exception("Subscription expired, please contact admin");
-				
-				// Employee not exist
-				if(employee == null) throw new Exception("Employee is not in service or Invalid Data");
 
+				if(employee != null)  {		
 
-				if(employee != null)  {
+					Branch branch = branchRepository.findBranchByBrIdAndBrIsActive(employee.getBranch().getBrId(), true);
+					if(branch == null) throw new Exception("Branch does not exist or is not active");
+
+					int branchValidity = branchRepository.checkBranchValidity(employee.getBranch().getBrId());
+					if(branchValidity == 0)  throw new Exception("Subscription expired, please contact admin");
 
 					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
 					formatter.setTimeZone(TimeZone.getTimeZone("IST"));
-					 Date date = new Date();
+					Date date = new Date();
 					String strDate = formatter.format(date);
-				
+
 					Date empInAttndDate = employeeRepository.getRecentInDateByAttndDateAndEmpId(strDate, employee.getEmpId());
 
 					Date empOutAttndDate = employeeRepository.getRecentOutDateByAttndDateAndEmpId(strDate, employee.getEmpId());
-					
+
 					Date empAttndDate = employeeRepository.getRecentAttndDate(strDate, employee.getEmpId());
 
 					if(empInAttndDate != null || empOutAttndDate != null) {
@@ -98,21 +92,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 						String pattern = "yyyy-MM-dd'T'HH:mm:ss";
 						SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 						dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-						
+
 						if(empInAttndDate != null) {
 							inDate = dateFormat.format(empInAttndDate);
 						}
-						
+
 						if(empOutAttndDate != null) {
 							outDate = dateFormat.format(empOutAttndDate);
 						}
-						
+
 						if(empAttndDate != null) {
 							String pattern1 = "yyyy-MM-dd";
 							SimpleDateFormat dateFormat1 = new SimpleDateFormat(pattern1);
 							attndDate = dateFormat1.format(empAttndDate);
 						}
-						
+
 						if(employee.getEmpPresistedFaceId() == null) {
 
 							byte[] custLogo = employee.getCustomer().getCustLogoFile();
@@ -147,9 +141,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 							response.employeeDataDto = new EmployeeDataDto(employee.getCustomer().getCustId(), employee.getCustomer().getCustName(), employee.getBranch().getBrId(), employee.getBranch().getBrName(), brCode, employee.getEmpId(), employee.getEmpName(), base64CustLogo, true, employee.getEmpPresistedFaceId(), false, attndDate, inDate,outDate);	
 						}
 					}
+				} else {
+					response.status = new Status(true,400,"Employee is not in service or Invalid Data");
 				}
-			} 
- 
+			} else {
+				response.status = new Status(true,400,"Invalid Data");
+			}
+
 		} catch(Exception ex) {
 			response.status = new Status(true,400,ex.getMessage());
 		}
