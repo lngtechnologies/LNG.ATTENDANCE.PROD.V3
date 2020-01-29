@@ -328,7 +328,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 
 		try {
 
-			List<Object[]> loginList = iLoginRepository.findAllUsersByCustId(0);
+			List<Object[]> loginList = iLoginRepository.findAllUsersByCustId(custId);
 			for(Object[] p : loginList) {
 				CompanyUserLoginDto companyUserLoginDto = new CompanyUserLoginDto();
 
