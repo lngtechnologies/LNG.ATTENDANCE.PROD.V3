@@ -94,6 +94,29 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
 		return branchListDto;
 	}
+	@Override
+	public BranchListDto getBranchDetailsByCustIdAndLoginId(Integer custId, Integer loginId) {
+		BranchListDto branchListDto = new BranchListDto();
+
+		try {
+			List<Branch> branchList = branchRepository.getBranchDetailsByCustomer_custIdAndUser_loginId(custId,loginId);
+
+
+			if(!branchList.isEmpty()) {
+				branchListDto.setCustId(custId);
+				branchListDto.setLoginId(loginId);
+				branchListDto.setBranchList(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+				branchListDto.status = new Status(false, 200, "Success");
+			}else {
+				branchListDto.status = new Status(false, 400, "Not found");
+			}
+
+		} catch (Exception e) {
+			branchListDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+
+		return branchListDto;
+	}
 
 	@Override
 	public CustLeaveTrypeListDto getLeaveListByCustId(Integer custId) {
@@ -211,5 +234,27 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 		custLeaveTypeDto.setCustLeaveId(custLeave.getCustLeaveId());
 		custLeaveTypeDto.setCustLeaveName(custLeave.getCustLeaveName());
 		return custLeaveTypeDto;
+	}
+	@Override
+	public BranchListDto getAllBranchListByCustId(Integer custId) {
+		BranchListDto branchListDto = new BranchListDto();
+
+		try {
+			List<Branch> branchList = branchRepository.getAllBranchListByCustId(custId);
+
+
+			if(!branchList.isEmpty()) {
+				branchListDto.setCustId(custId);
+				branchListDto.setBranchList(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+				branchListDto.status = new Status(false, 200, "Success");
+			}else {
+				branchListDto.status = new Status(false, 400, "Not found");
+			}
+
+		} catch (Exception e) {
+			branchListDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+
+		return branchListDto;
 	}
 }

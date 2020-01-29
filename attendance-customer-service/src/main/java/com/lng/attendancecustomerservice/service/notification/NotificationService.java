@@ -16,4 +16,6 @@ public interface NotificationService {
 	DeptSmsResponseDto getDepartmentListByCustId(Integer custId);
 	
 	Status sendNotificationToDeptBySms(DeptNotificationDto deptNotificationDto);
+	
+	BranchSmsResponseDto getAllBranchestByCustId(Integer custId);
 }

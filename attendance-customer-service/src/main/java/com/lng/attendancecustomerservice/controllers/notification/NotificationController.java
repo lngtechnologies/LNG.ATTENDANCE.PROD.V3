@@ -34,6 +34,12 @@ public class NotificationController {
 		return new ResponseEntity<BranchSmsResponseDto>(branchSmsResponseDto, HttpStatus.OK);
 	}
 	
+	@PostMapping(value = "/branch/getAllByCustId")
+	public ResponseEntity<BranchSmsResponseDto> getAllBranchListByCustId(@RequestBody BranchDto branchDto) {
+		BranchSmsResponseDto branchSmsResponseDto = notificationService.getAllBranchestByCustId(branchDto.getCustId());
+		return new ResponseEntity<BranchSmsResponseDto>(branchSmsResponseDto, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/department/getByCustId")
 	public ResponseEntity<DeptSmsResponseDto> getDepartmentListByCustId(@RequestBody DepartmentDto departmentDto) {
 		DeptSmsResponseDto deptSmsResponseDto = notificationService.getDepartmentListByCustId(departmentDto.getCustId());

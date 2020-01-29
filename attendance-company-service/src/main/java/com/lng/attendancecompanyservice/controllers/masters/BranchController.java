@@ -71,6 +71,14 @@ public class BranchController {
 			return new ResponseEntity<BranchResponse>(branchDto2,HttpStatus.OK);
 		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
 	}
+	
+	@PostMapping(value = "/getAllBranchesByCustId")
+	public ResponseEntity<BranchResponse> getAllBranchesByCustId(@RequestBody BranchDto branchDto) {
+		BranchResponse branchDto2 = branchService.getAllBranchesByCustId(branchDto.getRefCustomerId());
+		if(branchDto!=null){
+			return new ResponseEntity<BranchResponse>(branchDto2,HttpStatus.OK);
+		} return new ResponseEntity(HttpStatus.NO_CONTENT); 
+	}
 	/*@PostMapping(value = "/getBranchByCustId")
 	public ResponseEntity<BranchResponse> findBranchByCustId(@RequestBody BranchDto branchDto) {
 		BranchResponse branchResponse = branchService.findBranchList(branchDto.getRefCustomerId());

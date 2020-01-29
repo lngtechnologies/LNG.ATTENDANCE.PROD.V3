@@ -405,6 +405,25 @@ public class BranchServiceImpl implements BranchService {
 	}
 
 
+	@Override
+	public BranchResponse getAllBranchesByCustId(Integer custId) {
+		BranchResponse response = new BranchResponse();
+		try {
+			List<Branch> branchList=branchRepository.findAllBranchesByCustomer_CustId(custId);
+			response.setData1(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+			if(!branchList.isEmpty()) {
+				response.status = new Status(false,200, "Success");
+			}else {
+				response.status = new Status(false,400, "Not found"); 
+			}
+
+		}catch(Exception e) {
+			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
+		}
+		return response;
+	}
+
+
 	/*@Override
 	public BranchResponse findBranchList(Integer refCustomerId) {
 		BranchResponse branchResponse = new BranchResponse();

@@ -336,4 +336,36 @@ public class BlockServiceImpl implements BlockService {
 		blockDto.setBrCode(block.getBranch().getBrCode());
 		return blockDto;
 	}
+
+	@Override
+	public BlockResponse getBranchesByCustId(Integer custId) {
+		BlockResponse response=new BlockResponse(); 
+		List<BlockDto> blockDtoList = new ArrayList<>();
+		try {
+
+			List<Object[]> blockList = blockRepository.findBranchListByCustomer_CustId(custId);
+			if(!blockList.isEmpty()) {
+				for (Object[] p : blockList) {	
+					BlockDto blockDto1 = new BlockDto();
+					blockDto1.setCustId(Integer.valueOf(p[0].toString()));
+					blockDto1.setRefBranchId(Integer.valueOf(p[1].toString()));
+					blockDto1.setBrCode(p[2].toString());
+					blockDto1.setBrName(p[3].toString());
+					blockDtoList.add(blockDto1);
+					response.setData1(blockDtoList);
+					response.status = new Status(false,200, "Success");
+				}
+			}else {
+				response.status = new Status(false,400, "Not found");
+			}
+
+
+		}catch (Exception e){
+			response.status = new Status(true,500, "Oops..! Something went wrong..");
+
+
+		}
+		return response;
+	}
+
 }

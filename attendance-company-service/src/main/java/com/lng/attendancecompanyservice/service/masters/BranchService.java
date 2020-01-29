@@ -13,6 +13,7 @@ public interface BranchService {
 	BranchResponse deleteByBrId(Integer brId);
 	BranchResponse getBranchByBrId(int brId);
 	BranchResponse getAllByCustId(Integer custId);
+	BranchResponse getAllBranchesByCustId(Integer custId);
 	
 	void createBranchFaceListId(String branchCode) throws Exception;
 	

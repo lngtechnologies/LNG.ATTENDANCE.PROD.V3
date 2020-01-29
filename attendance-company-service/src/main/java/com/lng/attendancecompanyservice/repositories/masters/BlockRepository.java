@@ -20,8 +20,10 @@ public interface BlockRepository extends PagingAndSortingRepository<Block, Integ
 	
 	Block findBlockByblkId(Integer blkId);
 	
-	@Query(value = "select  tc.custId,tb.brId,tb.brCode,tb.brName  FROM   tmcustomer tc LEFT JOIN  tmstate ts on ts.stateId = tc.refStateId LEFT JOIN  tmbranch tb on tb.refCustomerId = tc.custId  where  tc.custId= ?1", nativeQuery = true)
+	@Query(value = "select  tc.custId,tb.brId,tb.brCode,tb.brName FROM   tmcustomer tc LEFT JOIN  tmstate ts on ts.stateId = tc.refStateId LEFT JOIN  tmbranch tb on tb.refCustomerId = tc.custId  where tc.custId= ?1 and tc.custIsActive = true and tb.brIsActive = true", nativeQuery = true)
 	List<Object[]> findBranchDetailsByCustomer_CustId(int custId);
+	@Query(value = "select  tc.custId,tb.brId,tb.brCode,tb.brName FROM   tmcustomer tc LEFT JOIN  tmstate ts on ts.stateId = tc.refStateId LEFT JOIN  tmbranch tb on tb.refCustomerId = tc.custId  where tc.custId= ?1 and tc.custIsActive = true and tb.brIsActive = true and tb.brValidityEnd >= curdate()", nativeQuery = true)
+	List<Object[]> findBranchListByCustomer_CustId(int custId);
 
 	@Query(value = "CALL CheckBlockExistOrNot(?1)",nativeQuery = true)
 	int  findEmployeeBlockByBlockBlkId(int blkId);

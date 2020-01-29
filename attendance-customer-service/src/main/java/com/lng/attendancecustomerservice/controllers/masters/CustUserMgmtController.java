@@ -189,4 +189,9 @@ public class CustUserMgmtController {
 		CustUserBranchResDto custLoginDto1 = custUserMgmtService.findAllBranchesByCustId(custLoginDto.getCustId());
 		return new ResponseEntity<CustUserBranchResDto>(custLoginDto1, HttpStatus.CREATED);	
 	}
+	@PostMapping(value = "/findBranchDetailsByCustId")
+	public ResponseEntity<CustUserBranchResDto> findAllBranchDetailsByCustId(@RequestBody CustLoginDto custLoginDto) {
+		CustUserBranchResDto custLoginDto1 = custUserMgmtService.findBranchDetailsByCustId(custLoginDto.getCustId());
+		return new ResponseEntity<CustUserBranchResDto>(custLoginDto1, HttpStatus.CREATED);	
+	}
 }

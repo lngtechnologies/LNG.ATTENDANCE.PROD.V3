@@ -187,4 +187,23 @@ public class NotificationServiceImpl implements NotificationService {
 		return departmentDto;
 	}
 
+	@Override
+	public BranchSmsResponseDto getAllBranchestByCustId(Integer custId) {
+		BranchSmsResponseDto responseDto = new BranchSmsResponseDto();
+		try {
+			List<Branch> branchList = branchRepository.getAllBranchListByCustId(custId);
+
+			if(!branchList.isEmpty()) {
+				responseDto.setBranchDtoList(branchList.stream().map(branch -> convertToBranchDto(branch)).collect(Collectors.toList()));
+				responseDto.status = new Status(false, 200, "Success");
+			} else {
+				responseDto.status = new Status(false, 400, "Not found");
+			}
+
+		} catch (Exception e) {
+			responseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return responseDto;
+	}
+
 }

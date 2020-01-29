@@ -59,4 +59,6 @@ public interface CustUserMgmtService {
 	UserModuleResDto findAllModules();
 	
 	CustUserBranchResDto findAllBranchesByCustId(Integer custId);
+	
+	CustUserBranchResDto findBranchDetailsByCustId(Integer custId);
 }

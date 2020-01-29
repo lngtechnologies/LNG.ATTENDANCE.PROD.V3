@@ -336,6 +336,37 @@ public class HolidayCalendarServiceImpl implements HolidayCalendarService {
 		return holidayCalendarResponse;
 	}
 
+	@Override
+	public HolidayCalendarResponse findBranchListByCustId(Integer refCustId) {
+		HolidayCalendarResponse  holidayCalendarResponse  =  new  HolidayCalendarResponse();
+		List<HolidayCalendarDto> HolidayCalendarDtoList = new ArrayList<>();
+		try {
+
+			List<Object[]> branchList = holidayCalendarRepository.findBranchDetailsByRefCustomerId(refCustId);
+			if(branchList.isEmpty()) {
+				holidayCalendarResponse.status = new Status(false,400, "Customer not found");
+			}else {
+				for (Object[] p : branchList) {	
+
+					HolidayCalendarDto holidayCalendarDto1 = new HolidayCalendarDto();
+					holidayCalendarDto1.setRefbrId(Integer.valueOf(p[0].toString()));
+					holidayCalendarDto1.setBrName((p[1].toString()));
+					HolidayCalendarDtoList.add(holidayCalendarDto1);
+					holidayCalendarResponse.setData1(HolidayCalendarDtoList);
+					holidayCalendarResponse.status = new Status(false,200, "success");
+				}
+
+			}
+
+		}catch (Exception e){
+			holidayCalendarResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+
+
+		}
+		return holidayCalendarResponse;
+	}
+
+
 }
 
 

@@ -33,8 +33,18 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch,Inte
 	@Query(value = "call getBranchDetailsByCustIdAndLoginId(?1,?2)", nativeQuery = true)
 	List<Branch> getBranchByCustomer_custIdAndUser_loginId(Integer custId,Integer loginId);
 	
+	@Query(value = "call getBranchesByLoginIdAndCustId(?1,?2)", nativeQuery = true)
+	List<Branch> getBranchDetailsByCustomer_custIdAndUser_loginId(Integer custId,Integer loginId);
+	
 	@Query(value = "SELECT brId, brName FROM tmbranch br LEFT JOIN tmcustomer c ON c.custId = br.refCustomerId WHERE br.refCustomerId = ?1 AND br.brIsActive = TRUE AND c.custIsActive = TRUE", nativeQuery = true)
 	List<Object[]> getAllBranchesByCustId(Integer custId);
+	
+
+	@Query(value = "SELECT brId, brName FROM tmbranch br LEFT JOIN tmcustomer c ON c.custId = br.refCustomerId WHERE br.refCustomerId = ?1 AND br.brIsActive = TRUE AND c.custIsActive = TRUE AND br.brValidityEnd >= CURDATE()", nativeQuery = true)
+	List<Object[]> getBranchesByCustId(Integer custId);
+	
+	@Query(value = "SELECT br.* FROM tmbranch br LEFT JOIN tmcustomer c ON c.custId = br.refCustomerId WHERE br.refCustomerId = ?1 AND br.brIsActive = TRUE AND c.custIsActive = TRUE AND br.brValidityEnd >= CURDATE()", nativeQuery = true)
+	List<Branch> getAllBranchListByCustId(Integer custId);
 	
 	@Query(value = "SELECT COUNT(*) AS cunt FROM tmbranch WHERE brValidityEnd > CURDATE() AND brId = ?1 AND brIsActive = TRUE", nativeQuery = true)
 	int checkBranchValidity(Integer brId);
