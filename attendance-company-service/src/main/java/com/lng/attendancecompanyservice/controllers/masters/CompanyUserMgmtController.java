@@ -71,12 +71,12 @@ public class CompanyUserMgmtController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 	
-	@PostMapping(value = "/findAllUsersByLoginId")
+	@PostMapping(value = "/findAllCompanyUsersByLoginId")
 	public ResponseEntity<CompanyUserLoginModuleMapResponseDto> findAllUsersByLoginId(@RequestBody CompanyUserLoginModuleMapResponseDto companyUserLoginModuleMapResponseDto) {
 		CompanyUserLoginModuleMapResponseDto status = companyUserMgmtService.getAllUserByLoginId(companyUserLoginModuleMapResponseDto.getLoginId());
 		return new ResponseEntity<CompanyUserLoginModuleMapResponseDto>(status, HttpStatus.CREATED);	
 	}
-	@PostMapping(value = "/findAllUsersByCustId")
+	@PostMapping(value = "/findAllComapanyUsersByCustId")
 	public ResponseEntity<CompanyUserLoginModuleMapResponseDto> findAllUsersByCustId(@RequestBody CompanyUserLoginModuleMapResponseDto custUserBranchLoginMapDto) {
 		CompanyUserLoginModuleMapResponseDto status = companyUserMgmtService.getAllUserByCustId(custUserBranchLoginMapDto.getCustId());
 		return new ResponseEntity<CompanyUserLoginModuleMapResponseDto>(status, HttpStatus.CREATED);	

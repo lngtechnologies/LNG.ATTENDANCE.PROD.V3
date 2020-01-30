@@ -25,9 +25,6 @@ import com.lng.attendancecompanyservice.utils.MessageUtil;
 import com.lng.dto.masters.custUserMgmt.CompanyUserLoginDto;
 import com.lng.dto.masters.custUserMgmt.CompanyUserLoginModuleDto;
 import com.lng.dto.masters.custUserMgmt.CompanyUserLoginModuleMapResponseDto;
-import com.lng.dto.masters.custUserMgmt.CustUserBranchesDto;
-import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
-import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
@@ -358,7 +355,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 				companyUserLoginDto.setModules(custUserModulesDtoList);
 			}
 			if(loginList.isEmpty()) {
-				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success and there is no login details exist for this customer");
+				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success and there is no login details exist for this admin");
 			}else {
 				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success");
 			}
