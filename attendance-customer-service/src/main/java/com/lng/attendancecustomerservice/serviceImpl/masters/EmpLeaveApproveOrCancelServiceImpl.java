@@ -226,6 +226,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 							empLeaveDto.setEmpLeaveStatus(p[10].toString());
 							empLeaveDto.setEmpLeaveRemarks(p[11].toString());
 							empLeaveDto.setEmpLeaveRejectionRemarks(p[12].toString());
+							empLeaveDto.setLeaveType(p[13].toString());
 
 							empLeaveDtoList.add(empLeaveDto);
 
