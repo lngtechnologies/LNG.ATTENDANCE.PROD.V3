@@ -6,7 +6,7 @@ public class IntermediateParamCLass {
 	private String userName;
 	private String uMobileNumber;
 	public List<CustUserModuleDto> modules;
-	
+
 	public String getUserName() {
 		return userName;
 	}
@@ -19,4 +19,11 @@ public class IntermediateParamCLass {
 	public void setuMobileNumber(String uMobileNumber) {
 		this.uMobileNumber = uMobileNumber;
 	}
+	public List<CustUserModuleDto> getModules() {
+		return modules;
+	}
+	public void setModules(List<CustUserModuleDto> modules) {
+		this.modules = modules;
+	}
+
 }
