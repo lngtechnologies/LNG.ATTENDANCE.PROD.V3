@@ -251,13 +251,13 @@ public class CustomerServiceImpl implements CustomerService {
 				"    <td>\r\n" + 
 				"		<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">\r\n" + 
 				"			<tr>\r\n" + 
-				"				<td colspan=\"3\" bgcolor=\"#1565c0\" style=\"padding:10px 25px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/facetek-content.svg\" alt=\"\"  style=\"width:380px;\"/></td>\r\n" + 
+				"				<td colspan=\"3\" bgcolor=\"#1565c0\" style=\"padding:10px 25px;\"><img src=\"http://52.183.143.13/welcomekitv3/images/facetek-content.svg\" alt=\"\"  style=\"width:380px;\"/></td>\r\n" + 
 				"			</tr>\r\n" + 
 				"			<tr>\r\n" + 
 				"				<td colspan=\"3\">\r\n" + 
 				"					<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">\r\n" + 
 				"						<tr>\r\n" + 
-				"						  <td colspan=\"3\" bgcolor=\"#1565c0\" style=\"background-image:url(http://52.183.143.13/WelcomeKitImages/Images/bg2.jpg); line-height:27px; width:400px; height:164px; font-size:16px; color:#fff;  padding:30px 100px 0px; text-align:center;\" valign=\"top\">You're all set, Now you can start using the <br>Facetek Smart Attendance System <br /> <br />\r\n" + 
+				"						  <td colspan=\"3\" bgcolor=\"#1565c0\" style=\"background-image:url(http://52.183.143.13/welcomekitv3/images/bg2.jpg); line-height:27px; width:400px; height:164px; font-size:16px; color:#fff;  padding:30px 100px 0px; text-align:center;\" valign=\"top\">You're all set, Now you can start using the <br>Facetek Smart Attendance System <br /> <br />\r\n" + 
 				"						    <a href=\"http://52.183.143.13/lngattendancesystemv5\" target=\"_blank\" style=\"text-decoration:none; color:#fff;\"><span style=\"background-color:#ff9602; padding:10px 30px; font-size:12px; \"> CLICK HERE TO LOG IN </span></a></td>\r\n" + 
 				"						</tr>\r\n" + 
 				"					</table>\r\n" + 
@@ -297,15 +297,15 @@ public class CustomerServiceImpl implements CustomerService {
 				"				<td colspan=\"12\" style=\"font-size:16px; color:#666; line-height:18px; padding:20px 0px 10px; color:#1565c0; text-align:center \"><strong> Facetek Features</strong></td>\r\n" + 
 				"			</tr>\r\n" + 
 				"									<tr>\r\n" + 
-				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/location.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">GPS Based Attendance</span></td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/welcomekitv3/images/location.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">GPS Based Attendance</span></td>\r\n" + 
 				"										<td>&nbsp;</td>\r\n" + 
-				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px; \"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/face.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Face Recognition</span></td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px; \"><img src=\"http://52.183.143.13/welcomekitv3/images/face.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Face Recognition</span></td>\r\n" + 
 				"										<td>&nbsp;</td>\r\n" + 
-				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/qrcode.svg\" style=\"width:64px;\"  alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">QR Code Based Attendance</span></td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/welcomekitv3/images/qrcode.svg\" style=\"width:64px;\"  alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">QR Code Based Attendance</span></td>\r\n" + 
 				"										<td>&nbsp;</td>\r\n" + 
-				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/prox.svg\" style=\"width:64px;\"  alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Proximity Based Attendance</span></td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/welcomekitv3/images/prox.svg\" style=\"width:64px;\"  alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Proximity Based Attendance</span></td>\r\n" + 
 				"										<td>&nbsp;</td>\r\n" + 
-				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/leave.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Leave Management</span></td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/welcomekitv3/images/leave.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Leave Management</span></td>\r\n" + 
 				"										\r\n" + 
 				"									</tr>\r\n" + 
 				"									\r\n" + 
@@ -326,9 +326,9 @@ public class CustomerServiceImpl implements CustomerService {
 				"							<td colspan=\"3\" align=\"center\" style=\"font-size:14px; line-height:21px; padding:10px 0px 10px;  color:#666;\">\r\n" + 
 				"								<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\r\n" + 
 				"									<tr>\r\n" + 
-				"										<td align=\"center\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/facebook.svg\" alt=\"\"  style=\"width:25px;\"/></td>\r\n" + 
-				"										<td align=\"center\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/twitter.svg\" alt=\"\" style=\"width:25px;\"/></td>\r\n" + 
-				"										<td align=\"center\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/linkeding.svg\" alt=\"\" style=\"width:25px;\"/></td>\r\n" + 
+				"										<td align=\"center\"><img src=\"http://52.183.143.13/welcomekitv3/images/facebook.svg\" alt=\"\"  style=\"width:25px;\"/></td>\r\n" + 
+				"										<td align=\"center\"><img src=\"http://52.183.143.13/welcomekitv3/images/twitter.svg\" alt=\"\" style=\"width:25px;\"/></td>\r\n" + 
+				"										<td align=\"center\"><img src=\"http://52.183.143.13/welcomekitv3/images/linkeding.svg\" alt=\"\" style=\"width:25px;\"/></td>\r\n" + 
 				"									</tr>\r\n" + 
 				"								</table>\r\n" + 
 				"							</td>\r\n" + 
