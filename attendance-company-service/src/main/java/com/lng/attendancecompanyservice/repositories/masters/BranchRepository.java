@@ -37,4 +37,6 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch, Int
 	
 	@Query(value = "call checkBranchValidityByLoginId(?1)", nativeQuery = true)
 	int checkBranchValidity(Integer brId);
+	
+	Branch getBranchByBrCode(String brCode);
 }

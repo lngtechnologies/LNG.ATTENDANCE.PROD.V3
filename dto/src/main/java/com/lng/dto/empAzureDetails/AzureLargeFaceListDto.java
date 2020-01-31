@@ -2,11 +2,42 @@ package com.lng.dto.empAzureDetails;
 
 public class AzureLargeFaceListDto {
 
+	
+	private Integer brId;
+	
+	private String brName;
+	
+	private Boolean brIsActive;
+	
 	private String largeFaceListId;
 	
 	private String name;
 	
 	private String userData;
+	
+	public Integer getBrId() {
+		return brId;
+	}
+
+	public void setBrId(Integer brId) {
+		this.brId = brId;
+	}
+
+	public String getBrName() {
+		return brName;
+	}
+
+	public void setBrName(String brName) {
+		this.brName = brName;
+	}
+
+	public Boolean getBrIsActive() {
+		return brIsActive;
+	}
+
+	public void setBrIsActive(Boolean brIsActive) {
+		this.brIsActive = brIsActive;
+	}
 
 	public String getLargeFaceListId() {
 		return largeFaceListId;

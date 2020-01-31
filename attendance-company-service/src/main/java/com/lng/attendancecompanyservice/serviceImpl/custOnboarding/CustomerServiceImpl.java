@@ -239,198 +239,120 @@ public class CustomerServiceImpl implements CustomerService {
 		//String template = email-template.html;
 
 
-		String mailSmS = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\"\r\n" + 
-				"\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\r\n" + 
-				"<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\" style=\"min-height: 100%; background: #f0f0f0;\">\r\n" + 
-				"    <head>\r\n" + 
-				"        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\r\n" + 
-				"        <meta name=\"viewport\" content=\"width=device-width\">\r\n" + 
-				"    </head>\r\n" + 
-				"    <body style=\"min-width: 100%; background: #f0f0f0; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; width: 100%;\">\r\n" + 
-				"        <table class=\"body\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; background: #f0f0f0; height: 100%; width: 100%; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" width=\"100%\" height=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"            <tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                <td class=\"center\" align=\"left\" valign=\"top\" style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; border-collapse: collapse;\">\r\n" + 
-				"                    <center data-parsed=\"\" style=\"width: 100%; min-width: 580px;\">\r\n" + 
-				"                        <table class=\"container text-center\" style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; background: #fefefe; width: 580px; margin: 0 auto; Margin: 0 auto; text-align: center;\" width=\"580\" valign=\"top\" align=\"center\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\"><td style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; border-collapse: collapse;\" valign=\"top\" align=\"left\"> <!-- This container adds the grey gap at the top of the email -->\r\n" + 
-				"                                        <table class=\"row grey\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; background: #f0f0f0; padding: 0; width: 100%; position: relative; display: table;\" width=\"100%\" valign=\"top\" align=\"left\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                    <th class=\"small-12 large-12 columns first last\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; text-align: left; font-size: 13px; line-height: 21px; margin: 0 auto; Margin: 0 auto; padding-bottom: 16px; width: 564px; padding-left: 16px; padding-right: 16px;\" align=\"left\">\r\n" + 
-				"                                                        <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                            <tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"                                                                    &#xA0; \r\n" + 
-				"                                                                </th>\r\n" + 
-				"                                                                <th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
-				"                                                            </tr>\r\n" + 
-				"                                                        </table>\r\n" + 
-				"                                                    </th>\r\n" + 
-				"                                                </tr></tbody></table>\r\n" + 
-				"                                    </td></tr></tbody></table>\r\n" + 
-				"\r\n" + 
-				"                                    <table class=\"container text-center\" style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; background: #fefefe; width: 580px; margin: 0 auto; Margin: 0 auto; text-align: center;\" width=\"580\" valign=\"top\" align=\"center\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\"><td style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; border-collapse: collapse;\" valign=\"top\" align=\"left\"> <!-- This container is the main email content -->\r\n" + 
-				"                                                    <table class=\"row\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0; width: 100%; position: relative; display: table;\" width=\"100%\" valign=\"top\" align=\"left\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\"> <!-- Logo -->\r\n" + 
-				"                                                                <th class=\"small-12 large-12 columns first last\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; text-align: left; font-size: 13px; line-height: 21px; margin: 0 auto; Margin: 0 auto; padding-bottom: 16px; width: 564px; padding-left: 16px; padding-right: 16px;\" align=\"left\">\r\n" + 
-				"                                                                    <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                        <tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                            <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"                                                                                <center data-parsed=\"\" style=\"width: 100%; min-width: 532px;\">\r\n" + 
-				"                                                                                    <a href=\"http://www.lngtechnologies.in\" align=\"center\" class=\"text-center\" target=\"new\" style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; line-height: 1.3; color: #f7931d; text-decoration: none;\">\r\n" + 
-				"                                                                                        <img src=\"http://52.183.143.13/welcomekit/images/lng_logo.png\" class=\"swu-logo\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; max-width: 100%; clear: both; display: block; border: none; width: 230px; height: auto; padding: 15px 0px 0px 0px;\" width=\"230\">\r\n" + 
-				"                                                                                    </a>\r\n" + 
-				"                                                                                </center>\r\n" + 
-				"                                                                            </th>\r\n" + 
-				"                                                                            <th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
-				"                                                                        </tr>\r\n" + 
-				"                                                                    </table>\r\n" + 
-				"                                                                </th>\r\n" + 
-				"                                                            </tr></tbody></table>\r\n" + 
-				"                                                            <table class=\"row masthead\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; background: #009899; padding: 0; width: 100%; position: relative; display: table;\" width=\"100%\" valign=\"top\" align=\"left\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\"> <!-- Masthead -->\r\n" + 
-				"                                                                        <th class=\"small-12 large-12 columns first last\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; text-align: left; font-size: 13px; line-height: 21px; margin: 0 auto; Margin: 0 auto; padding-bottom: 16px; width: 564px; padding-left: 16px; padding-right: 16px;\" align=\"left\">\r\n" + 
-				"                                                                            <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                <tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                    <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"                                                                                        <h1 class=\"text-center\" style=\"margin: 0; Margin: 0; line-height: 1.3; word-wrap: normal; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin-bottom: 10px; Margin-bottom: 10px; font-size: 34px; text-align: center; color: #f7931d; padding: 35px 0px 15px 0px;\">Welcome to LNG Attendance System!</h1>\r\n" + 
-				"                                                                                        <center data-parsed=\"\" style=\"width: 100%; min-width: 532px;\">\r\n" + 
-				"                                                                                            <img src=\"http://52.183.143.13/welcomekit/images/welcome_img.png\" valign=\"bottom\" align=\"center\" class=\"text-center\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: auto; max-width: 100%; clear: both; display: block; margin: 0 auto; Margin: 0 auto; float: none; text-align: center;\">\r\n" + 
-				"                                                                                        </center>\r\n" + 
-				"                                                                                    </th>\r\n" + 
-				"                                                                                    <th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
-				"                                                                                </tr>\r\n" + 
-				"                                                                            </table>\r\n" + 
-				"                                                                        </th>\r\n" + 
-				"                                                                    </tr></tbody></table>\r\n" + 
-				"                                                                    <table class=\"row\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0; width: 100%; position: relative; display: table;\" width=\"100%\" valign=\"top\" align=\"left\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\"> <!--This container adds the gap between masthead and digest content -->\r\n" + 
-				"                                                                                <th class=\"small-12 large-12 columns first last\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; text-align: left; font-size: 13px; line-height: 21px; margin: 0 auto; Margin: 0 auto; padding-bottom: 16px; width: 564px; padding-left: 16px; padding-right: 16px;\" align=\"left\">\r\n" + 
-				"                                                                                    <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                        <tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                            <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"                                                                                                &#xA0; \r\n" + 
-				"                                                                                            </th>\r\n" + 
-				"                                                                                            <th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
-				"                                                                                        </tr>\r\n" + 
-				"                                                                                    </table>\r\n" + 
-				"                                                                                </th>\r\n" + 
-				"                                                                            </tr></tbody></table>\r\n" + 
-				"                                                                            <table class=\"row\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0; width: 100%; position: relative; display: table;\" width=\"100%\" valign=\"top\" align=\"left\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\"> <!-- main Email content -->\r\n" + 
-				"                                                                                        <th class=\"small-12 large-12 columns first last\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; text-align: left; font-size: 13px; line-height: 21px; margin: 0 auto; Margin: 0 auto; padding-bottom: 16px; width: 564px; padding-left: 16px; padding-right: 16px;\" align=\"left\">\r\n" + 
-				"                                                                                            <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                                <tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                                    <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"                                                                                                        <b><h5 style=\"padding: 0; margin: 0; Margin: 0; text-align: left; line-height: 1.3; color: inherit; word-wrap: normal; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin-bottom: 10px; Margin-bottom: 10px; font-size: 20px;\">Welcome "+ customerDto.getCustName() + "!</h5></b>\r\n" + 
-				"																											<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\"> We are so glad that you have registered to LNG Attendance System. Your new Attendance account has been created Successfully. </p>\r\n" + 
-				"																											\r\n" + 
-				"																											 <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"																												<tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																													<td class=\"large-offset-1\" style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; padding-left: 64.33333px; border-collapse: collapse;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\"> Please find details of the account and the admin user.</p>\r\n" + 
-				"																													</td>\r\n" + 
-				"																												</tr>\r\n" + 
-				"																											</table>\r\n" + 
-				"																											 <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"																												<tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																													<td class=\"large-offset-1\" style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; padding-left: 64.33333px; border-collapse: collapse;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\"> Weblink</p>\r\n" + 
-				"																													</td>\r\n" + 
-				"																													<td style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; border-collapse: collapse;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\">: <a href=\"http://52.183.143.13/lngattendancesystemv5\" style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; line-height: 1.3; color: #f7931d; text-decoration: none;\" target = \"_blank\">https://www.lngattendancesystem.com</a> </p>\r\n" + 
-				"																													</td>\r\n" + 
-				"																												</tr>\r\n" + 
-				"																												<tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																													<td class=\"large-offset-1\" style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; padding-left: 64.33333px; border-collapse: collapse;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\"> Customer Code</p>\r\n" + 
-				"																													</td>\r\n" + 
-				"																													<td style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; border-collapse: collapse;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\">: "+ customerDto.getCustCode() +" </p>\r\n" + 
-				"																													</td>\r\n" + 
-				"																												</tr>\r\n" + 
-				"																												<tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																													<td class=\"large-offset-1\" style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; padding-left: 64.33333px; border-collapse: collapse;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\"> Admin User Id</p>\r\n" + 
-				"																													</td>\r\n" + 
-				"																													<td style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; border-collapse: collapse;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																														<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\">: "+ lName +" </p>\r\n" + 
-				"																													</td>\r\n" + 
-				"																												</tr>	\r\n" + 
-				"																											</table>	\r\n" + 
-				"																											\r\n" + 
-				"																											<p style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; font-size: 13px; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; text-align: justify; color: #777777;\"> From now on, please log in to your account using the User Id mentioned above. The password to access the Web Application is sent to the Admin Mobile number provided during the On-boarding. </p>\r\n" + 
-				"																											<br>\r\n" + 
-				"																											<b>Note:</b> <i>Make sure you don't share the Customer Code and User Id mentioned in this mail, because it's unique for you!</i>\r\n" + 
-				"																										<br>\r\n" + 
-				"																										\r\n" + 
-				"                                                                                                        <div class=\"button\">\r\n" + 
-				"                                                                                                            <!--[if mso]>\r\n" + 
-				"                                                                                                                <v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"#\" style=\"height:35px;v-text-anchor:middle;width:150px;\" arcsize=\"8%\" strokecolor=\"#f7931d\" fillcolor=\"#f7931d\">\r\n" + 
-				"                                                                                                                  <w:anchorlock/>\r\n" + 
-				"                                                                                                                  <center style=\"color:#ffffff;font-family:sans-serif;font-size:16px;font-weight:bold;\">Click here Button</center>\r\n" + 
-				"                                                                                                                </v:roundrect>\r\n" + 
-				"                                                                                                            <![endif]-->\r\n" + 
-				"                                                                                                            <!--<a href=\"#\" style=\"background-color:#f7931d;border:0px solid #f7931d;border-radius:3px;color:#ffffff;display:inline-block;font-family:sans-serif;font-size:16px;font-weight:bold;line-height:35px;text-align:center;text-decoration:none;width:150px;-webkit-text-size-adjust:none;mso-hide:all;\">Click le Button</a>\r\n" + 
-				"                                                                                                        </div> -->\r\n" + 
-				"                                                                                                    </div></th>\r\n" + 
-				"                                                                                                    <th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
-				"                                                                                                </tr>\r\n" + 
-				"                                                                                            </table>\r\n" + 
-				"																							\r\n" + 
-				"                                                                                        </th>\r\n" + 
-				"                                                                                    </tr></tbody></table>\r\n" + 
-				"																				\r\n" + 
-				"																					<table class=\"row\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0; width: 100%; position: relative; display: table;\" width=\"100%\" valign=\"top\" align=\"left\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																						<th class=\"small-12 large-12 columns first last\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; text-align: left; font-size: 13px; line-height: 21px; margin: 0 auto; Margin: 0 auto; padding-bottom: 16px; width: 564px; padding-left: 16px; padding-right: 16px;\" align=\"left\">\r\n" + 
-				"																							<table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"																								<tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																									<th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"																										<center data-parsed=\"\" style=\"width: 100%; min-width: 532px;\">\r\n" + 
-				"																											Stay Updated On Our Product Features\r\n" + 
-				"																										</center>\r\n" + 
-				"																									</th>\r\n" + 
-				"																								</tr>\r\n" + 
-				"																								<th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
-				"																								<tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"																									<th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"																										<center data-parsed=\"\" style=\"width: 100%; min-width: 532px;\">\r\n" + 
-				"																											<img src=\"http://52.183.143.13/welcomekit/images/social-media-icon.png\" alt=\"\" style=\"outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; clear: both; width: 124px; max-width: 600px; height: auto; display: block; padding-top: 6px;\" width=\"124\">																											\r\n" + 
-				"																										</center>\r\n" + 
-				"																									</th>\r\n" + 
-				"																								</tr>\r\n" + 
-				"																							</table>\r\n" + 
-				"																						</th>\r\n" + 
-				"																					</tr></tbody></table>\r\n" + 
-				"                                                                                    <table class=\"row\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; padding: 0; width: 100%; position: relative; display: table;\" width=\"100%\" valign=\"top\" align=\"left\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\"> <!-- This container adds whitespace gap at the bottom of main content  -->\r\n" + 
-				"                                                                                                <th class=\"small-2 large-2 columns first last\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; text-align: left; font-size: 13px; line-height: 21px; margin: 0 auto; Margin: 0 auto; padding-bottom: 16px; width: 80.66667px; padding-left: 16px; padding-right: 16px;\" align=\"left\">\r\n" + 
-				"                                                                                                    <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                                        <tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                                            <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"                                                                                                                &#xA0; \r\n" + 
-				"                                                                                                            </th>\r\n" + 
-				"                                                                                                            <th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
-				"                                                                                                        </tr>\r\n" + 
-				"                                                                                                    </table>\r\n" + 
-				"                                                                                                </th>\r\n" + 
-				"                                                                                            </tr></tbody></table>\r\n" + 
-				"                                                </td></tr></tbody></table>  <!-- end main email content --> \r\n" + 
-				"\r\n" + 
-				"                                                <table class=\"container text-center\" style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; background: #fefefe; width: 580px; margin: 0 auto; Margin: 0 auto; text-align: center;\" width=\"580\" valign=\"top\" align=\"center\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\"><td style=\"word-wrap: break-word; -webkit-hyphens: auto; -moz-hyphens: auto; hyphens: auto; vertical-align: top; color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; border-collapse: collapse;\" valign=\"top\" align=\"left\"> <!-- footer -->\r\n" + 
-				"                                                                <table class=\"row grey\" style=\"border-spacing: 0; border-collapse: collapse; vertical-align: top; text-align: left; background: #f0f0f0; padding: 0; width: 100%; position: relative; display: table;\" width=\"100%\" valign=\"top\" align=\"left\"><tbody><tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                            <th class=\"small-12 large-12 columns first last\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; text-align: left; font-size: 13px; line-height: 21px; margin: 0 auto; Margin: 0 auto; padding-bottom: 16px; width: 564px; padding-left: 16px; padding-right: 16px;\" align=\"left\">\r\n" + 
-				"                                                                                <table style=\"border-spacing: 0; border-collapse: collapse; padding: 0; vertical-align: top; text-align: left; width: 100%;\" width=\"100%\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                    <tr style=\"padding: 0; vertical-align: top; text-align: left;\" valign=\"top\" align=\"left\">\r\n" + 
-				"                                                                                        <th style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; padding: 0; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px;\" align=\"left\">\r\n" + 
-				"                                                                                            <p class=\"text-center footercopy\" style=\"font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; line-height: 21px; margin-bottom: 5px; Margin-bottom: 5px; padding: 20px 0px; font-size: 12px; text-align: center; color: #777777;\">&#xA9; Copyright 2019 LNG Technologies. All Rights Reserved.</p>\r\n" + 
-				"                                                                                        </th>\r\n" + 
-				"                                                                                        <th class=\"expander\" style=\"color: #0a0a0a; font-family: Helvetica, Arial, sans-serif; font-weight: normal; margin: 0; Margin: 0; text-align: left; font-size: 13px; line-height: 21px; visibility: hidden; width: 0; padding: 0;\" align=\"left\"></th>\r\n" + 
-				"                                                                                    </tr>\r\n" + 
-				"                                                                                </table>\r\n" + 
-				"                                                                            </th>\r\n" + 
-				"                                                                        </tr></tbody></table>\r\n" + 
-				"                                                            </td></tr></tbody></table>  \r\n" + 
-				"\r\n" + 
-				"\r\n" + 
-				"                    </center>\r\n" + 
-				"                </td>\r\n" + 
-				"            </tr>\r\n" + 
-				"        </table>\r\n" + 
-				"    </body>\r\n" + 
-				"</html>\r\n";		
+		String mailSmS = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n" + 
+				"<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n" + 
+				"<head>\r\n" + 
+				"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />\r\n" + 
+				"<title>Facetek</title>\r\n" + 
+				"</head>\r\n" + 
+				"<body style=\"margin:0; padding:0; font-family:Arial, Helvetica, sans-serif;\">\r\n" + 
+				"<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" style=\"border:1px solid #ccc;\">\r\n" + 
+				"  <tr>\r\n" + 
+				"    <td>\r\n" + 
+				"		<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">\r\n" + 
+				"			<tr>\r\n" + 
+				"				<td colspan=\"3\" bgcolor=\"#1565c0\" style=\"padding:10px 25px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/facetek-content.svg\" alt=\"\"  style=\"width:380px;\"/></td>\r\n" + 
+				"			</tr>\r\n" + 
+				"			<tr>\r\n" + 
+				"				<td colspan=\"3\">\r\n" + 
+				"					<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">\r\n" + 
+				"						<tr>\r\n" + 
+				"						  <td colspan=\"3\" bgcolor=\"#1565c0\" style=\"background-image:url(http://52.183.143.13/WelcomeKitImages/Images/bg2.jpg); line-height:27px; width:400px; height:164px; font-size:16px; color:#fff;  padding:30px 100px 0px; text-align:center;\" valign=\"top\">You're all set, Now you can start using the <br>Facetek Smart Attendance System <br /> <br />\r\n" + 
+				"						    <a href=\"http://52.183.143.13/lngattendancesystemv5\" target=\"_blank\" style=\"text-decoration:none; color:#fff;\"><span style=\"background-color:#ff9602; padding:10px 30px; font-size:12px; \"> CLICK HERE TO LOG IN </span></a></td>\r\n" + 
+				"						</tr>\r\n" + 
+				"					</table>\r\n" + 
+				"				</td>\r\n" + 
+				"			</tr>\r\n" + 
+				"			<tr>\r\n" + 
+				"    <td style=\"width:25px;\">&nbsp;</td>\r\n" + 
+				"	 <td style=\"width:550px;\">\r\n" + 
+				"	 	<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"550\">\r\n" + 
+				"			<tr>\r\n" + 
+				"				<td style=\"padding:20px 0px 10px; font-size:21px; color:#1565c0; text-align:center\" ><strong>Welcome "+ customerDto.getCustName() +"!</strong></td>\r\n" + 
+				"			</tr>\r\n" + 
+				"			<tr>\r\n" + 
+				"				<td style=\"font-size:14px; color:#666; padding:10px 00px 0px 0px; line-height:21px; text-align:center \">We are so glad that you have registered to <font color=\"#1565c0;\">Facetek Smart Attendance System</font>. <Br>Your new account has been created Successfully.</td>\r\n" + 
+				"			</tr>\r\n" + 
+				"			<tr>\r\n" + 
+				"				<td style=\"font-size:16px; color:#666; line-height:18px; padding:20px 0px 10px; color:#1565c0; text-align:center \"><strong> Account details</strong></td>\r\n" + 
+				"			</tr>\r\n" + 
+				"			<tr>\r\n" + 
+				"				<td colspan=\"3\" align=\"center\">\r\n" + 
+				"					<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"550\" align=\"left\" style=\"text-align:center;\">\r\n" + 
+				"						\r\n" + 
+				"						<tr>\r\n" + 
+				"							<td align=\"right\" width=\"250\" style=\"font-size:14px; padding-bottom:5px; color:#666;\">Customer Code</td>\r\n" + 
+				"							<td align=\"center\" width=\"50\" style=\"font-size:14px; padding-bottom:5px; color:#666;\">:</td>\r\n" + 
+				"							<td align=\"left\" width=\"250\" style=\"font-size:14px; padding-bottom:5px; color:#666;\">"+ customerDto.getCustCode() +"</td>\r\n" + 
+				"						</tr>\r\n" + 
+				"						<tr>\r\n" + 
+				"							<td align=\"right\" width=\"250\" style=\"font-size:14px; padding-bottom:5px; color:#666;\">Admin User Id</td>\r\n" + 
+				"							<td align=\"center\" width=\"50\" style=\"font-size:14px; padding-bottom:5px; color:#666;\">:</td>\r\n" + 
+				"							<td align=\"left\" width=\"250\" style=\"font-size:14px; padding-bottom:5px; color:#666;\">"+ lName +"</td>\r\n" + 
+				"						</tr>\r\n" + 
+				"						<tr>\r\n" + 
+				"							<td colspan=\"3\" align=\"center\"  style=\"padding:0px 0px 0px 0px;\">\r\n" + 
+				"								<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"550\" >\r\n" + 
+				"									<tr>\r\n" + 
+				"				<td colspan=\"12\" style=\"font-size:16px; color:#666; line-height:18px; padding:20px 0px 10px; color:#1565c0; text-align:center \"><strong> Facetek Features</strong></td>\r\n" + 
+				"			</tr>\r\n" + 
+				"									<tr>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/location.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">GPS Based Attendance</span></td>\r\n" + 
+				"										<td>&nbsp;</td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px; \"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/face.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Face Recognition</span></td>\r\n" + 
+				"										<td>&nbsp;</td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/qrcode.svg\" style=\"width:64px;\"  alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">QR Code Based Attendance</span></td>\r\n" + 
+				"										<td>&nbsp;</td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/prox.svg\" style=\"width:64px;\"  alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Proximity Based Attendance</span></td>\r\n" + 
+				"										<td>&nbsp;</td>\r\n" + 
+				"										<td align=\"center\" style=\"padding:5px; border:1px solid #ccc; vertical-align:top; width:108px;\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/leave.svg\"  style=\"width:64px;\" alt=\"\"/><br /><span style=\"text-align:center; font-size:12px;\">Leave Management</span></td>\r\n" + 
+				"										\r\n" + 
+				"									</tr>\r\n" + 
+				"									\r\n" + 
+				"									\r\n" + 
+				"								</table>\r\n" + 
+				"							</td>\r\n" + 
+				"						</tr>\r\n" + 
+				"						<tr>\r\n" + 
+				"							<td colspan=\"3\" align=\"center\" style=\"font-size:14px; line-height:21px; padding:20px 0px 5px;  color:#666;\">Log in to your account using the User Id mentioned above. The password to access the Web Application is sent to the Admin Mobile number provided during the On-boarding.</td>\r\n" + 
+				"						</tr>\r\n" + 
+				"						<tr>\r\n" + 
+				"							<td colspan=\"3\" align=\"center\" style=\"font-size:14px; line-height:21px; padding:20px 0px 5px;  color:#666;\"><strong>Note : </strong>Make sure you don't share the Customer Code and User Id mentioned in this mail, because it's unique for you!</td>\r\n" + 
+				"						</tr>\r\n" + 
+				"						<tr>\r\n" + 
+				"						  <td colspan=\"3\" align=\"center\" style=\"font-size:14px; line-height:21px; padding:10px 0px 10px;  color:#666;\">Stay Updated On Our Product Features <br /> <a href=\"http://www.facetek.in\" target=\"_blank\" style=\"text-decoration:none; color:#fff;\"><span style=\"color:#1565c0;\">www.facetek.in</span></a></td>\r\n" + 
+				"						</tr>\r\n" + 
+				"						<tr>\r\n" + 
+				"							<td colspan=\"3\" align=\"center\" style=\"font-size:14px; line-height:21px; padding:10px 0px 10px;  color:#666;\">\r\n" + 
+				"								<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\">\r\n" + 
+				"									<tr>\r\n" + 
+				"										<td align=\"center\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/facebook.svg\" alt=\"\"  style=\"width:25px;\"/></td>\r\n" + 
+				"										<td align=\"center\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/twitter.svg\" alt=\"\" style=\"width:25px;\"/></td>\r\n" + 
+				"										<td align=\"center\"><img src=\"http://52.183.143.13/WelcomeKitImages/Images/linkeding.svg\" alt=\"\" style=\"width:25px;\"/></td>\r\n" + 
+				"									</tr>\r\n" + 
+				"								</table>\r\n" + 
+				"							</td>\r\n" + 
+				"						</tr>\r\n" + 
+				"						\r\n" + 
+				"					</table>\r\n" + 
+				"				</td>\r\n" + 
+				"			</tr>\r\n" + 
+				"			\r\n" + 
+				"		</table>\r\n" + 
+				"	 </td>\r\n" + 
+				"	  <td style=\"width:25px;\">&nbsp;</td>\r\n" + 
+				"  </tr>\r\n" + 
+				"  \r\n" + 
+				"  <tr>\r\n" + 
+				"  	 <td colspan=\"3\" bgcolor=\"#1565c0\" style=\"padding:10px; text-align:center; font-size:10px; color:#ccc;\">&copy; Copyright 2019 Facetek. All Rights Reserved.</td>\r\n" + 
+				"  </tr>\r\n" + 
+				"		</table>\r\n" + 
+				"	</td>\r\n" + 
+				"  </tr>\r\n" + 
+				"</table>\r\n" + 
+				"</body>\r\n" + 
+				"</html>\r\n" + 
+				"";		
 
 		String message = mailSmS;
 		String toAddress = customerDto.getCustEmail();
