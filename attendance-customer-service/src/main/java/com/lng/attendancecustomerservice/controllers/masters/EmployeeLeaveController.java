@@ -37,9 +37,20 @@ public class EmployeeLeaveController {
 		return new ResponseEntity<BranchListDto>(branchListDto1, HttpStatus.OK);
 	}
 	
+	@PostMapping(value = "/getBranchDetailsByCustIdAndLoginId")
+	public ResponseEntity<BranchListDto> findBranchesByCustIdAndLoginId(@RequestBody BranchListDto branchListDto) {
+		BranchListDto branchListDto1 = employeeLeaveService.getBranchDetailsByCustIdAndLoginId(branchListDto.getCustId(),branchListDto.getLoginId());
+		return new ResponseEntity<BranchListDto>(branchListDto1, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/getBranchListByCustId")
 	public ResponseEntity<BranchListDto> findByCustId(@RequestBody BranchListDto branchListDto) {
 		BranchListDto branchListDto1 = employeeLeaveService.getBranchListByCustId(branchListDto.getCustId());
+		return new ResponseEntity<BranchListDto>(branchListDto1, HttpStatus.OK);
+	}
+	@PostMapping(value = "/getAllBranchListByCustId")
+	public ResponseEntity<BranchListDto> findAllByCustId(@RequestBody BranchListDto branchListDto) {
+		BranchListDto branchListDto1 = employeeLeaveService.getAllBranchListByCustId(branchListDto.getCustId());
 		return new ResponseEntity<BranchListDto>(branchListDto1, HttpStatus.OK);
 	}
 	

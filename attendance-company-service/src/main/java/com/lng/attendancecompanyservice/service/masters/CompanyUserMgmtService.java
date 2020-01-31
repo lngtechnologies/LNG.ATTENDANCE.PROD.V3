@@ -18,11 +18,13 @@ public interface CompanyUserMgmtService {
 
 	Status updateModules(CustUserModuleMapDto custUserModuleMapDto);
 	
-	CompanyUserLoginModuleMapResponseDto getAllUserByLoginId(Integer loginId);
+	//CompanyUserLoginModuleMapResponseDto getAllUserByLoginId(Integer loginId);
 	
 	UserModuleResDto findAllModules();
 	
 	CompanyUserLoginModuleMapResponseDto getAllUserByCustId(Integer custId);
+	
+	Status updateUserDetails(CompanyUserLoginModuleDto companyUserLoginModuleDto);
 	
 	
 

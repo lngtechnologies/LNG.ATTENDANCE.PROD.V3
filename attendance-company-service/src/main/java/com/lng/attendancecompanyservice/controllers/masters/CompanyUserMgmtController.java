@@ -23,7 +23,7 @@ import status.Status;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge=3600)
-@RequestMapping(value="/master/company/user")
+@RequestMapping(value="/master/user")
 public class CompanyUserMgmtController {
 
 	@Autowired
@@ -70,12 +70,12 @@ public class CompanyUserMgmtController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
-	
-	@PostMapping(value = "/findAllUsersByLoginId")
+
+	/*@PostMapping(value = "/findAllCompanyUsersByLoginId")
 	public ResponseEntity<CompanyUserLoginModuleMapResponseDto> findAllUsersByLoginId(@RequestBody CompanyUserLoginModuleMapResponseDto companyUserLoginModuleMapResponseDto) {
 		CompanyUserLoginModuleMapResponseDto status = companyUserMgmtService.getAllUserByLoginId(companyUserLoginModuleMapResponseDto.getLoginId());
 		return new ResponseEntity<CompanyUserLoginModuleMapResponseDto>(status, HttpStatus.CREATED);	
-	}
+	}*/
 	@PostMapping(value = "/findAllUsersByCustId")
 	public ResponseEntity<CompanyUserLoginModuleMapResponseDto> findAllUsersByCustId(@RequestBody CompanyUserLoginModuleMapResponseDto custUserBranchLoginMapDto) {
 		CompanyUserLoginModuleMapResponseDto status = companyUserMgmtService.getAllUserByCustId(custUserBranchLoginMapDto.getCustId());
@@ -85,5 +85,14 @@ public class CompanyUserMgmtController {
 	public ResponseEntity<UserModuleResDto> findAllModules() {
 		UserModuleResDto userModuleResponseDto = companyUserMgmtService.findAllModules();
 		return new ResponseEntity<UserModuleResDto>(userModuleResponseDto, HttpStatus.CREATED);	
+	}
+
+	@PostMapping(value = "/update/userDetails/modules")
+	public ResponseEntity<Status> updateAll(@RequestBody CompanyUserLoginModuleDto companyUserLoginModuleDto) {
+		Status status = companyUserMgmtService.updateUserDetails(companyUserLoginModuleDto);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 }

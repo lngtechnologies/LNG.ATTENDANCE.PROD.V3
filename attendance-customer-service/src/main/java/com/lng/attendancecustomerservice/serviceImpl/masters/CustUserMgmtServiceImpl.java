@@ -1063,6 +1063,31 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 		return custUserBranchResDto;
 	}
 
+	@Override
+	public CustUserBranchResDto findBranchDetailsByCustId(Integer custId) {
+		CustUserBranchResDto custUserBranchResDto = new CustUserBranchResDto();
+		List<CustUserBranchDto> branchList = new ArrayList<CustUserBranchDto>();
+		try {
+			List<Object[]> braches = branchRepository.getBranchesByCustId(custId);
+			if(!braches.isEmpty()) {
+				for(Object[] p: braches) {
+					CustUserBranchDto custUserBranchDto = new CustUserBranchDto();
+					custUserBranchDto.setBrId(Integer.valueOf(p[0].toString()));
+					custUserBranchDto.setBrName(p[1].toString());
+					branchList.add(custUserBranchDto);
+				}
+
+				custUserBranchResDto.setBranches(branchList);
+				custUserBranchResDto.status = new Status(false, 200, "Success");
+			} else {
+				custUserBranchResDto.status = new Status(true, 400, "Not found");
+			}
+		} catch (Exception e) {
+			custUserBranchResDto.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return custUserBranchResDto;
+	}
+
 
 	/*public CustUserModulesDto convertToCustUserModulesDto(Module module) {
 		CustUserModulesDto  custUserModulesDto = modelMapper.map(module, CustUserModulesDto.class);

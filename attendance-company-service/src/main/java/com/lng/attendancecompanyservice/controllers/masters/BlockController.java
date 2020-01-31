@@ -68,6 +68,15 @@ public class BlockController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
+	
+	@PostMapping(value = "/getBranchListByCustomerId")
+	public ResponseEntity<BlockResponse> getBranchList(@RequestBody BlockDto blockDto){
+		BlockResponse blockDto1 = blockService.getBranchesByCustId(blockDto.getCustId());
+		if(blockDto !=null){
+			return new ResponseEntity<BlockResponse>(blockDto1, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 	@PostMapping(value = "/getBlockDetailsByCustomerIdAndBranchId")
 	public ResponseEntity<BlockResponse> edit (@RequestBody BlockDto blockDto){
 		BlockResponse blockDto1 = blockService.getBlockDetailsByCustIdANDRefBranchId(blockDto.getCustId(), blockDto.getRefBranchId());

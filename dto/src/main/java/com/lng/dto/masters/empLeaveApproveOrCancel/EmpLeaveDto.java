@@ -29,6 +29,8 @@ public class EmpLeaveDto {
 	private String empLeaveRemarks;
 	
 	private String empLeaveRejectionRemarks;
+	
+	private String  leaveType;
 
 	public Integer getEmpLeaveId() {
 		return empLeaveId;
@@ -133,4 +135,14 @@ public class EmpLeaveDto {
 	public void setEmpLeaveRejectionRemarks(String empLeaveRejectionRemarks) {
 		this.empLeaveRejectionRemarks = empLeaveRejectionRemarks;
 	}
+
+	
+	public String getLeaveType() {
+		return leaveType;
+	}
+
+	public void setLeaveType(String leaveType) {
+		this.leaveType = leaveType;
+	}
+
 }

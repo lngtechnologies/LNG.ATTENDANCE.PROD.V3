@@ -25,9 +25,6 @@ import com.lng.attendancecompanyservice.utils.MessageUtil;
 import com.lng.dto.masters.custUserMgmt.CompanyUserLoginDto;
 import com.lng.dto.masters.custUserMgmt.CompanyUserLoginModuleDto;
 import com.lng.dto.masters.custUserMgmt.CompanyUserLoginModuleMapResponseDto;
-import com.lng.dto.masters.custUserMgmt.CustUserBranchesDto;
-import com.lng.dto.masters.custUserMgmt.CustUserLoginDto;
-import com.lng.dto.masters.custUserMgmt.CustUserLoginModuleBranchMapResponseDto;
 import com.lng.dto.masters.custUserMgmt.CustUserMgmtDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleDto;
 import com.lng.dto.masters.custUserMgmt.CustUserModuleMapDto;
@@ -152,8 +149,6 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 			if(login != null) {
 				Login login1 = iLoginRepository.findByLoginNameAndRefCustIdAndLoginIsActive(loginUserName,0, true);
 				if(login1 == null ||(login.getLoginId() == custUserMgmtDto.getLoginId() && login.getLoginName().equals(loginUserName))) {
-					//Login login2 = iLoginRepository.findByLoginMobileAndRefCustId(custUserMgmtDto.getuMobileNumber(),0);
-					//if(login2 == null || (login.getLoginId() == custUserMgmtDto.getLoginId() && login.getLoginMobile().equals(custUserMgmtDto.getuMobileNumber()))) {
 					login.setLoginName(loginUserName);
 					login.setLoginMobile(custUserMgmtDto.getuMobileNumber());
 					login.setLoginCreatedDate(new Date());
@@ -163,10 +158,6 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 					iLoginRepository.save(login);
 
 					status = new Status(false, 200, "updated");
-
-
-					/*  }else { status = new Status(true, 400, "Mobile number already exist"); 
-					  } */
 
 				}else {
 					status = new Status(true, 400, "User name already exist");
@@ -246,7 +237,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 		return status;
 	}
 
-	@Override
+	/*@Override
 	public CompanyUserLoginModuleMapResponseDto getAllUserByLoginId(Integer loginId) {
 		CompanyUserLoginModuleMapResponseDto companyUserLoginModuleMapResponseDto = new CompanyUserLoginModuleMapResponseDto();
 
@@ -289,7 +280,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 			companyUserLoginModuleMapResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return companyUserLoginModuleMapResponseDto;
-	}
+	}*/
 
 	@Override
 	public UserModuleResDto findAllModules() {
@@ -358,7 +349,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 				companyUserLoginDto.setModules(custUserModulesDtoList);
 			}
 			if(loginList.isEmpty()) {
-				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success and there is no login details exist for this customer");
+				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success and there is no login details exist for this admin");
 			}else {
 				companyUserLoginModuleMapResponseDto.status = new Status(false, 200, "Success");
 			}
@@ -366,5 +357,84 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 			companyUserLoginModuleMapResponseDto.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return companyUserLoginModuleMapResponseDto;
+	}
+
+	@Override
+	public Status updateUserDetails(CompanyUserLoginModuleDto companyUserLoginModuleDto) {
+		final Lock displayLock = this.displayQueueLock;
+		Status status = null;
+		String userName = null;
+		try {
+			displayLock.lock();
+			userName = companyUserLoginModuleDto.getUserDetails().getUserName();
+			String custCode ="LNG";
+			String loginUserName = userName+"@"+custCode;
+			Login login = iLoginRepository.findByLoginId(companyUserLoginModuleDto.getUserDetails().getLoginId());
+			if(login != null) {
+				Login login1 = iLoginRepository.findByLoginNameAndRefCustIdAndLoginIsActive(loginUserName,0, true);
+				if(login1 == null ||(login1.getLoginId().equals(companyUserLoginModuleDto.getUserDetails().getLoginId()))) {
+					login.setLoginName(loginUserName);
+					login.setLoginMobile(companyUserLoginModuleDto.getUserDetails().getuMobileNumber());
+					login.setLoginCreatedDate(new Date());
+					login.setLoginIsActive(true);
+					login.setRefCustId(0);
+					login.setRefEmpId(0);
+					iLoginRepository.save(login);
+					try {
+						List<UserRight> alreadyMapped = userRightRepository.getByRefLoginId(companyUserLoginModuleDto.getUserDetails().getLoginId());
+
+						List<CustUserModuleDto> nonNullUserRightIds = companyUserLoginModuleDto.getModules().stream().filter(e -> e.getUserRightId() != null).collect(Collectors.toList()); 
+
+						List<UserRight> removed = alreadyMapped.stream().filter(o1 -> nonNullUserRightIds.stream().noneMatch(o2 -> o2.getUserRightId().equals(o1.getUserRightId())))
+								.collect(Collectors.toList());
+
+						for(UserRight CustUserRightDto : removed) {
+							UserRight userRight3 = userRightRepository.findByUserRightId(CustUserRightDto.getUserRightId());
+							userRightRepository.delete(userRight3);
+						}
+
+						for(CustUserModuleDto custUserModuleDto : companyUserLoginModuleDto.getModules()) {
+
+							if(custUserModuleDto.getUserRightId() == null && custUserModuleDto.getModuleId() != null) {
+								UserRight userRight2 = new UserRight();
+								userRight2.setRefLoginId(companyUserLoginModuleDto.getUserDetails().getLoginId());
+								userRight2.setRefModuleId(custUserModuleDto.getModuleId());
+								userRightRepository.save(userRight2);
+							}
+
+							Module module = iModuleRepository.findModuleByModuleId(custUserModuleDto.getModuleId());
+							List<UserRight> userRights = userRightRepository.findByRefLoginId(companyUserLoginModuleDto.getUserDetails().getLoginId());
+							//UserRight userRight2 = userRightRepository.findByRefModuleId(custUserModuleDto.getModuleId());
+							for(UserRight userRight: userRights) {
+								if(custUserModuleDto.getUserRightId() != null && custUserModuleDto.getUserRightId().equals(userRight.getUserRightId())) {
+									userRight.setRefModuleId(module.getModuleId());
+									userRightRepository.save(userRight);
+								} 
+								else if(module == null){
+									userRightRepository.delete(userRight);
+								}
+								status = new Status(false, 200, "updated");
+							}
+						}
+
+					} catch (Exception e) {
+						status = new Status(true, 500,e.getMessage());
+
+					}
+
+				}else {
+					status = new Status(true, 400, "User name already exist");
+				}
+			}else {
+				status = new Status(true, 400, "Login Id not found");
+			}
+		}catch(Exception e) {
+			status = new Status(true, 500, "Oops..! Something went wrong..");
+
+		}
+		finally {
+			displayLock.unlock();
+		}
+		return status;
 	}
 }

@@ -18,4 +18,8 @@ public interface EmployeeLeaveService {
 	Status saveEmpLeave(EmployeeLeaveDto employeeLeaveDto);
 	
 	BranchListDto getBranchListByCustIdAndLoginId(Integer custId,Integer loginId);
+	
+	BranchListDto getBranchDetailsByCustIdAndLoginId(Integer custId,Integer loginId);
+	
+	BranchListDto getAllBranchListByCustId(Integer custId);
 }

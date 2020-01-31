@@ -26,8 +26,11 @@ public interface HolidayCalendarRepository extends PagingAndSortingRepository<Ho
 	
 	List<HolidayCalendar> findAll();
 	
-	@Query(value = "select  br.brId,br.brName from  tmbranch br where br.refCustomerId = ?1",nativeQuery = true)
+	@Query(value = "select  br.brId,br.brName from  tmbranch br where br.refCustomerId = ?1 and br.brIsActive = TRUE ",nativeQuery = true)
 	List<Object[]>  findBranchByRefCustomerId(Integer refCustId);
+	
+	@Query(value = "select  br.brId,br.brName from  tmbranch br where br.refCustomerId = ?1 and br.brIsActive = TRUE  and br.brValidityEnd >= CURDATE()",nativeQuery = true)
+	List<Object[]>  findBranchDetailsByRefCustomerId(Integer refCustId);
 	
 	@Query(value = "CALL getHolidayCalendarByBranch(?1)",nativeQuery = true)
 	List<Object[]>  findHolidayCalendarBybrId(Integer brId);
