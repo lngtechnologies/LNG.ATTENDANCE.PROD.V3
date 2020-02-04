@@ -18,26 +18,35 @@ import status.Status;
 @CrossOrigin(origins = "*", maxAge=3600)
 @RequestMapping(value="/employee/attendance")
 public class EmpAttendanceController {
-	
+
 	@Autowired
 	EmpAttendanceService  empAttendanceService;
-	
-	 @PostMapping(value = "/markIn")
-		public ResponseEntity<Status> saveIn(@RequestBody EmpAttendanceDto1 empAttendanceDto1) {
-			Status status = empAttendanceService.saveEmpAttndIn(empAttendanceDto1);
-			if (status !=null){
-				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
-			}
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+	@PostMapping(value = "/markIn")
+	public ResponseEntity<Status> saveIn(@RequestBody EmpAttendanceDto1 empAttendanceDto1) {
+		Status status = empAttendanceService.saveEmpAttndIn(empAttendanceDto1);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
 		}
-	
-	
-	 @PostMapping(value = "/markOut")
-		public ResponseEntity<Status> saveOut(@RequestBody EmpAttendanceDto1 empAttendanceDto1) {
-			Status status = empAttendanceService.saveEmpAttndOut(empAttendanceDto1);
-			if (status !=null){
-				return new ResponseEntity<Status>(status, HttpStatus.CREATED);
-			}
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
+
+	@PostMapping(value = "/markOut")
+	public ResponseEntity<Status> saveOut(@RequestBody EmpAttendanceDto1 empAttendanceDto1) {
+		Status status = empAttendanceService.saveEmpAttndOut(empAttendanceDto1);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
 		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
+	/*@PostMapping(value = "/mark")
+	public ResponseEntity<Status> save(@RequestBody EmpAttendanceDto1 empAttendanceDto1) {
+		Status status = empAttendanceService.saveEmployeeAttnd(empAttendanceDto1);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}*/
 }

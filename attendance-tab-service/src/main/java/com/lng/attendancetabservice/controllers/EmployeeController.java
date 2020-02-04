@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancetabservice.service.EmployeeService;
 import com.lng.dto.employeeAppSetup.OtpResponseDto;
-import com.lng.dto.tabService.CustomerDto1;
 import com.lng.dto.tabService.EmployeeDto1;
-import com.lng.dto.tabService.EmployeeDto2;
 import com.lng.dto.tabService.EmployeeResponse1;
 import com.lng.dto.tabService.EmployeeResponse2;
 

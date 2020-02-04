@@ -53,13 +53,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 			Customer customer = customerRepository.findCustomerByCustId(refCustId);
 			if(customer != null) {
 				if(!customer.getCustIsActive()) { 
-					employeeResponse1.status = new Status(true, 400, "Customer subscription expired");
+					employeeResponse1.status = new Status(true, 400, "Customer subscription expired, please contact admin");
+					return employeeResponse1;
+				}
+				int custValidity = customerRepository.checkCustValidationByCustId(refCustId);
+				if(custValidity == 0) {
+					employeeResponse1.status = new Status(true, 400, "Customer subscription expired, please contact admin");
 					return employeeResponse1;
 				}
 				Branch branch = branchRepository.findByBrId(refBrId);
 				if(branch != null) {
 					if(!branch.getBrIsActive()) { 
 						employeeResponse1.status = new Status(true, 400, "Branch is not active");
+						return employeeResponse1;
+					}
+					int branchValidity = branchRepository.checkBranchValidity(refBrId);
+					if(branchValidity == 0) {
+						employeeResponse1.status = new Status(true, 400, "Branch subscription expired, please contact admin");
 						return employeeResponse1;
 					}
 					Employee   employee  = employeeRepository.checkEmployeeExistsOrNot(refBrId, refCustId,empMobile);
@@ -89,10 +99,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 						employeeResponse1.status = new Status(true, 400, "Invalid mobile number");
 					}
 				}else {
-					employeeResponse1.status = new Status(true, 400, "Branch not found");
+					employeeResponse1.status = new Status(true, 400, "Branch does not exist");
 				}
 			}else {
-				employeeResponse1.status = new Status(true, 400, "Customer not found");
+				employeeResponse1.status = new Status(true, 400, "Customer doesn't exist");
 			}
 		}catch (Exception e){
 			employeeResponse1.status = new Status(true, 500, "Oops..! Something went wrong..");
@@ -127,7 +137,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					status = new Status(false, 200, "successfully updated");
 				}
 			}else {
-				status = new Status(false,400," Employee Not found");
+				status = new Status(false,400," Employee doesn't exist");
 			}
 		}catch(Exception e){
 			status = new Status(true, 500, "Oops..! Something went wrong..");
@@ -152,10 +162,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 			Customer customer = customerRepository.findCustomerByCustId(refCustId);
 			if(customer != null) {
 				if(!customer.getCustIsActive()) { 
-					otpResponseDto.status = new Status(true, 400, "Customer subscription expired");
+					otpResponseDto.status = new Status(true, 400, "Customer subscription expired, please contact admin");
 					return otpResponseDto;
 				}
-
+				int custValidity = customerRepository.checkCustValidationByCustId(refCustId);
+				if(custValidity == 0) {
+					otpResponseDto.status = new Status(true, 400, "Customer subscription expired, please contact admin");
+					return otpResponseDto;
+				}
 				Employee employee = employeeRepository.findEmployeeByEmpMobileAndCustomer_custId(empMobile,refCustId);
 
 				// Check if Employee exist or no
@@ -177,7 +191,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					}
 				}
 			}else {
-				otpResponseDto.status = new Status(true,400,"Customer not found");
+				otpResponseDto.status = new Status(true,400,"Customer doesn't exist");
 			}
 		} catch(Exception ex) {
 			otpResponseDto.status = new Status(true,500,"Oops..! Something went wrong..");
@@ -196,7 +210,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 			Customer customer = customerRepository.findCustomerByCustId(custId);
 			if(customer != null) {
 				if(!customer.getCustIsActive()) { 
-					employeeResponse2.status = new Status(true, 400, "Customer subscription expired");
+					employeeResponse2.status = new Status(true, 400, "Customer subscription expired, please contact admin");
+					return employeeResponse2;
+				}
+				int custValidity = customerRepository.checkCustValidationByCustId(custId);
+				if(custValidity == 0) {
+					employeeResponse2.status = new Status(true, 400, "Customer subscription expired, please contact admin");
 					return employeeResponse2;
 				}
 				Employee employee = employeeRepository.findByempId(empId);
@@ -227,10 +246,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 						employeeResponse2.status = new Status(true, 400, "Shift not found");
 					}
 				} else {
-					employeeResponse2.status = new Status(true, 400, "Employee not found");
+					employeeResponse2.status = new Status(true, 400, "Employee doesn't exist");
 				}
 			} else {
-				employeeResponse2.status = new Status(true, 400, "Customer not found");
+				employeeResponse2.status = new Status(true, 400, "Customer doesn't exist");
 			}
 		}catch (Exception e){
 			employeeResponse2.status = new Status(true, 500, "Oops..! Something went wrong..");

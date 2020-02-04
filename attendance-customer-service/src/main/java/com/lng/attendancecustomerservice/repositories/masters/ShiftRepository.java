@@ -36,4 +36,8 @@ public interface ShiftRepository extends CrudRepository<Shift,Integer> {
 	
 	@Query(value = "select s.* from tmshift s left join ttempshift es on s.shiftId = es.refShiftId WHERE es.refEmpId = ?1 AND es.shiftToDate IS NULL AND s.shiftIsActive = TRUE", nativeQuery = true)
 	Shift getByEmpId(Integer empId);
+	
+	Shift findShiftByShiftNameAndShiftStartAndShiftEndAndShiftIsActive(String shiftName,String shiftStart,String shiftEnd,Boolean shiftIsActive);
+	
+	
 }

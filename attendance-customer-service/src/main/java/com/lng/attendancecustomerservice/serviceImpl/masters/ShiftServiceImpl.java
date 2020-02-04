@@ -42,6 +42,7 @@ public class ShiftServiceImpl implements ShiftService {
 			if(shiftDto.getShiftName() == null || shiftDto.getShiftName().isEmpty()) throw new Exception("Plz Enter Shift Name");
 
 			int a = shiftRepository.findByRefBrIdAndShiftName(shiftDto.getRefBrId(), shiftDto.getShiftName());
+			Shift shift1 = shiftRepository.findShiftByShiftNameAndShiftStartAndShiftEndAndShiftIsActive(shiftDto.getShiftName(), shiftDto.getShiftStart(), shiftDto.getShiftEnd(), false);
 			if(a == 0) {
 				Branch branch = branchRepository.findBranchByBrId(shiftDto.getRefBrId());
 				if(branch != null) {
@@ -63,14 +64,34 @@ public class ShiftServiceImpl implements ShiftService {
 					shiftResponse.status = new Status(true,400, "Branch not found");
 					
 				}
-			}
-			else{ 
-
+			} else if(shift1 != null){
+				Branch branch = branchRepository.findBranchByBrId(shiftDto.getRefBrId());
+				if(branch != null) {
+					shift1.setBranch(branch);
+					shift1.setShiftName(shiftDto.getShiftName());
+					shift1.setShiftStart(shiftDto.getShiftStart());
+					shift1.setShiftEnd(shiftDto.getShiftEnd());
+					if(shiftDto.getDefaultOutInhrs() == null) {
+						shift1.setDefaultOutInhrs(0);
+					}else {
+						shift1.setDefaultOutInhrs(shiftDto.getDefaultOutInhrs());
+					}
+					shift1.setShiftIsActive(true);
+					shiftRepository.save(shift1);
+					shiftResponse.status = new Status(false,200, "created");
+					
+				}
+				else{ 
+					shiftResponse.status = new Status(true,400, "Branch not found");
+					
+				}
+			}else {
 				shiftResponse.status = new Status(true,400,"Shift name already exists");
 				
+
 			}
 		} catch (Exception e) {
-			shiftResponse.status = new Status(true, 500,"Oops..! Something went wrong..");
+			shiftResponse.status = new Status(true,500, e.getMessage());
 			
 		}
 		finally {

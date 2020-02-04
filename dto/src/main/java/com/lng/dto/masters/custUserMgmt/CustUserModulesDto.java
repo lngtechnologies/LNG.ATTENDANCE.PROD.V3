@@ -7,6 +7,8 @@ public class CustUserModulesDto {
 	private Integer moduleId;
 	
 	private String moduleName;
+	
+	private  Integer  userRightId;
 
 	public Integer getLoginId() {
 		return loginId;
@@ -30,6 +32,14 @@ public class CustUserModulesDto {
 
 	public void setModuleName(String moduleName) {
 		this.moduleName = moduleName;
+	}
+
+	public Integer getUserRightId() {
+		return userRightId;
+	}
+
+	public void setUserRightId(Integer userRightId) {
+		this.userRightId = userRightId;
 	}
 
 	
