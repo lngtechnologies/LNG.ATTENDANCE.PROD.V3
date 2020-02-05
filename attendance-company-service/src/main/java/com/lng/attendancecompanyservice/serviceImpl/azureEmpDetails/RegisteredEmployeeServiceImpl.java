@@ -53,7 +53,6 @@ public class RegisteredEmployeeServiceImpl implements RegisteredEmployeeService 
 	@Override
 	public AzurePersistedFaceIdsResponseDto getPersistedFaceIdByBranchId(Integer brId) {
 		AzurePersistedFaceIdsResponseDto azureFacelistResponseDto = new AzurePersistedFaceIdsResponseDto();
-		AzurePersistedFaceIdsDto azurePersistedFaceIdsDto = new AzurePersistedFaceIdsDto();
 		List<AzurePersistedFaceIdsDto> faceList = new ArrayList<AzurePersistedFaceIdsDto>();
 
 		try {
@@ -69,6 +68,7 @@ public class RegisteredEmployeeServiceImpl implements RegisteredEmployeeService 
 				for(AzurePersistedFaceIdsDto p: list) {
 					Employee employee = custEmployeeRepository.getEmployeeByEmpPresistedFaceId(p.getPersistedFaceId());
 					if(employee != null) {
+						AzurePersistedFaceIdsDto azurePersistedFaceIdsDto = new AzurePersistedFaceIdsDto();
 						azurePersistedFaceIdsDto.setEmpName(employee.getEmpName());
 						azurePersistedFaceIdsDto.setMobileNo(employee.getEmpMobile());
 						azurePersistedFaceIdsDto.setEmpInService(employee.getEmpInService());
@@ -93,7 +93,6 @@ public class RegisteredEmployeeServiceImpl implements RegisteredEmployeeService 
 	@Override
 	public AzureLargeFaceListResponseDto getAllFaceList() {
 		AzureLargeFaceListResponseDto azureLargeFaceListResponseDto = new AzureLargeFaceListResponseDto();
-		AzureLargeFaceListDto azureLargeFaceListDto = new AzureLargeFaceListDto();
 		List<AzureLargeFaceListDto> list1 = new ArrayList<AzureLargeFaceListDto>();
 
 		try {
@@ -109,6 +108,7 @@ public class RegisteredEmployeeServiceImpl implements RegisteredEmployeeService 
 
 				Branch branch = branchRepository.getBranchByBrCode(p.getLargeFaceListId());
 				if(branch != null) {
+					AzureLargeFaceListDto azureLargeFaceListDto = new AzureLargeFaceListDto();
 					azureLargeFaceListDto.setBrId(branch.getBrId());
 					azureLargeFaceListDto.setBrName(branch.getBrName());
 					azureLargeFaceListDto.setBrIsActive(branch.getBrIsActive());

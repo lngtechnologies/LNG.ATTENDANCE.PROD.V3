@@ -10,6 +10,7 @@ import com.lng.attendancecustomerservice.entity.employeeAttendance.EmployeeAtten
 
 @Repository
 public interface ReportRepository extends PagingAndSortingRepository<EmployeeAttendance, Integer>{
+	
 	@Query(value = "CALL Sp_GetReportMasterData(?1)", nativeQuery = true)
 	List<Object[]> GetReportMasterData(int custId);
 	
