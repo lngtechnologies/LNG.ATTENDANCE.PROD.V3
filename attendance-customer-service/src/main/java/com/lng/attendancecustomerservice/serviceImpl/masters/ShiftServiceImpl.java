@@ -42,7 +42,7 @@ public class ShiftServiceImpl implements ShiftService {
 			if(shiftDto.getShiftName() == null || shiftDto.getShiftName().isEmpty()) throw new Exception("Plz Enter Shift Name");
 
 			int a = shiftRepository.findByRefBrIdAndShiftName(shiftDto.getRefBrId(), shiftDto.getShiftName());
-			Shift shift1 = shiftRepository.findShiftByShiftNameAndShiftStartAndShiftEndAndShiftIsActive(shiftDto.getShiftName(), shiftDto.getShiftStart(), shiftDto.getShiftEnd(), false);
+			Shift shift1 = shiftRepository.findShiftByBranch_BrIdAndShiftNameAndShiftStartAndShiftEndAndShiftIsActive(shiftDto.getRefBrId(),shiftDto.getShiftName(), shiftDto.getShiftStart(), shiftDto.getShiftEnd(), false);
 			if(a == 0) {
 				Branch branch = branchRepository.findBranchByBrId(shiftDto.getRefBrId());
 				if(branch != null) {
