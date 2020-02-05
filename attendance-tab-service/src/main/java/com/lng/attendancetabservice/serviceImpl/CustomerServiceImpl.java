@@ -44,13 +44,23 @@ public class CustomerServiceImpl implements CustomerService {
 			Customer customer =	customerRepository.findByCustomer_CustCode(custCode);
 			if(customer != null) {
 				if(!customer.getCustIsActive()) { 
-					otpResponseDto.status = new Status(true, 400, "Customer subscription expired");
+					otpResponseDto.status = new Status(true, 400, "Customer subscription expired, please contact admin");
+					return otpResponseDto;
+				}
+				int custValidity = customerRepository.checkCustValidationByCustId(customer.getCustId());
+				if(custValidity == 0) {
+					otpResponseDto.status = new Status(true, 400, "Customer subscription expired, please contact admin");
 					return otpResponseDto;
 				}
 				Branch branch =branchRepository.findByBranch_BrCodeAndCustomer_CustId(brCode,customer.getCustId());
 				if(branch != null) {
 					if(!branch.getBrIsActive()) { 
 						otpResponseDto.status = new Status(true, 400, "Branch is not active");
+						return otpResponseDto;
+					}
+					int branchValidity = branchRepository.checkBranchValidity(branch.getBrId());
+					if(branchValidity == 0) {
+						otpResponseDto.status = new Status(true, 400, "Branch subscription expired, please contact admin");
 						return otpResponseDto;
 					}
 					String mobileNo = customer.getCustMobile();
@@ -63,10 +73,10 @@ public class CustomerServiceImpl implements CustomerService {
 						otpResponseDto.status = new Status(true,400,"There is some problem with the message utility");
 					}
 				}else {
-					otpResponseDto.status = new Status(true,400,"Branch not found");
+					otpResponseDto.status = new Status(true,400,"Branch does not exist");
 				}
 			}else {
-				otpResponseDto.status = new Status(true,400,"Customer not found");
+				otpResponseDto.status = new Status(true,400,"Customer does not exist");
 			}
 		} catch(Exception ex) {
 			otpResponseDto.status = new Status(true,500,"Oops..! Something went wrong..");

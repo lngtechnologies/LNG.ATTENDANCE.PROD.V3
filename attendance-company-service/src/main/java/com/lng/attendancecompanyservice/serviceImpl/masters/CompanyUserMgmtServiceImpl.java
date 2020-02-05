@@ -105,7 +105,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 					status = new Status(true, 400, "Please enter mobile number");
 				}
 			}else {
-				status = new Status(true, 400, "User name already exist");
+				status = new Status(true, 400, "User name already exists");
 			}
 		}catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
@@ -160,7 +160,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 					status = new Status(false, 200, "updated");
 
 				}else {
-					status = new Status(true, 400, "User name already exist");
+					status = new Status(true, 400, "User name already exists");
 
 				}
 			} else {
@@ -342,6 +342,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 					custUserModulesDto.setLoginId(Integer.valueOf(m[0].toString()));
 					custUserModulesDto.setModuleId(Integer.valueOf(m[1].toString()));
 					custUserModulesDto.setModuleName(m[2].toString());
+					custUserModulesDto.setUserRightId(Integer.valueOf(m[3].toString()));
 
 					custUserModulesDtoList.add(custUserModulesDto);
 
@@ -423,7 +424,7 @@ public class CompanyUserMgmtServiceImpl implements CompanyUserMgmtService {
 					}
 
 				}else {
-					status = new Status(true, 400, "User name already exist");
+					status = new Status(true, 400, "User name already exists");
 				}
 			}else {
 				status = new Status(true, 400, "Login Id not found");

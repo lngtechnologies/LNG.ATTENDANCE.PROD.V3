@@ -13,5 +13,8 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch,Inte
 	
 	Branch findByBrId(Integer brId);
 	
+	@Query(value = "SELECT COUNT(*) AS cunt FROM tmbranch WHERE brValidityEnd >= CURDATE() AND brId = ?1 AND brIsActive = TRUE", nativeQuery = true)
+	int checkBranchValidity(Integer brId);
+	
 
 }
