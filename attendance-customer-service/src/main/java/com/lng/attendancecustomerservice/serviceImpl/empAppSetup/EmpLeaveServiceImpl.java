@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.masters.CustLeave;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
-import com.lng.attendancecustomerservice.entity.masters.EmpLeave;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeLeave;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
@@ -75,8 +74,9 @@ public class EmpLeaveServiceImpl implements EmpLeaveService {
 			Employee employee = employeeRepository.getByEmpId(employeeLeaveDto.getEmpId());
 			CustLeave custLeave = custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(employeeLeaveDto.getCustLeaveId(), true);
 			int empLeave = employeeLeaveRepository.getEmpLeaveAlreadyApplied(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo(), employeeLeaveDto.getEmpId());
-
-			if(employee != null) {
+			if(employeeLeaveDto.getEmpLeaveFrom().compareTo(employee.getEmpJoiningDate()) < 0) {
+				status = new Status(true, 400, "Employee can't apply leave before joining date");
+			}else if(employee != null) {
 				if(custLeave != null) {
 					if(empLeave == 0) {
 						EmployeeLeave employeeLeave = modelMapper.map(employeeLeaveDto, EmployeeLeave.class);

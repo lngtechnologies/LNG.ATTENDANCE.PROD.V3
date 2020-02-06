@@ -1,10 +1,10 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,25 +78,33 @@ public class BeaconServiceImpl implements BeaconService {
 	@Override
 	public BeaconListResponseDto findAll() {
 		BeaconListResponseDto beaconListResponseDto = new BeaconListResponseDto();
+		List<BeaconDto> beaconDtoList = new ArrayList<>();
+	
 		try {
-			List<Beacon> beaconDtoList =  beaconRepository.findAll();
-
-			beaconListResponseDto.setBeaconDtoList(beaconDtoList.stream().map(beacon -> convertToBeaconDto(beacon)).collect(Collectors.toList()));
-
-			if(!beaconDtoList.isEmpty() && beaconListResponseDto.getBeaconDtoList() != null) {
-
-				beaconListResponseDto.status = new Status(false, 200, "Success");
+			List<Object[]> beaconList =  beaconRepository.findAllUsedAndUnUsedBecon();
+			if(beaconList.isEmpty()) {
+				beaconListResponseDto.status = new Status(false,400, "Not found");
 			}else {
-				beaconListResponseDto.status = new Status(false, 400, "Not found");
+					for (Object[] p : beaconList) {	
+					BeaconDto beaconDto = new BeaconDto();
+					beaconDto.setBeaconId(Integer.valueOf(p[0].toString()));
+					beaconDto.setBeaconCode(p[1].toString());
+					beaconDto.setBeaconCreatedDate((Date) p[2]);
+					String value = p[4].toString();
+					boolean b = Boolean.parseBoolean(value);
+					beaconDto.setIsUsed(b);
+					beaconDtoList.add(beaconDto);
+					beaconListResponseDto.setBeaconDtoList(beaconDtoList);
+					beaconListResponseDto.status = new Status(false,200, "Success");
+				}
 			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			beaconListResponseDto.status = new Status(true, 500, "Oops...! Something went wrong!");
+		}catch (Exception e){
+			beaconListResponseDto.status = new Status(true,500, "Oops..! Something went wrong..");
+
+
 		}
 		return beaconListResponseDto;
 	}
-
 	@SuppressWarnings("unused")
 	@Override
 	public StatusDto updateBeacon(BeaconDto beaconDto) {

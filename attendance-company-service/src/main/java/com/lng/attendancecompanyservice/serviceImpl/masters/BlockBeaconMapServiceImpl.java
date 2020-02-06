@@ -11,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lng.attendancecompanyservice.entity.custOnboarding.Customer;
 import com.lng.attendancecompanyservice.entity.masters.Beacon;
 import com.lng.attendancecompanyservice.entity.masters.Block;
 import com.lng.attendancecompanyservice.entity.masters.BlockBeaconMap;
@@ -26,7 +25,6 @@ import com.lng.dto.masters.beaconBlockMap.BlockAndBeaconCodeMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconCodeDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapList;
-import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapResponseDto;
 
 import status.Status;

@@ -49,6 +49,8 @@ public class CustomerDtoTwo {
 	private String custLogoFile;
 	
 	private String custGSTIN;
+	
+	private  String  contactName;
 
 	
 	public String getCountryTelCode() {
@@ -234,4 +236,13 @@ public class CustomerDtoTwo {
 	public void setCustGSTIN(String custGSTIN) {
 		this.custGSTIN = custGSTIN;
 	}
+
+	public String getContactName() {
+		return contactName;
+	}
+
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
+	}
+	
 }

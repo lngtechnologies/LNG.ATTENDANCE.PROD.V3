@@ -1,7 +1,6 @@
 package com.lng.attendancecompanyservice.serviceImpl.custOnboarding;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -701,6 +700,7 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 			displayLock.lock();
 			Customer customer = customerRepository.findCustomerByCustId(customerDto.getCustId());
+			if(customer != null) {
 			// Login login = loginRepository.findByRefCustIdAndLoginMobileAndLoginIsActiveAndEmployee_EmpId(customer.getCustId(), customer.getCustMobile(), true, 0);
 			Login login = loginRepository.findByRefCustIdAndLoginName(customer.getCustId(), "admin@"+customer.getCustCode());
 			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
@@ -710,7 +710,7 @@ public class CustomerServiceImpl implements CustomerService {
 			Customer customer2 = customerRepository.getCustomerByCustEmail(customerDto.getCustEmail());
 			if(customer1 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustMobile().equals(customerDto.getCustMobile()))) {
 				if(customer2 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustEmail().equals(customerDto.getCustEmail()))) {
-					if(customer != null) {
+					
 						customer.setCountry(country);
 						customer.setState(state);
 						customer.setIndustryType(industryType);
@@ -727,6 +727,7 @@ public class CustomerServiceImpl implements CustomerService {
 						customer.setCustPincode(customerDto.getCustPincode());
 						customer.setCustValidityEnd(customerDto.getCustValidityEnd());
 						customer.setCustValidityStart(customerDto.getCustValidityStart());
+						customer.setContactName(customerDto.getContactName());
 						if(customerDto.getCustLogoFile() == null) {
 							customer.setCustLogoFile(customer.getCustLogoFile());
 						} else {
@@ -744,16 +745,16 @@ public class CustomerServiceImpl implements CustomerService {
 						customerResponse.status = new Status(false, 200, "updated");
 						
 					} else {
-						customerResponse.status = new Status(false, 400, "Customer not found");
+						customerResponse.status = new Status(false, 400, "Customer email id already exist");
 						
 					}
 				} else {
-					customerResponse.status = new Status(true, 400, "Customer email id already exist");
+					customerResponse.status = new Status(true, 400, "Customer mobile number already exist");
 					
 				}
 				
 			} else {
-				customerResponse.status = new Status(true, 400, "Customer mobile number already exist");
+				customerResponse.status = new Status(true, 400, "Customer not found");
 				
 			}
 		} catch (Exception e) {

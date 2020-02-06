@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,10 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.authentication.Login;
+import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.EmployeeLeave;
+import com.lng.attendancecustomerservice.entity.notification.EmpToken;
 import com.lng.attendancecustomerservice.repositories.authentication.ILoginRepository;
+import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmployeeLeaveRepository;
+import com.lng.attendancecustomerservice.repositories.notification.EmpTokenRepository;
 import com.lng.attendancecustomerservice.service.masters.EmpLeaveApproveOrCancelService;
+import com.lng.attendancecustomerservice.utils.PushNotificationUtil;
 import com.lng.dto.masters.empLeaveApproveOrCancel.EmpLeaveDto;
 import com.lng.dto.masters.empLeaveApproveOrCancel.EmpLeaveResponseDto;
 import com.lng.dto.masters.employeeLeave.EmployeeLeaveDto;
@@ -28,7 +34,15 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 	@Autowired
 	ILoginRepository iLoginRepository;
 
+	@Autowired
+	EmployeeRepository employeeRepository;
+
+	@Autowired
+	EmpTokenRepository  empTokenRepository;
+
 	ModelMapper ModelMapper = new ModelMapper();
+
+	PushNotificationUtil pushNotificationUtil = new PushNotificationUtil();
 
 	@Override
 	public EmpLeaveResponseDto getByLoginIdAndCustID(Integer loginId, Integer custId) {
@@ -88,15 +102,35 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 			if(employeeLeave != null) {
 				Login login = iLoginRepository.findByLoginId(employeeLeaveDto.getLoginId());
 				if(login != null) {
-					employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
-					employeeLeave.setEmpLeaveStatus("App");
-					employeeLeaveRepository.save(employeeLeave);
-					status = new Status(false, 200, "Leave Approved for "+ employeeLeave.getEmployee().getEmpName());
+					Employee employee = employeeRepository.getByEmpId(employeeLeave.getEmployee().getEmpId());
+					if(employee != null) {
+						EmpToken empToken = empTokenRepository.findByEmployee_EmpIdAndIsActive(employee.getEmpId(),true);
+						if(empToken != null) {
+							employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+							employeeLeave.setEmpLeaveStatus("App");
+							employeeLeaveRepository.save(employeeLeave);
+							Date date =  employeeLeave.getEmpLeaveFrom();
+							Date date1 =  employeeLeave.getEmpLeaveTo();
+							SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+							String strDate = formatter.format(date); 
+							String strDate1 = formatter.format(date1); 
+							pushNotificationUtil.SendPushNotification(empToken.getToken(),"Leave for "+strDate+" - "+strDate1+" has been Approved..!","Leave");
+
+							status = new Status(false, 200, "Leave Approved for "+ employeeLeave.getEmployee().getEmpName());
+						}else if(empToken == null) {
+							employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+							employeeLeave.setEmpLeaveStatus("App");
+							employeeLeaveRepository.save(employeeLeave);
+							status = new Status(false, 200, "Leave Approved for "+ employeeLeave.getEmployee().getEmpName());	
+						}
+					}else {
+						status = new Status(true, 400, "Employee not found");
+					}
 				} else {
 					status = new Status(true, 400, "Login id not found");
 				}
 			} else {
-				status = new Status(false, 400, "Not found");
+				status = new Status(false, 400, "Leave id not found");
 			}
 
 		} catch (Exception e) {
@@ -114,16 +148,37 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 			if(employeeLeave != null) {
 				Login login = iLoginRepository.findByLoginId(employeeLeaveDto.getLoginId());
 				if(login != null) {
-					employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
-					employeeLeave.setEmpLeaveStatus("Rej");
-					employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
-					employeeLeaveRepository.save(employeeLeave);
-					status = new Status(false, 200, "Leave Rejected for "+ employeeLeave.getEmployee().getEmpName());
+					Employee employee = employeeRepository.getByEmpId(employeeLeave.getEmployee().getEmpId());
+					if(employee != null) {
+						EmpToken empToken = empTokenRepository.findByEmployee_EmpIdAndIsActive(employee.getEmpId(),true);
+						if(empToken != null) {
+							employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+							employeeLeave.setEmpLeaveStatus("Rej");
+							employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
+							employeeLeaveRepository.save(employeeLeave);
+							Date date =  employeeLeave.getEmpLeaveFrom();
+							Date date1 =  employeeLeave.getEmpLeaveTo();
+							SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+							String strDate = formatter.format(date); 
+							String strDate1 = formatter.format(date1); 
+							pushNotificationUtil.SendPushNotification(empToken.getToken(),"Leave for "+strDate+" - "+strDate1+" has been Rejected","Leave");
+
+							status = new Status(false, 200, "Leave Rejected for "+ employeeLeave.getEmployee().getEmpName());
+						}else if(empToken == null) {
+							employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+							employeeLeave.setEmpLeaveStatus("Rej");
+							employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
+							employeeLeaveRepository.save(employeeLeave);
+							status = new Status(false, 200, "Leave Rejected for "+ employeeLeave.getEmployee().getEmpName());
+						}
+					}else {
+						status = new Status(true, 400, "Employee not found");
+					}
 				} else {
 					status = new Status(true, 400, "Login id not found");
 				}
 			} else {
-				status = new Status(false, 400, "Not found");
+				status = new Status(false, 400, "Leave id not found");
 			}
 
 		} catch (Exception e) {
@@ -131,7 +186,6 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 		}
 		return status;
 	}
-
 	@Override
 	public EmpLeaveResponseDto getEmpLeaveAppByLoginIdAndCustID(Integer loginId, Integer custId) {
 		EmpLeaveResponseDto empLeaveResponseDto = new EmpLeaveResponseDto();
@@ -172,23 +226,42 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 	@Override
 	public Status empApproveCancelLeave(EmployeeLeaveDto employeeLeaveDto) {
 		Status status = null;
-
 		try {
 
 			EmployeeLeave employeeLeave = employeeLeaveRepository.findByEmpLeaveId(employeeLeaveDto.getEmpLeaveId());
 			if(employeeLeave != null) {
 				Login login = iLoginRepository.findByLoginId(employeeLeaveDto.getLoginId());
 				if(login != null) {
-					employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
-					employeeLeave.setEmpLeaveStatus("AppCan");
-					employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
-					employeeLeaveRepository.save(employeeLeave);
-					status = new Status(false, 200, "Leave Cancelled for "+ employeeLeave.getEmployee().getEmpName());
+					Employee employee = employeeRepository.getByEmpId(employeeLeave.getEmployee().getEmpId());
+					if(employee != null) {
+						EmpToken empToken = empTokenRepository.findByEmployee_EmpIdAndIsActive(employee.getEmpId(),true);
+						if(empToken != null) {
+							employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+							employeeLeave.setEmpLeaveStatus("AppCan");
+							employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
+							employeeLeaveRepository.save(employeeLeave);
+							Date date =  employeeLeave.getEmpLeaveFrom();
+							Date date1 =  employeeLeave.getEmpLeaveTo();
+							SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
+							String strDate = formatter.format(date); 
+							String strDate1 = formatter.format(date1);
+							pushNotificationUtil.SendPushNotification(empToken.getToken(),"Leave for "+strDate+" - "+strDate1+" has been Cancelled","Leave");
+							status = new Status(false, 200, "Leave Cancelled for "+ employeeLeave.getEmployee().getEmpName());
+						}else if(empToken == null){
+							employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
+							employeeLeave.setEmpLeaveStatus("AppCan");
+							employeeLeave.setEmpLeaveRejectionRemarks(employeeLeaveDto.getEmpLeaveRejectionRemarks());
+							employeeLeaveRepository.save(employeeLeave);
+							status = new Status(false, 200, "Leave Cancelled for "+ employeeLeave.getEmployee().getEmpName());	
+						}
+					}else {
+						status = new Status(true, 400, "Employee not found");
+					}
 				} else {
 					status = new Status(true, 400, "Login id not found");
 				}
 			} else {
-				status = new Status(false, 400, "Not found");
+				status = new Status(false, 400, "Leave id not found");
 			}
 
 		} catch (Exception e) {
