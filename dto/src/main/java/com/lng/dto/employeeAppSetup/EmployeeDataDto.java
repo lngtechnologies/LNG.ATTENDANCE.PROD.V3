@@ -8,6 +8,8 @@ public class EmployeeDataDto {
 
 	private String custName;
 	
+	private String custAddress;
+	
 	private Integer brId;
 	
 	private String brName;
@@ -18,7 +20,6 @@ public class EmployeeDataDto {
 
 	private String employeeName;
 
-	// private Integer otp;
 	private Boolean appStatus;
 	
 	private String empPresistedFaceId;
@@ -38,7 +39,8 @@ public class EmployeeDataDto {
 	//private Boolean empAppSetupStatus;
 
 	public EmployeeDataDto(Integer custId, String custName, Integer brId, String brName, String brCode, Integer empid, String empName, 
-						   String custLogo, Boolean appStatus, String empPresistedFaceId, Boolean empAttndStatus, String empAttndancedate, String empAttndanceInDateTime, String empAttndanceOutDateTime) {
+						   String custLogo, Boolean appStatus, String empPresistedFaceId, Boolean empAttndStatus, String empAttndancedate, 
+						   String empAttndanceInDateTime, String empAttndanceOutDateTime, String custAddress) {
 		this.custId = custId;
 		this.custName = custName;
 		this.brId = brId;
@@ -53,9 +55,20 @@ public class EmployeeDataDto {
 		this.empAttndancedate = empAttndancedate;
 		this.empAttndanceInDateTime = empAttndanceInDateTime;
 		this.empAttndanceOutDateTime = empAttndanceOutDateTime;
+		this.custAddress = custAddress;
 	}
 
 	
+	public String getCustAddress() {
+		return custAddress;
+	}
+
+
+	public void setCustAddress(String custAddress) {
+		this.custAddress = custAddress;
+	}
+
+
 	public String getEmpAttndancedate() {
 		return empAttndancedate;
 	}

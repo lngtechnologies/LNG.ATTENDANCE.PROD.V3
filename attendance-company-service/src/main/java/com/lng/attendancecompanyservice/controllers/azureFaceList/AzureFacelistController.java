@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecompanyservice.service.azureEmpDetails.RegisteredEmployeeService;
 import com.lng.dto.customer.BranchDto;
+import com.lng.dto.empAzureDetails.AzureLargeFaceListDto;
 import com.lng.dto.empAzureDetails.AzureLargeFaceListResponseDto;
+import com.lng.dto.empAzureDetails.AzurePersistedFaceIdsDto;
 import com.lng.dto.empAzureDetails.AzurePersistedFaceIdsResponseDto;
 import com.lng.dto.masters.beacon.BeaconListResponseDto;
+import com.lng.dto.masters.block.BlockDto;
 
 import status.Status;
 
@@ -39,5 +42,23 @@ public class AzureFacelistController {
 			return new ResponseEntity(HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<AzureLargeFaceListResponseDto>(azureLargeFaceListResponseDto, HttpStatus.OK);
+	}
+	
+	@PostMapping(value="/delete/largeFacelist")
+	public ResponseEntity<Status> deleteFacelist(@RequestBody AzureLargeFaceListDto azureLargeFaceListDto){
+		Status status = registeredEmployeeService.deleteLargeFacelist(azureLargeFaceListDto.getLargeFaceListId());
+		if(status != null){
+			return  new ResponseEntity<Status>(status, HttpStatus.OK);
+		}
+		return new ResponseEntity<Status>(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(value="/delete/persistedFaceId")
+	public ResponseEntity<Status> deletePersistedFaceId(@RequestBody AzurePersistedFaceIdsDto azurePersistedFaceIdsDto){
+		Status status = registeredEmployeeService.deletePersistedFaceId(azurePersistedFaceIdsDto.getPersistedFaceId());
+		if(status != null){
+			return  new ResponseEntity<Status>(status, HttpStatus.OK);
+		}
+		return new ResponseEntity<Status>(HttpStatus.NO_CONTENT);
 	}
 }

@@ -1,5 +1,8 @@
 package com.lng.attendancecompanyservice.serviceImpl.masters;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,11 +12,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecompanyservice.entity.exception.ApplicationException;
 import com.lng.attendancecompanyservice.entity.masters.Country;
 import com.lng.attendancecompanyservice.entity.masters.State;
+import com.lng.attendancecompanyservice.repositories.exception.ApplicationExceptionRepository;
 import com.lng.attendancecompanyservice.repositories.masters.CountryRepository;
 import com.lng.attendancecompanyservice.repositories.masters.StateRepository;
 import com.lng.attendancecompanyservice.service.masters.CountryService;
+import com.lng.attendancecompanyservice.serviceImpl.exception.ApplicationExceptionServiceImpl;
 import com.lng.dto.masters.country.CountryDto;
 import com.lng.dto.masters.country.CountryResponse;
 
@@ -27,6 +33,13 @@ public class CountryServiceImpl implements CountryService {
 
 	@Autowired
 	StateRepository stateRepository;
+	
+	@Autowired
+	ApplicationExceptionRepository applicationExceptionRepository;
+	
+	// ApplicationExceptionHandler applicationExceptionHandler = new ApplicationExceptionHandler();
+	
+	ApplicationExceptionServiceImpl applicationExceptionHandler = new ApplicationExceptionServiceImpl();
 
 	private final Lock displayQueueLock = new ReentrantLock();
 
@@ -69,6 +82,10 @@ public class CountryServiceImpl implements CountryService {
 				}
 			}
 		}catch(Exception ex){
+			StringWriter sw = new StringWriter();
+			ex.printStackTrace(new PrintWriter(sw));
+			String stackTrace = sw.toString();
+			saveException(0, "Save Country", ex.getMessage(), stackTrace, "Pending", "");
 			response.status = new Status(true,500, ex.getMessage()); 
 		}
 
@@ -115,11 +132,16 @@ public class CountryServiceImpl implements CountryService {
 			}
 
 		}catch(Exception e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String stackTrace = sw.toString();
+			saveException(0, "Get All Country", e.getMessage(), stackTrace, "Pending", "");
 			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
 		return response;
 	}
+	
 	@Override
 	public CountryResponse getAllByCountryIsActive() {
 		CountryResponse response = new CountryResponse();
@@ -133,6 +155,10 @@ public class CountryServiceImpl implements CountryService {
 			}
 
 		}catch(Exception e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String stackTrace = sw.toString();
+			saveException(1, "Get all country by is active", e.getMessage(), stackTrace, "Pending", "");
 			response.status = new Status(true,500, "Oops..! Something went wrong.."); 
 
 		}
@@ -196,6 +222,10 @@ public class CountryServiceImpl implements CountryService {
 			}
 		}
 		catch(Exception e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String stackTrace = sw.toString();
+			saveException(0, "Update country", e.getMessage(), stackTrace, "Pending", "");
 			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		finally {
@@ -225,7 +255,11 @@ public class CountryServiceImpl implements CountryService {
 				countryResponse.status = new Status(true,400, "Country not found");
 			}
 
-		}catch(Exception e) { 
+		}catch(Exception e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String stackTrace = sw.toString();
+			saveException(0, "Delete country", e.getMessage(), stackTrace, "Pending", "");
 			countryResponse.status = new Status(true,500, "Oops..! Something went wrong..");
 		}
 
@@ -238,6 +272,20 @@ public class CountryServiceImpl implements CountryService {
 		return countryDto;
 	}
 
-
-
+	public void saveException(int custId, String moduleName, String exMessage, String stackTrace, String status, String remarks) {
+		
+		try {
+			ApplicationException applicationException = new ApplicationException();
+			applicationException.setRefCustId(custId);
+			applicationException.setModuleName(moduleName);
+			applicationException.setExMessage(exMessage);
+			applicationException.setStackTrace(stackTrace);
+			applicationException.setDateTime(new Date());
+			applicationException.setStatus(status);
+			applicationException.setRemarks(remarks);
+			applicationExceptionRepository.save(applicationException);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

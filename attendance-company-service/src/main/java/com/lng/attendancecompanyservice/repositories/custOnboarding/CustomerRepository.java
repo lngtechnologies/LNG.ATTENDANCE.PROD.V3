@@ -43,7 +43,10 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	
 	Customer getCustomerByCustEmail(String custEmail);
 	
-	@Query(value = "SELECT COUNT(*) AS cunt FROM tmcustomer WHERE custValidityEnd > CURDATE() AND custId = ?1 AND custIsActive = TRUE", nativeQuery = true)
+	@Query(value = "SELECT * FROM tmcustomer WHERE custValidityEnd > CURDATE() AND custIsActive = TRUE", nativeQuery = true)
+	List<Customer> getAllActiveCustomers();
+	
+	@Query(value = "SELECT * FROM tmcustomer WHERE custValidityEnd < CURDATE() AND custIsActive = TRUE", nativeQuery = true)
 	List<Customer> getAllExpiredCustomers();
 	
 }

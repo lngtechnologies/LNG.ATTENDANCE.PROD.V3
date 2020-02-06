@@ -1,5 +1,8 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -9,12 +12,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecustomerservice.entity.exception.ApplicationException;
 import com.lng.attendancecustomerservice.entity.masters.Contractor;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
+import com.lng.attendancecustomerservice.repositories.exception.ApplicationExceptionRepository;
 import com.lng.attendancecustomerservice.repositories.masters.ContractorRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
 import com.lng.attendancecustomerservice.service.masters.ContractorService;
+import com.lng.attendancecustomerservice.serviceImpl.exception.ApplicationExceptionServiceImpl;
 import com.lng.dto.masters.contractor.ContractorDto;
 import com.lng.dto.masters.contractor.ContractorResponse;
 
@@ -29,6 +35,10 @@ public class ContractorServiceImpl implements ContractorService {
 	EmployeeRepository employeeRepository;
 	@Autowired
 	CustomerRepository customerRepository;
+	@Autowired
+	ApplicationExceptionRepository applicationExceptionRepository;
+	
+	ApplicationExceptionServiceImpl applicationExceptionServiceImpl = new ApplicationExceptionServiceImpl();
 	
 	private final Lock displayQueueLock = new ReentrantLock();
 	
@@ -228,9 +238,32 @@ public class ContractorServiceImpl implements ContractorService {
 			}
 
 		}catch(Exception e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String stackTrace = sw.toString();
+			applicationExceptionServiceImpl.saveEcxeption(1, "Get contractor", e.getMessage(), stackTrace, "Pending","");
 			response.status = new Status(true,500, "Oops..! Something went wrong"); 
 		}
 		return response;
+	}
+	
+	
+	public void saveEcxeption(int custId, String moduleName, String exMessage, String stackTrace, String status,
+			String remarks) {
+		try {
+			ApplicationException applicationException = new ApplicationException();
+			applicationException.setRefCustId(custId);
+			applicationException.setModuleName(moduleName);
+			applicationException.setExMessage(exMessage);
+			applicationException.setStackTrace(stackTrace);
+			applicationException.setStatus(status);
+			applicationException.setRemarks(remarks);
+			applicationException.setDateTime(new Date());
+			applicationExceptionRepository.save(applicationException);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }
 

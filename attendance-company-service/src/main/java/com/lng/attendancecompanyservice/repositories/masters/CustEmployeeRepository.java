@@ -25,5 +25,7 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	List<Employee> findByBranch_BrId(Integer brId);
 	
+	Employee getEmployeeByEmpPresistedFaceId(String faceId);
+	
 	// Employee findEmployeeByReportionToId(Integer );
 }

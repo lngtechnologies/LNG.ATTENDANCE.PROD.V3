@@ -107,15 +107,15 @@ public class LoginServiceImpl implements ILogin {
 				if(cust == null) throw new Exception("Customer doesn't exist");
 
 				//
-				if(!cust.getCustIsActive()) throw new Exception("Subscription expired, please contact admin");
+				if(!cust.getCustIsActive()) throw new Exception("Customer is not active, contact admin");
 
 				// Check customer validity
 				int custValidity = custRepository.checkCustValidationByCustId(cust.getCustId());
-				if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
+				if(custValidity == 0) throw new Exception("Subscription expired, contact admin");
 
 				// Check Branch validity
 				int branchValidity = branchRepository.checkBranchValidity(user.getLoginId());
-				if(branchValidity == 0) throw new Exception("Subscription expired, please contact admin");
+				if(branchValidity == 0) throw new Exception("Subscription expired, contact admin");
 
 
 				// convert byte to base64
@@ -172,11 +172,11 @@ public class LoginServiceImpl implements ILogin {
 
 			// Check customer validity
 			int custValidity = custRepository.checkCustValidationByCustId(user.getRefCustId());
-			if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
+			if(custValidity == 0) throw new Exception("Subscription expired, contact admin");
 
 			// Check Branch validity
 			int branchValidity = branchRepository.checkBranchValidity(user.getLoginId());
-			if(branchValidity == 0) throw new Exception("Subscription expired, please contact admin");
+			if(branchValidity == 0) throw new Exception("Subscription expired, contact admin");
 
 			// Check mobile exist
 			if(user.getLoginMobile() == null) throw new Exception("Mobile no doesn't exists. Unable to reset password.");
@@ -191,7 +191,7 @@ public class LoginServiceImpl implements ILogin {
 				if(cust == null) throw new Exception("Customer doesn't exist");
 
 				//
-				if(!cust.getCustIsActive()) throw new Exception("Subscription expired, please contact admin");
+				if(!cust.getCustIsActive()) throw new Exception("Customer is not active, contact admin");
 			}
 
 			// Generate new password
@@ -251,11 +251,11 @@ public class LoginServiceImpl implements ILogin {
 
 				// Check customer validity
 				int custValidity = custRepository.checkCustValidationByCustId(user.getRefCustId());
-				if(custValidity == 0) throw new Exception("Subscription expired, please contact admin");
+				if(custValidity == 0) throw new Exception("Subscription expired, contact admin");
 
 				// Check Branch validity
 				int branchValidity = branchRepository.checkBranchValidity(user.getLoginId());
-				if(branchValidity == 0) throw new Exception("Subscription expired, please contact admin");
+				if(branchValidity == 0) throw new Exception("Subscription expired, contact admin");
 
 				// Get customer details by customer id
 				Customer cust = custRepository.findByCustId(user.getRefCustId());
@@ -264,7 +264,7 @@ public class LoginServiceImpl implements ILogin {
 				if(cust == null) throw new Exception("Customer doesn't exist");
 
 				//
-				if(!cust.getCustIsActive()) throw new Exception("Subscription expired, please contact admin");
+				if(!cust.getCustIsActive()) throw new Exception("Customer is not active, contact admin");
 			}
 
 			// Validate password else throw invalid details

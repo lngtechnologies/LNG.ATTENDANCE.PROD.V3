@@ -25,6 +25,7 @@ public interface CountryRepository extends CrudRepository<Country,Integer> {
 	Country   getStateByCountryId(Integer countryId);
 	Country   getCoustomerByCountryId(Integer countryId );
 	Country  findCountryNameByCountryTelCode(String countryTelCode);
+	
 	@Query(value = "SELECT * FROM tmcountry  ORDER BY countryName ASC", nativeQuery = true)
 	List<Country> findAll();
 	

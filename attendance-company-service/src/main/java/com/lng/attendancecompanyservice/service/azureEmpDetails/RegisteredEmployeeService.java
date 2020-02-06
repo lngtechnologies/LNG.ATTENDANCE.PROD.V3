@@ -17,4 +17,8 @@ public interface RegisteredEmployeeService {
 	
 	AzureLargeFaceListResponseDto getAllFaceList();
 	//List<AzureFacelistDto> getPersistedFaceIds(String branchCode) throws Exception;;
+	
+	Status deleteLargeFacelist(String largeFacelist);
+	
+	Status deletePersistedFaceId(String faceId);
 }
