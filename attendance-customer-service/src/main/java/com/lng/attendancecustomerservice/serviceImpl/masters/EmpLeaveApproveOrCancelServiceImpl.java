@@ -161,7 +161,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 							SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 							String strDate = formatter.format(date); 
 							String strDate1 = formatter.format(date1); 
-							pushNotificationUtil.SendPushNotification(empToken.getToken(),"Leave for "+strDate+" - "+strDate1+" has been Rejected","Leave");
+							pushNotificationUtil.SendPushNotification(empToken.getToken(),"Leave for "+strDate+" - "+strDate1+" has been Rejected..!","Leave");
 
 							status = new Status(false, 200, "Leave Rejected for "+ employeeLeave.getEmployee().getEmpName());
 						}else if(empToken == null) {
@@ -245,7 +245,7 @@ public class EmpLeaveApproveOrCancelServiceImpl implements EmpLeaveApproveOrCanc
 							SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");  
 							String strDate = formatter.format(date); 
 							String strDate1 = formatter.format(date1);
-							pushNotificationUtil.SendPushNotification(empToken.getToken(),"Leave for "+strDate+" - "+strDate1+" has been Cancelled","Leave");
+							pushNotificationUtil.SendPushNotification(empToken.getToken(),"Leave for "+strDate+" - "+strDate1+" has been Cancelled..!","Leave");
 							status = new Status(false, 200, "Leave Cancelled for "+ employeeLeave.getEmployee().getEmpName());
 						}else if(empToken == null){
 							employeeLeave.setEmpLeaveAppRejBy(login.getRefEmpId());
