@@ -56,7 +56,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			Customer customer = customerRepository.getByCustCode(custCode);
 
 			// Check customer exist else throw exception	
-			if(customer == null || !customer.getCustIsActive()) throw new Exception("Customet not found or Invalid Data");
+			if(customer == null || !customer.getCustIsActive()) throw new Exception("Customer not found or Invalid Data");
 
 			// Check customer validity
 			int custValidity = customerRepository.checkCustValidationByCustId(customer.getCustId());

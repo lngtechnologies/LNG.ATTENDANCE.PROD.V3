@@ -42,5 +42,8 @@ public interface HolidayCalendarRepository extends PagingAndSortingRepository<Ho
 	List<HolidayCalendar>  findHolidayCalendarByrefCustIdAndRefbrId(Integer refCustId,Integer refbrId);
 
 	HolidayCalendar findHolidayCalendarByHolidayDateAndRefCustId(Date holidayDate, Integer refCustId);
+	
+	@Query(value = "CALL getBranchHolidayBetweenTwoDates(?1,?2,?3)",nativeQuery = true)
+	List<String>  findHolidayCalendarByrefBrIdFromDateAndToDate(Integer brId, Date fromDate, Date todate);
 
 }

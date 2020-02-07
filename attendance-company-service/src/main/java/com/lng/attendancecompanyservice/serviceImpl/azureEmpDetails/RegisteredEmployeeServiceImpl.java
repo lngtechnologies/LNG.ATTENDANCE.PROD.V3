@@ -12,17 +12,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lng.attendancecompanyservice.entity.masters.Branch;
 import com.lng.attendancecompanyservice.entity.masters.Employee;
@@ -34,6 +31,7 @@ import com.lng.dto.empAzureDetails.AzureLargeFaceListDto;
 import com.lng.dto.empAzureDetails.AzureLargeFaceListResponseDto;
 import com.lng.dto.empAzureDetails.AzurePersistedFaceIdsDto;
 import com.lng.dto.empAzureDetails.AzurePersistedFaceIdsResponseDto;
+
 import status.Status;
 
 
@@ -77,7 +75,6 @@ public class RegisteredEmployeeServiceImpl implements RegisteredEmployeeService 
 						faceList.add(azurePersistedFaceIdsDto);
 					}
 				}
-
 				azureFacelistResponseDto.setFacelist(faceList);
 				azureFacelistResponseDto.status = new Status(false, 200, "Success");
 			}else {
