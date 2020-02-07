@@ -141,8 +141,6 @@ public class BlockServiceImpl implements BlockService {
 
 			else {
 				status = new Status(false, 400, "Branch not found");
-				
-
 			}
 		}
 		catch(Exception e) {
