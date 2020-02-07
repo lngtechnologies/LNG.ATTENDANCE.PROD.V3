@@ -205,10 +205,6 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 
 			Employee employee = employeeRepository.getByEmpId(employeeLeaveDto.getEmpId());
 
-
-
-			// System.out.println(count);
-
 			if(employeeLeaveDto.getEmpLeaveFrom().compareTo(employee.getEmpJoiningDate()) < 0) {
 				status = new Status(true, 400, "Employee can't apply leave before joining date");
 			} else if(employee != null) {
@@ -216,8 +212,8 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 				if(custLeave != null) {
 					int empLeave = employeeLeaveRepository.getEmpLeaveAlreadyApplied(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo(), employeeLeaveDto.getEmpId());
 					if(empLeave == 0) {
-<<<<<<< HEAD
-						if(count > 0) {
+
+						
 							ZoneId defaultZoneId = ZoneId.systemDefault();
 							Date startDate = employeeLeaveDto.getEmpLeaveFrom();
 							Instant fInstant = startDate.toInstant();
@@ -256,7 +252,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 									}
 								}
 							}
-
+							if(count > 0) {
 							EmployeeLeave employeeLeave = modelMapper.map(employeeLeaveDto, EmployeeLeave.class);
 							Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 							employeeLeave.setEmployee(employee);
@@ -270,18 +266,7 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 						} else {
 							status = new Status(true, 400, "Cannot apply leave on week off days or holidays");
 						}
-=======
-						EmployeeLeave employeeLeave = modelMapper.map(employeeLeaveDto, EmployeeLeave.class);
-						Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
-						employeeLeave.setEmployee(employee);
-						employeeLeave.setCustLeave(custLeave);
-						employeeLeave.setEmpLeaveDaysCount(countNoOfDays);
-						employeeLeave.setEmpLeaveAppliedDatetime(new Date());
-						employeeLeave.setEmpLeaveStatus("");
-						employeeLeaveRepository.save(employeeLeave);
-						status = new Status(false, 200, "Leave Appliedss for "+employee.getEmpName());
-						
->>>>>>> branch 'develop' of https://github.com/lngtechnologies/LNG.ATTENDANCE.PROD.V3
+
 					} else {
 						status = new Status(true, 400, "Leave already applied for this date");
 
