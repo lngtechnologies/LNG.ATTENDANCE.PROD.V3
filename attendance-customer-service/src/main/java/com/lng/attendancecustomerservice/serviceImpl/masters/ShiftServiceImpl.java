@@ -58,11 +58,11 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					shiftResponse.status = new Status(false,200, "created");
-					
+
 				}
 				else{ 
 					shiftResponse.status = new Status(true,400, "Branch not found");
-					
+
 				}
 			} else if(shift1 != null){
 				Branch branch = branchRepository.findBranchByBrId(shiftDto.getRefBrId());
@@ -79,20 +79,20 @@ public class ShiftServiceImpl implements ShiftService {
 					shift1.setShiftIsActive(true);
 					shiftRepository.save(shift1);
 					shiftResponse.status = new Status(false,200, "created");
-					
+
 				}
 				else{ 
 					shiftResponse.status = new Status(true,400, "Branch not found");
-					
+
 				}
 			}else {
 				shiftResponse.status = new Status(true,400,"Shift name already exists");
-				
+
 
 			}
 		} catch (Exception e) {
 			shiftResponse.status = new Status(true,500, e.getMessage());
-			
+
 		}
 		finally {
 			displayLock.unlock();
@@ -140,7 +140,7 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					status = new Status(false, 200, "updated");
-					
+
 				} else if (sh.getShiftId() == shiftDto.getShiftId()) { 
 
 					shift = modelMapper.map(shiftDto,Shift.class);
@@ -148,23 +148,23 @@ public class ShiftServiceImpl implements ShiftService {
 					shift.setShiftIsActive(true);
 					shiftRepository.save(shift);
 					status = new Status(false, 200, "updated");
-					
+
 				}
 				else{ 
 
 					status = new Status(true,400,"Shift name already exists");
-					
+
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Branch not found");
-				
+
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
-			
+
 		}
 		finally {
 			displayLock.unlock();
@@ -177,8 +177,8 @@ public class ShiftServiceImpl implements ShiftService {
 		ShiftResponse shiftResponse=new ShiftResponse(); 
 		try {
 			Shift shift = shiftRepository.findShiftByShiftId(shiftId);
-			int b = shiftRepository.findEmployeeByShiftShiftId(shiftId);
 			if(shift!= null) {
+				int b = shiftRepository.findEmployeeByShiftShiftId(shiftId);
 				if(b == 0) {
 
 					shiftRepository.delete(shift);	
