@@ -51,7 +51,6 @@ public class CountryServiceImpl implements CountryService {
 
 		try{
 			displayLock.lock();
-			// Thread.sleep(3000L);
 
 			if(countryDto.getCountryName() == null || countryDto.getCountryName().isEmpty()) throw new Exception("Please enter country name");
 			if(countryDto.getCountryTelCode() ==  null || countryDto.getCountryTelCode().isEmpty()) throw new Exception("Please enter country code");
@@ -88,11 +87,9 @@ public class CountryServiceImpl implements CountryService {
 			saveException(0, "Save Country", ex.getMessage(), stackTrace, "Pending", "");
 			response.status = new Status(true,400, ex.getMessage()); 
 		}
-
 		finally {
 			displayLock.unlock();
 		}
-
 		return response;
 	}
 

@@ -132,7 +132,6 @@ public class BlockServiceImpl implements BlockService {
 					block.setBlkIsActive(true);
 					blockRepository.save(block);
 					status = new Status(false, 200, "updated");
-					
 				}
 				else{ 
 					status = new Status(true,400,"Block name already exist");
