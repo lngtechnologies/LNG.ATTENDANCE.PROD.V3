@@ -121,7 +121,7 @@ public class BlockServiceImpl implements BlockService {
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
 					block.setBlkCreatedDate(new Date());
-					block.setBlkIsActive(false);
+					block.setBlkIsActive(true);
 					blockRepository.save(block);
 					status = new Status(false, 200, "updated");
 					
@@ -129,7 +129,7 @@ public class BlockServiceImpl implements BlockService {
 					block = modelMapper.map(blockDto,Block.class);
 					block.setBranch(branch);
 					block.setBlkCreatedDate(new Date());
-					block.setBlkIsActive(false);
+					block.setBlkIsActive(true);
 					blockRepository.save(block);
 					status = new Status(false, 200, "updated");
 					

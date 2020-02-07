@@ -86,7 +86,7 @@ public class CountryServiceImpl implements CountryService {
 			ex.printStackTrace(new PrintWriter(sw));
 			String stackTrace = sw.toString();
 			saveException(0, "Save Country", ex.getMessage(), stackTrace, "Pending", "");
-			response.status = new Status(true,500, ex.getMessage()); 
+			response.status = new Status(true,400, ex.getMessage()); 
 		}
 
 		finally {

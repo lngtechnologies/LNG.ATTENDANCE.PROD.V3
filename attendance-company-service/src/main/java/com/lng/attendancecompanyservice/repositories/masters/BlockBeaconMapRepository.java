@@ -7,7 +7,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import com.lng.attendancecompanyservice.entity.masters.BlockBeaconMap;
-import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
 
 @Repository
 public interface BlockBeaconMapRepository extends PagingAndSortingRepository<BlockBeaconMap, Integer> {
@@ -44,4 +43,5 @@ public interface BlockBeaconMapRepository extends PagingAndSortingRepository<Blo
 	List<Object[]> findByCustomer_CustIdAndBranch_BrId(Integer custId,Integer brId);
 	
 	List<BlockBeaconMap> findByBlock_BlkIdAndBlkBeaconMapIsActive(Integer blkId, Boolean blkBeaconMapIsActive);
+
 }

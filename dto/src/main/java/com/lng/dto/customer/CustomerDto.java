@@ -41,6 +41,8 @@ public class CustomerDto {
 	private String custLogoFile;
 	
 	private String custGSTIN;
+	
+	private String contactName;
 
 	public Integer getCustId() {
 		return custId;
@@ -192,6 +194,14 @@ public class CustomerDto {
 
 	public void setCustGSTIN(String custGSTIN) {
 		this.custGSTIN = custGSTIN;
+	}
+
+	public String getContactName() {
+		return contactName;
+	}
+
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
 	}
 	
 

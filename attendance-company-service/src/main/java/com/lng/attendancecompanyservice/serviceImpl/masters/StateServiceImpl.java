@@ -140,7 +140,7 @@ public class StateServiceImpl implements StateService {
 		final Lock displayLock = this.displayQueueLock;
 		Status status = null;
 		try {
-			
+			displayLock.lock();
 			if(stateDto.getStateName() == null || stateDto.getStateName().isEmpty()) throw new Exception("Please enter State name");
 			if(stateDto.getStateId() == null || stateDto.getStateId() == 0) throw new Exception("State id is null or zero");
 			if(stateDto.getRefCountryId() == null || stateDto.getRefCountryId() == 0) throw new Exception("RefCountryId id is null or zero");
@@ -178,7 +178,6 @@ public class StateServiceImpl implements StateService {
 		}
 		catch(Exception e) {
 			status = new Status(true,500, "Oops..! Something went wrong..");
-			
 		}
 		finally {
 			displayLock.unlock();

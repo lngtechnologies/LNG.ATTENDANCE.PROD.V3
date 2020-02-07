@@ -9,6 +9,8 @@ public class BeaconDto {
 	private String beaconCode;
 	
 	private Date beaconCreatedDate;
+	
+	private Boolean  isUsed;
 
 	public Integer getBeaconId() {
 		return beaconId;
@@ -25,7 +27,6 @@ public class BeaconDto {
 	public void setBeaconCode(String beaconCode) {
 		this.beaconCode = beaconCode;
 	}
-
 	public Date getBeaconCreatedDate() {
 		return beaconCreatedDate;
 	}
@@ -33,5 +34,12 @@ public class BeaconDto {
 	public void setBeaconCreatedDate(Date beaconCreatedDate) {
 		this.beaconCreatedDate = beaconCreatedDate;
 	}
-	
+
+	public Boolean getIsUsed() {
+		return isUsed;
+	}
+
+	public void setIsUsed(Boolean isUsed) {
+		this.isUsed = isUsed;
+	}
 }

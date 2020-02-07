@@ -86,6 +86,9 @@ public class Customer {
 	
 	@Column(name = "custGSTIN")
 	private String custGSTIN;
+	
+	@Column(name = "contactName")
+	private String contactName;
 
 	public Integer getCustId() {
 		return custId;
@@ -237,6 +240,14 @@ public class Customer {
 
 	public void setCustGSTIN(String custGSTIN) {
 		this.custGSTIN = custGSTIN;
+	}
+
+	public String getContactName() {
+		return contactName;
+	}
+
+	public void setContactName(String contactName) {
+		this.contactName = contactName;
 	}
 	
 	
