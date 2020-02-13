@@ -213,48 +213,47 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 					int empLeave = employeeLeaveRepository.getEmpLeaveAlreadyApplied(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo(), employeeLeaveDto.getEmpId());
 					if(empLeave == 0) {
 
-						
-							ZoneId defaultZoneId = ZoneId.systemDefault();
-							Date startDate = employeeLeaveDto.getEmpLeaveFrom();
-							Instant fInstant = startDate.toInstant();
-							LocalDate fromDate = fInstant.atZone(defaultZoneId).toLocalDate();
+						ZoneId defaultZoneId = ZoneId.systemDefault();
+						Date startDate = employeeLeaveDto.getEmpLeaveFrom();
+						Instant fInstant = startDate.toInstant();
+						LocalDate fromDate = fInstant.atZone(defaultZoneId).toLocalDate();
 
-							Date endDate = employeeLeaveDto.getEmpLeaveTo();
-							Instant tInstant = endDate.toInstant();
-							LocalDate toDate = tInstant.atZone(defaultZoneId).toLocalDate();
+						Date endDate = employeeLeaveDto.getEmpLeaveTo();
+						Instant tInstant = endDate.toInstant();
+						LocalDate toDate = tInstant.atZone(defaultZoneId).toLocalDate();
 
-							EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmpId(employeeLeaveDto.getEmpId());
-							weekOffDay = empWeeklyOffDay.getDayOfWeek();		
-							String[] values = weekOffDay.toUpperCase().split(",");
+						EmpWeeklyOffDay empWeeklyOffDay = empWeeklyOffDayRepository.findEEmpWeeklyOffDayByEmpId(employeeLeaveDto.getEmpId());
+						weekOffDay = empWeeklyOffDay.getDayOfWeek();		
+						String[] values = weekOffDay.toUpperCase().split(",");
 
-							List<String> holidays = holidayCalendarRepository.findHolidayCalendarByrefBrIdFromDateAndToDate(employee.getBranch().getBrId(), employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
+						List<String> holidays = holidayCalendarRepository.findHolidayCalendarByrefBrIdFromDateAndToDate(employee.getBranch().getBrId(), employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 
-							for (date = fromDate; date.isBefore(toDate.plusDays(1)); date = date.plusDays(1)) {
-								Date appliedDate = Date.from(date.atStartOfDay(defaultZoneId).toInstant());
-								SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-								String aDate = sdf1.format(appliedDate);
-								// System.out.println("Applied date " + aDate);
-								if(!holidays.isEmpty()) {
-									if(!holidays.contains(aDate)) {		
-										days = date.getDayOfWeek();
+						for (date = fromDate; date.isBefore(toDate.plusDays(1)); date = date.plusDays(1)) {
+							Date appliedDate = Date.from(date.atStartOfDay(defaultZoneId).toInstant());
+							SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+							String aDate = sdf1.format(appliedDate);
+							// System.out.println("Applied date " + aDate);
+							days = date.getDayOfWeek();
+							if(!holidays.isEmpty()) {
+								if(!holidays.contains(aDate)) {		
 
-										List<String> wkOff = Arrays.asList(values);
-										// System.out.println(wkOff);
-										if(!wkOff.contains(days.toString())) {
-											count++;	
-										}
-									}
-								} else {
 									List<String> wkOff = Arrays.asList(values);
 									// System.out.println(wkOff);
 									if(!wkOff.contains(days.toString())) {
 										count++;	
 									}
 								}
+							} else {
+								List<String> wkOff = Arrays.asList(values);
+								// System.out.println(wkOff);
+								if(!wkOff.contains(days.toString())) {
+									count++;	
+								}
 							}
-							if(count > 0) {
+						}
+						if(count > 0) {
 							EmployeeLeave employeeLeave = modelMapper.map(employeeLeaveDto, EmployeeLeave.class);
-							Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
+							// Integer countNoOfDays = employeeLeaveRepository.getNoOfDaysCount(employeeLeaveDto.getEmpLeaveFrom(), employeeLeaveDto.getEmpLeaveTo());
 							employeeLeave.setEmployee(employee);
 							employeeLeave.setCustLeave(custLeave);
 							employeeLeave.setEmpLeaveDaysCount(count);
@@ -266,20 +265,14 @@ public class EmployeeLeaveServiceImpl implements EmployeeLeaveService {
 						} else {
 							status = new Status(true, 400, "Cannot apply leave on week off days or holidays");
 						}
-
 					} else {
 						status = new Status(true, 400, "Leave already applied for this date");
-
-					}	
-
+					}
 				}else {
 					status = new Status(true, 400, "Cust Leave not found");
-
 				}
-
 			} else {
 				status = new Status(true, 400, "Employee not found");
-
 			}
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");

@@ -15,6 +15,8 @@ public interface BlockBeaconMapRepository extends PagingAndSortingRepository<Blo
 	
 	BlockBeaconMap findByBeaconCode(String beaconCode);
 	
+	List<BlockBeaconMap> getByBeaconCodeAndBlkBeaconMapIsActive(String beaconCode, Boolean blkBeaconMapIsActive);
+	
 	BlockBeaconMap findByBeaconCodeAndBlkBeaconMapIsActive(String beaconCode, Boolean blkBeaconMapIsActive);
 	
 	BlockBeaconMap findBlockBeaconMapByblkBeaconMapId(Integer blkBeaconMapId);

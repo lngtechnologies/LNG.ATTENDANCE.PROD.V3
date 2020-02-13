@@ -114,7 +114,7 @@ public class BeaconServiceImpl implements BeaconService {
 
 		Beacon beacon1 = beaconRepository.findBeaconByBeaconId(beaconDto.getBeaconId());
 		Beacon beacon2 = beaconRepository.findBeaconByBeaconCode(beaconDto.getBeaconCode());
-		BlockBeaconMap blockBeaconMap = blockBeaconMapRepository.findByBeaconCodeAndBlkBeaconMapIsActive(beacon1.getBeaconCode(), true);
+		List<BlockBeaconMap> blockBeaconMapList = blockBeaconMapRepository.getByBeaconCodeAndBlkBeaconMapIsActive(beacon1.getBeaconCode(), true);
 		try {
 			displayLock.lock();
 			if(beacon1 != null){
@@ -122,11 +122,13 @@ public class BeaconServiceImpl implements BeaconService {
 					beacon1.setBeaconCode(beaconDto.getBeaconCode());
 					beacon1.setBeaconCreatedDate(new Date());
 					beaconRepository.save(beacon1);
-					if(blockBeaconMap != null) {
-						blockBeaconMap.setBeaconCode(beaconDto.getBeaconCode());
-						blockBeaconMapRepository.save(blockBeaconMap);
+					
+					if(!blockBeaconMapList.isEmpty()) {
+						for(BlockBeaconMap blockBeaconMap: blockBeaconMapList) {
+							blockBeaconMap.setBeaconCode(beaconDto.getBeaconCode());
+							blockBeaconMapRepository.save(blockBeaconMap);
+						}
 					}
-
 					statusDto.setCode(200);
 					statusDto.setError(false);
 					statusDto.setMessage("updated");
