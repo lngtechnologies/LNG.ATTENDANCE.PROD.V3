@@ -8,18 +8,32 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.reports.ReportDto;
 import com.lng.attendancecustomerservice.entity.reports.ReportEmployeeSummaryDto;
 import com.lng.attendancecustomerservice.entity.reports.ReportMasterDataDto;
 import com.lng.attendancecustomerservice.entity.reports.ReportResponseDto;
 import com.lng.attendancecustomerservice.entity.reports.ResponseSummaryReport;
+import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.ReportRepository;
+import com.lng.attendancecustomerservice.repositories.masters.LoginDataRightRepository;
 import com.lng.attendancecustomerservice.service.reports.IReport;
+import com.lng.dto.masters.employeeLeave.EmployeeDto;
+import com.lng.dto.reports.EmployeeDetailsDto;
+import com.lng.dto.reports.EmployeeDtailsResponse;
 import com.lng.dto.reports.ReportParam;
+
+import status.Status;
 
 @Service
 public class ReportServiceImpl implements IReport {
 	@Autowired ReportRepository reportRepo;
+
+	@Autowired
+	LoginDataRightRepository loginDataRightRepository;
+
+	@Autowired
+	EmployeeRepository  employeeRepository;
 
 	@Override
 	public ReportResponseDto GetAttendanceReport(ReportParam reportParam) {
@@ -39,7 +53,7 @@ public class ReportServiceImpl implements IReport {
 					}
 				}
 			}
-			
+
 			String whereClause = BuildWhereClause(reportParam);
 			if(whereClause != null) {
 				List<Object[]> resultReport = null;
@@ -68,7 +82,7 @@ public class ReportServiceImpl implements IReport {
 						date = reportParam.getFromDate();
 					} else {
 						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	                    date = dateFormat.format(new Date());
+						date = dateFormat.format(new Date());
 					}
 					resultReport = reportRepo.GetAbsentReport(whereClause, date);
 					if(resultReport != null) {
@@ -85,13 +99,13 @@ public class ReportServiceImpl implements IReport {
 					}
 				}
 			}
-			
+
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return response;
 	}
-	
+
 	private String BuildWhereClause(ReportParam reportParam) {
 		String whereClause = "";
 		if(reportParam.getCustId() != null && reportParam.getCustId() != 0) {
@@ -133,9 +147,9 @@ public class ReportServiceImpl implements IReport {
 				}
 			}
 
-		 if(reportParam.getEmpId() != null) {
-			 List<Object[]> summaryReportResult = reportRepo.GetEmployeeSummaryReport(reportParam.getFromDate(), reportParam.getToDate(), reportParam.getEmpId());
-			 if(summaryReportResult != null) {
+			if(reportParam.getEmpId() != null) {
+				List<Object[]> summaryReportResult = reportRepo.GetEmployeeSummaryReport(reportParam.getFromDate(), reportParam.getToDate(), reportParam.getEmpId());
+				if(summaryReportResult != null) {
 					for(Object[] dt: summaryReportResult) {
 						ReportEmployeeSummaryDto rptData = new ReportEmployeeSummaryDto();
 						rptData.setDate(dt[2].toString());
@@ -147,17 +161,60 @@ public class ReportServiceImpl implements IReport {
 						rptData.setApprovedGeoLocation(dt[8].toString());
 						rptData.setTimeInLocation(dt[9].toString());
 						rptData.setTimeOutLocation(dt[10].toString());
-						
+
 						rptDataList.add(rptData);
 					}
 					responseSummaryReport.setResult(rptDataList);
 				}
-		 }
+			}
 
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
 		return responseSummaryReport;
+	}
+
+	@Override
+	public EmployeeDtailsResponse getEmployeeDetails(Integer empId,Integer custId) {
+		EmployeeDtailsResponse employeeDtailsResponse = new EmployeeDtailsResponse();
+		List<EmployeeDetailsDto> employeeDetailsDtoList = new ArrayList<>();
+
+
+		try {
+			Employee employee = employeeRepository.getByEmpId(empId);
+			if(employee != null) {
+				List<Object[]> employeeList  =  loginDataRightRepository.findEmployeeListByEmployee_EmpIdAndCustomer_CustId(empId,custId);
+				if(!employeeList.isEmpty()) {
+					for(Object[] a : employeeList){
+						EmployeeDetailsDto employeeDetailsDto = new EmployeeDetailsDto();
+						employeeDetailsDto.setEmpId(Integer.valueOf(a[0].toString()));
+						employeeDetailsDto.setEmpName(a[1].toString());
+						employeeDetailsDtoList.add(employeeDetailsDto);
+						employeeDtailsResponse.setEmployeeDetails(employeeDetailsDtoList);
+						employeeDtailsResponse.status = new Status(false, 200, "success");
+					}
+				} else {
+					employeeDtailsResponse.status = new Status(false, 400, "Not found");
+				}
+			}else {
+				List<Object[]> empList = loginDataRightRepository.findEmpListByCustId(custId);
+				if(!empList.isEmpty()) {
+					for(Object[] b : empList){
+						EmployeeDetailsDto employeeDetailsDto = new EmployeeDetailsDto();
+						employeeDetailsDto.setEmpId(Integer.valueOf(b[0].toString()));
+						employeeDetailsDto.setEmpName(b[1].toString());
+						employeeDetailsDtoList.add(employeeDetailsDto);
+						employeeDtailsResponse.setEmployeeDetails(employeeDetailsDtoList);
+						employeeDtailsResponse.status = new Status(false, 200, "success");
+					}  
+				} else {
+					employeeDtailsResponse.status = new Status(false, 400, "Not found");
+				} 
+			}
+		}catch(Exception  e) {
+			employeeDtailsResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return employeeDtailsResponse;
 	}
 
 }
