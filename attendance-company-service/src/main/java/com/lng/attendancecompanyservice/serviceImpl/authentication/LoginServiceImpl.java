@@ -213,7 +213,8 @@ public class LoginServiceImpl implements ILogin {
 			}
 
 			String mobileSmS = "Password to access the Smart Attendance System has been reset to: " + nPassword +" for "+ user.getLoginName();	
-			String s = messageUtil.sms(mobileNo, mobileSmS);
+			// String s = messageUtil.sms(mobileNo, mobileSmS);
+			messageUtil.sms(mobileNo, mobileSmS);
 
 			//Set msg
 			response = new Status(false, 200, "Your new password has been sent to your registered Mobile no.");

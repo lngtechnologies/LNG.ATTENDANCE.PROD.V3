@@ -23,6 +23,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.lng.attendancecustomerservice.entity.smsVendor.SMSVendorCust;
 import com.lng.attendancecustomerservice.repositories.smsVendor.SMSVendorRepositoryCust;
+import  java.io.BufferedReader;    
+import  java.io.InputStreamReader;    
+import  java.io.OutputStreamWriter;   
+import  java.net.HttpURLConnection;    
+import  java.net.URL;   
+import  java.net.URLEncoder;    
+import  java.util.Date; 
 
 
 public class MessageUtil {
@@ -30,7 +37,7 @@ public class MessageUtil {
 
 	@Autowired
 	SMSVendorRepositoryCust smsVendorRepository;
-	
+
 	//Send SMS
 	public String sms(String to, String message)
 	{
@@ -40,79 +47,79 @@ public class MessageUtil {
 
 			//  String messageBody="Your OTP for this registration is "+message;
 			//message=messageBody;
-			
+
 			String mobileNumbers = to;
 
 			String textMessage = message;
-			
+
 			// SMSVendorCust smsVendor = smsVendorRepository.getAllBySmsVndrIsActive();
-			
+
 			// SMSVendorCust smsVendor = smsVendorRepository.findAllBySmsVndrIsActive(true);
 
 			// final  String uri = smsVendor.getSmsVndrURL();
-			
-		    final  String uri = "http://promotional.mysmsbasket.com/V2/http-api.php?apikey=YE5ssFpB9306XlDP&senderid=LNGATS&number=mobileNumbers&message=textMessage&format=json";
+
+			final  String uri = "http://promotional.mysmsbasket.com/V2/http-api.php?apikey=YE5ssFpB9306XlDP&senderid=LNGATS&number=mobileNumbers&message=textMessage&format=json";
 
 			StringBuilder sb = new StringBuilder(uri);
 			sb.replace(sb.indexOf("mobileNumbers"), sb.indexOf("mobileNumbers") + "mobileNumbers".length(), mobileNumbers);
 			sb.replace(sb.indexOf("textMessage"), sb.indexOf("textMessage") + "textMessage".length(), textMessage);
-			
+
 			result = restTemplate.getForObject(sb.toString(), String.class);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 
 		return result;
 	}
 
-		//Send Only Email Without Attchments
-		public  void sendOnlyEmail(String host, String port,
-				final String userName, final String password, String toAddress,
-				String subject, String message)
-						throws AddressException, MessagingException {
-			try {
-				// sets SMTP server properties
-				Properties properties = new Properties();
-				properties.put("mail.smtp.host", host);
-				properties.put("mail.smtp.port", port);
-				properties.put("mail.smtp.auth", "true");
-				properties.put("mail.smtp.starttls.enable", "true");
-				properties.put("mail.user", userName);
-				properties.put("mail.password", password);
+	//Send Only Email Without Attchments
+	public  void sendOnlyEmail(String host, String port,
+			final String userName, final String password, String toAddress,
+			String subject, String message)
+					throws AddressException, MessagingException {
+		try {
+			// sets SMTP server properties
+			Properties properties = new Properties();
+			properties.put("mail.smtp.host", host);
+			properties.put("mail.smtp.port", port);
+			properties.put("mail.smtp.auth", "true");
+			properties.put("mail.smtp.starttls.enable", "true");
+			properties.put("mail.user", userName);
+			properties.put("mail.password", password);
 
-				// creates a new session with an authenticator
-				Authenticator auth = new Authenticator() {
-					public PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(userName, password);
-					}
-				};
-				Session session = Session.getInstance(properties, auth);
+			// creates a new session with an authenticator
+			Authenticator auth = new Authenticator() {
+				public PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(userName, password);
+				}
+			};
+			Session session = Session.getInstance(properties, auth);
 
-				// creates a new e-mail message
-				Message msg = new MimeMessage(session);
+			// creates a new e-mail message
+			Message msg = new MimeMessage(session);
 
-				msg.setFrom(new InternetAddress(userName, "Facetek Admin"));
-				InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
-				msg.setRecipients(Message.RecipientType.TO, toAddresses);
-				msg.setSubject(subject);
-				msg.setSentDate(new Date());
+			msg.setFrom(new InternetAddress(userName, "Facetek Admin"));
+			InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
+			msg.setRecipients(Message.RecipientType.TO, toAddresses);
+			msg.setSubject(subject);
+			msg.setSentDate(new Date());
 
-				// creates message part
-				MimeBodyPart messageBodyPart = new MimeBodyPart();
-				messageBodyPart.setContent(message, "text/html");
-				Multipart multipart = new MimeMultipart();
-				multipart.addBodyPart(messageBodyPart);
-				msg.setContent(multipart);
+			// creates message part
+			MimeBodyPart messageBodyPart = new MimeBodyPart();
+			messageBodyPart.setContent(message, "text/html");
+			Multipart multipart = new MimeMultipart();
+			multipart.addBodyPart(messageBodyPart);
+			msg.setContent(multipart);
 
-				// sends the e-mail
-				Transport.send(msg);
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}	
+			// sends the e-mail
+			Transport.send(msg);
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}	
 
-		}
+	}
 
 
 	//Send Email with Attachments
@@ -177,5 +184,40 @@ public class MessageUtil {
 		// sends the e-mail
 		Transport.send(msg);
 
+	}
+
+	public void sendMsg(String to, String message) {
+		try {   
+			Date mydate = new Date(System.currentTimeMillis());   
+			String data = "";   data += "method=sendMessage";   
+			data += "&userid=2000191058"; // your loginId 
+			data += "&password=" +   
+					URLEncoder.encode("W3lcome2@LNG", "UTF-8"); // your password   
+			data += "&msg=" + URLEncoder.encode(message + mydate.toString(), "UTF-8");   
+			data += "&send_to=" +   URLEncoder.encode(to, "UTF-8"); // a valid 10 digit phone no.   
+			data += "&v=1.1" ;   data += "&msg_type=TEXT"; // Can by "FLASH" or   "UNICODE_TEXT" or “BINARY”   
+			data += "&auth_scheme=PLAIN";   
+			URL url = new URL("http://enterprise.smsgupshup.com/GatewayAPI/rest?" + data);   
+			HttpURLConnection conn = (HttpURLConnection)url.openConnection();   
+			conn.setRequestMethod("GET");   
+			conn.setDoOutput(true);   
+			conn.setDoInput(true);   
+			conn.setUseCaches(false);   
+			conn.connect();   
+			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));   
+			String line;   
+			StringBuffer buffer = new StringBuffer(); 
+			while ((line = rd.readLine()) != null)
+			{   
+				buffer.append(line).append("\n");   
+			}   
+			System.out.println(buffer.toString());   
+			rd.close();   
+			conn.disconnect();   
+		}   
+		catch(Exception e)
+		{ 
+			e.printStackTrace();   
+		} 
 	}
 }
