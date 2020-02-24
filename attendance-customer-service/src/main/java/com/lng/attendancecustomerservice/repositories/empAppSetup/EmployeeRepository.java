@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import com.lng.attendancecustomerservice.entity.employeeAttendance.EmployeeAttendance;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 
 @Repository
@@ -39,6 +38,13 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	
 	@Query(value = "call getOutPermisableTimeByEmpIdAndCustId(?1,?2)", nativeQuery = true)
 	String getOutPermissibleTimeByEmployee_EmpIdAndCustomer_CustId(Integer empId,Integer custId);
+	
+	@Query(value = "call GETREPORTS(?1,?2)", nativeQuery = true)
+	List<Object[]> getReportsByLogin_LoginIdAndCustomer_custId(Integer loginId,Integer custId);
+	
+	@Query(value = "call GetReportsforAdmin(?1,?2)", nativeQuery = true)
+	List<Object[]> getReportsForAdminByCustomer_custIdAndLogin_loginId(Integer custId,Integer loginId);
+	
 	
 	/*
 	 * @Query(value =
