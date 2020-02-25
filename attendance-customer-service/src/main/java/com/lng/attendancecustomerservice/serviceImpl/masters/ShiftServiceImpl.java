@@ -156,7 +156,6 @@ public class ShiftServiceImpl implements ShiftService {
 
 				}
 			}
-
 			else {
 				status = new Status(false, 400, "Branch not found");
 

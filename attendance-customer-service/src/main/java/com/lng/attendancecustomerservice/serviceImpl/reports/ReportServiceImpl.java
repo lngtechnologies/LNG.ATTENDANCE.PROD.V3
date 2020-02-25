@@ -18,7 +18,6 @@ import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeReposi
 import com.lng.attendancecustomerservice.repositories.employeeAttendance.ReportRepository;
 import com.lng.attendancecustomerservice.repositories.masters.LoginDataRightRepository;
 import com.lng.attendancecustomerservice.service.reports.IReport;
-import com.lng.dto.masters.employeeLeave.EmployeeDto;
 import com.lng.dto.reports.EmployeeDetailsDto;
 import com.lng.dto.reports.EmployeeDtailsResponse;
 import com.lng.dto.reports.ReportParam;

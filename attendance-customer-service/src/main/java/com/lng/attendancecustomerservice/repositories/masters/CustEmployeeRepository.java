@@ -53,5 +53,9 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	@Query(value = "SELECT * FROM tmemployee WHERE refCustId = ?1 AND empInService = true AND empId NOT IN(SELECT refEmpId FROM ttlogin WHERE refCustId = ?1 and loginIsActive = true)", nativeQuery = true)
 	List<Employee> findByCustomer_CustId(Integer custId);
 	
+	@Query(value = "CALL M_GetTodaysEmployeeSummary(?1,?2)", nativeQuery = true)
+	List<Object[]> M_getEmployeeTodaysSummary(Integer custId, Integer empId);
 	
+	@Query(value = "CALL W_GetTodaysEmployeeSummary(?1,?2)", nativeQuery = true)
+	List<Object[]> W_getEmployeeTodaysSummary(Integer custId, Integer loginId);
 }
