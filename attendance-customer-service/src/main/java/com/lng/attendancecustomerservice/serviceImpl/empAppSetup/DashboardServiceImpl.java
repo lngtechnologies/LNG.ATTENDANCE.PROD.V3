@@ -87,6 +87,8 @@ public class DashboardServiceImpl implements DashboardService {
 							
 							if(employee != null) {
 								dashboardDto.setIsEmployeeInService(true);
+								dashboardDto.setEmpIsSupervisor_Manager(employee.getEmpIsSupervisor_Manager());
+															
 								
 								Employee employee1 = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
 								if(employee1.getEmpPresistedFaceId() != null ) {
