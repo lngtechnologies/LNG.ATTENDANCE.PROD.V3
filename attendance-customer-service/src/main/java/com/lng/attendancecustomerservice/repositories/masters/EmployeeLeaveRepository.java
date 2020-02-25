@@ -39,4 +39,7 @@ public interface EmployeeLeaveRepository extends PagingAndSortingRepository<Empl
 	
 	@Query(value = "call getPendingLeaveByLoginIdAndEmpIdAndCustId(?1,?2,?3)", nativeQuery = true)
 	List<Object[]> getEmpPendingLeaveByLoginIdAndCustIdAndEmpId(Integer loginId, Integer custId,Integer empId);
+	
+	@Query(value = "call GetAllPendingLeaveByCustIdAndEmpId(?1,?2)", nativeQuery = true)
+	List<Object[]> getPendingLeaveByEmployee_EmpIdAndCustomer_custId(Integer empId,Integer custId);
 }

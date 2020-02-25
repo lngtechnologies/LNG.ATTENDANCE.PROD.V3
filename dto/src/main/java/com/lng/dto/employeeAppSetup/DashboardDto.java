@@ -18,6 +18,8 @@ public class DashboardDto {
 	
 	private Boolean isEmployeeInService;
 	
+	private Boolean empIsSupervisor_Manager;
+	
 	private Boolean isFaceregistered;
 	
 	private Boolean isShiftAllotted;
@@ -31,6 +33,7 @@ public class DashboardDto {
 	private BlockBeaconMapListResponse empBeacons;
 	
 	private EmpLeaveResponseDto empLeaveData;
+	
 	
 	public Status status;
 	
@@ -113,4 +116,13 @@ public class DashboardDto {
 	public void setEmpShiftDetails(ShiftResponseDto empShiftDetails) {
 		this.empShiftDetails = empShiftDetails;
 	}
+
+	public Boolean getEmpIsSupervisor_Manager() {
+		return empIsSupervisor_Manager;
+	}
+
+	public void setEmpIsSupervisor_Manager(Boolean empIsSupervisor_Manager) {
+		this.empIsSupervisor_Manager = empIsSupervisor_Manager;
+	}
+	
 }

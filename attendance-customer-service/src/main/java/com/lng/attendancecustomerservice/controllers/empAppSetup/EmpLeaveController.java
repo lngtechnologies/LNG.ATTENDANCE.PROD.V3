@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empAppSetup.EmpLeaveService;
+import com.lng.dto.employeeAppSetup.EmpLaveResponse;
+import com.lng.dto.employeeAppSetup.EmpLeavesDto;
 import com.lng.dto.masters.employeeLeave.CustLeaveTrypeListDto;
 import com.lng.dto.masters.employeeLeave.EmpCancelLeaveDto;
 import com.lng.dto.masters.employeeLeave.EmpLeaveResponseDto;
@@ -24,13 +26,13 @@ public class EmpLeaveController {
 
 	@Autowired
 	EmpLeaveService empLeaveService;
-	
+
 	@PostMapping(value = "/getLeaveListByCustId")
 	public ResponseEntity<CustLeaveTrypeListDto> findByCustId(@RequestBody CustLeaveTrypeListDto custLeaveTrypeListDto) {
 		CustLeaveTrypeListDto custLeaveTrypeListDto1 = empLeaveService.getLeaveListByCustId(custLeaveTrypeListDto.getCustId());
 		return new ResponseEntity<CustLeaveTrypeListDto>(custLeaveTrypeListDto1, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/apply")
 	public ResponseEntity<Status> save(@RequestBody EmployeeLeaveDto employeeLeaveDto) {
 		Status status = empLeaveService.saveEmpLeave(employeeLeaveDto);
@@ -39,13 +41,13 @@ public class EmpLeaveController {
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
-	
+
 	@PostMapping(value = "/getEmpLeaveByEmpId")
 	public ResponseEntity<EmpLeaveResponseDto> findByEmpId(@RequestBody EmployeeLeaveDto empLeaveDto) {
 		EmpLeaveResponseDto empLeaveResponseDto = empLeaveService.getEmpLeaveByEmpId(empLeaveDto.getEmpId());
 		return new ResponseEntity<EmpLeaveResponseDto>(empLeaveResponseDto, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/cancel")
 	public ResponseEntity<Status> cancelEmpLeave(@RequestBody EmpCancelLeaveDto empCancelLeaveDto) {
 		Status status = empLeaveService.cancelLeave(empCancelLeaveDto.getCustId(), empCancelLeaveDto.getEmpLeaveId());
@@ -53,5 +55,30 @@ public class EmpLeaveController {
 			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping(value = "/approve")
+	public ResponseEntity<Status> approve(@RequestBody EmployeeLeaveDto employeeLeaveDto) {
+		Status status = empLeaveService.empApproveLeave(employeeLeaveDto);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping(value = "/reject")
+	public ResponseEntity<Status> reject(@RequestBody EmployeeLeaveDto employeeLeaveDto) {
+		Status status = empLeaveService.empRejectLeave(employeeLeaveDto);
+		if (status !=null){
+			return new ResponseEntity<Status>(status, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+
+
+	@PostMapping(value = "/getEmpPendingLeaveByCustIdAndEmpId")
+	public ResponseEntity<EmpLaveResponse> getEmpPendingLeaveByCustIdAndEmpId(@RequestBody EmpLeavesDto empLeaveDto) {
+		EmpLaveResponse empLaveResponse = empLeaveService.getByCustIDAndEmpId(empLeaveDto.getCustId(), empLeaveDto.getEmpId());
+		return new ResponseEntity<EmpLaveResponse>(empLaveResponse, HttpStatus.OK);
 	}
 }

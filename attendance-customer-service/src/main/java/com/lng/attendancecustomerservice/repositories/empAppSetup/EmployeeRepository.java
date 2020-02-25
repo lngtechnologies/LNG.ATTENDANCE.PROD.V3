@@ -45,7 +45,6 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	@Query(value = "call GetReportsforAdmin(?1,?2)", nativeQuery = true)
 	List<Object[]> getReportsForAdminByCustomer_custIdAndLogin_loginId(Integer custId,Integer loginId);
 	
-	
 	/*
 	 * @Query(value =
 	 * "UPDATE tmemployee SET empAppSetupStatus=:empAppSetupStatus WHERE empId=:empId"
