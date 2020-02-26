@@ -18,7 +18,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lng.attendancecustomerservice.entity.authentication.Login;
 import com.lng.attendancecustomerservice.entity.masters.CustLeave;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
 import com.lng.attendancecustomerservice.entity.masters.EmpWeeklyOffDay;
@@ -37,7 +36,6 @@ import com.lng.attendancecustomerservice.service.empAppSetup.EmpLeaveService;
 import com.lng.attendancecustomerservice.utils.PushNotificationUtil;
 import com.lng.dto.employeeAppSetup.EmpLaveResponse;
 import com.lng.dto.employeeAppSetup.EmpLeavesDto;
-import com.lng.dto.masters.empLeaveApproveOrCancel.EmpLeaveDto;
 import com.lng.dto.masters.employeeLeave.CustLeaveTrypeListDto;
 import com.lng.dto.masters.employeeLeave.CustLeaveTypeDto;
 import com.lng.dto.masters.employeeLeave.EmpAppLeaveDto;
@@ -366,7 +364,7 @@ public class EmpLeaveServiceImpl implements EmpLeaveService {
 					status = new Status(true, 400, "Employee not found");
 				}
 			} else {
-				status = new Status(false, 400, "Leave id not found");
+				status = new Status(true, 400, "Leave id not found");
 			}
 
 		} catch (Exception e) {
@@ -449,7 +447,7 @@ public class EmpLeaveServiceImpl implements EmpLeaveService {
 						empLaveResponse.status = new Status(false, 200, "Success");
 					} 
 				}else {
-					empLaveResponse.status = new Status(false, 400, "No records found");
+					empLaveResponse.status = new Status(true, 400, "No records found");
 				}
 			}else {
 				empLaveResponse.status = new Status(true, 400, "Customer not found");

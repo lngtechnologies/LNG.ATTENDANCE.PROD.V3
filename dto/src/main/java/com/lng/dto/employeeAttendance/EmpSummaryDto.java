@@ -13,7 +13,7 @@ public class EmpSummaryDto {
 	private Integer absent;
 	
 	private Integer  totalLeave;
-
+	
 	
 	public Integer getCustId() {
 		return custId;
@@ -62,5 +62,6 @@ public class EmpSummaryDto {
 	public void setEmpId(Integer empId) {
 		this.empId = empId;
 	}
+
 	
 }

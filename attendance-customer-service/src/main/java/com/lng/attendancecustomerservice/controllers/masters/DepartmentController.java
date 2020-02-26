@@ -69,5 +69,11 @@ public class DepartmentController {
 		DepartmentResponse departmentResponse = departmentService.getAllByCustId(departmentDto.getRefCustId());
 		return new ResponseEntity<DepartmentResponse>(departmentResponse, HttpStatus.OK);
 	}
+
+	@PostMapping(value = "/getAllbyBrId")
+	public ResponseEntity<DepartmentResponse> getByBrId(@RequestBody DepartmentDto departmentDto) {
+		DepartmentResponse departmentResponse = departmentService.getAllByCustId(departmentDto.getBrId());
+		return new ResponseEntity<DepartmentResponse>(departmentResponse, HttpStatus.OK);
+	}
 }
 

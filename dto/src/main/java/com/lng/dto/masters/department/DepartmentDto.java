@@ -1,13 +1,12 @@
 package com.lng.dto.masters.department;
 
-import java.util.List;
-
 public class DepartmentDto {
 	private Integer deptId;
 	private Integer refCustId;
 	private String deptName;
 	private Boolean deptIsActive;
     private String  custName;
+    private  Integer brId;
 	
 	public Integer getDeptId() {
 		return deptId;
@@ -38,6 +37,12 @@ public class DepartmentDto {
 	}
 	public void setDeptIsActive(Boolean deptIsActive) {
 		this.deptIsActive = deptIsActive;
+	}
+	public Integer getBrId() {
+		return brId;
+	}
+	public void setBrId(Integer brId) {
+		this.brId = brId;
 	}
 
 
