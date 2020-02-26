@@ -58,4 +58,23 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	@Query(value = "CALL W_GetTodaysEmployeeSummary(?1,?2)", nativeQuery = true)
 	List<Object[]> W_getEmployeeTodaysSummary(Integer custId, Integer loginId);
+	
+	@Query(value = "CALL M_GetEmployeeTodaysLeaveSummary(?1,?2)", nativeQuery = true)
+	List<Object[]> M_getEmployeeTodaysLeaveSummary(Integer custId, Integer empId);
+	
+	@Query(value = "CALL W_GetEmployeeTodaysLeaveSummary(?1,?2)", nativeQuery = true)
+	List<Object[]> W_getEmployeeTodaysLeaveSummary(Integer custId, Integer loginId);
+	
+	@Query(value = "CALL getTodaysLateComers(?1,?2)", nativeQuery = true)
+	List<Object[]> getLateComers(Integer custId, Integer empId);
+	
+	@Query(value = "CALL getTodaysEarlyLeavers(?1,?2)", nativeQuery = true)
+	List<Object[]> getEarlyLeavers(Integer custId, Integer empId);
+
+	@Query(value = "CALL getTodaysLateComersForAdmin(?1,?2)", nativeQuery = true)
+	List<Object[]> getLateComersForAdmin(Integer custId, Integer loginId);
+	
+	@Query(value = "CALL getTodaysEarlyLeaversForAdmin(?1,?2)", nativeQuery = true)
+	List<Object[]> getEarlyLeaversForAdmin(Integer custId, Integer loginId);
+
 }
