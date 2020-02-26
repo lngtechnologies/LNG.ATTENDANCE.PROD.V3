@@ -30,22 +30,31 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		try {
 			if(loginId == 0) {
 				List<Object[]> summary = custEmployeeRepository.M_getEmployeeTodaysSummary(custId, empId);
-				for(Object[] sm : summary) {
-					EmployeeTodaysSummaryDto employeeTodaysSummaryDto = new EmployeeTodaysSummaryDto();
-					employeeTodaysSummaryDto.setPresent(Integer.valueOf(sm[0].toString()));
-					employeeTodaysSummaryDto.setAbsent(Integer.valueOf(sm[1].toString()));
-					employeeTodaysSummaryDto.setLeave(Integer.valueOf(sm[2].toString()));
-					empTodaySummaryResponse.setEmpSummary(employeeTodaysSummaryDto);
+				if(summary != null) {
+					for(Object[] sm : summary) {
+						EmployeeTodaysSummaryDto employeeTodaysSummaryDto = new EmployeeTodaysSummaryDto();
+						employeeTodaysSummaryDto.setPresent(Integer.valueOf(sm[0].toString()));
+						employeeTodaysSummaryDto.setAbsent(Integer.valueOf(sm[1].toString()));
+						employeeTodaysSummaryDto.setLeave(Integer.valueOf(sm[2].toString()));
+						empTodaySummaryResponse.setEmpSummary(employeeTodaysSummaryDto);
+					}
+				} else {
+					empTodaySummaryResponse.status = new Status(false, 200, "Not found");
 				}
+				
 				empTodaySummaryResponse.status = new Status(false, 200, "success");
 			} else if(empId == 0) {
 				List<Object[]> summary = custEmployeeRepository.W_getEmployeeTodaysSummary(custId, loginId);
-				for(Object[] sm : summary) {
-					EmployeeTodaysSummaryDto employeeTodaysSummaryDto = new EmployeeTodaysSummaryDto();
-					employeeTodaysSummaryDto.setPresent(Integer.valueOf(sm[0].toString()));
-					employeeTodaysSummaryDto.setAbsent(Integer.valueOf(sm[1].toString()));
-					employeeTodaysSummaryDto.setLeave(Integer.valueOf(sm[2].toString()));
-					empTodaySummaryResponse.setEmpSummary(employeeTodaysSummaryDto);
+				if(summary != null) {
+					for(Object[] sm : summary) {
+						EmployeeTodaysSummaryDto employeeTodaysSummaryDto = new EmployeeTodaysSummaryDto();
+						employeeTodaysSummaryDto.setPresent(Integer.valueOf(sm[0].toString()));
+						employeeTodaysSummaryDto.setAbsent(Integer.valueOf(sm[1].toString()));
+						employeeTodaysSummaryDto.setLeave(Integer.valueOf(sm[2].toString()));
+						empTodaySummaryResponse.setEmpSummary(employeeTodaysSummaryDto);
+					}
+				} else {
+					empTodaySummaryResponse.status = new Status(false, 200, "Not found");
 				}
 				empTodaySummaryResponse.status = new Status(false, 200, "success");
 			}
@@ -62,20 +71,29 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		try {
 			if(loginId == 0) {
 				List<Object[]> leaveSummary = custEmployeeRepository.M_getEmployeeTodaysLeaveSummary(custId, empId);
-				for(Object[] ls: leaveSummary) {
-					EmpTodaysLeaveSummaryDto dto = new EmpTodaysLeaveSummaryDto();
-					dto.setApproved(Integer.valueOf(ls[0].toString()));
-					dto.setRejected(Integer.valueOf(ls[1].toString()));
-					response.setTodaysLeaveSummary(dto);
+				if(leaveSummary != null) {
+					for(Object[] ls: leaveSummary) {
+						EmpTodaysLeaveSummaryDto dto = new EmpTodaysLeaveSummaryDto();
+						dto.setApproved(Integer.valueOf(ls[0].toString()));
+						dto.setRejected(Integer.valueOf(ls[1].toString()));
+						response.setTodaysLeaveSummary(dto);
+					}
+				} else {
+					response.status = new Status(false, 200, "Not found");
 				}
+				
 				response.status = new Status(false, 200, "success");
 			} else if(empId == 0) {
 				List<Object[]> leaveSummary = custEmployeeRepository.W_getEmployeeTodaysLeaveSummary(custId, loginId);
-				for(Object[] ls: leaveSummary) {
-					EmpTodaysLeaveSummaryDto dto = new EmpTodaysLeaveSummaryDto();
-					dto.setApproved(Integer.valueOf(ls[0].toString()));
-					dto.setRejected(Integer.valueOf(ls[1].toString()));
-					response.setTodaysLeaveSummary(dto);
+				if(leaveSummary != null) {
+					for(Object[] ls: leaveSummary) {
+						EmpTodaysLeaveSummaryDto dto = new EmpTodaysLeaveSummaryDto();
+						dto.setApproved(Integer.valueOf(ls[0].toString()));
+						dto.setRejected(Integer.valueOf(ls[1].toString()));
+						response.setTodaysLeaveSummary(dto);
+					}
+				} else {
+					response.status = new Status(false, 200, "Not found");
 				}
 				response.status = new Status(false, 200, "success");
 			}
