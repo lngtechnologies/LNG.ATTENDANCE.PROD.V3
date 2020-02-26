@@ -4,16 +4,18 @@ import status.Status;
 
 public class EmpSummaryResponse {
 
-	private EmpSummaryDto empSummaryDetails;
+	//private EmpSummaryDto empSummaryDetails;
+	
+	private   EmpAttendanceSumaryDto  summaryDetails;
 
 	public Status status;
 
-	public EmpSummaryDto getEmpSummaryDetails() {
-		return empSummaryDetails;
+	public EmpAttendanceSumaryDto getSummaryDetails() {
+		return summaryDetails;
 	}
 
-	public void setEmpSummaryDetails(EmpSummaryDto empSummaryDetails) {
-		this.empSummaryDetails = empSummaryDetails;
+	public void setSummaryDetails(EmpAttendanceSumaryDto summaryDetails) {
+		this.summaryDetails = summaryDetails;
 	}
 
 

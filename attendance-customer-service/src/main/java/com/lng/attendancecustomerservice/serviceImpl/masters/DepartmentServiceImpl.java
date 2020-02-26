@@ -29,7 +29,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 	CustomerRepository customerRepository;
 
 	private final Lock displayQueueLock = new ReentrantLock();
-	
+
 	@Override
 	public DepartmentResponse saveDepartment(DepartmentDto departmentDto) {
 		DepartmentResponse response = new DepartmentResponse();
@@ -39,9 +39,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 			if(departmentDto.getDeptName() == null || departmentDto.getDeptName().isEmpty()) throw new Exception("Please enter Department name");
 
 			int a = departmentRepository.findByRefCustIdAndDeptName(departmentDto.getRefCustId(), departmentDto.getDeptName());
-			
+
 			Department department1 = departmentRepository.findByCustomer_CustIdAndDeptNameAndDeptIsActive(departmentDto.getRefCustId(), departmentDto.getDeptName(), false);
-			
+
 			if(a == 0) {
 				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(departmentDto.getRefCustId(), true);
 				if(customer != null) {
@@ -52,11 +52,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
 					response.status = new Status(false,200, "created");
-					
+
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
-					
+
 				}
 			}else if(department1 != null){
 				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(departmentDto.getRefCustId(), true);
@@ -67,29 +67,29 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department1.setDeptIsActive(true);
 					departmentRepository.save(department1);
 					response.status = new Status(false,200, "created");
-					
+
 				}
 				else{ 
 					response.status = new Status(true,400, "Customer not found");
-					
+
 				}
 			}else {
-				
+
 				response.status = new Status(true,400,"Department name already exists");
-				
+
 			}
 
 		}catch(Exception ex){
 			response.status = new Status(true, 500, "Oops..! Something went wrong..");
-			
+
 		}
 		finally {
 			displayLock.unlock();
 		}
 		return response;
 	}
-	
-	
+
+
 	@Override
 	public DepartmentResponse getAll() {
 		DepartmentResponse response = new DepartmentResponse();
@@ -126,7 +126,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
 					status = new Status(false, 200, "updated");
-					
+
 				} else if (de.getDeptId() == departmentDto.getDeptId()) { 
 
 					department = modelMapper.map(departmentDto,Department.class);
@@ -134,23 +134,23 @@ public class DepartmentServiceImpl implements DepartmentService {
 					department.setDeptIsActive(true);
 					departmentRepository.save(department);
 					status = new Status(false, 200, "updated");
-					
+
 				}
 				else{ 
 
 					status = new Status(true,400,"Department name already exists");
-					
+
 				}
 			}
 
 			else {
 				status = new Status(false, 400, "Customer not found");
-				
+
 			}
 		}
 		catch(Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
-			
+
 		}
 		finally {
 			displayLock.unlock();
@@ -219,6 +219,26 @@ public class DepartmentServiceImpl implements DepartmentService {
 		DepartmentResponse response = new DepartmentResponse();
 		try {
 			List<Department> departments = departmentRepository.findAllByCustomer_CustId(custId);
+			response.setData1(departments.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList()));
+			if(response.getData1().isEmpty()) {
+				response.status = new Status(false,400, "Not found");
+			}else {
+				response.status = new Status(false,200, "success");
+
+			}
+		}catch(Exception e) {
+			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
+
+		}
+		return response;
+	}
+
+
+	@Override
+	public DepartmentResponse getDepartmentDetailsByBrId(Integer brId) {
+		DepartmentResponse response = new DepartmentResponse();
+		try {
+			List<Department> departments =departmentRepository.findDepartmentByBranch_brId(brId);
 			response.setData1(departments.stream().map(department -> convertToDepartmentDto(department)).collect(Collectors.toList()));
 			if(response.getData1().isEmpty()) {
 				response.status = new Status(false,400, "Not found");

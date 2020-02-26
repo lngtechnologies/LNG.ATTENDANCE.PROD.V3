@@ -8,14 +8,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.lng.attendancecustomerservice.entity.masters.Contractor;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
-import com.lng.attendancecustomerservice.entity.masters.Department;
 import com.lng.attendancecustomerservice.entity.masters.Location;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
 import com.lng.attendancecustomerservice.repositories.masters.LocationRepository;
 import com.lng.attendancecustomerservice.service.masters.LocationService;
-import com.lng.dto.masters.department.DepartmentDto;
 import com.lng.dto.masters.location.LocationDto;
 import com.lng.dto.masters.location.LocationResponse;
 

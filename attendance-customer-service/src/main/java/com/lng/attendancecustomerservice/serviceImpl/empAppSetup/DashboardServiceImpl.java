@@ -19,6 +19,7 @@ import com.lng.attendancecustomerservice.entity.masters.Shift;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.WelcomeScreenRepository;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
+import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustLeaveRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerConfigRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
@@ -28,6 +29,9 @@ import com.lng.attendancecustomerservice.service.empAppSetup.DashboardService;
 import com.lng.dto.employeeAppSetup.CustomerValidityDto;
 import com.lng.dto.employeeAppSetup.DashboardDto;
 import com.lng.dto.employeeAppSetup.EmpAttndStatusDto;
+import com.lng.dto.employeeAttendance.EmpAttendanceSumaryDto;
+import com.lng.dto.employeeAttendance.EmpSummaryDto;
+import com.lng.dto.employeeAttendance.EmpSummaryResponse;
 import com.lng.dto.employeeAttendance.ShiftDetailsDto;
 import com.lng.dto.employeeAttendance.ShiftResponseDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapDto;
@@ -59,12 +63,14 @@ public class DashboardServiceImpl implements DashboardService {
 
 	@Autowired
 	CustomerRepository customerRepository;
-	
+
 	@Autowired
 	CustomerConfigRepository customerConfigRepository;
-	
+
 	@Autowired
 	BranchRepository branchRepository;
+	@Autowired
+	CustEmployeeRepository custEmployeeRepository;
 
 	ModelMapper modelMapper = new ModelMapper();
 
@@ -72,35 +78,38 @@ public class DashboardServiceImpl implements DashboardService {
 	@Override
 	public DashboardDto getEmployeeDetails(Integer custId, Integer empId) {
 		DashboardDto dashboardDto = new DashboardDto();
+        EmpSummaryDto empSummaryDto = new EmpSummaryDto();
 		try {
 			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custId, true);
 			if(customer != null) {
 				int custValidityFlag = customerRepository.checkCustValidationByCustId(custId);
 				if(custValidityFlag == 1) {
 					dashboardDto.setIsValidCustomer(true);
-					
+
 					Employee employee = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
 					if(employee != null) {
 						int branchValidity = branchRepository.checkBranchValidity(employee.getBranch().getBrId());
 						if(branchValidity == 1) {
 							dashboardDto.setIsValidBranch(true);
-							
+
 							if(employee != null) {
 								dashboardDto.setIsEmployeeInService(true);
 								dashboardDto.setEmpIsSupervisor_Manager(employee.getEmpIsSupervisor_Manager());
-															
-								
+
+
 								Employee employee1 = employeeRepository.getByEmpIdAndRefCustId(custId, empId);
 								if(employee1.getEmpPresistedFaceId() != null ) {
 									dashboardDto.setIsFaceregistered(true);
-									
+
 									//dashboardDto.setCustomerValidity(checkValidationByCustId(custId));
 									dashboardDto.setConfig(getConfigDetails(empId, custId));
 									dashboardDto.setEmpAttendanceStatus(getAttndStatusByEmployee(empId, custId));
 									dashboardDto.setEmpShiftDetails(getShiftDetailsByEmpIdAndCustId(empId, custId));
 									dashboardDto.setEmpBeacons(getBeaconsByEmpId(empId, custId));
 									dashboardDto.setEmpLeaveData(getEmpLeaveByEmpIdAndCustId(empId, custId));
-									
+									dashboardDto.setEmpSummary(getEmpSummaryDetails(empId, custId));
+
+
 									Shift shift = shiftRepository.getByEmpId(empId);
 									if(shift != null) {
 										dashboardDto.setIsShiftAllotted(true);
@@ -113,7 +122,7 @@ public class DashboardServiceImpl implements DashboardService {
 										dashboardDto.setIsShiftAllotted(false);
 										dashboardDto.status = new Status(true, 400, "Shif not found");
 									}
-									
+
 								} else {
 									dashboardDto.setIsValidCustomer(true);
 									dashboardDto.setIsValidBranch(true);
@@ -131,7 +140,7 @@ public class DashboardServiceImpl implements DashboardService {
 								dashboardDto.status = new Status(true, 400, "Employee not in service");
 							}
 						} else {
-							
+
 							dashboardDto.setIsValidCustomer(true);
 							dashboardDto.setIsValidBranch(false);
 							dashboardDto.setIsEmployeeInService(false);
@@ -147,7 +156,7 @@ public class DashboardServiceImpl implements DashboardService {
 						dashboardDto.setIsShiftAllotted(false);
 						dashboardDto.status = new Status(true, 400, "Employee not found");
 					}
-			
+
 				} else {
 					dashboardDto.setIsValidCustomer(false);
 					dashboardDto.setIsValidBranch(false);
@@ -164,8 +173,8 @@ public class DashboardServiceImpl implements DashboardService {
 				dashboardDto.setIsShiftAllotted(false);
 				dashboardDto.status = new Status(true, 400, "Customer not found");
 			}
-			
-			
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -360,7 +369,7 @@ public class DashboardServiceImpl implements DashboardService {
 					formatter.setTimeZone(TimeZone.getTimeZone("IST"));
 					Date date = new Date();
 					String strDate = formatter.format(date);
-					
+
 					String inDate = "NA";
 					String outDate = "NA";
 					String attndDate = "NA";
@@ -390,13 +399,13 @@ public class DashboardServiceImpl implements DashboardService {
 							SimpleDateFormat dateFormat1 = new SimpleDateFormat(pattern1);
 							attndDate = dateFormat1.format(empAttndDate);
 						}
-											
+
 					} 
 					empAttndStatusDto.setEmpAttndDate(attndDate);
 					empAttndStatusDto.setEmpAttndInDateTime(inDate);
 					empAttndStatusDto.setEmpAttndOutDateTime(outDate);
 					empAttndStatusDto.status = new Status(false, 200, "Success");
-					
+
 				} else {
 					empAttndStatusDto.status = new Status(true, 400, "Employee not found or not in service");
 				}
@@ -411,7 +420,7 @@ public class DashboardServiceImpl implements DashboardService {
 
 		return empAttndStatusDto;
 	}
-	
+
 	public DashboardCustConfigResponse getConfigDetails(Integer empId, Integer custId){
 		List<DashboardCustConfigDto> dashboardCustConfigList = new ArrayList<DashboardCustConfigDto>();
 		DashboardCustConfigResponse dashboardCustConfigResponse = new DashboardCustConfigResponse();
@@ -440,6 +449,43 @@ public class DashboardServiceImpl implements DashboardService {
 		return dashboardCustConfigResponse;
 	}
 
+	public EmpSummaryResponse getEmpSummaryDetails(Integer empId, Integer custId){
+		EmpSummaryResponse  empSummaryResponse =  new EmpSummaryResponse();
+		try {
+			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custId, true);
+			if(customer!= null) {
+				Employee employee = employeeRepository.getByEmpIdAndRefCustId(custId,empId);
+				if(employee != null) {
+					List<Object[]> summary = custEmployeeRepository.M_getEmployeeTodaysSummary(custId,empId);
+					if(!summary.isEmpty()) {
+						int leave = custEmployeeRepository.getTotalNumberOfLeavePending(empId, custId);
+						for(Object[] c: summary) {
+							EmpAttendanceSumaryDto empAttendanceSumaryDto = new EmpAttendanceSumaryDto();
+							empAttendanceSumaryDto.setPresent(Integer.valueOf(c[0].toString()));
+							empAttendanceSumaryDto.setAbsent(Integer.valueOf(c[1].toString()));
+							empAttendanceSumaryDto.setTotalAppLeave(Integer.valueOf(c[2].toString()));
+							empAttendanceSumaryDto.setTotalPendingLeave(leave);
+							empSummaryResponse.setSummaryDetails(empAttendanceSumaryDto);
+							empSummaryResponse.status = new Status(false, 200, "success");
+						}
+
+					} else {
+						empSummaryResponse.status = new Status(true, 400, "Not found");
+					}
+				}else {
+					empSummaryResponse.status = new Status(true, 400, "Employee not found");
+				}
+
+			}else {
+				empSummaryResponse.status = new Status(true, 400, "Customer not found");
+			}
+		}catch(Exception e) {
+
+			empSummaryResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+
+		return empSummaryResponse;
+	}
 	public BlockBeaconMapDto convertToBlockBeaconMapDto(BlockBeaconMap blockBeaconMap) {
 		BlockBeaconMapDto blockBeaconMapDto = modelMapper.map(blockBeaconMap,BlockBeaconMapDto.class);
 		blockBeaconMapDto.setRefBlkId(blockBeaconMap.getBlock().getBlkId());

@@ -1,8 +1,8 @@
 package com.lng.dto.employeeAppSetup;
 
+import com.lng.dto.employeeAttendance.EmpSummaryResponse;
 import com.lng.dto.employeeAttendance.ShiftResponseDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
-import com.lng.dto.masters.customerConfig.DashboardCustConfigDto;
 import com.lng.dto.masters.customerConfig.DashboardCustConfigResponse;
 import com.lng.dto.masters.employeeLeave.EmpLeaveResponseDto;
 
@@ -33,6 +33,8 @@ public class DashboardDto {
 	private BlockBeaconMapListResponse empBeacons;
 	
 	private EmpLeaveResponseDto empLeaveData;
+	
+	private EmpSummaryResponse  empSummary;
 	
 	
 	public Status status;
@@ -123,6 +125,14 @@ public class DashboardDto {
 
 	public void setEmpIsSupervisor_Manager(Boolean empIsSupervisor_Manager) {
 		this.empIsSupervisor_Manager = empIsSupervisor_Manager;
+	}
+
+	public EmpSummaryResponse getEmpSummary() {
+		return empSummary;
+	}
+
+	public void setEmpSummary(EmpSummaryResponse empSummary) {
+		this.empSummary = empSummary;
 	}
 	
 }

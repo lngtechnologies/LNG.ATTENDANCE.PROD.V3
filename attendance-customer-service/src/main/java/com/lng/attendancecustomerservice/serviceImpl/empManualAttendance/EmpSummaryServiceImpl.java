@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.serviceImpl.empManualAttendance;
+/*package com.lng.attendancecustomerservice.serviceImpl.empManualAttendance;
 
 import java.util.List;
 
@@ -57,4 +57,4 @@ public class EmpSummaryServiceImpl implements EmpSummaryService {
 		return empSummaryResponse;
 	}
 
-}
+}*/

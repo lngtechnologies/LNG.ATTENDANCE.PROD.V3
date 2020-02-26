@@ -12,5 +12,7 @@ public interface DepartmentService {
 	DepartmentResponse deleteByDeptId(Integer deptId);
 	DepartmentResponse getDepartmentByDeptId(Integer deptId);
 	DepartmentResponse getAllByCustId(Integer custId);
+	DepartmentResponse getDepartmentDetailsByBrId(Integer brId);
+	
 
 }

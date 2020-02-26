@@ -58,4 +58,7 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	@Query(value = "CALL W_GetTodaysEmployeeSummary(?1,?2)", nativeQuery = true)
 	List<Object[]> W_getEmployeeTodaysSummary(Integer custId, Integer loginId);
+	
+	@Query(value = "CALL CountTotalLeavePending(?1,?2)", nativeQuery = true)
+	int getTotalNumberOfLeavePending(Integer empId,Integer custId);
 }

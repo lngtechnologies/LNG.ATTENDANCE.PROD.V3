@@ -1,4 +1,4 @@
-package com.lng.attendancecustomerservice.controllers.empManualAttendance;
+/*package com.lng.attendancecustomerservice.controllers.empManualAttendance;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,4 +31,4 @@ public class EmpSummaryController {
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}
 
-}
+}*/
