@@ -10,6 +10,10 @@ public class EmpAttendanceSumaryDto {
 
 	private Integer   totalPendingLeave;
 
+	private Integer   totalEarlyLeavers;
+	
+	private Integer   totalLateComers;
+
 	public Integer getPresent() {
 		return present;
 	}
@@ -41,5 +45,22 @@ public class EmpAttendanceSumaryDto {
 	public void setTotalPendingLeave(Integer totalPendingLeave) {
 		this.totalPendingLeave = totalPendingLeave;
 	}
+
+	public Integer getTotalEarlyLeavers() {
+		return totalEarlyLeavers;
+	}
+
+	public void setTotalEarlyLeavers(Integer totalEarlyLeavers) {
+		this.totalEarlyLeavers = totalEarlyLeavers;
+	}
+
+	public Integer getTotalLateComers() {
+		return totalLateComers;
+	}
+
+	public void setTotalLateComers(Integer totalLateComers) {
+		this.totalLateComers = totalLateComers;
+	}
+
 
 }
