@@ -39,7 +39,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 						empTodaySummaryResponse.setEmpSummary(employeeTodaysSummaryDto);
 					}
 				} else {
-					empTodaySummaryResponse.status = new Status(false, 200, "Not found");
+					empTodaySummaryResponse.status = new Status(false, 400, "Not found");
 				}
 				
 				empTodaySummaryResponse.status = new Status(false, 200, "success");
@@ -54,13 +54,13 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 						empTodaySummaryResponse.setEmpSummary(employeeTodaysSummaryDto);
 					}
 				} else {
-					empTodaySummaryResponse.status = new Status(false, 200, "Not found");
+					empTodaySummaryResponse.status = new Status(false, 400, "Not found");
 				}
 				empTodaySummaryResponse.status = new Status(false, 200, "success");
 			}
 
 		} catch (Exception e) {
-			empTodaySummaryResponse.status = new Status(false, 200, "Oops..! Something went wrong..");
+			empTodaySummaryResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return empTodaySummaryResponse;
 	}
@@ -79,7 +79,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 						response.setTodaysLeaveSummary(dto);
 					}
 				} else {
-					response.status = new Status(false, 200, "Not found");
+					response.status = new Status(false, 400, "Not found");
 				}
 				
 				response.status = new Status(false, 200, "success");
@@ -93,12 +93,12 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 						response.setTodaysLeaveSummary(dto);
 					}
 				} else {
-					response.status = new Status(false, 200, "Not found");
+					response.status = new Status(false, 400, "Not found");
 				}
 				response.status = new Status(false, 200, "success");
 			}
 		} catch (Exception e) {
-			response.status = new Status(false, 200, "Oops..! Something went wrong..");
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return response;
 	}
@@ -128,7 +128,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					}
 					response.setLateComers(lateComersList);
 				} else {
-					response.status = new Status(false, 200, "Late commers not found");
+					response.status = new Status(false, 400, "Late commers not found");
 				}
 				if(earlyLeavers != null) {
 					for(Object[] el: earlyLeavers) {
@@ -145,7 +145,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					}
 					response.setEarlyLeavers(earlyLeaversList);
 				} else {
-					response.status = new Status(false, 200, "Early leavers not found");
+					response.status = new Status(false, 400, "Early leavers not found");
 				}
 			} else if(empId == 0) {
 				List<EmpTodaysLateComersDto> lateComersList = new ArrayList<EmpTodaysLateComersDto>();
@@ -167,7 +167,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					}
 					response.setLateComers(lateComersList);
 				} else {
-					response.status = new Status(false, 200, "Late commers not found");
+					response.status = new Status(false, 400, "Late commers not found");
 				}
 				if(earlyLeavers != null) {
 					for(Object[] el: earlyLeavers) {
@@ -184,12 +184,12 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					}
 					response.setEarlyLeavers(earlyLeaversList);
 				} else {
-					response.status = new Status(false, 200, "Early leavers not found");
+					response.status = new Status(false, 400, "Early leavers not found");
 				}
 			}
 			response.status = new Status(false, 200, "success");
 		} catch (Exception e) {
-			response.status = new Status(false, 200, "Oops..! Something went wrong..");
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return response;
 	}

@@ -40,6 +40,9 @@ import com.lng.dto.masters.customerConfig.DashboardCustConfigDto;
 import com.lng.dto.masters.customerConfig.DashboardCustConfigResponse;
 import com.lng.dto.masters.employeeLeave.EmpAppLeaveDto;
 import com.lng.dto.masters.employeeLeave.EmpLeaveResponseDto;
+import com.lng.dto.reports.EmpTodaysEarlyLeaversDto;
+import com.lng.dto.reports.EmpTodaysLateComersDto;
+import com.lng.dto.reports.TodaysLateComersAndEarlyLeaversResponse;
 
 import status.Status;
 
@@ -78,7 +81,7 @@ public class DashboardServiceImpl implements DashboardService {
 	@Override
 	public DashboardDto getEmployeeDetails(Integer custId, Integer empId) {
 		DashboardDto dashboardDto = new DashboardDto();
-        EmpSummaryDto empSummaryDto = new EmpSummaryDto();
+		EmpSummaryDto empSummaryDto = new EmpSummaryDto();
 		try {
 			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custId, true);
 			if(customer != null) {
@@ -465,8 +468,13 @@ public class DashboardServiceImpl implements DashboardService {
 							empAttendanceSumaryDto.setAbsent(Integer.valueOf(c[1].toString()));
 							empAttendanceSumaryDto.setTotalAppLeave(Integer.valueOf(c[2].toString()));
 							empAttendanceSumaryDto.setTotalPendingLeave(leave);
-							empSummaryResponse.setSummaryDetails(empAttendanceSumaryDto);
-							empSummaryResponse.status = new Status(false, 200, "success");
+							List<Object[]> Attendance = custEmployeeRepository.getTotalNumberOfLateComersAndEarlyLeavers(custId,empId);
+							for(Object[] a: Attendance) {
+								empAttendanceSumaryDto.setTotalEarlyLeavers(Integer.valueOf(a[0].toString()));
+								empAttendanceSumaryDto.setTotalLateComers(Integer.valueOf(a[1].toString()));
+								empSummaryResponse.setSummaryDetails(empAttendanceSumaryDto);
+								empSummaryResponse.status = new Status(false, 200, "success");
+							}
 						}
 
 					} else {
@@ -493,5 +501,55 @@ public class DashboardServiceImpl implements DashboardService {
 		blockBeaconMapDto.setBrId(blockBeaconMap.getBlock().getBranch().getBrId());
 		blockBeaconMapDto.setCustId(blockBeaconMap.getBlock().getBranch().getCustomer().getCustId());
 		return blockBeaconMapDto;
+	}
+
+	@Override
+	public TodaysLateComersAndEarlyLeaversResponse getLateComersAndEarlyLeavers(int custId, int empId) {
+		TodaysLateComersAndEarlyLeaversResponse response = new TodaysLateComersAndEarlyLeaversResponse();
+
+		try {
+			List<EmpTodaysLateComersDto> lateComersList = new ArrayList<EmpTodaysLateComersDto>();
+			List<EmpTodaysEarlyLeaversDto> earlyLeaversList = new ArrayList<EmpTodaysEarlyLeaversDto>(); 
+			List<Object[]> lateComers = custEmployeeRepository.getLateComers(custId, empId);
+			List<Object[]> earlyLeavers = custEmployeeRepository.getEarlyLeavers(custId, empId);
+			if(lateComers != null) {
+				for(Object[] lc: lateComers) {
+					EmpTodaysLateComersDto dto = new EmpTodaysLateComersDto();
+					dto.setEmpId(Integer.valueOf(lc[0].toString()));
+					dto.setEmpName(lc[1].toString());
+					dto.setShiftStart(lc[2].toString());
+					if(lc[3].toString() != null) {
+						dto.setAttndInDateTime(lc[3].toString());
+					} else {
+						dto.setAttndInDateTime("NA");
+					}
+					lateComersList.add(dto);
+				}
+				response.setLateComers(lateComersList);
+			} else {
+				response.status = new Status(true, 400, "Late commers not found");
+			}
+			if(earlyLeavers != null) {
+				for(Object[] el: earlyLeavers) {
+					EmpTodaysEarlyLeaversDto dto = new EmpTodaysEarlyLeaversDto();
+					dto.setEmpId(Integer.valueOf(el[0].toString()));
+					dto.setEmpName(el[1].toString());
+					dto.setShiftEnd(el[2].toString());
+					if(el[3].toString() != null) {
+						dto.setAttndOutDateTime(el[3].toString());
+					} else {
+						dto.setAttndOutDateTime("NA");
+					}
+					earlyLeaversList.add(dto);
+				}
+				response.setEarlyLeavers(earlyLeaversList);
+			} else {
+				response.status = new Status(true, 400, "Early leavers not found");
+			}
+			response.status = new Status(false, 200, "success");
+		} catch (Exception e) {
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return response;
 	}
 }
