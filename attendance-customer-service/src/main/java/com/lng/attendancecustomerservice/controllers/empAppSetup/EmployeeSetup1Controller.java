@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
+import com.lng.dto.employeeAppSetup.AttendanceParamDto;
+import com.lng.dto.employeeAppSetup.EarlyLeaversResponse;
 import com.lng.dto.employeeAppSetup.EmployeeDto;
+import com.lng.dto.employeeAppSetup.LateComersResponse;
 import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.employeeAppSetup.ResponseDto;
 
@@ -48,6 +51,22 @@ public class EmployeeSetup1Controller {
 		StatusDto statusDto = employeeService.updateEmpAppStatus(employeeDto);
         if (statusDto !=null){
             return new ResponseEntity<StatusDto>(statusDto, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+	@PostMapping(value = "/getlateComersDetails")
+    public ResponseEntity<LateComersResponse> getShiftAndLateComersDetails(@RequestBody AttendanceParamDto attendanceParamDto) {
+		LateComersResponse lateComersResponse = employeeService.getLateComersDetails(attendanceParamDto.getDates(), attendanceParamDto.getCustId(),attendanceParamDto.getEmpId());
+        if (lateComersResponse !=null){
+            return new ResponseEntity<LateComersResponse>(lateComersResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+	@PostMapping(value = "/getEarlyLeaversDetails")
+    public ResponseEntity<EarlyLeaversResponse> getEarlyLeavers(@RequestBody AttendanceParamDto attendanceParamDto) {
+		EarlyLeaversResponse earlyLeaversResponse = employeeService.getEarlyLeaversDetails(attendanceParamDto.getDates(), attendanceParamDto.getCustId(),attendanceParamDto.getEmpId());
+        if (earlyLeaversResponse !=null){
+            return new ResponseEntity<EarlyLeaversResponse>(earlyLeaversResponse, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
