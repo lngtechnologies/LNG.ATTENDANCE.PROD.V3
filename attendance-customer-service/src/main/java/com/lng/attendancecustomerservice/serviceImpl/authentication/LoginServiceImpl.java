@@ -2,12 +2,15 @@ package com.lng.attendancecustomerservice.serviceImpl.authentication;
 
 import java.util.Base64;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.authentication.Login;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
+import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.repositories.authentication.ICustomerRepository;
 import com.lng.attendancecustomerservice.repositories.authentication.ILoginRepository;
+import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.security.JwtTokenService;
 import com.lng.attendancecustomerservice.service.authentication.ILogin;
 import com.lng.attendancecustomerservice.utils.Encoder;
@@ -37,16 +40,16 @@ public class LoginServiceImpl implements ILogin {
 	private ILoginRepository accountRepository;
 	private ICustomerRepository custRepository;
 	private JwtTokenService jwtTokenService;
-	
+
 	MessageUtil messageUtil = new MessageUtil();
-	
+
 	Encoder encoder = new Encoder();
-	
+
 	/*
 	 * @Bean public BCryptPasswordEncoder getEncoder() { return new
 	 * BCryptPasswordEncoder(); }
 	 */
-	
+
 
 	public LoginServiceImpl(ILoginRepository accountRepository, JwtTokenService jwtTokenService, ICustomerRepository custRepository) {
 		this.accountRepository = accountRepository;
@@ -54,13 +57,16 @@ public class LoginServiceImpl implements ILogin {
 		this.custRepository = custRepository;
 	}
 
+	
+	@Autowired
+	CustEmployeeRepository custEmployeeRepository;
 	// Authenticated user
 
 	@Override
 	public LoginResponse AuthenticateUser(LoginParamDto loginDto) {
 		// Object to hold response
 		LoginResponse response = new LoginResponse();
-		
+
 		String logo = null;
 
 		try {
@@ -74,7 +80,7 @@ public class LoginServiceImpl implements ILogin {
 
 			// Get user by login name
 			Login user = accountRepository.findByLoginName(loginDto.getLoginName());
-			
+
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(loginDto.getLoginName() + " not found");
 
@@ -83,20 +89,20 @@ public class LoginServiceImpl implements ILogin {
 
 				// Get customer details by customer id
 				Customer cust = custRepository.findByCustId(user.getRefCustId());
-				
+
 				// Customer not exist
 				if(cust == null) throw new Exception("Customer doesn't exist");
 
 				// Check customer validity
 				int custValidity = custRepository.checkCustValidationByCustId(cust.getCustId());
 				if(custValidity == 0) throw new Exception("Subscription expired, contact admin");
-				
+
 				// Check customer validity
 				if(!cust.getCustIsActive()) throw new Exception("Customer is not active, contact admin");
-				
+
 				// convert byte to base64
 				if(cust != null)
-				logo = Base64.getEncoder().encodeToString(cust.getCustLogoFile());
+					logo = Base64.getEncoder().encodeToString(cust.getCustLogoFile());
 
 			}
 
@@ -141,17 +147,16 @@ public class LoginServiceImpl implements ILogin {
 
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(loginDto.getUserName() + " not found");
-			
+
 			// Check customer validity
 			int custValidity = custRepository.checkCustValidationByCustId(user.getRefCustId());
 			if(custValidity == 0) throw new Exception("Subscription expired, contact admin");
-			
+
 			// Check user is active
 			if(user.getLoginIsActive()== false) throw new Exception("Contact admin "+loginDto.getUserName() + "is not active");
-			
-			// Check mobile exist
-			if(user.getLoginMobile() == null) throw new Exception("Mobile no doesn't exists. Unable to reset password.");
-			
+
+
+
 			// Check customer validity
 			if(user != null && user.getRefCustId() != 0) {
 
@@ -167,18 +172,30 @@ public class LoginServiceImpl implements ILogin {
 
 			// Generate new password
 			String nPassword = accountRepository.generatePassword();
-			
+
 			// set new password
 			String hashedPassword = encoder.getEncoder().encode(nPassword);
 			user.setLoginPassword(hashedPassword);
 			accountRepository.save(user);
-			
+
 			// Send new password to registered mobile
-			String mobileNo = user.getLoginMobile();
+			String mobileNo = null;
+			if(user.getLoginMobile() != null) {
+				mobileNo = user.getLoginMobile();
+			} else {
+				// Get emp mobile no
+				Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(user.getRefEmpId(), true);
+				mobileNo = employee.getEmpMobile();
+			}
+			// Check mobile exist
+			if(mobileNo == null) throw new Exception("Mobile no doesn't exists. Unable to reset password.");
+
+			// Send new password to registered mobile
+			//String mobileNo = user.getLoginMobile();
 			//String mobileSmS = "Dear " + loginDto.getUserName() +" \n, Your new login password is " + nPassword;
 			String mobileSmS = "Password to access the Smart Attendance System has been reset to: " + nPassword +" for "+ user.getLoginName();	
 			String s = messageUtil.sms(mobileNo, mobileSmS);
-			
+
 			//Set msg
 			response = new Status(false, 200, "Your new password has been sent to your registered Mobile no.");
 
@@ -202,12 +219,12 @@ public class LoginServiceImpl implements ILogin {
 
 			// Get user by login name
 			Login user = accountRepository.findByLoginName(changePasswordDto.getUserName());
-			
+
 			// Check user exist else throw exception
 			if(user == null) throw new Exception(changePasswordDto.getUserName() + " not found");
-			
-			
-			
+
+
+
 			// Check user is active
 			if(user.getLoginIsActive() == false) throw new Exception("Please contact admin "+changePasswordDto.getUserName() + "is not active");
 
@@ -217,7 +234,7 @@ public class LoginServiceImpl implements ILogin {
 				// Check customer validity
 				int custValidity = custRepository.checkCustValidationByCustId(user.getRefCustId());
 				if(custValidity == 0) throw new Exception("Subscription expired, contact admin");
-				
+
 				// Get customer details by customer id
 				Customer cust = custRepository.findByCustId(user.getRefCustId());
 

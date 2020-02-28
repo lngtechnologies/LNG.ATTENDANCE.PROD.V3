@@ -178,9 +178,6 @@ public class LoginServiceImpl implements ILogin {
 			int branchValidity = branchRepository.checkBranchValidity(user.getLoginId());
 			if(branchValidity == 0) throw new Exception("Subscription expired, contact admin");
 
-			// Check mobile exist
-			if(user.getLoginMobile() == null) throw new Exception("Mobile no doesn't exists. Unable to reset password.");
-
 			// Check customer validity
 			if(user != null && user.getRefCustId() != 0) {
 
@@ -211,6 +208,8 @@ public class LoginServiceImpl implements ILogin {
 				Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(user.getRefEmpId(), true);
 				mobileNo = employee.getEmpMobile();
 			}
+			// Check mobile exist
+			if(mobileNo == null) throw new Exception("Mobile no doesn't exists. Unable to reset password.");
 
 			String mobileSmS = "Password to access the Smart Attendance System has been reset to: " + nPassword +" for "+ user.getLoginName();	
 			// String s = messageUtil.sms(mobileNo, mobileSmS);
