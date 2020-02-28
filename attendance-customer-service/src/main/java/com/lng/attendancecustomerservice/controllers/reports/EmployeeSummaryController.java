@@ -9,8 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversAndLateComersResponse;
+import com.lng.attendancecustomerservice.entity.reports.EmpLeaveReportResponse;
+import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutResponse;
 import com.lng.attendancecustomerservice.service.reports.EmployeeSummaryService;
 import com.lng.dto.employeeAttendance.EmpSummaryDto;
+import com.lng.dto.reports.EmpReportByReportTypeResponse;
+import com.lng.dto.reports.EmpReportParam;
 import com.lng.dto.reports.EmpTodaySummaryResponse;
 import com.lng.dto.reports.EmpTodaysLeaveSummaryResponse;
 import com.lng.dto.reports.TodaysLateComersAndEarlyLeaversResponse;
@@ -64,6 +69,42 @@ public class EmployeeSummaryController {
 		TodaysLateComersAndEarlyLeaversResponse responseDto = employeeSummaryService.getLateComersAndEarlyLeavers(empSummaryDto.getCustId(), empSummaryDto.getEmpId(), empSummaryDto.getLoginId());
         if (responseDto !=null){
             return new ResponseEntity<TodaysLateComersAndEarlyLeaversResponse>(responseDto, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+	
+	@PostMapping(value = "/get/empAbsentReportByReportType")
+    public ResponseEntity<EmpReportByReportTypeResponse> GetAbsentReport(@RequestBody EmpReportParam empReportParam) {
+		EmpReportByReportTypeResponse responseDto = employeeSummaryService.getReportByReportType(empReportParam.getCustId(), empReportParam.getBrId(), empReportParam.getDeptId(), empReportParam.getReportType());
+        if (responseDto !=null){
+            return new ResponseEntity<EmpReportByReportTypeResponse>(responseDto, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+	@PostMapping(value = "/get/empEarlyLeaversAndLateComersByReportType")
+    public ResponseEntity<EmpEarlyLeaversAndLateComersResponse> GetEarlyLeaversAndLateComers(@RequestBody EmpReportParam empReportParam) {
+		EmpEarlyLeaversAndLateComersResponse responseDto = employeeSummaryService.getEarlyLeaversAndLateComers(empReportParam.getBrId(), empReportParam.getDeptId(), empReportParam.getReportType(), empReportParam.getFromDate(), empReportParam.getToDate());
+        if (responseDto !=null){
+            return new ResponseEntity<EmpEarlyLeaversAndLateComersResponse>(responseDto, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+	
+	@PostMapping(value = "/get/empLeaveReportByReportType")
+    public ResponseEntity<EmpLeaveReportResponse> GetLeavereport(@RequestBody EmpReportParam empReportParam) {
+		EmpLeaveReportResponse responseDto = employeeSummaryService.getEmpLeaveReport(empReportParam.getBrId(), empReportParam.getDeptId(), empReportParam.getReportType(), empReportParam.getFromDate(), empReportParam.getToDate());
+        if (responseDto !=null){
+            return new ResponseEntity<EmpLeaveReportResponse>(responseDto, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+	
+	@PostMapping(value = "/get/empOfficeOutReportByReportType")
+    public ResponseEntity<EmpOfficeOutResponse> GetOfficeOutReport(@RequestBody EmpReportParam empReportParam) {
+		EmpOfficeOutResponse responseDto = employeeSummaryService.getOfficeOutReport(empReportParam.getBrId(), empReportParam.getDeptId(), empReportParam.getReportType(), empReportParam.getFromDate(), empReportParam.getToDate());
+        if (responseDto !=null){
+            return new ResponseEntity<EmpOfficeOutResponse>(responseDto, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }

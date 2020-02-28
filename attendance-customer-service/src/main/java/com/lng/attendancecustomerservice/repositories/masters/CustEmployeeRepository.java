@@ -82,4 +82,7 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	@Query(value = "CALL getCountOfLateComersAndEarlyLeavers(?1,?2)", nativeQuery = true)
 	List<Object[]> getTotalNumberOfLateComersAndEarlyLeavers(Integer custId, Integer empId);
+	
+	@Query(value = "CALL sp_getReportByType(?1,?2,?3,?4,?5,?6)", nativeQuery = true)
+	List<Object[]> getReportByReportType(Integer custId, Integer brId, Integer deptId, String reportType, Date fromDate, Date toDate);
 }

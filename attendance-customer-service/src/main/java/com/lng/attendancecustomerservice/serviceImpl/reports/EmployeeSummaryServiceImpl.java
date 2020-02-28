@@ -1,13 +1,23 @@
 package com.lng.attendancecustomerservice.serviceImpl.reports;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversAndLateComersResponse;
+import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversDto;
+import com.lng.attendancecustomerservice.entity.reports.EmpLateComersDto;
+import com.lng.attendancecustomerservice.entity.reports.EmpLeaveReportDto;
+import com.lng.attendancecustomerservice.entity.reports.EmpLeaveReportResponse;
+import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutDto;
+import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutResponse;
 import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.service.reports.EmployeeSummaryService;
+import com.lng.dto.reports.EmpReportByReportTypeDto;
+import com.lng.dto.reports.EmpReportByReportTypeResponse;
 import com.lng.dto.reports.EmpTodaySummaryResponse;
 import com.lng.dto.reports.EmpTodaysEarlyLeaversDto;
 import com.lng.dto.reports.EmpTodaysLateComersDto;
@@ -188,6 +198,153 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				}
 			}
 			response.status = new Status(false, 200, "success");
+		} catch (Exception e) {
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return response;
+	}
+
+	@Override
+	public EmpReportByReportTypeResponse getReportByReportType(int custId, int brId, int deptId, String reportType) {
+		EmpReportByReportTypeResponse response = new EmpReportByReportTypeResponse();
+		List<EmpReportByReportTypeDto> reportList = new ArrayList<EmpReportByReportTypeDto>();
+		try {
+			List<Object[]> reports = custEmployeeRepository.getReportByReportType(custId, brId, deptId, reportType, new Date(),new Date());
+			if(!reports.isEmpty() && reports != null) {
+				for(Object[] rt: reports) {
+					EmpReportByReportTypeDto dto = new EmpReportByReportTypeDto();
+					dto.setEmpName(rt[0].toString());
+					dto.setDeptName(rt[1].toString());
+					dto.setBrName(rt[2].toString());
+					dto.setBlkName(rt[3].toString());
+					dto.setDesignationName(rt[4].toString());
+					dto.setShiftName(rt[5].toString());
+					reportList.add(dto);
+				}
+				response.setReportDto(reportList);
+				response.status = new Status(false, 200, "Success");
+			} else {
+				response.status = new Status(false, 400, "Not found");
+			}
+		} catch (Exception e) {
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return response;
+	}
+
+	@Override
+	public EmpEarlyLeaversAndLateComersResponse getEarlyLeaversAndLateComers(int brId, int deptId, String reportType, Date fromDate, Date todate) {
+		EmpEarlyLeaversAndLateComersResponse response = new EmpEarlyLeaversAndLateComersResponse();
+		try {
+			if(reportType.trim().equals("earlyLeavers")) {
+				List<EmpEarlyLeaversDto> earlyLeavers = new ArrayList<EmpEarlyLeaversDto>();
+				List<Object[]> earlyLeaversList = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
+				if(!earlyLeaversList.isEmpty()) {
+					for(Object[] el: earlyLeaversList) {
+						EmpEarlyLeaversDto dto = new EmpEarlyLeaversDto();
+						dto.setEmpName(el[0].toString());
+						dto.setDeptName(el[1].toString());
+						dto.setBranchName(el[2].toString());
+						dto.setBlockName(el[3].toString());
+						dto.setDesignationName(el[4].toString());
+						dto.setShiftName(el[5].toString());
+						dto.setShiftEnd(el[6].toString());
+						dto.setOutTime(el[7].toString());
+						dto.setDiff(el[8].toString());
+						earlyLeavers.add(dto);
+					}
+					response.setEarlyLeavers(earlyLeavers);
+					response.status = new Status(false, 200, "Success");
+				} else {
+					response.status = new Status(false, 400, "Not found");
+				}
+				
+			} else if(reportType.trim().equals("lateComers")) {
+				List<EmpLateComersDto> lateComers = new ArrayList<EmpLateComersDto>();
+				List<Object[]> lateComersList = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
+				if(!lateComersList.isEmpty()) {
+					for(Object[] el: lateComersList) {
+						EmpLateComersDto dto = new EmpLateComersDto();
+						dto.setEmpName(el[0].toString());
+						dto.setDeptName(el[1].toString());
+						dto.setBranchName(el[2].toString());
+						dto.setBlockName(el[3].toString());
+						dto.setDesignationName(el[4].toString());
+						dto.setShiftName(el[5].toString());
+						dto.setShiftStart(el[6].toString());
+						dto.setInTime(el[7].toString());
+						dto.setDiff(el[8].toString());
+						lateComers.add(dto);
+					}
+					response.setLateComers(lateComers);
+					response.status = new Status(false, 200, "Success");
+				} else {
+					response.status = new Status(false, 400, "Not found");
+				}	
+			}
+		} catch (Exception e) {
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return response;
+	}
+
+	@Override
+	public EmpLeaveReportResponse getEmpLeaveReport(int brId, int deptId, String reportType, Date fromDate, Date todate) {
+		EmpLeaveReportResponse response = new EmpLeaveReportResponse();
+		List<EmpLeaveReportDto> leaveReportList = new ArrayList<EmpLeaveReportDto>();
+		try {
+			List<Object[]> leaves = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
+			if(!leaves.isEmpty()) {
+				for(Object[] l: leaves) {
+					EmpLeaveReportDto dto = new EmpLeaveReportDto();
+					dto.setEmpName(l[0].toString());
+					dto.setDeptName(l[1].toString());
+					dto.setBranchName(l[2].toString());
+					dto.setBlockName(l[3].toString());
+					dto.setDesignationName(l[4].toString());
+					dto.setShiftName(l[5].toString());
+					dto.setLeaveFrom(l[6].toString());
+					dto.setLeaveTo(l[7].toString());
+					dto.setNoOfDays(l[8].toString());
+					dto.setStatus(l[9].toString());
+					leaveReportList.add(dto);
+				}
+				response.setLeaveReport(leaveReportList);
+				response.status = new Status(false, 200, "Success");
+			} else {
+				response.status = new Status(false, 400, "Not found");
+			}
+		} catch (Exception e) {
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return response;
+	}
+
+	@Override
+	public EmpOfficeOutResponse getOfficeOutReport(int brId, int deptId, String reportType, Date fromDate, Date todate) {
+		EmpOfficeOutResponse response = new EmpOfficeOutResponse();
+		List<EmpOfficeOutDto> outList = new ArrayList<EmpOfficeOutDto>();
+		try {
+			List<Object[]> officeOut = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
+			if(!officeOut.isEmpty()) {
+				for(Object[] o: officeOut) {
+					EmpOfficeOutDto dto = new EmpOfficeOutDto();
+					dto.setEmpName(o[0].toString());
+					dto.setDeptName(o[1].toString());
+					dto.setBranchName(o[2].toString());
+					dto.setBlockName(o[3].toString());
+					dto.setDesignationName(o[4].toString());
+					dto.setShiftName(o[5].toString());
+					dto.setDesignatedLocation(o[6].toString());
+					dto.setAttendanceOutLocation(o[7].toString());
+					dto.setAttendanceDate(o[8].toString());
+					outList.add(dto);
+				}
+				response.setOfficeOutDetails(outList);
+				response.status = new Status(false, 200, "Success");
+			} else {
+				response.status = new Status(false, 400, "Not found");
+			}
 		} catch (Exception e) {
 			response.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
