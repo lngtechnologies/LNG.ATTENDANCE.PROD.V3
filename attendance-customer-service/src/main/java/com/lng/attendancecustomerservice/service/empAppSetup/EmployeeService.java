@@ -1,6 +1,10 @@
 package com.lng.attendancecustomerservice.service.empAppSetup;
 
+import java.util.Date;
+
+import com.lng.dto.employeeAppSetup.EarlyLeaversResponse;
 import com.lng.dto.employeeAppSetup.EmployeeDto;
+import com.lng.dto.employeeAppSetup.LateComersResponse;
 import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.employeeAppSetup.ResponseDto;
 
@@ -20,5 +24,9 @@ public interface EmployeeService {
 	
 	//Employee Application Setup Stage 2
    // EmpAppStatusResponseDto updateEmpAppStatusStageTwo(EmployeeSetup2Dto employeeSetup2Dto);
+	
+	LateComersResponse  getLateComersDetails(Date dates,Integer custId,Integer empId);
+	
+	EarlyLeaversResponse  getEarlyLeaversDetails(Date dates,Integer custId,Integer empId);
 	
 }

@@ -2,8 +2,10 @@ package com.lng.attendancecustomerservice.serviceImpl.empAppSetup;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,16 @@ import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository
 import com.lng.attendancecustomerservice.repositories.masters.EmployeePicRepository;
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
 import com.lng.attendancecustomerservice.utils.MessageUtil;
+import com.lng.dto.employeeAppSetup.EarlyLeaversDto;
+import com.lng.dto.employeeAppSetup.EarlyLeaversResponse;
 import com.lng.dto.employeeAppSetup.EmployeeDataDto;
 import com.lng.dto.employeeAppSetup.EmployeeDto;
+import com.lng.dto.employeeAppSetup.LateComersDto;
+import com.lng.dto.employeeAppSetup.LateComersResponse;
 import com.lng.dto.employeeAppSetup.OtpDto;
 import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.employeeAppSetup.ResponseDto;
+import com.lng.dto.employeeAppSetup.ShiftTypeDto;
 
 import status.Status;
 import status.StatusDto;
@@ -280,6 +287,98 @@ public class EmployeeServiceImpl implements EmployeeService {
 		System.out.println(formatter.format(empAttndDate));
 		return formatter.parse(formatter.format(empAttndDate));
 
+	}
+
+	@Override
+	public LateComersResponse getLateComersDetails(Date dates, Integer custId, Integer empId) {
+		LateComersResponse lateComersResponse = new LateComersResponse();
+		List<LateComersDto>  empDetailsList = new ArrayList<LateComersDto>();
+		List<ShiftTypeDto>  shiftDetailsList = new ArrayList<ShiftTypeDto>();
+		try {
+			List<Object[]> shiftType =employeeRepository.getShiftDetailsByDatesAndCustomer_CustIdAndEmployee_EmpId(dates, custId, empId);
+			if(shiftType != null) {
+				for(Object[] s :shiftType){
+					ShiftTypeDto shiftTypeDto = new ShiftTypeDto();
+					shiftTypeDto.setShiftName(s[0].toString());
+					shiftTypeDto.setShiftStart(s[1].toString());
+					shiftTypeDto.setShiftEnd(s[2].toString());
+					shiftTypeDto.setTotalCount(Integer.valueOf(s[3].toString()));
+					shiftDetailsList.add(shiftTypeDto);
+					lateComersResponse.setLateComersShiftDetails(shiftDetailsList);
+				}
+			} else {
+				lateComersResponse.status = new Status(true, 400, "ShiftDetails not found");
+			}
+			List<Object[]> empDetails = employeeRepository.getLateComersDetailsByDatesAndCustomer_CustIdAndEmployee_EmpId(dates, custId, empId);
+			if(empDetails != null) {
+				for(Object[] e:empDetails) {
+					LateComersDto lateComersDto	 = new LateComersDto();
+					lateComersDto.setEmpName(e[0].toString());
+					lateComersDto.setShiftName(e[1].toString());
+					lateComersDto.setShiftStart(e[2].toString());
+					lateComersDto.setShiftEnd(e[3].toString());
+					if(e[4].toString() != null) {
+						lateComersDto.setAttndInTime(e[4].toString());
+					} else {
+						lateComersDto.setAttndInTime("NA");
+					}
+					empDetailsList.add(lateComersDto);
+					lateComersResponse.setLateComersEmpShiftDetails(empDetailsList);
+				}
+			} else {
+				lateComersResponse.status = new Status(true, 400, "LateComers not found");
+			}
+			lateComersResponse.status = new Status(false, 200, "success");
+		}catch(Exception e) {
+			lateComersResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return lateComersResponse;
+	}
+
+	@Override
+	public EarlyLeaversResponse getEarlyLeaversDetails(Date dates, Integer custId, Integer empId) {
+		EarlyLeaversResponse earlyLeaversResponse = new EarlyLeaversResponse();
+		List<EarlyLeaversDto>  empDetailsList = new ArrayList<EarlyLeaversDto>();
+		List<ShiftTypeDto>  shiftDetailsList = new ArrayList<ShiftTypeDto>();
+		try {
+			List<Object[]> shiftType =employeeRepository.getShiftDetailsForEarlyLeaverByDatesAndCustomer_CustIdAndEmployee_EmpId(dates, custId, empId);
+			if(shiftType != null) {
+				for(Object[] s :shiftType){
+					ShiftTypeDto shiftTypeDto = new ShiftTypeDto();
+					shiftTypeDto.setShiftName(s[0].toString());
+					shiftTypeDto.setShiftStart(s[1].toString());
+					shiftTypeDto.setShiftEnd(s[2].toString());
+					shiftTypeDto.setTotalCount(Integer.valueOf(s[3].toString()));
+					shiftDetailsList.add(shiftTypeDto);
+					earlyLeaversResponse.setEarlyLeaversShiftDetails(shiftDetailsList);
+				}
+			} else {
+				earlyLeaversResponse.status = new Status(true, 400, "ShiftDetails not found");
+			}
+			List<Object[]> empDetails = employeeRepository.getEmployeeDetailsEarlyLeaverByDatesAndCustomer_CustIdAndEmployee_EmpId(dates, custId, empId);
+			if(empDetails != null) {
+				for(Object[] e:empDetails) {
+					EarlyLeaversDto earlyLeaversDto = new EarlyLeaversDto();
+					earlyLeaversDto.setEmpName(e[0].toString());
+					earlyLeaversDto.setShiftName(e[1].toString());
+					earlyLeaversDto.setShiftStart(e[2].toString());
+					earlyLeaversDto.setShiftEnd(e[3].toString());
+					if(e[4].toString() != null) {
+						earlyLeaversDto.setAttndOutTime(e[4].toString());
+					} else {
+						earlyLeaversDto.setAttndOutTime("NA");
+					}
+					empDetailsList.add(earlyLeaversDto);
+					earlyLeaversResponse.setEarlyLeaversEmpShiftDetails(empDetailsList);
+				}
+			} else {
+				earlyLeaversResponse.status = new Status(true, 400, "LateComers not found");
+			}
+			earlyLeaversResponse.status = new Status(false, 200, "success");
+		}catch(Exception e) {
+			earlyLeaversResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return earlyLeaversResponse;
 	}
 
 } 

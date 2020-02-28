@@ -45,6 +45,18 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	@Query(value = "call GetReportsforAdmin(?1,?2)", nativeQuery = true)
 	List<Object[]> getReportsForAdminByCustomer_custIdAndLogin_loginId(Integer custId,Integer loginId);
 	
+	@Query(value = "call getAllShiftDEtailsByCustIdAndEmpId(?1,?2,?3)", nativeQuery = true)
+	List<Object[]> getShiftDetailsByDatesAndCustomer_CustIdAndEmployee_EmpId(Date dates,Integer custId,Integer empId);
+	
+	@Query(value = "call getEmployeeDetailsWithShiftDetailsForLateComers(?1,?2,?3)", nativeQuery = true)
+	List<Object[]> getLateComersDetailsByDatesAndCustomer_CustIdAndEmployee_EmpId(Date dates,Integer custId,Integer empId);
+	
+	@Query(value = "call getShiftDetailsForEarlyLeavers(?1,?2,?3)", nativeQuery = true)
+	List<Object[]> getShiftDetailsForEarlyLeaverByDatesAndCustomer_CustIdAndEmployee_EmpId(Date dates,Integer custId,Integer empId);
+	
+	@Query(value = "call getShiftDetailsWithEmpDetailsForEarlyLeavers(?1,?2,?3)", nativeQuery = true)
+	List<Object[]> getEmployeeDetailsEarlyLeaverByDatesAndCustomer_CustIdAndEmployee_EmpId(Date dates,Integer custId,Integer empId);
+	
 	/*
 	 * @Query(value =
 	 * "UPDATE tmemployee SET empAppSetupStatus=:empAppSetupStatus WHERE empId=:empId"
