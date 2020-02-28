@@ -1,5 +1,7 @@
 package com.lng.dto.employeeAppSetup;
 
+import java.util.Date;
+
 import com.lng.dto.employeeAttendance.EmpSummaryResponse;
 import com.lng.dto.employeeAttendance.ShiftResponseDto;
 import com.lng.dto.masters.beaconBlockMap.BlockBeaconMapListResponse;
@@ -19,6 +21,8 @@ public class DashboardDto {
 	private Boolean isEmployeeInService;
 	
 	private Boolean empIsSupervisor_Manager;
+	
+	private String empJoiningDate;
 	
 	private Boolean isFaceregistered;
 	
@@ -134,5 +138,13 @@ public class DashboardDto {
 	public void setEmpSummary(EmpSummaryResponse empSummary) {
 		this.empSummary = empSummary;
 	}
-	
+
+	public String getEmpJoiningDate() {
+		return empJoiningDate;
+	}
+
+	public void setEmpJoiningDate(String empJoiningDate) {
+		this.empJoiningDate = empJoiningDate;
+	}
+
 }
