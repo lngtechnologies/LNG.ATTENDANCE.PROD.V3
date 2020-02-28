@@ -99,7 +99,7 @@ public class DashboardServiceImpl implements DashboardService {
 								dashboardDto.setIsEmployeeInService(true);
 								dashboardDto.setEmpIsSupervisor_Manager(employee.getEmpIsSupervisor_Manager());
 								
-								SimpleDateFormat sdf = new SimpleDateFormat("dd-mm-yyyy");
+								SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 								String date = sdf.format(employee.getEmpJoiningDate());
 								dashboardDto.setEmpJoiningDate(date);
 
