@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
+import com.lng.dto.employeeAppSetup.AbsentDetailsResponse;
+import com.lng.dto.employeeAppSetup.AppLeaveResponse;
 import com.lng.dto.employeeAppSetup.AttendanceParamDto;
 import com.lng.dto.employeeAppSetup.EarlyLeaversResponse;
 import com.lng.dto.employeeAppSetup.EmployeeDto;
@@ -67,6 +69,24 @@ public class EmployeeSetup1Controller {
 		EarlyLeaversResponse earlyLeaversResponse = employeeService.getEarlyLeaversDetails(attendanceParamDto.getDates(), attendanceParamDto.getCustId(),attendanceParamDto.getEmpId());
         if (earlyLeaversResponse !=null){
             return new ResponseEntity<EarlyLeaversResponse>(earlyLeaversResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+	
+	@PostMapping(value = "/getAbsentEmployeeDetails")
+    public ResponseEntity<AbsentDetailsResponse> getAbsentList(@RequestBody AttendanceParamDto attendanceParamDto) {
+		AbsentDetailsResponse absentDetailsResponse = employeeService.getAbsentEmployeeDetails(attendanceParamDto.getCustId(),attendanceParamDto.getEmpId(),attendanceParamDto.getDates());
+        if (absentDetailsResponse !=null){
+            return new ResponseEntity<AbsentDetailsResponse>(absentDetailsResponse, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+	
+	@PostMapping(value = "/getAppLeaveEmployeeDetails")
+    public ResponseEntity<AppLeaveResponse> getAppLeave(@RequestBody AttendanceParamDto attendanceParamDto) {
+		AppLeaveResponse appLeaveResponse = employeeService.getAppLeaveDetails(attendanceParamDto.getCustId(),attendanceParamDto.getEmpId(),attendanceParamDto.getDates());
+        if (appLeaveResponse !=null){
+            return new ResponseEntity<AppLeaveResponse>(appLeaveResponse, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }

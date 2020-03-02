@@ -57,6 +57,17 @@ public interface EmployeeRepository extends PagingAndSortingRepository<Employee,
 	@Query(value = "call getShiftDetailsWithEmpDetailsForEarlyLeavers(?1,?2,?3)", nativeQuery = true)
 	List<Object[]> getEmployeeDetailsEarlyLeaverByDatesAndCustomer_CustIdAndEmployee_EmpId(Date dates,Integer custId,Integer empId);
 	
+	@Query(value = "call M_getShiftWiseCountOfAbsentByCustIdAndEmpId(?1,?2,?3)", nativeQuery = true)
+	List<Object[]> getShiftDetailsForAbsentEmployeeByCustomer_CustIdAndEmployee_EmpIdAndDate(Integer custId,Integer empId,Date dates);
+	
+	@Query(value = "call M_GetAbsentDetailsByCustIdAndEmpId(?1,?2,?3)", nativeQuery = true)
+	List<Object[]> getEmployeeDetailsForAbsentEmployeeByCustomer_CustIdAndEmployee_EmpIdAndDate(Integer custId,Integer empId,Date dates);
+	
+	@Query(value = "call M_getShiftDetailsForLeaveByCustIdAndEmpId(?1,?2,?3)", nativeQuery = true)
+	List<Object[]> getShiftDetailsForAppLeaveByCustomer_CustIdAndEmployee_EmpIdAndDate(Integer custId,Integer empId,Date dates);
+	
+	@Query(value = "call M_getEmployeeLeaveDetailsByCustIdAndEmpId(?1,?2,?3)", nativeQuery = true)
+	List<Object[]> getEmployeeDetailsForAppLeaveByCustomer_CustIdAndEmployee_EmpIdAndDate(Integer custId,Integer empId,Date dates);
 	/*
 	 * @Query(value =
 	 * "UPDATE tmemployee SET empAppSetupStatus=:empAppSetupStatus WHERE empId=:empId"

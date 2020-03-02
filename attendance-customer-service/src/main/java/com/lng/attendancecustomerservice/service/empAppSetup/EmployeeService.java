@@ -2,6 +2,8 @@ package com.lng.attendancecustomerservice.service.empAppSetup;
 
 import java.util.Date;
 
+import com.lng.dto.employeeAppSetup.AbsentDetailsResponse;
+import com.lng.dto.employeeAppSetup.AppLeaveResponse;
 import com.lng.dto.employeeAppSetup.EarlyLeaversResponse;
 import com.lng.dto.employeeAppSetup.EmployeeDto;
 import com.lng.dto.employeeAppSetup.LateComersResponse;
@@ -28,5 +30,12 @@ public interface EmployeeService {
 	LateComersResponse  getLateComersDetails(Date dates,Integer custId,Integer empId);
 	
 	EarlyLeaversResponse  getEarlyLeaversDetails(Date dates,Integer custId,Integer empId);
+	
+	AbsentDetailsResponse getAbsentEmployeeDetails(Integer custId,Integer empId,Date dates);
+	
+	AppLeaveResponse      getAppLeaveDetails(Integer custId,Integer empId,Date dates);
+	
+	
+	
 	
 }

@@ -21,12 +21,16 @@ import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository
 import com.lng.attendancecustomerservice.repositories.masters.EmployeePicRepository;
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
 import com.lng.attendancecustomerservice.utils.MessageUtil;
+import com.lng.dto.employeeAppSetup.AbsentDetailsResponse;
+import com.lng.dto.employeeAppSetup.AbsentDto;
+import com.lng.dto.employeeAppSetup.AppLeaveResponse;
 import com.lng.dto.employeeAppSetup.EarlyLeaversDto;
 import com.lng.dto.employeeAppSetup.EarlyLeaversResponse;
 import com.lng.dto.employeeAppSetup.EmployeeDataDto;
 import com.lng.dto.employeeAppSetup.EmployeeDto;
 import com.lng.dto.employeeAppSetup.LateComersDto;
 import com.lng.dto.employeeAppSetup.LateComersResponse;
+import com.lng.dto.employeeAppSetup.LeaveDto;
 import com.lng.dto.employeeAppSetup.OtpDto;
 import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.employeeAppSetup.ResponseDto;
@@ -372,13 +376,97 @@ public class EmployeeServiceImpl implements EmployeeService {
 					earlyLeaversResponse.setEarlyLeaversEmpShiftDetails(empDetailsList);
 				}
 			} else {
-				earlyLeaversResponse.status = new Status(true, 400, "LateComers not found");
+				earlyLeaversResponse.status = new Status(true, 400, "EarlyLeavers not found");
 			}
 			earlyLeaversResponse.status = new Status(false, 200, "success");
 		}catch(Exception e) {
 			earlyLeaversResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return earlyLeaversResponse;
+	}
+
+	@Override
+	public AbsentDetailsResponse getAbsentEmployeeDetails(Integer custId, Integer empId, Date dates) {
+		AbsentDetailsResponse absentDetailsResponse = new AbsentDetailsResponse();
+		List<AbsentDto>  empDetailsList = new ArrayList<AbsentDto>();
+		List<ShiftTypeDto>  shiftDetailsList = new ArrayList<ShiftTypeDto>();
+		try {
+			List<Object[]> shiftType =employeeRepository.getShiftDetailsForAbsentEmployeeByCustomer_CustIdAndEmployee_EmpIdAndDate(custId, empId,dates);
+			if(shiftType != null) {
+				for(Object[] s :shiftType){
+					ShiftTypeDto shiftTypeDto = new ShiftTypeDto();
+					shiftTypeDto.setShiftName(s[0].toString());
+					shiftTypeDto.setShiftStart(s[1].toString());
+					shiftTypeDto.setShiftEnd(s[2].toString());
+					shiftTypeDto.setTotalCount(Integer.valueOf(s[3].toString()));
+					shiftDetailsList.add(shiftTypeDto);
+					absentDetailsResponse.setAbsentShiftDetails(shiftDetailsList);
+				}
+			} else {
+				absentDetailsResponse.status = new Status(true, 400, "ShiftDetails not found");
+			}
+			List<Object[]> empDetails = employeeRepository.getEmployeeDetailsForAbsentEmployeeByCustomer_CustIdAndEmployee_EmpIdAndDate(custId, empId,dates);
+			if(empDetails != null) {
+				for(Object[] e:empDetails) {
+					AbsentDto absentDto = new AbsentDto();
+					absentDto.setShiftName(e[0].toString());
+					absentDto.setEmpName(e[1].toString());
+					empDetailsList.add(absentDto);
+					absentDetailsResponse.setAbsentEmpShiftDetails(empDetailsList);
+				}
+			} else {
+				absentDetailsResponse.status = new Status(true, 400, "No records found");
+			}
+			absentDetailsResponse.status = new Status(false, 200, "success");
+		}catch(Exception e) {
+			absentDetailsResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return absentDetailsResponse;
+	}
+
+	@Override
+	public AppLeaveResponse getAppLeaveDetails(Integer custId, Integer empId, Date dates) {
+		AppLeaveResponse appLeaveResponse = new AppLeaveResponse();
+		List<LeaveDto>  empDetailsList = new ArrayList<LeaveDto>();
+		List<ShiftTypeDto>  shiftDetailsList = new ArrayList<ShiftTypeDto>();
+		try {
+			List<Object[]> shiftType =employeeRepository.getShiftDetailsForAppLeaveByCustomer_CustIdAndEmployee_EmpIdAndDate(custId, empId,dates);
+			if(shiftType != null) {
+				for(Object[] s :shiftType){
+					ShiftTypeDto shiftTypeDto = new ShiftTypeDto();
+					shiftTypeDto.setShiftName(s[0].toString());
+					shiftTypeDto.setShiftStart(s[1].toString());
+					shiftTypeDto.setShiftEnd(s[2].toString());
+					shiftTypeDto.setTotalCount(Integer.valueOf(s[3].toString()));
+					shiftDetailsList.add(shiftTypeDto);
+					appLeaveResponse.setAppLeaveShiftDetails(shiftDetailsList);
+				}
+			} else {
+				appLeaveResponse.status = new Status(true, 400, "ShiftDetails not found");
+			}
+			List<Object[]> empDetails = employeeRepository.getEmployeeDetailsForAppLeaveByCustomer_CustIdAndEmployee_EmpIdAndDate(custId, empId,dates);
+			if(empDetails != null) {
+				for(Object[] e:empDetails) {
+					LeaveDto leaveDto = new LeaveDto();
+					leaveDto.setEmpId(Integer.valueOf(e[0].toString()));
+					leaveDto.setEmpName(e[1].toString());
+					leaveDto.setShiftName(e[2].toString());
+					leaveDto.setEmpLeaveFrom(e[3].toString());
+					leaveDto.setMpLeaveTo(e[4].toString());
+					leaveDto.setEmpLeaveDaysCount(Integer.valueOf(e[5].toString()));
+					leaveDto.setEmpLeaveStatus(e[6].toString());
+					leaveDto.setEmpLeaveRemarks(e[7].toString());
+					empDetailsList.add(leaveDto);
+					appLeaveResponse.setAppLeaveEmpShiftDetails(empDetailsList);
+				}
+			} else {
+				appLeaveResponse.status = new Status(true, 400, "No records found");
+			}
+			appLeaveResponse.status = new Status(false, 200, "success");
+		}catch(Exception e) {
+			appLeaveResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return appLeaveResponse;
 	}
 
 } 
