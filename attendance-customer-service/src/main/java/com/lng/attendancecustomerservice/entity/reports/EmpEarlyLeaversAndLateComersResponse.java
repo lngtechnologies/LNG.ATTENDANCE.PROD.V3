@@ -6,8 +6,8 @@ import status.Status;
 
 public class EmpEarlyLeaversAndLateComersResponse {
 
+	private MasterDataDto masterData;
 	private List<EmpEarlyLeaversDto> earlyLeavers;
-	
 	private List<EmpLateComersDto> lateComers;
 	
 	public Status status;
@@ -28,4 +28,11 @@ public class EmpEarlyLeaversAndLateComersResponse {
 		this.lateComers = lateComers;
 	}
 
+	public MasterDataDto getMasterData() {
+		return masterData;
+	}
+
+	public void setMasterData(MasterDataDto masterData) {
+		this.masterData = masterData;
+	}
 }

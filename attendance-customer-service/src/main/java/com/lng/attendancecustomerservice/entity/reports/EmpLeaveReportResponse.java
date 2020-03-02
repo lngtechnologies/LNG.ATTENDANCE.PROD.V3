@@ -6,6 +6,7 @@ import status.Status;
 
 public class EmpLeaveReportResponse {
 
+	private MasterDataDto masterData;
 	private List<EmpLeaveReportDto> leaveReport;
 	
 	public Status status;
@@ -18,4 +19,11 @@ public class EmpLeaveReportResponse {
 		this.leaveReport = leaveReport;
 	}
 
+	public MasterDataDto getMasterData() {
+		return masterData;
+	}
+
+	public void setMasterData(MasterDataDto masterData) {
+		this.masterData = masterData;
+	}
 }

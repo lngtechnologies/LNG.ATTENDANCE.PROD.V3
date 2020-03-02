@@ -1,17 +1,25 @@
-package com.lng.dto.reports;
+package com.lng.attendancecustomerservice.entity.reports;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EmpReportByReportTypeDto {
 
+	@JsonProperty("Name")
 	private String empName;
 	
+	@JsonProperty("Department")
 	private String deptName;
 	
-	private String brName;
+	@JsonProperty("Branch")
+	private String branchName;
 	
-	private String blkName;
+	@JsonProperty("Block")
+	private String blockName;
 	
+	@JsonProperty("Designation")
 	private String designationName;
 	
+	@JsonProperty("Shift")
 	private String shiftName;
 
 	public String getEmpName() {
@@ -30,20 +38,20 @@ public class EmpReportByReportTypeDto {
 		this.deptName = deptName;
 	}
 
-	public String getBrName() {
-		return brName;
+	public String getBranchName() {
+		return branchName;
 	}
 
-	public void setBrName(String brName) {
-		this.brName = brName;
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
 	}
 
-	public String getBlkName() {
-		return blkName;
+	public String getBlockName() {
+		return blockName;
 	}
 
-	public void setBlkName(String blkName) {
-		this.blkName = blkName;
+	public void setBlockName(String blockName) {
+		this.blockName = blockName;
 	}
 
 	public String getDesignationName() {

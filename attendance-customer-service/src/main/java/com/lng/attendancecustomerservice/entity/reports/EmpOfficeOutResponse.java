@@ -6,6 +6,7 @@ import status.Status;
 
 public class EmpOfficeOutResponse {
 
+	private MasterDataDto masterData;
 	private List<EmpOfficeOutDto> officeOutDetails;
 	
 	public Status status;
@@ -16,5 +17,13 @@ public class EmpOfficeOutResponse {
 
 	public void setOfficeOutDetails(List<EmpOfficeOutDto> officeOutDetails) {
 		this.officeOutDetails = officeOutDetails;
+	}
+
+	public MasterDataDto getMasterData() {
+		return masterData;
+	}
+
+	public void setMasterData(MasterDataDto masterData) {
+		this.masterData = masterData;
 	}
 }

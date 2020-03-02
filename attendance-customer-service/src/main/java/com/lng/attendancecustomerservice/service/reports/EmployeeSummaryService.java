@@ -5,7 +5,7 @@ import java.util.Date;
 import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversAndLateComersResponse;
 import com.lng.attendancecustomerservice.entity.reports.EmpLeaveReportResponse;
 import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutResponse;
-import com.lng.dto.reports.EmpReportByReportTypeResponse;
+import com.lng.attendancecustomerservice.entity.reports.EmpReportByReportTypeResponse;
 import com.lng.dto.reports.EmpTodaySummaryResponse;
 import com.lng.dto.reports.EmpTodaysLeaveSummaryResponse;
 import com.lng.dto.reports.TodaysLateComersAndEarlyLeaversResponse;

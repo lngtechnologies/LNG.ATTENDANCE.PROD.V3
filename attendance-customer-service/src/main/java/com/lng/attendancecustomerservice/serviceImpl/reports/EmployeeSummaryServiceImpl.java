@@ -1,8 +1,10 @@
 package com.lng.attendancecustomerservice.serviceImpl.reports;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ import com.lng.attendancecustomerservice.entity.reports.EmpLeaveReportDto;
 import com.lng.attendancecustomerservice.entity.reports.EmpLeaveReportResponse;
 import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutDto;
 import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutResponse;
+import com.lng.attendancecustomerservice.entity.reports.EmpReportByReportTypeDto;
+import com.lng.attendancecustomerservice.entity.reports.EmpReportByReportTypeResponse;
+import com.lng.attendancecustomerservice.entity.reports.MasterDataDto;
+import com.lng.attendancecustomerservice.entity.reports.ReportMasterDataDto;
 import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.service.reports.EmployeeSummaryService;
-import com.lng.dto.reports.EmpReportByReportTypeDto;
-import com.lng.dto.reports.EmpReportByReportTypeResponse;
 import com.lng.dto.reports.EmpTodaySummaryResponse;
 import com.lng.dto.reports.EmpTodaysEarlyLeaversDto;
 import com.lng.dto.reports.EmpTodaysLateComersDto;
@@ -208,15 +212,35 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 	public EmpReportByReportTypeResponse getReportByReportType(int custId, int brId, int deptId, String reportType) {
 		EmpReportByReportTypeResponse response = new EmpReportByReportTypeResponse();
 		List<EmpReportByReportTypeDto> reportList = new ArrayList<EmpReportByReportTypeDto>();
+		
 		try {
+			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+			if(!master.isEmpty()) {
+				for(Object[] ms: master) {
+					MasterDataDto masterData = new MasterDataDto();
+					masterData.setCustName(ms[0].toString());
+					masterData.setCustAddress(ms[1].toString());
+					masterData.setBrName(ms[2].toString());
+					masterData.setBrAddress(ms[3].toString());
+					masterData.setDeptName(ms[4].toString());
+					String pattern = "yyyy-MM-dd";
+					SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+					dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+					Date date = new Date();
+					String sysDate = dateFormat.format(date);
+					masterData.setDate(sysDate);
+					response.setMasterData(masterData);
+				}
+			}
+			
 			List<Object[]> reports = custEmployeeRepository.getReportByReportType(custId, brId, deptId, reportType, new Date(),new Date());
 			if(!reports.isEmpty() && reports != null) {
 				for(Object[] rt: reports) {
 					EmpReportByReportTypeDto dto = new EmpReportByReportTypeDto();
 					dto.setEmpName(rt[0].toString());
 					dto.setDeptName(rt[1].toString());
-					dto.setBrName(rt[2].toString());
-					dto.setBlkName(rt[3].toString());
+					dto.setBranchName(rt[2].toString());
+					dto.setBlockName(rt[3].toString());
 					dto.setDesignationName(rt[4].toString());
 					dto.setShiftName(rt[5].toString());
 					reportList.add(dto);
@@ -238,6 +262,26 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		try {
 			if(reportType.trim().equals("earlyLeavers")) {
 				List<EmpEarlyLeaversDto> earlyLeavers = new ArrayList<EmpEarlyLeaversDto>();
+				List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+				if(!master.isEmpty()) {
+					for(Object[] ms: master) {
+						MasterDataDto masterData = new MasterDataDto();
+						masterData.setCustName(ms[0].toString());
+						masterData.setCustAddress(ms[1].toString());
+						masterData.setBrName(ms[2].toString());
+						masterData.setBrAddress(ms[3].toString());
+						masterData.setDeptName(ms[4].toString());
+						String pattern = "yyyy-MM-dd";
+						SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+						dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+						Date date = new Date();
+						String sysDate = dateFormat.format(date);
+						masterData.setDate(sysDate);
+						masterData.setFromDate(fromDate);
+						masterData.setToDate(todate);
+						response.setMasterData(masterData);
+					}
+				}
 				List<Object[]> earlyLeaversList = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
 				if(!earlyLeaversList.isEmpty()) {
 					for(Object[] el: earlyLeaversList) {
@@ -261,6 +305,26 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				
 			} else if(reportType.trim().equals("lateComers")) {
 				List<EmpLateComersDto> lateComers = new ArrayList<EmpLateComersDto>();
+				List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+				if(!master.isEmpty()) {
+					for(Object[] ms: master) {
+						MasterDataDto masterData = new MasterDataDto();
+						masterData.setCustName(ms[0].toString());
+						masterData.setCustAddress(ms[1].toString());
+						masterData.setBrName(ms[2].toString());
+						masterData.setBrAddress(ms[3].toString());
+						masterData.setDeptName(ms[4].toString());
+						String pattern = "yyyy-MM-dd";
+						SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+						dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+						Date date = new Date();
+						String sysDate = dateFormat.format(date);
+						masterData.setDate(sysDate);
+						masterData.setFromDate(fromDate);
+						masterData.setToDate(todate);
+						response.setMasterData(masterData);
+					}
+				}
 				List<Object[]> lateComersList = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
 				if(!lateComersList.isEmpty()) {
 					for(Object[] el: lateComersList) {
@@ -293,6 +357,27 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		EmpLeaveReportResponse response = new EmpLeaveReportResponse();
 		List<EmpLeaveReportDto> leaveReportList = new ArrayList<EmpLeaveReportDto>();
 		try {
+			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+			if(!master.isEmpty()) {
+				for(Object[] ms: master) {
+					MasterDataDto masterData = new MasterDataDto();
+					masterData.setCustName(ms[0].toString());
+					masterData.setCustAddress(ms[1].toString());
+					masterData.setBrName(ms[2].toString());
+					masterData.setBrAddress(ms[3].toString());
+					masterData.setDeptName(ms[4].toString());
+					String pattern = "yyyy-MM-dd";
+					SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+					dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+					Date date = new Date();
+					String sysDate = dateFormat.format(date);
+					masterData.setDate(sysDate);
+					masterData.setFromDate(fromDate);
+					masterData.setToDate(todate);
+					response.setMasterData(masterData);
+				}
+			}
+			
 			List<Object[]> leaves = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
 			if(!leaves.isEmpty()) {
 				for(Object[] l: leaves) {
@@ -325,6 +410,28 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		EmpOfficeOutResponse response = new EmpOfficeOutResponse();
 		List<EmpOfficeOutDto> outList = new ArrayList<EmpOfficeOutDto>();
 		try {
+			
+			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+			if(!master.isEmpty()) {
+				for(Object[] ms: master) {
+					MasterDataDto masterData = new MasterDataDto();
+					masterData.setCustName(ms[0].toString());
+					masterData.setCustAddress(ms[1].toString());
+					masterData.setBrName(ms[2].toString());
+					masterData.setBrAddress(ms[3].toString());
+					masterData.setDeptName(ms[4].toString());
+					String pattern = "yyyy-MM-dd";
+					SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+					dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+					Date date = new Date();
+					String sysDate = dateFormat.format(date);
+					masterData.setDate(sysDate);
+					masterData.setFromDate(fromDate);
+					masterData.setToDate(todate);
+					response.setMasterData(masterData);
+				}
+			}
+			
 			List<Object[]> officeOut = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
 			if(!officeOut.isEmpty()) {
 				for(Object[] o: officeOut) {
