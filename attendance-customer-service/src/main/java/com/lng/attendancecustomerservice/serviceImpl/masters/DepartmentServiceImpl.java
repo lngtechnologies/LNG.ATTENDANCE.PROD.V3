@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.serviceImpl.masters;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -15,6 +16,8 @@ import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository
 import com.lng.attendancecustomerservice.repositories.masters.DepartmentRepository;
 import com.lng.attendancecustomerservice.service.masters.DepartmentService;
 import com.lng.dto.masters.department.DepartmentDto;
+import com.lng.dto.masters.department.DepartmentParam;
+import com.lng.dto.masters.department.DepartmentParamResponse;
 import com.lng.dto.masters.department.DepartmentResponse;
 
 import status.Status;
@@ -249,6 +252,48 @@ public class DepartmentServiceImpl implements DepartmentService {
 		}catch(Exception e) {
 			response.status = new Status(true, 500, "Oops..! Something went wrong.."); 
 
+		}
+		return response;
+	}
+
+
+	@Override
+	public DepartmentParamResponse getDepartmentdetailByCustIdAndEmpId(Integer custId, Integer empId) {
+		DepartmentParamResponse response = new DepartmentParamResponse();
+		List<DepartmentParam> departmentList = new ArrayList<DepartmentParam>();
+		try {
+			List<Object[]> departments = departmentRepository.findDepartmentByCustomer_CustIdAndEmployee_EmpId(custId, empId);
+			if(empId != 0) {
+				if(!departments.isEmpty()) {
+					for(Object[] e : departments ) {
+						DepartmentParam departmentParam	 = new DepartmentParam();
+						departmentParam.setDeptId(Integer.valueOf(e[0].toString()));
+						departmentParam.setDeptName(e[1].toString());
+						departmentList.add(departmentParam);
+						response.setDepartmentList(departmentList);
+						response.status = new Status(false, 200, "Success");
+					}
+				}else {
+					response.status = new Status(false, 400, "No records found");
+				}
+			}else {
+				List<Object[]>	departments2 =departmentRepository.getDepartmentDetailsForAdminByCustomer_CustIdAndEmployee_EmpId(custId, empId);
+				if(!departments2.isEmpty()) {
+					for(Object[] a : departments2 ) {
+						DepartmentParam departmentParam1 = new DepartmentParam();
+						departmentParam1.setDeptId(Integer.valueOf(a[0].toString()));
+						departmentParam1.setDeptName(a[1].toString());
+						departmentList.add(departmentParam1);
+						response.setDepartmentList(departmentList);
+						response.status = new Status(false, 200, "Success");
+					}
+				}else {
+					response.status = new Status(false, 400, "No records found");
+				}
+			}
+
+		}catch(Exception e) {
+			response.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return response;
 	}

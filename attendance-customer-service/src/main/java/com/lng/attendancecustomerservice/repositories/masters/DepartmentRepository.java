@@ -37,4 +37,10 @@ public interface DepartmentRepository extends CrudRepository<Department,Integer>
 	
 	@Query(value = "SELECT de.* FROM tmdepartment de LEFT JOIN tmbranch br ON br.refCustomerId = de.refCustId WHERE  br.brId  = ?1 AND de.deptIsActive = TRUE",nativeQuery = true)
 	List<Department> findDepartmentByBranch_brId(Integer brId);
+	
+	@Query(value = "call GetDepartmentDetailsByCustIdAndEmpId(?1,?2)",nativeQuery =  true)
+	List<Object[]> findDepartmentByCustomer_CustIdAndEmployee_EmpId(Integer custId,Integer empId);
+	
+	@Query(value = "SELECT  d.deptId,d.deptName FROM tmdepartment d WHERE d.refCustId = ?1 AND d.deptIsActive = TRUE ORDER BY  d.deptName",nativeQuery = true)
+	List<Object[]> getDepartmentDetailsForAdminByCustomer_CustIdAndEmployee_EmpId(Integer custId,Integer empId);
 }

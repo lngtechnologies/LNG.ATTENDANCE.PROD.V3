@@ -308,8 +308,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 					shiftTypeDto.setShiftEnd(s[2].toString());
 					shiftTypeDto.setTotalCount(Integer.valueOf(s[3].toString()));
 					shiftDetailsList.add(shiftTypeDto);
-					lateComersResponse.setLateComersShiftDetails(shiftDetailsList);
 				}
+				lateComersResponse.setLateComersShiftDetails(shiftDetailsList);
 			} else {
 				lateComersResponse.status = new Status(true, 400, "ShiftDetails not found");
 			}
@@ -327,8 +327,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 						lateComersDto.setAttndInTime("NA");
 					}
 					empDetailsList.add(lateComersDto);
-					lateComersResponse.setLateComersEmpShiftDetails(empDetailsList);
 				}
+				lateComersResponse.setLateComersEmpShiftDetails(empDetailsList);
 			} else {
 				lateComersResponse.status = new Status(true, 400, "LateComers not found");
 			}
