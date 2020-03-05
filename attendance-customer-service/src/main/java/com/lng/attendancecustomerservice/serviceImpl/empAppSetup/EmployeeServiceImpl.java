@@ -452,10 +452,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 					leaveDto.setEmpName(e[1].toString());
 					leaveDto.setShiftName(e[2].toString());
 					leaveDto.setEmpLeaveFrom(e[3].toString());
-					leaveDto.setMpLeaveTo(e[4].toString());
+					leaveDto.setEmpLeaveTo(e[4].toString());
 					leaveDto.setEmpLeaveDaysCount(Integer.valueOf(e[5].toString()));
 					leaveDto.setEmpLeaveStatus(e[6].toString());
 					leaveDto.setEmpLeaveRemarks(e[7].toString());
+					leaveDto.setLeaveType(e[8].toString());
 					empDetailsList.add(leaveDto);
 					appLeaveResponse.setAppLeaveEmpShiftDetails(empDetailsList);
 				}
