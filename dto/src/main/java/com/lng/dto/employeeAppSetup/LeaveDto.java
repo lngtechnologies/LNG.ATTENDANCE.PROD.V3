@@ -1,7 +1,5 @@
 package com.lng.dto.employeeAppSetup;
 
-import java.util.Date;
-
 public class LeaveDto {
 
 	private Integer empId;
@@ -12,13 +10,15 @@ public class LeaveDto {
 
 	private String empLeaveFrom;
 
-	private String mpLeaveTo;
+	private String empLeaveTo;
 
 	private Integer empLeaveDaysCount;
 
 	private  String  empLeaveStatus;
 
 	private  String   empLeaveRemarks;
+	
+	private String    leaveType;
 
 	public Integer getEmpId() {
 		return empId;
@@ -53,12 +53,12 @@ public class LeaveDto {
 		this.empLeaveFrom = empLeaveFrom;
 	}
 
-	public String getMpLeaveTo() {
-		return mpLeaveTo;
+	public String getEmpLeaveTo() {
+		return empLeaveTo;
 	}
 
-	public void setMpLeaveTo(String mpLeaveTo) {
-		this.mpLeaveTo = mpLeaveTo;
+	public void setEmpLeaveTo(String empLeaveTo) {
+		this.empLeaveTo = empLeaveTo;
 	}
 
 	public Integer getEmpLeaveDaysCount() {
@@ -85,7 +85,12 @@ public class LeaveDto {
 		this.empLeaveRemarks = empLeaveRemarks;
 	}
 
+	public String getLeaveType() {
+		return leaveType;
+	}
 
-
+	public void setLeaveType(String leaveType) {
+		this.leaveType = leaveType;
+	}
 
 }

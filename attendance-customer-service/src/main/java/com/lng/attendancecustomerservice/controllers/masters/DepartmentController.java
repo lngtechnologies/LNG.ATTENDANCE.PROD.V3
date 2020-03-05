@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.masters.DepartmentService;
 import com.lng.dto.masters.department.DepartmentDto;
+import com.lng.dto.masters.department.DepartmentParamResponse;
 import com.lng.dto.masters.department.DepartmentResponse;
 
 @RestController
@@ -72,8 +73,19 @@ public class DepartmentController {
 
 	@PostMapping(value = "/getAllbyBrId")
 	public ResponseEntity<DepartmentResponse> getByBrId(@RequestBody DepartmentDto departmentDto) {
-		DepartmentResponse departmentResponse = departmentService.getAllByCustId(departmentDto.getBrId());
+		DepartmentResponse departmentResponse = departmentService.getDepartmentDetailsByBrId(departmentDto.getBrId());
 		return new ResponseEntity<DepartmentResponse>(departmentResponse, HttpStatus.OK);
+	}
+	
+	@PostMapping(value ="/getDepartmentDetailsByCustIdAndEmpId")
+	public ResponseEntity<DepartmentParamResponse> getDepartmentDetailsByCustIdAndEmpId(@RequestBody DepartmentDto departmentDto){
+		DepartmentParamResponse departmentParamResponse = departmentService.getDepartmentdetailByCustIdAndEmpId(departmentDto.getRefCustId(), departmentDto.getEmpId());
+		if(departmentParamResponse != null) {
+			return new ResponseEntity<DepartmentParamResponse>(departmentParamResponse,HttpStatus.OK);
+		}
+				
+		return new ResponseEntity<DepartmentParamResponse>(HttpStatus.NOT_FOUND);		
+		
 	}
 }
 

@@ -7,6 +7,7 @@ public class DepartmentDto {
 	private Boolean deptIsActive;
     private String  custName;
     private  Integer brId;
+    private Integer empId;
 	
 	public Integer getDeptId() {
 		return deptId;
@@ -43,6 +44,12 @@ public class DepartmentDto {
 	}
 	public void setBrId(Integer brId) {
 		this.brId = brId;
+	}
+	public Integer getEmpId() {
+		return empId;
+	}
+	public void setEmpId(Integer empId) {
+		this.empId = empId;
 	}
 
 
