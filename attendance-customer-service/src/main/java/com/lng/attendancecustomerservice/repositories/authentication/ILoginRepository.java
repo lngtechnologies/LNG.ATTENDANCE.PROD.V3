@@ -22,6 +22,9 @@ public interface ILoginRepository extends JpaRepository<Login, Integer> {
 	Login findByLoginMobileAndRefCustId(String mobileNumber, Integer custId);
 
 	Login getByRefCustId(Integer custId);
+	
+	@Query(value = "select * from ttlogin where refCustId = ?1 and loginName like '%admin%'", nativeQuery = true)
+	Login findByCustomet_CustId(Integer custId);
 
 	List<Login> findAll();
 

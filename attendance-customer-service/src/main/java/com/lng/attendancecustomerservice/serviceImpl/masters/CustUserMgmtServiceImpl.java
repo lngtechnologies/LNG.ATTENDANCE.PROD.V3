@@ -892,9 +892,6 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 
 					if(login1 == null) {
 
-
-
-
 						String newPassword = iLoginRepository.generatePassword();
 						Login login = new Login();
 						login.setLoginName(loginUserName);
@@ -931,12 +928,16 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						
 						try {
 							if(!custUserLoginModuleBranchDto.getModules().isEmpty()) {
+								UserRight usrRight = new UserRight();
+								usrRight.setRefLoginId(login.getLoginId());
+								usrRight.setRefModuleId(1);
+								userRightRepository.save(usrRight);
 								for(CustUserModuleDto custUserModuleDto : custUserLoginModuleBranchDto.getModules()) {
 									UserRight userRight = new UserRight();
 									userRight.setRefLoginId(login.getLoginId());
 									userRight.setRefModuleId(custUserModuleDto.getModuleId());
 									userRightRepository.save(userRight);
-								}
+								}	
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -956,7 +957,6 @@ public class CustUserMgmtServiceImpl implements CustUserMgmtService {
 						}
 					}else {
 						status = new Status(true, 400, "User name already exist");
-						
 					}
 				} else {
 					status = new Status(true, 400, "The user has already been created for the selected Employee");

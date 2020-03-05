@@ -9,6 +9,7 @@ import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecustomerservice.entity.authentication.Login;
 import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversAndLateComersResponse;
 import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversDto;
 import com.lng.attendancecustomerservice.entity.reports.EmpLateComersDto;
@@ -20,6 +21,7 @@ import com.lng.attendancecustomerservice.entity.reports.EmpReportByReportTypeDto
 import com.lng.attendancecustomerservice.entity.reports.EmpReportByReportTypeResponse;
 import com.lng.attendancecustomerservice.entity.reports.MasterDataDto;
 import com.lng.attendancecustomerservice.entity.reports.ReportMasterDataDto;
+import com.lng.attendancecustomerservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.service.reports.EmployeeSummaryService;
 import com.lng.dto.reports.EmpTodaySummaryResponse;
@@ -37,6 +39,9 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 
 	@Autowired
 	CustEmployeeRepository custEmployeeRepository;
+	
+	@Autowired
+	ILoginRepository iLoginRepository;
 
 	@Override
 	public EmpTodaySummaryResponse getSummary(int custId, int empId, int loginId) {
@@ -49,7 +54,8 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 						EmployeeTodaysSummaryDto employeeTodaysSummaryDto = new EmployeeTodaysSummaryDto();
 						employeeTodaysSummaryDto.setPresent(Integer.valueOf(sm[0].toString()));
 						employeeTodaysSummaryDto.setAbsent(Integer.valueOf(sm[1].toString()));
-						employeeTodaysSummaryDto.setLeave(Integer.valueOf(sm[2].toString()));
+						employeeTodaysSummaryDto.setApprovedLeave(Integer.valueOf(sm[2].toString()));
+						employeeTodaysSummaryDto.setPendingLeaves(Integer.valueOf(sm[3].toString()));
 						empTodaySummaryResponse.setEmpSummary(employeeTodaysSummaryDto);
 					}
 				} else {
@@ -58,13 +64,22 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				
 				empTodaySummaryResponse.status = new Status(false, 200, "success");
 			} else if(empId == 0) {
-				List<Object[]> summary = custEmployeeRepository.W_getEmployeeTodaysSummary(custId, loginId);
+				Integer iLoginId = 0;
+				if(loginId == 1) {
+					Login login = iLoginRepository.findByCustomet_CustId(custId);
+					iLoginId = login.getLoginId();
+				} else {
+					iLoginId = loginId;
+				}
+				
+				List<Object[]> summary = custEmployeeRepository.W_getEmployeeTodaysSummary(custId, iLoginId);
 				if(summary != null) {
 					for(Object[] sm : summary) {
 						EmployeeTodaysSummaryDto employeeTodaysSummaryDto = new EmployeeTodaysSummaryDto();
 						employeeTodaysSummaryDto.setPresent(Integer.valueOf(sm[0].toString()));
 						employeeTodaysSummaryDto.setAbsent(Integer.valueOf(sm[1].toString()));
-						employeeTodaysSummaryDto.setLeave(Integer.valueOf(sm[2].toString()));
+						employeeTodaysSummaryDto.setApprovedLeave(Integer.valueOf(sm[2].toString()));
+						employeeTodaysSummaryDto.setPendingLeaves(Integer.valueOf(sm[3].toString()));
 						empTodaySummaryResponse.setEmpSummary(employeeTodaysSummaryDto);
 					}
 				} else {
@@ -98,7 +113,14 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				
 				response.status = new Status(false, 200, "success");
 			} else if(empId == 0) {
-				List<Object[]> leaveSummary = custEmployeeRepository.W_getEmployeeTodaysLeaveSummary(custId, loginId);
+				Integer iLoginId = 0;
+				if(loginId == 1) {
+					Login login = iLoginRepository.findByCustomet_CustId(custId);
+					iLoginId = login.getLoginId();
+				} else {
+					iLoginId = loginId;
+				}
+				List<Object[]> leaveSummary = custEmployeeRepository.W_getEmployeeTodaysLeaveSummary(custId, iLoginId);
 				if(leaveSummary != null) {
 					for(Object[] ls: leaveSummary) {
 						EmpTodaysLeaveSummaryDto dto = new EmpTodaysLeaveSummaryDto();
@@ -162,10 +184,17 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					response.status = new Status(false, 400, "Early leavers not found");
 				}
 			} else if(empId == 0) {
+				Integer iLoginId = 0;
+				if(loginId == 1) {
+					Login login = iLoginRepository.findByCustomet_CustId(custId);
+					iLoginId = login.getLoginId();
+				} else {
+					iLoginId = loginId;
+				}
 				List<EmpTodaysLateComersDto> lateComersList = new ArrayList<EmpTodaysLateComersDto>();
 				List<EmpTodaysEarlyLeaversDto> earlyLeaversList = new ArrayList<EmpTodaysEarlyLeaversDto>(); 
-				List<Object[]> lateComers = custEmployeeRepository.getLateComersForAdmin(custId, loginId);
-				List<Object[]> earlyLeavers = custEmployeeRepository.getEarlyLeaversForAdmin(custId, loginId);
+				List<Object[]> lateComers = custEmployeeRepository.getLateComersForAdmin(custId, iLoginId);
+				List<Object[]> earlyLeavers = custEmployeeRepository.getEarlyLeaversForAdmin(custId, iLoginId);
 				if(lateComers != null) {
 					for(Object[] lc: lateComers) {
 						EmpTodaysLateComersDto dto = new EmpTodaysLateComersDto();
@@ -214,7 +243,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		List<EmpReportByReportTypeDto> reportList = new ArrayList<EmpReportByReportTypeDto>();
 		
 		try {
-			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId, deptId);
 			if(!master.isEmpty()) {
 				for(Object[] ms: master) {
 					MasterDataDto masterData = new MasterDataDto();
@@ -262,7 +291,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		try {
 			if(reportType.trim().equals("earlyLeavers")) {
 				List<EmpEarlyLeaversDto> earlyLeavers = new ArrayList<EmpEarlyLeaversDto>();
-				List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+				List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId, deptId);
 				if(!master.isEmpty()) {
 					for(Object[] ms: master) {
 						MasterDataDto masterData = new MasterDataDto();
@@ -305,7 +334,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				
 			} else if(reportType.trim().equals("lateComers")) {
 				List<EmpLateComersDto> lateComers = new ArrayList<EmpLateComersDto>();
-				List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+				List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId, deptId);
 				if(!master.isEmpty()) {
 					for(Object[] ms: master) {
 						MasterDataDto masterData = new MasterDataDto();
@@ -357,7 +386,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		EmpLeaveReportResponse response = new EmpLeaveReportResponse();
 		List<EmpLeaveReportDto> leaveReportList = new ArrayList<EmpLeaveReportDto>();
 		try {
-			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId, deptId);
 			if(!master.isEmpty()) {
 				for(Object[] ms: master) {
 					MasterDataDto masterData = new MasterDataDto();
@@ -411,7 +440,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		List<EmpOfficeOutDto> outList = new ArrayList<EmpOfficeOutDto>();
 		try {
 			
-			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId);
+			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId, deptId);
 			if(!master.isEmpty()) {
 				for(Object[] ms: master) {
 					MasterDataDto masterData = new MasterDataDto();

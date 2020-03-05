@@ -6,7 +6,9 @@ public class EmployeeTodaysSummaryDto {
 	
 	private Integer absent;
 	
-	private Integer leave;
+	private Integer approvedLeaves;
+	
+	private Integer pendingLeaves;
 
 	public Integer getPresent() {
 		return present;
@@ -24,11 +26,20 @@ public class EmployeeTodaysSummaryDto {
 		this.absent = absent;
 	}
 
-	public Integer getLeave() {
-		return leave;
+	public Integer getApprovedLeave() {
+		return approvedLeaves;
 	}
 
-	public void setLeave(Integer leave) {
-		this.leave = leave;
+	public void setApprovedLeave(Integer approvedLeave) {
+		this.approvedLeaves = approvedLeave;
 	}
+
+	public Integer getPendingLeaves() {
+		return pendingLeaves;
+	}
+
+	public void setPendingLeaves(Integer pendingLeaves) {
+		this.pendingLeaves = pendingLeaves;
+	}
+
 }

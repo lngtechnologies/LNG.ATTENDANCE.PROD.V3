@@ -86,7 +86,7 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	@Query(value = "CALL sp_getReportByType(?1,?2,?3,?4,?5,?6)", nativeQuery = true)
 	List<Object[]> getReportByReportType(Integer custId, Integer brId, Integer deptId, String reportType, Date fromDate, Date toDate);
 	
-	@Query(value = "CALL sp_getMasterDataByBrId(?1)", nativeQuery = true)
-	List<Object[]> GetEmployeMasterData(int brId);
+	@Query(value = "CALL sp_getMasterDataByBrId(?1, ?2)", nativeQuery = true)
+	List<Object[]> GetEmployeMasterData(int brId, int deptId);
 
 }
