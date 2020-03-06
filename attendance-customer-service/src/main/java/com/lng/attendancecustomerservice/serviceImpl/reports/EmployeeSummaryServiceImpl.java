@@ -19,8 +19,9 @@ import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutDto;
 import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutResponse;
 import com.lng.attendancecustomerservice.entity.reports.EmpReportByReportTypeDto;
 import com.lng.attendancecustomerservice.entity.reports.EmpReportByReportTypeResponse;
+import com.lng.attendancecustomerservice.entity.reports.EmployeeSummaryParamDto;
 import com.lng.attendancecustomerservice.entity.reports.MasterDataDto;
-import com.lng.attendancecustomerservice.entity.reports.ReportMasterDataDto;
+import com.lng.attendancecustomerservice.entity.reports.SummaryDetailsResponse;
 import com.lng.attendancecustomerservice.repositories.authentication.ILoginRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.service.reports.EmployeeSummaryService;
@@ -39,7 +40,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 
 	@Autowired
 	CustEmployeeRepository custEmployeeRepository;
-	
+
 	@Autowired
 	ILoginRepository iLoginRepository;
 
@@ -61,7 +62,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				} else {
 					empTodaySummaryResponse.status = new Status(false, 400, "Not found");
 				}
-				
+
 				empTodaySummaryResponse.status = new Status(false, 200, "success");
 			} else if(empId == 0) {
 				Integer iLoginId = 0;
@@ -71,7 +72,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				} else {
 					iLoginId = loginId;
 				}
-				
+
 				List<Object[]> summary = custEmployeeRepository.W_getEmployeeTodaysSummary(custId, iLoginId);
 				if(summary != null) {
 					for(Object[] sm : summary) {
@@ -110,7 +111,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				} else {
 					response.status = new Status(false, 400, "Not found");
 				}
-				
+
 				response.status = new Status(false, 200, "success");
 			} else if(empId == 0) {
 				Integer iLoginId = 0;
@@ -142,7 +143,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 	@Override
 	public TodaysLateComersAndEarlyLeaversResponse getLateComersAndEarlyLeavers(int custId, int empId, int loginId) {
 		TodaysLateComersAndEarlyLeaversResponse response = new TodaysLateComersAndEarlyLeaversResponse();
-		
+
 		try {
 			if(loginId == 0) {
 				List<EmpTodaysLateComersDto> lateComersList = new ArrayList<EmpTodaysLateComersDto>();
@@ -241,7 +242,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 	public EmpReportByReportTypeResponse getReportByReportType(int custId, int brId, int deptId, String reportType) {
 		EmpReportByReportTypeResponse response = new EmpReportByReportTypeResponse();
 		List<EmpReportByReportTypeDto> reportList = new ArrayList<EmpReportByReportTypeDto>();
-		
+
 		try {
 			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId, deptId);
 			if(!master.isEmpty()) {
@@ -261,7 +262,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					response.setMasterData(masterData);
 				}
 			}
-			
+
 			List<Object[]> reports = custEmployeeRepository.getReportByReportType(custId, brId, deptId, reportType, new Date(),new Date());
 			if(!reports.isEmpty() && reports != null) {
 				for(Object[] rt: reports) {
@@ -331,7 +332,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				} else {
 					response.status = new Status(false, 400, "Not found");
 				}
-				
+
 			} else if(reportType.trim().equals("lateComers")) {
 				List<EmpLateComersDto> lateComers = new ArrayList<EmpLateComersDto>();
 				List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId, deptId);
@@ -406,7 +407,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					response.setMasterData(masterData);
 				}
 			}
-			
+
 			List<Object[]> leaves = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
 			if(!leaves.isEmpty()) {
 				for(Object[] l: leaves) {
@@ -439,7 +440,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		EmpOfficeOutResponse response = new EmpOfficeOutResponse();
 		List<EmpOfficeOutDto> outList = new ArrayList<EmpOfficeOutDto>();
 		try {
-			
+
 			List<Object[]> master = custEmployeeRepository.GetEmployeMasterData(brId, deptId);
 			if(!master.isEmpty()) {
 				for(Object[] ms: master) {
@@ -460,7 +461,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					response.setMasterData(masterData);
 				}
 			}
-			
+
 			List<Object[]> officeOut = custEmployeeRepository.getReportByReportType(0, brId, deptId, reportType, fromDate, todate);
 			if(!officeOut.isEmpty()) {
 				for(Object[] o: officeOut) {
@@ -485,5 +486,80 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 			response.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return response;
+	}
+
+	@Override
+	public SummaryDetailsResponse getEmployeeSumarryDetails(Integer custId, Integer empId,Integer loginId) {
+		SummaryDetailsResponse summaryDetailsResponse = new SummaryDetailsResponse();
+		List<EmployeeSummaryParamDto> empPresentList = new ArrayList<EmployeeSummaryParamDto>();
+		List<EmployeeSummaryParamDto> empAbsentList = new ArrayList<EmployeeSummaryParamDto>();
+		List<EmployeeSummaryParamDto> empApprovedList = new ArrayList<EmployeeSummaryParamDto>();
+		List<EmployeeSummaryParamDto> empPendingList = new ArrayList<EmployeeSummaryParamDto>();
+		try {
+
+			List<Object[]> present = custEmployeeRepository.w_GetEmployeePresentData(custId, empId);
+			if(!present.isEmpty()) {
+				for(Object[] p: present) {
+					EmployeeSummaryParamDto employeeSummaryParamDto = new EmployeeSummaryParamDto();
+					employeeSummaryParamDto.setEmpName(p[0].toString());
+					employeeSummaryParamDto.setMobileNo(p[1].toString());
+					employeeSummaryParamDto.setBranchName(p[2].toString());
+					employeeSummaryParamDto.setDeptName(p[3].toString());
+					empPresentList.add(employeeSummaryParamDto);
+				}
+				summaryDetailsResponse.setPresentList(empPresentList);
+				summaryDetailsResponse.status = new Status(false, 200, "Success");
+			} else {
+				summaryDetailsResponse.status = new Status(false, 400, "Not found");
+			}
+			List<Object[]> absent = custEmployeeRepository.w_GetEmployeeAbsentData(custId, empId);
+			if(!absent.isEmpty()) {
+				for(Object[] a: absent) {
+					EmployeeSummaryParamDto employeeSummaryParamDto1 = new EmployeeSummaryParamDto();
+					employeeSummaryParamDto1.setEmpName(a[0].toString());
+					employeeSummaryParamDto1.setMobileNo(a[1].toString());
+					employeeSummaryParamDto1.setBranchName(a[2].toString());
+					employeeSummaryParamDto1.setDeptName(a[3].toString());
+					empAbsentList.add(employeeSummaryParamDto1);
+				}
+				summaryDetailsResponse.setAbsentList(empAbsentList);
+				summaryDetailsResponse.status = new Status(false, 200, "Success");
+			} else {
+				summaryDetailsResponse.status = new Status(false, 400, "Not found");
+			}
+			List<Object[]> approvedLeave = custEmployeeRepository.w_GetEmployeeApprovedLeaveData(custId, empId);
+			if(!approvedLeave.isEmpty()) {
+				for(Object[] al: approvedLeave) {
+					EmployeeSummaryParamDto employeeSummaryParamDto2 = new EmployeeSummaryParamDto();
+					employeeSummaryParamDto2.setEmpName(al[0].toString());
+					employeeSummaryParamDto2.setMobileNo(al[1].toString());
+					employeeSummaryParamDto2.setBranchName(al[2].toString());
+					employeeSummaryParamDto2.setDeptName(al[3].toString());
+					empApprovedList.add(employeeSummaryParamDto2);
+				}
+				summaryDetailsResponse.setApprovedList(empApprovedList);
+				summaryDetailsResponse.status = new Status(false, 200, "Success");
+			} else {
+				summaryDetailsResponse.status = new Status(false, 400, "Not found");
+			}
+			List<Object[]> pendingLeave = custEmployeeRepository.w_GetEmployeePendingLeaveData(custId, empId);
+			if(!pendingLeave.isEmpty()) {
+				for(Object[] pl: pendingLeave) {
+					EmployeeSummaryParamDto employeeSummaryParamDto3 = new EmployeeSummaryParamDto();
+					employeeSummaryParamDto3.setEmpName(pl[0].toString());
+					employeeSummaryParamDto3.setMobileNo(pl[1].toString());
+					employeeSummaryParamDto3.setBranchName(pl[2].toString());
+					employeeSummaryParamDto3.setDeptName(pl[3].toString());
+					empPendingList.add(employeeSummaryParamDto3);
+				}
+				summaryDetailsResponse.setPendingList(empPendingList);
+				summaryDetailsResponse.status = new Status(false, 200, "Success");
+			} else {
+				summaryDetailsResponse.status = new Status(false, 400, "Not found");
+			}
+		} catch (Exception e) {
+			summaryDetailsResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+		return summaryDetailsResponse;
 	}
 }

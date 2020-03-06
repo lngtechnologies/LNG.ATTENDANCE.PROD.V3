@@ -321,6 +321,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 						employeeAttendance1.setEmpAttendanceInMode(employeeAttendanceDto.getEmpAttendanceInMode());
 						employeeAttendance1.setEmpAttendanceInLatLong(employeeAttendanceDto.getEmpAttendanceInLatLong());
 						employeeAttendance1.setEmpAttendanceInConfidence(employeeAttendanceDto.getEmpAttendanceInConfidence());
+						employeeAttendance1.setEmpAttendanceInLocation(employeeAttendanceDto.getEmpAttendanceInLocation());
 
 						employeeAttendanceRepository.save(employeeAttendance1);
 						status = new Status(false, 200, "Successfully attendance marked");
@@ -332,7 +333,8 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 						employeeAttendance1.setEmpAttendanceInMode(employeeAttendanceDto.getEmpAttendanceInMode());
 						employeeAttendance1.setEmpAttendanceInLatLong(employeeAttendanceDto.getEmpAttendanceInLatLong());
 						employeeAttendance1.setEmpAttendanceInConfidence(employeeAttendanceDto.getEmpAttendanceInConfidence());
-
+						employeeAttendance1.setEmpAttendanceInLocation(employeeAttendanceDto.getEmpAttendanceInLocation());
+						
 						employeeAttendanceRepository.save(employeeAttendance1);
 						status = new Status(false, 200, "Successfully attendance marked");
 					}
@@ -367,6 +369,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 							emAttendance.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
 							emAttendance.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
 							emAttendance.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
+							emAttendance.setEmpAttendanceOutLocation(employeeAttendanceDto.getEmpAttendanceOutLocation());
 							employeeAttendanceRepository.save(emAttendance);
 							status = new Status(false, 200, "Successfully attendance marked");
 						} else {
@@ -375,6 +378,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 							emAttendance.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
 							emAttendance.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
 							emAttendance.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
+							emAttendance.setEmpAttendanceOutLocation(employeeAttendanceDto.getEmpAttendanceOutLocation());
 							employeeAttendanceRepository.save(emAttendance);
 							status = new Status(false, 200, "Successfully attendance marked");
 						}
@@ -387,6 +391,7 @@ public class EmployeeAttendanceServiceImpl implements EmployeeAttendanceService 
 						emAttendance.setEmpAttendanceOutMode(employeeAttendanceDto.getEmpAttendanceOutMode());
 						emAttendance.setEmpAttendanceOutLatLong(employeeAttendanceDto.getEmpAttendanceOutLatLong());
 						emAttendance.setEmpAttendanceOutConfidence(employeeAttendanceDto.getEmpAttendanceOutConfidence());
+						emAttendance.setEmpAttendanceOutLocation(employeeAttendanceDto.getEmpAttendanceOutLocation());
 						employeeAttendanceRepository.save(emAttendance);
 						status = new Status(false, 200, "Successfully attendance marked");
 					}

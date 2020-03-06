@@ -13,6 +13,7 @@ import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversAndLateCo
 import com.lng.attendancecustomerservice.entity.reports.EmpLeaveReportResponse;
 import com.lng.attendancecustomerservice.entity.reports.EmpOfficeOutResponse;
 import com.lng.attendancecustomerservice.entity.reports.EmpReportByReportTypeResponse;
+import com.lng.attendancecustomerservice.entity.reports.SummaryDetailsResponse;
 import com.lng.attendancecustomerservice.service.reports.EmployeeSummaryService;
 import com.lng.dto.employeeAttendance.EmpSummaryDto;
 import com.lng.dto.reports.EmpReportParam;
@@ -105,6 +106,20 @@ public class EmployeeSummaryController {
 		EmpOfficeOutResponse responseDto = employeeSummaryService.getOfficeOutReport(empReportParam.getBrId(), empReportParam.getDeptId(), empReportParam.getReportType(), empReportParam.getFromDate(), empReportParam.getToDate());
         if (responseDto !=null){
             return new ResponseEntity<EmpOfficeOutResponse>(responseDto, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+	@PostMapping(value = "/get/EmployeeSumarryDetails")
+    public ResponseEntity<SummaryDetailsResponse> GetEmployeeSumaryDetails(@RequestBody EmpSummaryDto empSummaryDto) {
+		if(empSummaryDto.getLoginId() == null) {
+			empSummaryDto.setLoginId(0);
+		}
+		if(empSummaryDto.getEmpId() == null) {
+			empSummaryDto.setEmpId(0); 
+		}
+		SummaryDetailsResponse summaryDetailsResponse = employeeSummaryService.getEmployeeSumarryDetails(empSummaryDto.getCustId(), empSummaryDto.getEmpId(), empSummaryDto.getLoginId());
+        if (summaryDetailsResponse !=null){
+            return new ResponseEntity<SummaryDetailsResponse>(summaryDetailsResponse, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }

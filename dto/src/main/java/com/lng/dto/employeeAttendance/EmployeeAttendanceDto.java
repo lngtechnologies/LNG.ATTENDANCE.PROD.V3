@@ -6,30 +6,34 @@ import java.util.Date;
 public class EmployeeAttendanceDto {
 
 	private Integer empAttendanceId;
-	
+
 	private Integer refEmpId;
-	
+
 	private Date empAttendanceDate;
-	
+
 	private String empAttendanceInMode;
-	
+
 	private String empAttendanceOutMode;
-	
+
 	private Date empAttendanceInDatetime;
-	
+
 	private Date empAttendanceOutDatetime;
-	
+
 	private Date empAttendanceConsiderInDatetime;
-	
+
 	private Date empAttendanceConsiderOutDatetime;
-	
+
 	private BigDecimal empAttendanceInConfidence;
-	
+
 	private BigDecimal empAttendanceOutConfidence;
-	
+
 	private String empAttendanceInLatLong;
-	
+
 	private String empAttendanceOutLatLong;
+
+	private String empAttendanceInLocation;
+
+	private String  empAttendanceOutLocation;
 
 	public Integer getEmpAttendanceId() {
 		return empAttendanceId;
@@ -134,4 +138,21 @@ public class EmployeeAttendanceDto {
 	public void setEmpAttendanceOutLatLong(String empAttendanceOutLatLong) {
 		this.empAttendanceOutLatLong = empAttendanceOutLatLong;
 	}
+
+	public String getEmpAttendanceInLocation() {
+		return empAttendanceInLocation;
+	}
+
+	public void setEmpAttendanceInLocation(String empAttendanceInLocation) {
+		this.empAttendanceInLocation = empAttendanceInLocation;
+	}
+
+	public String getEmpAttendanceOutLocation() {
+		return empAttendanceOutLocation;
+	}
+
+	public void setEmpAttendanceOutLocation(String empAttendanceOutLocation) {
+		this.empAttendanceOutLocation = empAttendanceOutLocation;
+	}
+
 }

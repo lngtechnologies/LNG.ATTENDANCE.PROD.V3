@@ -59,6 +59,12 @@ public class EmployeeAttendance {
 
 	@Column(name = "empAttendanceOutLatLong")
 	private String empAttendanceOutLatLong;
+	
+	@Column(name = "empAttendanceInLocation")
+	private String empAttendanceInLocation;
+	
+	@Column(name = "empAttendanceOutLocation")
+	private String empAttendanceOutLocation;
 
 
 	public Integer getEmpAttendanceId() {
@@ -163,6 +169,22 @@ public class EmployeeAttendance {
 
 	public void setEmpAttendanceOutLatLong(String empAttendanceOutLatLong) {
 		this.empAttendanceOutLatLong = empAttendanceOutLatLong;
+	}
+
+	public String getEmpAttendanceInLocation() {
+		return empAttendanceInLocation;
+	}
+
+	public void setEmpAttendanceInLocation(String empAttendanceInLocation) {
+		this.empAttendanceInLocation = empAttendanceInLocation;
+	}
+
+	public String getEmpAttendanceOutLocation() {
+		return empAttendanceOutLocation;
+	}
+
+	public void setEmpAttendanceOutLocation(String empAttendanceOutLocation) {
+		this.empAttendanceOutLocation = empAttendanceOutLocation;
 	}
 
 }

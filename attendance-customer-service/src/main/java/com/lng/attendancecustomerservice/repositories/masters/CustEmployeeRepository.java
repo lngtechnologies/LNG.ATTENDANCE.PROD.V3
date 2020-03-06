@@ -88,5 +88,28 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	@Query(value = "CALL sp_getMasterDataByBrId(?1, ?2)", nativeQuery = true)
 	List<Object[]> GetEmployeMasterData(int brId, int deptId);
+	
+	@Query(value = "CALL W_getPresentDetailsByCustIdAndEmpId(?1, ?2)", nativeQuery = true)
+	List<Object[]> w_GetEmployeePresentData(Integer custId, Integer empId);
+	
+	@Query(value = "CALL W_getAbsentDetailsByCustIdAndEmpId(?1, ?2)", nativeQuery = true)
+	List<Object[]> w_GetEmployeeAbsentData(Integer custId, Integer empId);
+	
+	@Query(value = "CALL W_getApprovedLeavesDetailsByCutIdAndEmpId(?1, ?2)", nativeQuery = true)
+	List<Object[]> w_GetEmployeeApprovedLeaveData(Integer custId, Integer empId);
+	
+	@Query(value = "CALL W_getPendingDetailsByCustIdAndEmpId(?1, ?2)", nativeQuery = true)
+	List<Object[]> w_GetEmployeePendingLeaveData(Integer custId, Integer empId);
 
+	@Query(value = "CALL W_getPresentDataForAdmin(?1, ?2)", nativeQuery = true)
+	List<Object[]> w_GetEmployeePresentDataForAdmin(Integer loginId,Integer custId);
+	
+	@Query(value = "CALL W_getAbsentDataForAdmin(?1, ?2)", nativeQuery = true)
+	List<Object[]> w_GetEmployeeAbsentDataForAdmin(Integer loginId,Integer custId);
+	
+	@Query(value = "CALL W_getApprovedLeaveForAdmin(?1, ?2)", nativeQuery = true)
+	List<Object[]> w_GetEmployeeApprovedDataForAdmin(Integer loginId,Integer custId);
+	
+	@Query(value = "CALL W_getPendingLeaveForAdmin(?1, ?2)", nativeQuery = true)
+	List<Object[]> w_GetEmployeePendingDataForAdmin(Integer loginId,Integer custId);
 }
