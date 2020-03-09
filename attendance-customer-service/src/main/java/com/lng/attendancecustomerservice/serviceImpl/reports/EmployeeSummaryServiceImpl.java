@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.lng.attendancecustomerservice.entity.authentication.Login;
+import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversAndLateComersResponse;
 import com.lng.attendancecustomerservice.entity.reports.EmpEarlyLeaversDto;
 import com.lng.attendancecustomerservice.entity.reports.EmpLateComersDto;
@@ -495,8 +496,9 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 		List<EmployeeSummaryParamDto> empAbsentList = new ArrayList<EmployeeSummaryParamDto>();
 		List<EmployeeSummaryParamDto> empApprovedList = new ArrayList<EmployeeSummaryParamDto>();
 		List<EmployeeSummaryParamDto> empPendingList = new ArrayList<EmployeeSummaryParamDto>();
-		try {
 
+		try {
+			if(loginId == 0) {
 			List<Object[]> present = custEmployeeRepository.w_GetEmployeePresentData(custId, empId);
 			if(!present.isEmpty()) {
 				for(Object[] p: present) {
@@ -557,8 +559,94 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 			} else {
 				summaryDetailsResponse.status = new Status(false, 400, "Not found");
 			}
+			}else if(loginId != 0) {
+				List<Object[]> present = custEmployeeRepository.w_GetEmployeePresentDataForAdmin(loginId,custId);
+				if(!present.isEmpty()) {
+					for(Object[] p: present) {
+						EmployeeSummaryParamDto employeeSummaryParamDto = new EmployeeSummaryParamDto();
+						employeeSummaryParamDto.setEmpName(p[0].toString());
+						employeeSummaryParamDto.setMobileNo(p[1].toString());
+						employeeSummaryParamDto.setBranchName(p[2].toString());
+						employeeSummaryParamDto.setDeptName(p[3].toString());
+						Employee employee = custEmployeeRepository.findEmpReportingToByEmpId(Integer.valueOf(p[4].toString()));
+						if(employee != null) {
+							employeeSummaryParamDto.setReportingToName(employee.getEmpName());
+						}else {
+							employeeSummaryParamDto.setReportingToName("NA");
+						}
+						empPresentList.add(employeeSummaryParamDto);
+					}
+					summaryDetailsResponse.setPresentList(empPresentList);
+					summaryDetailsResponse.status = new Status(false, 200, "Success");
+				} else {
+					summaryDetailsResponse.status = new Status(false, 400, "Not found");
+				}
+				List<Object[]> absent = custEmployeeRepository.w_GetEmployeeAbsentDataForAdmin(loginId,custId);
+				if(!absent.isEmpty()) {
+					for(Object[] a: absent) {
+						EmployeeSummaryParamDto employeeSummaryParamDto1 = new EmployeeSummaryParamDto();
+						employeeSummaryParamDto1.setEmpName(a[0].toString());
+						employeeSummaryParamDto1.setMobileNo(a[1].toString());
+						employeeSummaryParamDto1.setBranchName(a[2].toString());
+						employeeSummaryParamDto1.setDeptName(a[3].toString());
+						Employee employee = custEmployeeRepository.findEmpReportingToByEmpId(Integer.valueOf(a[4].toString()));
+						if(employee != null) {
+							employeeSummaryParamDto1.setReportingToName(employee.getEmpName());
+						}else {
+							employeeSummaryParamDto1.setReportingToName("NA");
+						}
+						empAbsentList.add(employeeSummaryParamDto1);
+					}
+					summaryDetailsResponse.setAbsentList(empAbsentList);
+					summaryDetailsResponse.status = new Status(false, 200, "Success");
+				} else {
+					summaryDetailsResponse.status = new Status(false, 400, "Not found");
+				}
+				List<Object[]> approvedLeave = custEmployeeRepository.w_GetEmployeeApprovedDataForAdmin(loginId,custId);
+				if(!approvedLeave.isEmpty()) {
+					for(Object[] al: approvedLeave) {
+						EmployeeSummaryParamDto employeeSummaryParamDto2 = new EmployeeSummaryParamDto();
+						employeeSummaryParamDto2.setEmpName(al[0].toString());
+						employeeSummaryParamDto2.setMobileNo(al[1].toString());
+						employeeSummaryParamDto2.setBranchName(al[2].toString());
+						employeeSummaryParamDto2.setDeptName(al[3].toString());
+						Employee employee = custEmployeeRepository.findEmpReportingToByEmpId(Integer.valueOf(al[4].toString()));
+						if(employee != null) {
+							employeeSummaryParamDto2.setReportingToName(employee.getEmpName());
+						}else {
+							employeeSummaryParamDto2.setReportingToName("NA");
+						}
+						empApprovedList.add(employeeSummaryParamDto2);
+					}
+					summaryDetailsResponse.setApprovedList(empApprovedList);
+					summaryDetailsResponse.status = new Status(false, 200, "Success");
+				} else {
+					summaryDetailsResponse.status = new Status(false, 400, "Not found");
+				}
+				List<Object[]> pendingLeave = custEmployeeRepository.w_GetEmployeePendingDataForAdmin(loginId,custId);
+				if(!pendingLeave.isEmpty()) {
+					for(Object[] pl: pendingLeave) {
+						EmployeeSummaryParamDto employeeSummaryParamDto3 = new EmployeeSummaryParamDto();
+						employeeSummaryParamDto3.setEmpName(pl[0].toString());
+						employeeSummaryParamDto3.setMobileNo(pl[1].toString());
+						employeeSummaryParamDto3.setBranchName(pl[2].toString());
+						employeeSummaryParamDto3.setDeptName(pl[3].toString());
+						Employee employee = custEmployeeRepository.findEmpReportingToByEmpId(Integer.valueOf(pl[4].toString()));
+						if(employee != null) {
+							employeeSummaryParamDto3.setReportingToName(employee.getEmpName());
+						}else {
+							employeeSummaryParamDto3.setReportingToName("NA");
+						}
+						empPendingList.add(employeeSummaryParamDto3);
+					}
+					summaryDetailsResponse.setPendingList(empPendingList);
+					summaryDetailsResponse.status = new Status(false, 200, "Success");
+				} else {
+					summaryDetailsResponse.status = new Status(false, 400, "Not found");
+				}	
+			}
 		} catch (Exception e) {
-			summaryDetailsResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
+			summaryDetailsResponse.status = new Status(true,500,"Oops..! Something went wrong..");
 		}
 		return summaryDetailsResponse;
 	}

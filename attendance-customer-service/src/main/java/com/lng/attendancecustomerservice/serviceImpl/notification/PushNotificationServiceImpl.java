@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.Department;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
+import com.lng.attendancecustomerservice.entity.notification.BranchNotification;
 import com.lng.attendancecustomerservice.entity.notification.EmpToken;
 import com.lng.attendancecustomerservice.entity.notification.Notification;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.DepartmentRepository;
+import com.lng.attendancecustomerservice.repositories.notification.BranchNotificationRepository;
 import com.lng.attendancecustomerservice.repositories.notification.EmpTokenRepository;
 import com.lng.attendancecustomerservice.repositories.notification.NotificationRepository;
 import com.lng.attendancecustomerservice.service.notification.PushNotificationService;
@@ -31,21 +33,24 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 
 	@Autowired
 	CustEmployeeRepository custEmployeeRepository;
-	
+
 	@Autowired
 	EmpTokenRepository empTokensRepository;
-	
+
 	@Autowired
 	BranchRepository branchRepository;
-	
+
 	@Autowired
 	NotificationRepository notificationRepository;
-	
+
 	@Autowired
 	DepartmentRepository departmentRepository;
-	
+
+	@Autowired
+	BranchNotificationRepository branchNotificationRepository;
+
 	PushNotificationUtil pushNotificationUtil = new PushNotificationUtil();
-	
+
 	@Override
 	public Status saveEmpToken(PushNotificationDto pustNotificationDto) {
 		Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(pustNotificationDto.getEmpId(), true);
@@ -72,19 +77,19 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
-		
+
 		return status;
 	}
-	
+
 	@Override
 	public Status sendPustNotificationToBranch(NotificationDto notificationDto) {
-		
+
 		Status status = null;
 		Notification notification = new Notification();
 		try {
 			for(BranchDto branchDto: notificationDto.getBranchDtoList()) {
 				Branch branch = branchRepository.findBranchByBrId(branchDto.getBrId());
-				
+
 				if(branch != null) {
 					List<EmpToken> tokenList = empTokensRepository.findByBranchId(branch.getBrId());
 					if(!tokenList.isEmpty()) {
@@ -102,15 +107,20 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 				notification.setNotificationType(notificationDto.getNotificationType());
 				notification.setNotificationHeader(notificationDto.getNotificationHeader());
 				notification.setNotificationMessage(notificationDto.getNotificationMessage());
-
 				notificationRepository.save(notification);
+
+				BranchNotification brNotification = new BranchNotification();
+				brNotification.setRefBrId(branch.getBrId());
+				brNotification.setRefNotificationId(notification.getNotificationId());
+				branchNotificationRepository.save(brNotification);
+
 				status = new Status(false, 200, "Success");
-								
+
 			}
 		} catch (Exception e) {
 			status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
-		
+
 		return status;
 	}
 
@@ -134,7 +144,7 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 					status = new Status(false, 400, "Department not found");
 				}
 			}
-			
+
 			notification.setNotificationSentBy(deptNotificationDto.getNotificationSentBy());
 			notification.setNotificationSentOn(new Date());
 			notification.setNotificationType(deptNotificationDto.getNotificationType());
@@ -148,6 +158,6 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 		}
 		return status;
 	}
-	
+
 }
 

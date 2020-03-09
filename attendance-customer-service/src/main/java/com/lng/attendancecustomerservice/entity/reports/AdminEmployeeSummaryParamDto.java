@@ -2,20 +2,20 @@ package com.lng.attendancecustomerservice.entity.reports;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class EmployeeSummaryParamDto {
-	
+public class AdminEmployeeSummaryParamDto {
+
 	@JsonProperty("Name")
 	private String empName;
-	
+
 	@JsonProperty("Mobile No")
 	private String mobileNo;
-	
+
 	@JsonProperty("Department")
 	private String deptName;
-	
+
 	@JsonProperty("Branch")
 	private String branchName;
-	
+
 	@JsonProperty("ReportingTo Name")
 	private String reportingToName;
 
@@ -58,5 +58,7 @@ public class EmployeeSummaryParamDto {
 	public void setReportingToName(String reportingToName) {
 		this.reportingToName = reportingToName;
 	}
-	
+
+
+
 }
