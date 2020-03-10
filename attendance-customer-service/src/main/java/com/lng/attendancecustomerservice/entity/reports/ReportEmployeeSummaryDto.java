@@ -30,6 +30,12 @@ public class ReportEmployeeSummaryDto {
 
 	@JsonProperty("Out Location")
 	private String timeOutLocation;
+	
+	@JsonProperty("In Address")
+	private String  inAddress;
+	
+	@JsonProperty("Out Address")
+	private String  outAddress;
 
 	public String getDate() {
 		return date;
@@ -102,5 +108,22 @@ public class ReportEmployeeSummaryDto {
 	public void setTimeOutLocation(String timeOutLocation) {
 		this.timeOutLocation = timeOutLocation;
 	}
+
+	public String getInAddress() {
+		return inAddress;
+	}
+
+	public void setInAddress(String inAddress) {
+		this.inAddress = inAddress;
+	}
+
+	public String getOutAddress() {
+		return outAddress;
+	}
+
+	public void setOutAddress(String outAddress) {
+		this.outAddress = outAddress;
+	}
+	
 
 }

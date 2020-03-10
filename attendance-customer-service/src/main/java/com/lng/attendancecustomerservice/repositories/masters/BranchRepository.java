@@ -48,4 +48,10 @@ public interface BranchRepository extends PagingAndSortingRepository<Branch,Inte
 	
 	@Query(value = "SELECT COUNT(*) AS cunt FROM tmbranch WHERE brValidityEnd > CURDATE() AND brId = ?1 AND brIsActive = TRUE", nativeQuery = true)
 	int checkBranchValidity(Integer brId);
+	
+	@Query(value = "select br.* from  tmbranch br left join tmcustomer cu on cu.custId = br.refCustomerId where   br.brId = ?1 and cu.custId = ?2 and br.brIsActive = true", nativeQuery = true)
+	Branch getByBranchIdAndCustId(Integer brId,Integer custId);
+	
+	@Query(value = "call get7DaysPushNotificationByBranchId(?1)", nativeQuery = true)
+	List<Object[]> getPushNotificationByBrId(Integer brId);
 }

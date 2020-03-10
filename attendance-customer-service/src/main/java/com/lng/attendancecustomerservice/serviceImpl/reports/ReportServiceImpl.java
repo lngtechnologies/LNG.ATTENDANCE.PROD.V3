@@ -160,6 +160,33 @@ public class ReportServiceImpl implements IReport {
 						rptData.setApprovedGeoLocation(dt[8].toString());
 						rptData.setTimeInLocation(dt[9].toString());
 						rptData.setTimeOutLocation(dt[10].toString());
+						boolean a = (dt[11].toString()).equals("G") || (dt[11].toString()).equals("B");
+						if(a == true ) {
+							rptData.setInAddress(dt[13].toString());
+						}
+						boolean b = (dt[11].toString()).equals("T") || (dt[11].toString()).equals("D");
+						if(b == true ) {
+							String address = reportRepo.GetEmployeeLocation(reportParam.getEmpId());
+							rptData.setInAddress(address);
+						}
+						boolean c = (dt[11].toString()).equals("NA");
+						if(c == true) {
+							rptData.setInAddress("NA");
+						}
+						boolean d = (dt[12].toString()).equals("G") || (dt[12].toString()).equals("B");
+						if(d == true ) {
+							rptData.setOutAddress(dt[14].toString());
+						}
+						boolean e = (dt[12].toString()).equals("T") || (dt[12].toString()).equals("D");
+						if(e == true ) {
+							String address = reportRepo.GetEmployeeLocation(reportParam.getEmpId());
+							rptData.setOutAddress(address);
+						}
+
+						boolean f = (dt[12].toString()).equals("NA");
+						if(f == true) {
+							rptData.setOutAddress("NA");
+						}
 
 						rptDataList.add(rptData);
 					}

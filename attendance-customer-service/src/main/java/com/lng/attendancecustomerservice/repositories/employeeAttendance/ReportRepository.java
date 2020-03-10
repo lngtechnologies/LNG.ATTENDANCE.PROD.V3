@@ -26,4 +26,9 @@ public interface ReportRepository extends PagingAndSortingRepository<EmployeeAtt
 	
 	@Query(value = "CALL Sp_getSummaryReportByEmp(?1, ?2, ?3)", nativeQuery = true)
 	List<Object[]> GetEmployeeSummaryReport(String sDate, String eDate, int empId);
+	
+	@Query(value = "SELECT br.brAddress FROM tmbranch br LEFT JOIN tmemployee e ON e.refBrId = br.brId WHERE e.empId = ?1 AND e.empInService = TRUE AND  br.brIsActive = TRUE", nativeQuery = true)
+	String GetEmployeeLocation(int empId);
+	
+	
 }
