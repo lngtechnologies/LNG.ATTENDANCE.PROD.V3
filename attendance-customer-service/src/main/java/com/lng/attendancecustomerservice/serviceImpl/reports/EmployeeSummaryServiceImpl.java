@@ -559,8 +559,16 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				} else {
 					summaryDetailsResponse.status = new Status(false, 400, "Not found");
 				}
-			}else if(loginId != 0) {
-				List<Object[]> present = custEmployeeRepository.w_GetEmployeePresentDataForAdmin(loginId,custId);
+
+			} else if(empId == 0) {
+				Integer iLoginId = 0;
+				if(loginId == 1) {
+					Login login = iLoginRepository.findByCustomet_CustId(custId);
+					iLoginId = login.getLoginId();
+				} else {
+					iLoginId = loginId;
+				}
+				List<Object[]> present = custEmployeeRepository.w_GetEmployeePresentDataForAdmin(iLoginId,custId);
 				if(!present.isEmpty()) {
 					for(Object[] p: present) {
 						EmployeeSummaryParamDto employeeSummaryParamDto = new EmployeeSummaryParamDto();
@@ -581,7 +589,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				} else {
 					summaryDetailsResponse.status = new Status(false, 400, "Not found");
 				}
-				List<Object[]> absent = custEmployeeRepository.w_GetEmployeeAbsentDataForAdmin(loginId,custId);
+				List<Object[]> absent = custEmployeeRepository.w_GetEmployeeAbsentDataForAdmin(iLoginId,custId);
 				if(!absent.isEmpty()) {
 					for(Object[] a: absent) {
 						EmployeeSummaryParamDto employeeSummaryParamDto1 = new EmployeeSummaryParamDto();
@@ -602,7 +610,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				} else {
 					summaryDetailsResponse.status = new Status(false, 400, "Not found");
 				}
-				List<Object[]> approvedLeave = custEmployeeRepository.w_GetEmployeeApprovedDataForAdmin(loginId,custId);
+				List<Object[]> approvedLeave = custEmployeeRepository.w_GetEmployeeApprovedDataForAdmin(iLoginId,custId);
 				if(!approvedLeave.isEmpty()) {
 					for(Object[] al: approvedLeave) {
 						EmployeeSummaryParamDto employeeSummaryParamDto2 = new EmployeeSummaryParamDto();
@@ -623,7 +631,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 				} else {
 					summaryDetailsResponse.status = new Status(false, 400, "Not found");
 				}
-				List<Object[]> pendingLeave = custEmployeeRepository.w_GetEmployeePendingDataForAdmin(loginId,custId);
+				List<Object[]> pendingLeave = custEmployeeRepository.w_GetEmployeePendingDataForAdmin(iLoginId,custId);
 				if(!pendingLeave.isEmpty()) {
 					for(Object[] pl: pendingLeave) {
 						EmployeeSummaryParamDto employeeSummaryParamDto3 = new EmployeeSummaryParamDto();

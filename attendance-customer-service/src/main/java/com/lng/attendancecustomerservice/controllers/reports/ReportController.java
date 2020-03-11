@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.lng.attendancecustomerservice.entity.reports.ReportResponseDto;
 import com.lng.attendancecustomerservice.entity.reports.ResponseSummaryReport;
 import com.lng.attendancecustomerservice.service.reports.IReport;
-import com.lng.dto.employeeAttendance.EmpSummaryResponse;
 import com.lng.dto.reports.EmployeeDetailsDto;
 import com.lng.dto.reports.EmployeeDtailsResponse;
 import com.lng.dto.reports.ReportParam;
