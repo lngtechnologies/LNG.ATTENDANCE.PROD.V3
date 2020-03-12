@@ -43,8 +43,8 @@ public class EmpMovementController {
 	@PostMapping(value = "/getEmpPlaceOfVisitListByEmpId")
 	public ResponseEntity<EmpMovementParamResponse> getplaceOfVisit(@RequestBody EmpMovementDto empMovementDto){
 		EmpMovementParamResponse empMovementParamResponse = empMovementService.getAllEmpVisitList(empMovementDto.getRefEmpId());
-		if(empMovementParamResponse != null) {
-			return new ResponseEntity<EmpMovementParamResponse>(empMovementParamResponse,HttpStatus.OK);
+		if(empMovementDto != null) {
+			return new ResponseEntity<EmpMovementParamResponse>(empMovementParamResponse, HttpStatus.CREATED);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}

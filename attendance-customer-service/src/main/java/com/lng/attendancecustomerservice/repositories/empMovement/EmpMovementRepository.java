@@ -13,7 +13,7 @@ public interface EmpMovementRepository extends PagingAndSortingRepository<EmpMov
 	
 	List<EmpMovement>  findEmpMovementByEmployee_EmpIdAndEmpMovementDate(Integer refEmpId,Date empMovementDate);
 	
-	@Query(value = "SELECT empPlaceOfVisit FROM  ttempmovement WHERE   refEmpId = ?1 GROUP BY  empPlaceOfVisit",nativeQuery = true)
+	@Query(value = "SELECT IFNULL(empPlaceOfVisit, 'NA') AS empPlaceOfVisit FROM  ttempmovement WHERE   refEmpId = ?1 GROUP BY  empPlaceOfVisit",nativeQuery = true)
 	List<Object[]>  getAllEmpPlaceVisitListByrefEmpId(Integer empId);
 
 }

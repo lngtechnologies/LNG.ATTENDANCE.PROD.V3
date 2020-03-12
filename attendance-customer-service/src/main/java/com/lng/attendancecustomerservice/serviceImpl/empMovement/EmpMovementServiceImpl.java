@@ -93,7 +93,9 @@ public class EmpMovementServiceImpl implements EmpMovementService {
 		List<EmpMovementParam> empPlaceList = new ArrayList<EmpMovementParam>();
 		try {
 			List<Object[]> visitList = empMovementRepository.getAllEmpPlaceVisitListByrefEmpId(empId);
-			if(!visitList.isEmpty()) {
+			if(visitList.isEmpty()) {
+				empMovementParamResponse.status = new Status(true, 400, "Not found");
+			}else {
 				for(Object [] v : visitList) {
 					EmpMovementParam empMovementParam = new EmpMovementParam();
 					empMovementParam.setEmpPlaceOfVisit(v[0].toString());
@@ -103,8 +105,6 @@ public class EmpMovementServiceImpl implements EmpMovementService {
 					empMovementParamResponse.status = new Status(false, 200, "Successs");
 				}
 
-			}else {
-				empMovementParamResponse.status = new Status(true, 400, "Not found");
 			}
 		}catch(Exception e) {
 			empMovementParamResponse.status = new Status(true, 500, "Oops..! Something went wrong");
