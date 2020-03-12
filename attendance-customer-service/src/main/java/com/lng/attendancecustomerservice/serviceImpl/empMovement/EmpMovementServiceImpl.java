@@ -1,5 +1,6 @@
 package com.lng.attendancecustomerservice.serviceImpl.empMovement;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,17 +15,19 @@ import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeReposi
 import com.lng.attendancecustomerservice.repositories.empMovement.EmpMovementRepository;
 import com.lng.attendancecustomerservice.service.empMovement.EmpMovementService;
 import com.lng.dto.empMovement.EmpMovementDto;
+import com.lng.dto.empMovement.EmpMovementParam;
+import com.lng.dto.empMovement.EmpMovementParamResponse;
 import com.lng.dto.empMovement.EmpMovementResponse;
 
 import status.Status;
 @Service
 public class EmpMovementServiceImpl implements EmpMovementService {
-	
+
 	ModelMapper modelMapper=new ModelMapper();
 
 	@Autowired
 	EmployeeRepository employeeRepository;
-	
+
 	@Autowired
 	EmpMovementRepository empMovementRepository;
 
@@ -41,9 +44,11 @@ public class EmpMovementServiceImpl implements EmpMovementService {
 				empMovement.setEmpMovementLatLong(empMovementDto.getEmpMovementLatLong());
 				empMovement.setEmpMovementMode(empMovementDto.getEmpMovementMode());
 				empMovement.setEmpMovementType(empMovementDto.getEmpMovementType());
+				empMovement.setEmpMovementLocation(empMovementDto.getEmpMovementLocation());
+				empMovement.setEmpPlaceOfVisit(empMovementDto.getEmpPlaceOfVisit());
 				empMovementRepository.save(empMovement);
 				empMovementResponse.status = new Status(false,200, "successfully created");
-				
+
 			}
 			else{ 
 				empMovementResponse.status = new Status(true,400, "Employee not found");
@@ -63,8 +68,8 @@ public class EmpMovementServiceImpl implements EmpMovementService {
 		try {
 			List<EmpMovement> empMovementList = empMovementRepository.findEmpMovementByEmployee_EmpIdAndEmpMovementDate(refEmpId, empMovementDate);
 			if(!empMovementList.isEmpty()) {
-			empMovementResponse.setData1(empMovementList.stream().map(empMovement -> convertToEmpMovementDto(empMovement)).collect(Collectors.toList()));
-			empMovementResponse.status = new Status(false,200, "Success");
+				empMovementResponse.setData1(empMovementList.stream().map(empMovement -> convertToEmpMovementDto(empMovement)).collect(Collectors.toList()));
+				empMovementResponse.status = new Status(false,200, "Success");
 			}else {
 				empMovementResponse.status = new Status(false,400, "Not found");
 			}
@@ -74,12 +79,39 @@ public class EmpMovementServiceImpl implements EmpMovementService {
 		}
 		return empMovementResponse;
 	}
-	
+
 	public EmpMovementDto convertToEmpMovementDto(EmpMovement empMovement) {
 		EmpMovementDto empMovementDto = modelMapper.map(empMovement,EmpMovementDto.class); 
 		empMovementDto.setRefEmpId(empMovement.getEmployee().getEmpId());
 		empMovementDto.setEmpName(empMovement.getEmployee().getEmpName());
 		return empMovementDto;
+	}
+
+	@Override
+	public EmpMovementParamResponse getAllEmpVisitList(Integer empId) {
+		EmpMovementParamResponse empMovementParamResponse = new EmpMovementParamResponse();
+		List<EmpMovementParam> empPlaceList = new ArrayList<EmpMovementParam>();
+		try {
+			List<Object[]> visitList = empMovementRepository.getAllEmpPlaceVisitListByrefEmpId(empId);
+			if(!visitList.isEmpty()) {
+				for(Object [] v : visitList) {
+					EmpMovementParam empMovementParam = new EmpMovementParam();
+					empMovementParam.setEmpPlaceOfVisit(v[0].toString());
+					empPlaceList.add(empMovementParam);
+					empMovementParamResponse.setEmpPlaceVisitList(empPlaceList);
+
+					empMovementParamResponse.status = new Status(false, 200, "Successs");
+				}
+
+			}else {
+				empMovementParamResponse.status = new Status(true, 400, "Not found");
+			}
+		}catch(Exception e) {
+			empMovementParamResponse.status = new Status(true, 500, "Oops..! Something went wrong");
+
+		}
+
+		return empMovementParamResponse;
 	}
 
 }

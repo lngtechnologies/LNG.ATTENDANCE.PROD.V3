@@ -17,7 +17,11 @@ public class EmpMovementDto {
 	private  Date empMovementDatetime;
 
 	private String  empMovementLatLong;
-	
+
+	private String   empMovementLocation;
+
+	private String   empPlaceOfVisit;
+
 	private String empName;
 
 	public Integer getEmpMovementId() {
@@ -84,9 +88,19 @@ public class EmpMovementDto {
 		this.empName = empName;
 	}
 
+	public String getEmpMovementLocation() {
+		return empMovementLocation;
+	}
 
+	public void setEmpMovementLocation(String empMovementLocation) {
+		this.empMovementLocation = empMovementLocation;
+	}
 
+	public String getEmpPlaceOfVisit() {
+		return empPlaceOfVisit;
+	}
 
-
-
+	public void setEmpPlaceOfVisit(String empPlaceOfVisit) {
+		this.empPlaceOfVisit = empPlaceOfVisit;
+	}
 }

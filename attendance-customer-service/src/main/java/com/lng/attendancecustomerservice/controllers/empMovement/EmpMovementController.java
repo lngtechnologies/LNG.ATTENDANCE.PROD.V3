@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lng.attendancecustomerservice.service.empMovement.EmpMovementService;
 import com.lng.dto.empMovement.EmpMovementDto;
+import com.lng.dto.empMovement.EmpMovementParamResponse;
 import com.lng.dto.empMovement.EmpMovementResponse;
 
 @RestController
@@ -35,6 +36,15 @@ public class EmpMovementController {
 		EmpMovementResponse empMovementResponse = empMovementService.getAll(empMovementDto.getRefEmpId(), empMovementDto.getEmpMovementDate());
 		if(empMovementDto !=null){
 			return new ResponseEntity<EmpMovementResponse>(empMovementResponse, HttpStatus.CREATED);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
+	
+	@PostMapping(value = "/getEmpPlaceOfVisitListByEmpId")
+	public ResponseEntity<EmpMovementParamResponse> getplaceOfVisit(@RequestBody EmpMovementDto empMovementDto){
+		EmpMovementParamResponse empMovementParamResponse = empMovementService.getAllEmpVisitList(empMovementDto.getRefEmpId());
+		if(empMovementParamResponse != null) {
+			return new ResponseEntity<EmpMovementParamResponse>(empMovementParamResponse,HttpStatus.OK);
 		}
 		return new ResponseEntity(HttpStatus.NO_CONTENT);
 	}

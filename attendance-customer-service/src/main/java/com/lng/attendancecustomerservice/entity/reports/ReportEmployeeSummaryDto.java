@@ -25,11 +25,11 @@ public class ReportEmployeeSummaryDto {
 	@JsonProperty("Approved GEO Location")
 	private String approvedGeoLocation;
 
-	/*@JsonProperty("In Location")
+	@JsonProperty("In Location")
 	private String timeInLocation;
 
 	@JsonProperty("Out Location")
-	private String timeOutLocation;*/
+	private String timeOutLocation;
 	
 	@JsonProperty("In Address")
 	private String  inAddress;
@@ -93,7 +93,7 @@ public class ReportEmployeeSummaryDto {
 		this.approvedGeoLocation = approvedGeoLocation;
 	}
 
-/*	public String getTimeInLocation() {
+	public String getTimeInLocation() {
 		return timeInLocation;
 	}
 
@@ -107,7 +107,7 @@ public class ReportEmployeeSummaryDto {
 
 	public void setTimeOutLocation(String timeOutLocation) {
 		this.timeOutLocation = timeOutLocation;
-	}*/
+	}
 
 	public String getInAddress() {
 		return inAddress;

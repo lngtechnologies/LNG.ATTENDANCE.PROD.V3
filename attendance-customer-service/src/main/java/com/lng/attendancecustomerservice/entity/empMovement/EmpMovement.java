@@ -39,6 +39,12 @@ public class EmpMovement {
 
 	@Column(name = "empMovementLatLong")
 	private String  empMovementLatLong;
+	
+	@Column(name = "empMovementLocation")
+	private String   empMovementLocation;
+	
+	@Column(name = "empPlaceOfVisit")
+	private String   empPlaceOfVisit;
 
 	public Integer getEmpMovementId() {
 		return empMovementId;
@@ -96,7 +102,19 @@ public class EmpMovement {
 		this.empMovementLatLong = empMovementLatLong;
 	}
 
+	public String getEmpMovementLocation() {
+		return empMovementLocation;
+	}
 
+	public void setEmpMovementLocation(String empMovementLocation) {
+		this.empMovementLocation = empMovementLocation;
+	}
 
+	public String getEmpPlaceOfVisit() {
+		return empPlaceOfVisit;
+	}
 
+	public void setEmpPlaceOfVisit(String empPlaceOfVisit) {
+		this.empPlaceOfVisit = empPlaceOfVisit;
+	}
 }
