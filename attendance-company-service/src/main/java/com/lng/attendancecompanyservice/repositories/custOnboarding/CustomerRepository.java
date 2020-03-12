@@ -27,11 +27,11 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	@Query(value = "CALL searchCustomerByNameAndCode(?1)", nativeQuery = true)
 	List<Customer> searchAllCustomerByNameOrCode(String cust);
 	
-	List<Customer> findCustomerByCustEmail(String custEmail);
+	List<Customer> findCustomerByCustEmailAndCustIsActive(String custEmail, Boolean isActive);
 	
 	List<Customer> findCustomerByCustName(String custName);
 	
-	List<Customer> findCustomerByCustMobile(String custMobile);
+	List<Customer> findCustomerByCustMobileAndCustIsActive(String custMobile, Boolean isActive);
 	
 	List<Customer> findCustomerByIndustryType_IndustryId(Integer industryId);
 	
@@ -39,9 +39,9 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	
 	List<Customer> findByState_StateId(Integer stateId);
 	
-	Customer getCustomerByCustMobile(String custMobile);
+	Customer getCustomerByCustMobileAndCustIsActive(String custMobile, Boolean isActive);
 	
-	Customer getCustomerByCustEmail(String custEmail);
+	Customer getCustomerByCustEmailAndCustIsActive(String custEmail, Boolean isActive);
 	
 	@Query(value = "SELECT * FROM tmcustomer WHERE custValidityEnd > CURDATE() AND custIsActive = TRUE", nativeQuery = true)
 	List<Customer> getAllActiveCustomers();

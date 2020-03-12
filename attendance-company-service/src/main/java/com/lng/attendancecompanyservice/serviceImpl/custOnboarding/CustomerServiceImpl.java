@@ -128,12 +128,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 		try {
 			displayLock.lock();
-			List<Customer> customerList1 = customerRepository.findCustomerByCustEmail(customerDto.getCustEmail());
-			List<Customer> customerList2 = customerRepository.findCustomerByCustMobile(customerDto.getCustMobile());
+			List<Customer> customerList1 = customerRepository.findCustomerByCustEmailAndCustIsActive(customerDto.getCustEmail(), true);
+			List<Customer> customerList2 = customerRepository.findCustomerByCustMobileAndCustIsActive(customerDto.getCustMobile(), true);
 			//List<Customer> customerList3 = customerRepository.findCustomerByCustName(customerDto.getCustName());
-
-			
-			
 			//Thread.sleep(3000L);
 
 			if(customerList1.isEmpty() && customerList2.isEmpty()) {
@@ -628,8 +625,8 @@ public class CustomerServiceImpl implements CustomerService {
 			Country country = countryRepository.findCountryByCountryId(customerDto.getRefCountryId());
 			State state = stateRepository.findByStateId(customerDto.getRefStateId());
 			IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(customerDto.getRefIndustryTypeId());
-			Customer customer1 = customerRepository.getCustomerByCustMobile(customerDto.getCustMobile());
-			Customer customer2 = customerRepository.getCustomerByCustEmail(customerDto.getCustEmail());
+			Customer customer1 = customerRepository.getCustomerByCustMobileAndCustIsActive(customerDto.getCustMobile(), true);
+			Customer customer2 = customerRepository.getCustomerByCustEmailAndCustIsActive(customerDto.getCustEmail(), true);
 			if(customer1 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustMobile().equals(customerDto.getCustMobile()))) {
 				if(customer2 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustEmail().equals(customerDto.getCustEmail()))) {
 					
@@ -667,7 +664,7 @@ public class CustomerServiceImpl implements CustomerService {
 						customerResponse.status = new Status(false, 200, "updated");
 						
 					} else {
-						customerResponse.status = new Status(false, 400, "Customer email id already exist");
+						customerResponse.status = new Status(true, 400, "Customer email id already exist");
 						
 					}
 				} else {
