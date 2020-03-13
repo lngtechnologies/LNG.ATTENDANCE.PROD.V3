@@ -158,8 +158,8 @@ public class ReportServiceImpl implements IReport {
 						rptData.setWorkedHrs(dt[6].toString());
 						rptData.setStatus(dt[7].toString());
 						rptData.setApprovedGeoLocation(dt[8].toString());
-						//rptData.setTimeInLocation(dt[9].toString());
-						//rptData.setTimeOutLocation(dt[10].toString());
+						rptData.setTimeInLocation(dt[9].toString());
+						rptData.setTimeOutLocation(dt[10].toString());
 						boolean a = (dt[11].toString()).equals("G") || (dt[11].toString()).equals("B");
 						if(a == true ) {
 							rptData.setInAddress(dt[13].toString());
