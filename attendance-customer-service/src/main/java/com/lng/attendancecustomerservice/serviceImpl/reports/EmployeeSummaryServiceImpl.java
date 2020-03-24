@@ -323,8 +323,17 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 						dto.setBlockName(el[3].toString());
 						dto.setDesignationName(el[4].toString());
 						dto.setShiftName(el[5].toString());
-						dto.setShiftEnd(el[6].toString());
-						dto.setOutTime(el[7].toString());
+						
+						SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						dateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
+						String shiftEnd = dateFormat1.format(el[6]);
+						dto.setShiftEnd(shiftEnd);
+						
+						SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						dateFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
+						String outTime = dateFormat2.format(el[7]);
+						dto.setOutTime(outTime);
+						
 						dto.setDiff(el[8].toString());
 						earlyLeavers.add(dto);
 					}
@@ -366,8 +375,16 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 						dto.setBlockName(el[3].toString());
 						dto.setDesignationName(el[4].toString());
 						dto.setShiftName(el[5].toString());
-						dto.setShiftStart(el[6].toString());
-						dto.setInTime(el[7].toString());
+						
+						SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						dateFormat1.setTimeZone(TimeZone.getTimeZone("UTC"));
+						String shiftStart = dateFormat1.format(el[6]);
+						dto.setShiftStart(shiftStart);
+						
+						SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						dateFormat2.setTimeZone(TimeZone.getTimeZone("UTC"));
+						String inTime = dateFormat2.format(el[7]);
+						dto.setInTime(inTime);
 						dto.setDiff(el[8].toString());
 						lateComers.add(dto);
 					}

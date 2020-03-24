@@ -1,7 +1,9 @@
 package com.lng.attendancecustomerservice.serviceImpl.notification;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,7 +105,12 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 					status = new Status(false, 400, "Branch not found");
 				}
 				notification.setNotificationSentBy(notificationDto.getNotificationSentBy());
-				notification.setNotificationSentOn(new Date());
+				String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+				SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+				dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+				Date date = new Date();
+				String sysDate = dateFormat.format(date);
+				notification.setNotificationSentOn(sysDate);
 				notification.setNotificationType(notificationDto.getNotificationType());
 				notification.setNotificationHeader(notificationDto.getNotificationHeader());
 				notification.setNotificationMessage(notificationDto.getNotificationMessage());
@@ -146,7 +153,12 @@ public class PushNotificationServiceImpl implements PushNotificationService {
 			}
 
 			notification.setNotificationSentBy(deptNotificationDto.getNotificationSentBy());
-			notification.setNotificationSentOn(new Date());
+			String pattern = "yyyy-MM-dd'T'HH:mm:ss";
+			SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+			dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
+			Date date = new Date();
+			String sysDate = dateFormat.format(date);
+			notification.setNotificationSentOn(sysDate);
 			notification.setNotificationType(deptNotificationDto.getNotificationType());
 			notification.setNotificationHeader(deptNotificationDto.getNotificationHeader());
 			notification.setNotificationMessage(deptNotificationDto.getNotificationMessage());
