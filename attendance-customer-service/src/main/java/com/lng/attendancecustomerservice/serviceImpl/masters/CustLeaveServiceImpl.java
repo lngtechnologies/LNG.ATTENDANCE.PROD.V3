@@ -119,8 +119,8 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 			if(custLeaveDto.getRefCustId() == null || custLeaveDto.getRefCustId() == 0) throw new Exception("Customer id is null or zero");
 
 			CustLeave custLeave =  custLeaveRepository.findCustLeaveByCustLeaveIdAndCustLeaveIsActive(custLeaveDto.getCustLeaveId(), true);
-			Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custLeaveDto.getRefCustId(), true);
-			if(custLeave != null) {
+				if(custLeave != null) {
+					Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(custLeaveDto.getRefCustId(), true);
 				if(customer != null) {
 					CustLeave cl = 	custLeaveRepository.findCustLeaveBycustLeaveNameAndCustomer_custIdAndCustLeaveIsActive(custLeaveDto.getCustLeaveName(), custLeaveDto.getRefCustId(), true);
 					if(cl == null) {
@@ -130,8 +130,8 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 						custLeaveRepository.save(custLeave);
 						status = new Status(false, 200, "updated");
 						
-					} else if (cl.getCustLeaveId() == custLeaveDto.getCustLeaveId()) { 
-
+					} else if (Integer.compare(cl.getCustLeaveId() ,custLeaveDto.getCustLeaveId()) == 0) { 
+					                                                                     
 						custLeave = modelMapper.map(custLeaveDto,CustLeave.class);
 						custLeave.setCustomer(customer);
 						custLeave.setCustLeaveIsActive(true);

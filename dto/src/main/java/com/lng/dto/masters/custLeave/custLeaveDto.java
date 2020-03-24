@@ -1,6 +1,6 @@
 package com.lng.dto.masters.custLeave;
 
-public class custLeaveDto {
+   public class custLeaveDto {
 
 	private Integer custLeaveId;
 
