@@ -357,7 +357,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					earlyLeaversResponse.setEarlyLeaversShiftDetails(shiftDetailsList);
 				}
 			} else {
-				earlyLeaversResponse.status = new Status(true, 400, "ShiftDetails not found");
+				earlyLeaversResponse.status = new Status(true, 400, "Shift Details not found");
 			}
 			List<Object[]> empDetails = employeeRepository.getEmployeeDetailsEarlyLeaverByDatesAndCustomer_CustIdAndEmployee_EmpId(dates, custId, empId);
 			if(empDetails != null) {
@@ -376,7 +376,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 					earlyLeaversResponse.setEarlyLeaversEmpShiftDetails(empDetailsList);
 				}
 			} else {
-				earlyLeaversResponse.status = new Status(true, 400, "EarlyLeavers not found");
+				earlyLeaversResponse.status = new Status(true, 400, "Early Leavers not found");
 			}
 			earlyLeaversResponse.status = new Status(false, 200, "success");
 		}catch(Exception e) {

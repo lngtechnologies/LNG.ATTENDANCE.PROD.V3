@@ -25,7 +25,7 @@ public class Notification {
 	private Integer notificationSentBy;
 
 	@Column(name = "notificationSentOn")
-	private Date notificationSentOn;
+	private String notificationSentOn;
 
 	@Column(name = "notificationHeader")
 	private String notificationHeader;
@@ -57,11 +57,13 @@ public class Notification {
 		this.notificationSentBy = notificationSentBy;
 	}
 
-	public Date getNotificationSentOn() {
+	
+
+	public String getNotificationSentOn() {
 		return notificationSentOn;
 	}
 
-	public void setNotificationSentOn(Date notificationSentOn) {
+	public void setNotificationSentOn(String notificationSentOn) {
 		this.notificationSentOn = notificationSentOn;
 	}
 

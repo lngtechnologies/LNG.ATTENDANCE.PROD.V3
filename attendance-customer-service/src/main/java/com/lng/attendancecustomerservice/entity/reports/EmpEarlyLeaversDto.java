@@ -3,7 +3,7 @@ package com.lng.attendancecustomerservice.entity.reports;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class EmpEarlyLeaversDto {
-
+	
 	@JsonProperty("Name")
 	private String empName;
 	

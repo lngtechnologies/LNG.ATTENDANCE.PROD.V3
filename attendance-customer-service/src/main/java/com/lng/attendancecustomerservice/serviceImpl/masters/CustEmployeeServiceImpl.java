@@ -583,9 +583,13 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			Shift shift = shiftRepository.findShiftByShiftIdAndShiftIsActive(custEmployeeDto.getShiftId(), true);
 			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
 			Employee employee1 = custEmployeeRepository.findByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
-
+			int empId1 = employee.getEmpId();
+			int empId2 = custEmployeeDto.getEmpId();
+			String empMobile1 = employee.getEmpMobile().trim();
+			String empMobile2 = custEmployeeDto.getEmpMobile().trim();
+			
 			// Contractor contractor = contractorRepository.findContractorByContractorId(custEmployeeDto.getContractorId());
-			if(employee1 == null || (employee.getEmpId() == custEmployeeDto.getEmpId() && employee.getEmpMobile().equals(custEmployeeDto.getEmpMobile())))
+			if(employee1 == null || (empId1 == empId2 && empMobile1.equals(empMobile2)))
 			{
 				if(employee != null) {
 					employee.setBranch(branch);
