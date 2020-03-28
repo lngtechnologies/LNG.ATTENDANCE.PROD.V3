@@ -18,6 +18,8 @@ import com.lng.dto.employeeAppSetup.EmployeeDto;
 import com.lng.dto.employeeAppSetup.LateComersResponse;
 import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.employeeAppSetup.ResponseDto;
+import com.lng.dto.masters.custEmployee.CustEmployeeDto;
+import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
 
 import status.StatusDto;
 
@@ -90,4 +92,13 @@ public class EmployeeSetup1Controller {
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
+	
+	@PostMapping(value = "/deleteEmployeeAttendance")
+	public ResponseEntity<CustEmployeeStatus> deleteEmployeeAttendance(@RequestBody AttendanceParamDto attendanceParamDto) {
+		CustEmployeeStatus custEmployeeStatus = employeeService.deleteEmployeeByEmpIdAndDates(attendanceParamDto.getEmpId(),attendanceParamDto.getDates());
+		if (custEmployeeStatus != null) {
+			return new ResponseEntity<CustEmployeeStatus>(custEmployeeStatus, HttpStatus.OK);
+		}
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+	}
 }

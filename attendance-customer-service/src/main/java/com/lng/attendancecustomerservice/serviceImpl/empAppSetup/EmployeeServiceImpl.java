@@ -11,12 +11,15 @@ import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.lng.attendancecustomerservice.entity.employeeAttendance.EmployeeAttendance;
 import com.lng.attendancecustomerservice.entity.masters.Branch;
 import com.lng.attendancecustomerservice.entity.masters.Customer;
 import com.lng.attendancecustomerservice.entity.masters.Employee;
 import com.lng.attendancecustomerservice.entity.masters.EmployeePic;
 import com.lng.attendancecustomerservice.repositories.empAppSetup.EmployeeRepository;
+import com.lng.attendancecustomerservice.repositories.employeeAttendance.EmployeeAttendanceRepository;
 import com.lng.attendancecustomerservice.repositories.masters.BranchRepository;
+import com.lng.attendancecustomerservice.repositories.masters.CustEmployeeRepository;
 import com.lng.attendancecustomerservice.repositories.masters.CustomerRepository;
 import com.lng.attendancecustomerservice.repositories.masters.EmployeePicRepository;
 import com.lng.attendancecustomerservice.service.empAppSetup.EmployeeService;
@@ -35,6 +38,7 @@ import com.lng.dto.employeeAppSetup.OtpDto;
 import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.employeeAppSetup.ResponseDto;
 import com.lng.dto.employeeAppSetup.ShiftTypeDto;
+import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
 
 import status.Status;
 import status.StatusDto;
@@ -53,6 +57,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Autowired
 	BranchRepository branchRepository;
+
+	@Autowired
+	CustEmployeeRepository custEmployeeRepository;
+
+	@Autowired
+	EmployeeAttendanceRepository   employeeAttendanceRepository;
 
 	MessageUtil messageUtil = new MessageUtil();
 
@@ -468,6 +478,44 @@ public class EmployeeServiceImpl implements EmployeeService {
 			appLeaveResponse.status = new Status(true, 500, "Oops..! Something went wrong..");
 		}
 		return appLeaveResponse;
+	}
+
+	@Override
+	public CustEmployeeStatus deleteEmployeeByEmpIdAndDates(Integer empId, Date dates) {
+
+		CustEmployeeStatus custEmployeeStatus = new CustEmployeeStatus();
+		try {
+			Employee employee = custEmployeeRepository.findEmployeeByEmpIdAndEmpInService(empId, true);
+			if(employee != null) {
+				Customer customer = customerRepository.findCustomerByCustIdAndCustIsActive(employee.getCustomer().getCustId(), true);
+				if (customer != null) {
+					Employee employee1 = custEmployeeRepository.checkEmployeeBelongsToCustomerOrNotByEmpIdAndCustomer_CustCode(empId, customer.getCustCode());
+					if(employee1 != null) {
+						EmployeeAttendance employeeAttendance = employeeAttendanceRepository.getEmpAttendanceByRefEmpIdAndEmpAttendanceDate(empId, dates);
+						if(employeeAttendance != null) {
+							employeeAttendanceRepository.delete(employeeAttendance);
+							custEmployeeStatus.status = new Status(false,200, "deleted");
+						}else {
+							custEmployeeStatus.status = new Status(true,400, "Not found");
+						}
+
+					}else {
+						custEmployeeStatus.status = new Status(true,400, "Employee not found");
+					}
+
+				}else {
+					custEmployeeStatus.status = new Status(true,400, "Customer not found");
+				}
+			}else {
+				custEmployeeStatus.status = new Status(true,400, "Employee not in service");
+			}
+
+		}catch(Exception e) {
+
+			custEmployeeStatus.status = new Status(true, 500, "Oops..! Something went wrong..");
+		}
+
+		return custEmployeeStatus;
 	}
 
 } 

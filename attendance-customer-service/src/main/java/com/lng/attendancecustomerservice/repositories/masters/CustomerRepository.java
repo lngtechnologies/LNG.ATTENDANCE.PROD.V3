@@ -15,4 +15,5 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	
 	@Query(value = "SELECT COUNT(*) AS cunt FROM tmcustomer WHERE custValidityEnd > CURDATE() AND custId = ?1 AND custIsActive = TRUE", nativeQuery = true)
 	int checkCustValidationByCustId(Integer custId);
+
 }
