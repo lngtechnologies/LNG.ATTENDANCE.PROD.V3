@@ -112,4 +112,7 @@ public interface CustEmployeeRepository extends PagingAndSortingRepository<Emplo
 	
 	@Query(value = "CALL W_getPendingLeaveForAdmin(?1, ?2)", nativeQuery = true)
 	List<Object[]> w_GetEmployeePendingDataForAdmin(Integer loginId,Integer custId);
+	
+	@Query(value = "select  e.* from  tmemployee e left join   tmcustomer c on c.custId = e.refCustId where e.empId = ?1 and c.custCode = ?2", nativeQuery = true)
+	Employee checkEmployeeBelongsToCustomerOrNotByEmpIdAndCustomer_CustCode(Integer empId,String custCode);
 }

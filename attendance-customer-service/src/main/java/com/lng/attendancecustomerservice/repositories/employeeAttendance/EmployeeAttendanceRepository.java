@@ -35,5 +35,8 @@ public interface EmployeeAttendanceRepository extends PagingAndSortingRepository
 	EmployeeAttendance findByEmpAttendanceId(Integer empAttendanceId);
 
 	List<EmployeeAttendance> findAllByEmployee_EmpIdAndEmpAttendanceDate(Integer refEmpId, Date empAttendanceDate);
+	
+	@Query(value = "select * from ttempattendance where refEmpId = ?1 and empAttendanceDate = ?2", nativeQuery = true)
+	EmployeeAttendance getEmpAttendanceByRefEmpIdAndEmpAttendanceDate(Integer empId,Date empAttendanceDate);
 
 }

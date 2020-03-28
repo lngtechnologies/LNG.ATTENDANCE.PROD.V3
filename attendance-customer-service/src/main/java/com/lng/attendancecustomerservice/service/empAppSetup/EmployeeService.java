@@ -9,6 +9,7 @@ import com.lng.dto.employeeAppSetup.EmployeeDto;
 import com.lng.dto.employeeAppSetup.LateComersResponse;
 import com.lng.dto.employeeAppSetup.OtpResponseDto;
 import com.lng.dto.employeeAppSetup.ResponseDto;
+import com.lng.dto.masters.custEmployee.CustEmployeeStatus;
 
 import status.StatusDto;
 
@@ -34,6 +35,8 @@ public interface EmployeeService {
 	AbsentDetailsResponse getAbsentEmployeeDetails(Integer custId,Integer empId,Date dates);
 	
 	AppLeaveResponse      getAppLeaveDetails(Integer custId,Integer empId,Date dates);
+	
+	CustEmployeeStatus deleteEmployeeByEmpIdAndDates(Integer empId, Date dates);
 	
 	
 	
