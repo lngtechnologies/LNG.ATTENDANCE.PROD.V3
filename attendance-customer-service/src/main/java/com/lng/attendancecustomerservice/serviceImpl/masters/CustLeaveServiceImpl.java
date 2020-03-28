@@ -137,15 +137,12 @@ public class CustLeaveServiceImpl implements CustLeaveService {
 						custLeave.setCustLeaveIsActive(true);
 						custLeaveRepository.save(custLeave);
 						status = new Status(false, 200, "updated");
-						
 					}
 					else{ 
 						status = new Status(true,400,"Leave type already exist");
-						
 					}
 				} else {
-					status = new Status(true,400,"Leave not found");
-					
+					status = new Status(true,400,"Leave not found");		
 				}
 			}
 			else {

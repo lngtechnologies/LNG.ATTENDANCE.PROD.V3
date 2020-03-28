@@ -240,7 +240,7 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 	}
 
 	@Override
-	public EmpReportByReportTypeResponse getReportByReportType(int custId, int brId, int deptId, String reportType) {
+	public EmpReportByReportTypeResponse getReportByReportType(int custId, int brId, int deptId, String reportType, Date fromDate) {
 		EmpReportByReportTypeResponse response = new EmpReportByReportTypeResponse();
 		List<EmpReportByReportTypeDto> reportList = new ArrayList<EmpReportByReportTypeDto>();
 
@@ -257,14 +257,14 @@ public class EmployeeSummaryServiceImpl implements EmployeeSummaryService {
 					String pattern = "yyyy-MM-dd";
 					SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 					dateFormat.setTimeZone(TimeZone.getTimeZone("IST"));
-					Date date = new Date();
-					String sysDate = dateFormat.format(date);
+					// Date date = new Date();
+					String sysDate = dateFormat.format(fromDate);
 					masterData.setDate(sysDate);
 					response.setMasterData(masterData);
 				}
 			}
 
-			List<Object[]> reports = custEmployeeRepository.getReportByReportType(custId, brId, deptId, reportType, new Date(),new Date());
+			List<Object[]> reports = custEmployeeRepository.getReportByReportType(custId, brId, deptId, reportType, fromDate, new Date());
 			if(!reports.isEmpty() && reports != null) {
 				for(Object[] rt: reports) {
 					EmpReportByReportTypeDto dto = new EmpReportByReportTypeDto();

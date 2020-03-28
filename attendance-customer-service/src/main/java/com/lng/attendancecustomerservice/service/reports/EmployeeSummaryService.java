@@ -19,7 +19,7 @@ public interface EmployeeSummaryService {
 	
 	TodaysLateComersAndEarlyLeaversResponse getLateComersAndEarlyLeavers(int custId, int empId, int loginId);
 	
-	EmpReportByReportTypeResponse getReportByReportType(int custId, int brId, int deptId, String reportType);
+	EmpReportByReportTypeResponse getReportByReportType(int custId, int brId, int deptId, String reportType, Date fromDate);
 	
 	EmpEarlyLeaversAndLateComersResponse getEarlyLeaversAndLateComers(int brId, int deptId, String reportType, Date fromDate, Date todate);
 	

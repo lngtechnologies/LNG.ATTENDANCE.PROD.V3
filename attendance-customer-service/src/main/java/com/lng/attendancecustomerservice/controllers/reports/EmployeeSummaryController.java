@@ -76,7 +76,7 @@ public class EmployeeSummaryController {
 	
 	@PostMapping(value = "/get/empAbsentReportByReportType")
     public ResponseEntity<EmpReportByReportTypeResponse> GetAbsentReport(@RequestBody EmpReportParam empReportParam) {
-		EmpReportByReportTypeResponse responseDto = employeeSummaryService.getReportByReportType(empReportParam.getCustId(), empReportParam.getBrId(), empReportParam.getDeptId(), empReportParam.getReportType());
+		EmpReportByReportTypeResponse responseDto = employeeSummaryService.getReportByReportType(empReportParam.getCustId(), empReportParam.getBrId(), empReportParam.getDeptId(), empReportParam.getReportType(), empReportParam.getFromDate());
         if (responseDto !=null){
             return new ResponseEntity<EmpReportByReportTypeResponse>(responseDto, HttpStatus.OK);
         }

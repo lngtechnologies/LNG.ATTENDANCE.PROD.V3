@@ -57,8 +57,10 @@ public class MessageUtil {
 
 		//final  String uri = smsVendor.getSmsVndrURL();
 		
-		final  String uri = "http://promotional.mysmsbasket.com/V2/http-api.php?apikey=YE5ssFpB9306XlDP&senderid=LNGATS&number=mobileNumbers&message=textMessage&format=json";
+		// final  String uri = "http://promotional.mysmsbasket.com/V2/http-api.php?apikey=YE5ssFpB9306XlDP&senderid=LNGATS&number=mobileNumbers&message=textMessage&format=json";
 
+		final  String uri = "http://onex-ultimo.in/api/pushsms?user=SerenityHostels&authkey=92TMhDdRCtDe6&sender=SERENT&mobile=mobileNumbers&text=textMessage&output=json";
+		
 		StringBuilder sb = new StringBuilder(uri);
 		sb.replace(sb.indexOf("mobileNumbers"), sb.indexOf("mobileNumbers") + "mobileNumbers".length(), mobileNumbers);
 		sb.replace(sb.indexOf("textMessage"), sb.indexOf("textMessage") + "textMessage".length(), textMessage);
@@ -219,7 +221,7 @@ public class MessageUtil {
 
 	}
 	
-	public void sendMsg(String to, String message) {
+	/* public void sendMsg(String to, String message) {
 		try {   
 			Date mydate = new Date(System.currentTimeMillis());   
 			String data = "";   data += "method=sendMessage";   
@@ -252,5 +254,5 @@ public class MessageUtil {
 		{ 
 			e.printStackTrace();   
 		} 
-	}
+	}*/
 }
