@@ -254,7 +254,7 @@ public class CustomerServiceImpl implements CustomerService {
 				"					<table width=\"600\" border=\"0\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\">\r\n" + 
 				"						<tr>\r\n" + 
 				"						  <td colspan=\"3\" bgcolor=\"#1565c0\" style=\"background-image:url(http://52.183.143.13/welcomekitv3/images/bg2.jpg); line-height:27px; width:400px; height:164px; font-size:16px; color:#fff;  padding:30px 100px 0px; text-align:center;\" valign=\"top\">You're all set, Now you can start using the <br>Facetek Smart Attendance System <br /> <br />\r\n" + 
-				"						    <a href=\"http://52.183.143.13/lngattendancesystemv5\" target=\"_blank\" style=\"text-decoration:none; color:#fff;\"><span style=\"background-color:#ff9602; padding:10px 30px; font-size:12px; \"> CLICK HERE TO LOGIN </span></a></td>\r\n" + 
+				"						    <a href=\"http://facetek.in/lngattendancesystem\" target=\"_blank\" style=\"text-decoration:none; color:#fff;\"><span style=\"background-color:#ff9602; padding:10px 30px; font-size:12px; \"> CLICK HERE TO LOGIN </span></a></td>\r\n" + 
 				"						</tr>\r\n" + 
 				"					</table>\r\n" + 
 				"				</td>\r\n" + 
@@ -627,8 +627,16 @@ public class CustomerServiceImpl implements CustomerService {
 			IndustryType industryType = industryTypeRepository.findIndustryTypeByIndustryId(customerDto.getRefIndustryTypeId());
 			Customer customer1 = customerRepository.getCustomerByCustMobileAndCustIsActive(customerDto.getCustMobile(), true);
 			Customer customer2 = customerRepository.getCustomerByCustEmailAndCustIsActive(customerDto.getCustEmail(), true);
-			if(customer1 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustMobile().equals(customerDto.getCustMobile()))) {
-				if(customer2 == null || (customer.getCustId() == customerDto.getCustId() && customer.getCustEmail().equals(customerDto.getCustEmail()))) {
+			
+			int custId1 = customer.getCustId();
+			int custId2 = customerDto.getCustId();
+			String custMobile1 = customer.getCustMobile().trim();
+			String custMobile2 = customerDto.getCustMobile().trim();
+			String custEmail1 = customer.getCustEmail().trim();
+			String custEmail2 = customerDto.getCustEmail().trim();
+			
+			if(customer1 == null || (custId1 == custId2 && custMobile1.equals(custMobile2))) {
+				if(customer2 == null || (custId1 == custId2 && custEmail1.equals(custEmail2))) {
 					
 						customer.setCountry(country);
 						customer.setState(state);

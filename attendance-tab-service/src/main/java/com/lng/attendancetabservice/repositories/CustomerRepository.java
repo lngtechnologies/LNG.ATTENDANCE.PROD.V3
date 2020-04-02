@@ -19,6 +19,8 @@ public interface CustomerRepository extends PagingAndSortingRepository<Customer,
 	
 	Customer findCustomerByCustId(Integer custId);
 	
+	Customer findCustomerByCustIdAndCustIsActive(Integer custId, Boolean custIsActive);
+	
 	@Query(value = "SELECT tc.* FROM tmcustomer tc WHERE tc.custCode = ?1", nativeQuery = true)
 	Customer findByCustomer_CustCode(String custCode);
 	

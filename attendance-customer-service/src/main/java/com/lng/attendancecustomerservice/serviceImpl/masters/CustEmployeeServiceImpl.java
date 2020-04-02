@@ -133,7 +133,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 
 		try {
 			displayLock.lock();
-			List<Employee> employee1 = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
+			List<Employee> employee1 = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustIdAndEmpInService(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId(), true);
 
 			if(employee1.isEmpty()) {
 
@@ -582,7 +582,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 			EmployeeType employeeType = employeeTypeRepository.findEmployeeTypeByEmpTypeId(custEmployeeDto.getEmpTypeId());
 			Shift shift = shiftRepository.findShiftByShiftIdAndShiftIsActive(custEmployeeDto.getShiftId(), true);
 			Branch branch = branchRepository.findBranchByBrId(custEmployeeDto.getBrId());
-			Employee employee1 = custEmployeeRepository.findByEmpMobileAndCustomer_CustId(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId());
+			Employee employee1 = custEmployeeRepository.findByEmpMobileAndCustomer_CustIdAndEmpInService(custEmployeeDto.getEmpMobile(), custEmployeeDto.getCustId(), true);
 			int empId1 = employee.getEmpId();
 			int empId2 = custEmployeeDto.getEmpId();
 			String empMobile1 = employee.getEmpMobile().trim();
@@ -1150,7 +1150,7 @@ public class CustEmployeeServiceImpl implements CustEmployeeService {
 	public Status checkEmpMobileNumExistOrNot(String empMobile, Integer custId) {
 		Status status = null;
 		try {
-			List<Employee> employee = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustId(empMobile, custId);
+			List<Employee> employee = custEmployeeRepository.findAllEmployeeByEmpMobileAndCustomer_CustIdAndEmpInService(empMobile, custId, true);
 
 			if(employee.isEmpty()) {
 				status = new Status(false, 200, "Not exist");
